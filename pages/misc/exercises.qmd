@@ -1,0 +1,3 @@
+# Exercises
+
+Exercises Day 1 and Day 2 can be found here: [Link](https://github.com/marco-willi/cas-dl-compvis-exercises-fs2026/tree/main)

@@ -1,0 +1,134 @@
+#############################################
+# Root / Course Website Ignore File
+# Reorganized: 2025-09-21
+# Rationale: Group by category, tighten overly broad rules, explicitly keep AGENTS.md
+#############################################
+
+########## OS & Editor ##########
+.DS_Store
+Thumbs.db
+.vscode/**
+.idea/
+.history/
+
+########## Python Bytecode & Caches ##########
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+pip-wheel-metadata/
+
+########## Environments ##########
+.env
+.env.*
+venv/
+.venv/
+env/
+
+########## Build / Packaging ##########
+build/
+dist/
+*.egg-info/
+*.whl
+
+########## Quarto & Render Artifacts ##########
+_site/
+_output*/
+_freeze/**
+site_libs/**
+**/.jupyter_cache/
+.quarto
+/_*.local
+**/execute-results/**
+**/.ipynb_checkpoints/**
+**/*.quarto_ipynb  # intermediary produced when rendering notebooks to qmd
+
+########## Legacy / Unneeded Book Build ##########
+archive/
+
+########## Archives & Large Bundles ##########
+**/archive/**
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bz2
+
+########## Node / JS ##########
+node_modules/
+
+########## Data (raw / large) ##########
+# Keep structure but ignore raw bulk data; adjust if you want to version a subset.
+data/**
+!data/README.md
+
+########## Demos ##########
+# Keep demo source files (so remove blanket ignore). Ignore only heavy outputs.
+demos/**/figure-*/
+demos/**/cache/
+demos/**/.ipynb_checkpoints/
+demos/*
+# Allow actual demo notebooks and qmd
+# !demos/**/*.ipynb
+# !demos/**/*.qmd
+# !demos/data/README.md
+
+########## Assets (selective exclusions) ##########
+# Ignore certain large, topic-specific image folders not used in current build.
+assets/images/*/archive/*
+assets/images/genai/*
+
+########## Model Weights / Checkpoints ##########
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+checkpoints/
+models/
+
+########## Logs & Temp ##########
+logs/
+*.log
+*.out
+*.err
+*.tmp
+*.temp
+
+########## Misc Generated ##########
+*.bak
+*.swp
+*.swo
+*.orig
+*.rej
+
+########## Explicitly Keep ##########
+!AGENTS.md
+!TODO.md
+
+########## Claude Code ##########
+.claude/
+
+########## Exam ##########
+exam/*
+
+
+#############################################
+# Notes:
+# - Removed previous broad 'demos/*' ignore so that demo notebooks remain tracked.
+# - Added negative patterns for AGENTS.md and TODO.md to ensure inclusion.
+# - If you later add curated sample data, place a README.md inside a subfolder and
+#   negate its path similarly to keep documentation but ignore bulk binaries.
+# - Adjust data/ & model weight patterns if versioning small models intentionally.
+#############################################
+
+**/*.quarto_ipynb
+
+.quarto/
+
+/.quarto/

@@ -1,0 +1,18 @@
+/* Ensure logo has transparent background */
+.sidebar-logo {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Also target the image itself */
+.sidebar-logo img {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Alternative selector if Quarto uses different class */
+.navbar-logo img,
+.sidebar .logo img {
+  background-color: transparent !important;
+  background: transparent !important;
+}

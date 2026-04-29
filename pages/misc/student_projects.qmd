@@ -1,0 +1,204 @@
+---
+title: "Project Ideas"
+params:
+   images_path: "/assets/images/student_projects/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Topic List
+
+You can choose your own topic!
+
+Alternatively, feel free to pick one of the following topics.
+
+
+### Image Classification: EuroSAT Land Use and Land Cover Classification
+
+**Goal**: Develop a model to classify satellite images. You should consider RGB images and images with 13 spectral bands (see [wiki](https://en.wikipedia.org/wiki/Sentinel-2)) in modeling. There are 10 classes and 27,000 images.
+
+**Approach**: Investigate various model architectures and decide what works best. Compare pre-trained models with those you train from scratch. Use appropriate data augmentation techniques. Since the dataset is relatively small, you should be careful of overfitting and robustly compare different models. Use RGB-only models for simplicity.
+
+**Focus**: Compare different pre-trained models (foundation models) and a model trained from scratch.
+
+**Dataset**: The two datasets can be found here: [https://github.com/phelber/eurosat](https://github.com/phelber/eurosat). There is a dataset in RGB format and a dataset with 13 spectral bands.
+
+:::{#fig-sp-eurosat}
+![]({{< meta params.images_path >}}eurosat.png){width=600}
+
+Source: [Link](https://github.com/phelber/eurosat)
+:::
+
+**Difficulty/Effort**: Medium
+
+
+
+### Image Classification: Food Images
+
+**Goal**: Develop a model to classify images of food. Pick 10 food classes (≈10k imgs)
+
+**Approach**: Use pre-trained (foundation) models.
+
+**Focus**: Compare different models, including CLIP zero-shot learning, and a DINO variant. Investigate how DINO improves with more labels.
+
+**Dataset**: The dataset can be found here: [https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/), see @bossard_food-101_2014. It is 5 GB.
+
+:::{#fig-sp-food}
+![]({{< meta params.images_path >}}food101.png){width=600}
+
+Source: [Link](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/)
+:::
+
+**Difficulty/Effort**: Medium
+
+
+### Age Estimation from Faces
+
+**Goal**: Predict _apparent_ age from images of faces.
+
+**Approach**: Train a CNN as a 101-class classifier (ages 0 to 100) and convert class probabilities to a numeric prediction via the softmax expected value (see paper, @rothe_dex_2015). Compare against direct regression (single output).
+
+**Focus**: Compare at least two variants: a CNN defined and trained from scratch and a pre-trained model with fine-tuning / as feature-extractor. Analyse the errors.
+
+**Dataset**: The dataset can be found here [Link](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/). Use a small dataset with cropped faces, e.g. [Link](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/wiki_crop.tar).
+
+:::{#fig-sp-age}
+![]({{< meta params.images_path >}}age_gender_prediction.jpg){width=600}
+
+Source: [Link](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
+:::
+
+**Difficulty/Effort**: Medium - High
+
+
+<!--
+
+
+### Semantic Segmentation: Underwater Imagery
+
+**Goal**: Develop a segmentation model to segment underwater camera images. You should classify pixels into 8 classes on 1,500 images.
+
+**Approach**: Develop your architecture based on your intuition and knowledge from the course. Read the paper @islam_semantic_2020 and implement one of the architectures presented (SUIM-Net RSB or SUIM-Net VGG) and compare with your architecture. Since the dataset is relatively small, you should be careful of overfitting and robustly compare different models.
+
+**Dataset**: Available here: [https://irvlab.cs.umn.edu/resources/suim-dataset](https://irvlab.cs.umn.edu/resources/suim-dataset).
+
+:::{#fig-mp-suim}
+![]({{< meta params.images_path >}}semantic_seg_underwater.png){width=600}
+
+Source: [Link](https://github.com/phelber/eurosat)
+:::
+
+**Difficulty/Effort**: Medium -->
+
+
+<!-- ### Semantic Segmentation: Pothole and Crack Detection
+
+**Goal**: Segment images from street surfaces to detect regions with potholes and cracks. Classify each pixel into either normal, pothole or crack. The dataset consists of 4'340 images and masks.
+
+**Approach**. This dataset was used in a competition. Make sure to consult a description of the best methods as described in @thompson_shrec_2022. Start with developing your architecture based on your intuition and knowledge from the course. One problem is the class imbalance, with many pixels being normal. Consider this when designing your loss function.
+
+**Dataset**: Available here: [https://data.mendeley.com/datasets/kfth5g2xk3/2](https://data.mendeley.com/datasets/kfth5g2xk3/2). See also @andrea_ranieri_pothole_2022. This datset is actually a collection of different datasets. See @fig-mp-potholes for examples.
+
+**Difficulty/Effort**: Medium
+
+:::{#fig-mp-potholes}
+![]({{< meta params.images_path >}}potholes_n_cracks.png){width=600}
+
+Examples from different datasets. Red are cracks, blue potholes. From @thompson_shrec_2022.
+::: -->
+
+
+<!--
+### Object Detection: Polyp Detection
+
+
+**Goal**: Develop an object detection model to detect polyps in images from endoscopic procedures. The goal is to detect each polyp with a bounding box. There are 1'000 images for training. See left and mid image of @fig-mp-polyp.
+
+**Approach**: Develop **your own architecture** based on the lecture notes. Follow the best practices and implement your ML pipeline carefully from the ground up by gradually adding complexity. Compare a few architectures and hyper-parameters.
+
+**Dataset**: Available here: [https://datasets.simula.no/kvasir-seg/](https://datasets.simula.no/kvasir-seg/).
+
+
+:::{#fig-mp-polyp}
+![]({{< meta params.images_path >}}polyp_segmentation.png){width=600}
+
+Input image (left), semantic segmentation (middle) and object detection (right). From @ro_kvasir-seg_2020.
+:::
+
+**Difficulty/Effort**: High -->
+
+<!--
+
+
+## Pet Breed Transfer Learning (small fine-tune)
+
+**Task.** Fine-tune MobileNet/ResNet to classify 6–10 chosen breeds; visualize Grad-CAM on a few images.
+**Dataset.** Oxford-IIIT Pet — <https://www.robots.ox.ac.uk/~vgg/data/pets/>
+**Visual (pipeline).**
+224×224 resize → pretrained backbone → small classification head → Grad-CAM on sample images
+
+
+
+## Food-101 (Few-Class Mini-Challenge)
+
+**Task.** Pick 10 food classes (≈10k imgs). Fine-tune a small net; discuss class imbalance & noisy labels.
+**Dataset.** Food-101 — <https://www.vision.ee.ethz.ch/datasets_extra/food-101/>
+**Visual (pipeline).**
+food images → stratified split → transfer learning → metrics (Top-1, F1) → error gallery
+
+
+
+## EuroSAT: Land-Cover from Space
+
+**Task.** Classify land-use classes using EuroSAT RGB; compare training from scratch vs. ImageNet-pretrained; map most confused classes.
+**Dataset.** EuroSAT — <https://github.com/phelber/EuroSAT>
+**Visual (pipeline).**
+Sentinel-2 patch (RGB) → preprocess → {ResNet18 scratch | ResNet18 pretrained} → compare metrics
+
+
+## Industrial Anomaly Detection (one category)
+
+**Task.** Choose one MVTec AD class (e.g., *bottle*). Train a simple autoencoder or kNN-embedding baseline on **only normal** images; detect defects on the test set.
+**Dataset.** MVTec AD — <https://www.mvtec.com/company/research/datasets/mvtec-ad>
+**Visual (pipeline).**
+(normal train set) → {autoencoder | CNN embeddings + kNN} → fit “normality”
+(test image) → reconstruct/embed → anomaly score → threshold → pass/fail
+
+
+## Tiny Image Retrieval (CBIR) with Embeddings
+
+**Task.** Compute image embeddings (pretrained CNN). Given a query image, return top-k similar images (cosine). Evaluate with precision@k on CIFAR-10 or a 10-class Food-101 subset.
+**Dataset.** CIFAR-10 — <https://www.cs.toronto.edu/~kriz/cifar.html> or Food-101 subset
+**Visual (pipeline).**
+index images → embed with CNN → build vector index
+query image → embed → nearest neighbors → precision@k
+
+
+## Natural Scenes (Intel) — Quick Transfer Learn
+
+**Task.** Classify 6 scene types (buildings/forest/glacier/mountain/sea/street). Great for a clean, single-evening fine-tune with tidy splits.
+**Dataset.** Intel Image Classification (Kaggle) — <https://www.kaggle.com/datasets/puneet6060/intel-image-classification>
+**Visual (pipeline).**
+scene image → resize (~160) → MobileNetV3-Small → accuracy + ROC
+
+
+## Suggested Time Split (per project)
+
+- **Setup & data** (env, download, sanity checks): 2–3 h
+- **Baseline model** (train once, save metrics): 4–5 h
+- **One improvement** (augmentation / lr-schedule / transfer): 3–4 h
+- **Evaluation & visuals** (confusion matrix, sample errors): 2–3 h
+- **Short report** (1–2 pages with plots): 2 h
+
+
+### Notes & Tips
+
+- Favor **small backbones** and **few classes** to stay under the time budget.
+- When datasets are large, **sample 2–10 classes** or **subset N images per class**.
+- Track basic metrics (accuracy, F1), save a confusion matrix, and include 8–12 **failure cases** (thumbnails) in your report.
+ -->

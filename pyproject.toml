@@ -1,0 +1,84 @@
+
+[tool.poetry]
+name = "cas-dl-cv"
+version = "0.1.1"
+description = "CAS Deep Learning - Computer Vision HS2026"
+authors = ["Marco Willi <marco.willi@fhnw.ch>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.14"
+
+# Core
+numpy = "*"
+pillow = "*"
+scikit-learn = "*"
+
+# Visualization
+matplotlib = "*"
+seaborn = "*"
+
+
+# --- jupyter & notebooks --- #
+ipywidgets = ">=8"
+ipykernel = "^6.30.1"
+jupyter = "*"
+jupyterlab = "*"
+jupyter-cache = "*"
+
+# CV/ML core
+scikit-image = "*"
+timm = "*"
+
+torch = { version = "*", source = "pytorch-cpu" }
+torchvision = { version = "*", source = "pytorch-cpu" }
+
+torchmetrics = "*"
+lightning = "*"
+transformers = "*"
+opencv-python-headless = "*"
+mlxtend = "*"
+kornia = "*"
+
+# --- generative ai--- #
+openai = "^2.1.0"
+replicate = "^1.0.7"
+diffusers = "*"
+accelerate = "*"
+bitsandbytes = "*"
+datasets = "*"
+sentencepiece = "*"
+
+# --- experiment tracking --- #
+tensorboard = "*"
+
+# visualization extras
+plotly = "*"
+altair = "*"
+
+# handy tools
+gdown = "*"
+torchshow = "*"
+torchviz = "*"
+torchinfo = "*"
+visualtorch = "*"
+tabulate = "*"
+python-dotenv = "*"
+pyrootutils = "*"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+ruff = "*"
+pre-commit = "*"
+pytest = "*"
+mypy = "*"
+rich = "*"
+
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "supplemental"
