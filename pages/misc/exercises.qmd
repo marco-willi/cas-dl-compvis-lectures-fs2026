@@ -37,9 +37,7 @@ as a small, fast-loading dataset for first contact with PyTorch tensors,
 
 A balanced subset of camera-trap images from Serengeti National Park
 (Snapshot Safari 2024 Expansion), curated to ten species classes plus an
-`empty` class (~1850 images total). About 56% of the frames are IR/night
-shots — a deliberate teaching point about distribution shift. Used as the
-**default** camera-trap dataset in
+`empty` class (~1850 images total). Used as the  **default** camera-trap dataset in:
 
 - 01_image_data
 - 02_classification
@@ -53,8 +51,7 @@ shots — a deliberate teaching point about distribution shift. Used as the
 A balanced 8-class subset of the CCT20 benchmark (200 images per class:
 bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel). Sourced
 from LILA Science. Offered as an **alternative** camera-trap dataset in
-exercises 02, 04, and 05 — useful when SER is too dark or when a
-North-American species mix is preferred.
+exercises 02, 04, and 05.
 
 ![CCT20 bobcat crossing a road at night]({{< meta params.images_path >}}cct20_bobcat.jpg)
 
@@ -62,9 +59,8 @@ North-American species mix is preferred.
 
 A subset of Snapshot Kgalagadi Season 1 (Kalahari camera traps) covering
 six classes: empty, gemsbokoryx, birdother, steenbok, ostrich,
-jackalblackbacked. Heavily imbalanced — `empty` accounts for ~78% of the
-~3400 images — which makes it the **alternative of choice when teaching
-class imbalance** in exercises 02, 04, and 05.
+jackalblackbacked. Heavily imbalanced, `empty` accounts for ~78% of the
+~3400 images, can be used in exercises 02, 04, and 05.
 
 ![Kgalagadi gemsbok at a Kalahari camera trap]({{< meta params.images_path >}}kgalagadi_gemsbok.jpg)
 
@@ -84,7 +80,7 @@ A 5-class coarse-label subset (dresses, outerwear, pants, skirts, tops) of
 the DeepFashion In-Shop Clothes Retrieval Benchmark from MMLAB/CUHK, ~3300
 images split by item ID so all views of one product stay in the same split.
 Offered as the **alternative** to ABO in 03_retrieval.. **Internal use only — do not
-redistribute** (see the dataset card for license details).
+redistribute**.
 
 ![DeepFashion dress — in-shop catalogue photo]({{< meta params.images_path >}}deepfashion_dress.jpg)
 
