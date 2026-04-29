@@ -1,0 +1,98 @@
+---
+title: "Exercises"
+params:
+   images_path: "/assets/images/exercises/"
+execute:
+  cache: false
+  freeze: false
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Day 1 and Day 2
+
+Exercises Day 1 and Day 2 can be found here: [Link](https://github.com/marco-willi/cas-dl-compvis-exercises-fs2026/tree/main)
+
+### Datasets
+
+
+This document lists every dataset used by the exercises, with a short description
+of its origin, content, and the exercise(s) it appears in.
+
+#### MNIST
+
+The classic dataset of 28×28 grayscale handwritten digits (0–9), 60k train
+and 10k test images. Used in [exercises/00_pytorch](../exercises/00_pytorch)
+as a small, fast-loading dataset for first contact with PyTorch tensors,
+`Dataset`, and `DataLoader`. Loaded directly from `torchvision.datasets.MNIST`.
+
+![MNIST samples]({{< meta params.images_path >}}mnist_samples.png)
+
+#### Snapshot Safari SER (Serengeti)
+
+A balanced subset of camera-trap images from Serengeti National Park
+(Snapshot Safari 2024 Expansion), curated to ten species classes plus an
+`empty` class (~1850 images total). About 56% of the frames are IR/night
+shots — a deliberate teaching point about distribution shift. Used as the
+**default** camera-trap dataset in
+
+- 01_image_data
+- 02_classification
+- 04_adaptation
+- 05_backbones
+
+![SER elephant — night IR camera-trap frame]({{< meta params.images_path >}}ser_elephant.jpg)
+
+#### Caltech Camera Traps (CCT20)
+
+A balanced 8-class subset of the CCT20 benchmark (200 images per class:
+bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel). Sourced
+from LILA Science. Offered as an **alternative** camera-trap dataset in
+exercises 02, 04, and 05 — useful when SER is too dark or when a
+North-American species mix is preferred.
+
+![CCT20 bobcat crossing a road at night]({{< meta params.images_path >}}cct20_bobcat.jpg)
+
+#### Snapshot Kgalagadi
+
+A subset of Snapshot Kgalagadi Season 1 (Kalahari camera traps) covering
+six classes: empty, gemsbokoryx, birdother, steenbok, ostrich,
+jackalblackbacked. Heavily imbalanced — `empty` accounts for ~78% of the
+~3400 images — which makes it the **alternative of choice when teaching
+class imbalance** in exercises 02, 04, and 05.
+
+![Kgalagadi gemsbok at a Kalahari camera trap]({{< meta params.images_path >}}kgalagadi_gemsbok.jpg)
+
+#### Amazon Berkeley Objects (ABO) Furniture
+
+A curated subset of the Amazon Berkeley Objects dataset, restricted to six
+furniture categories (bed, chair, lamp, sofa, storage, table) with multiple
+views per item, ~25k centre-cropped 224×224 JPEGs. The multi-view structure
+(via `retrieval_groups.json`) makes it well-suited for image retrieval.
+Used as the **default** dataset in 03_retrieval and offered as the **alternative** to DeepFashion.
+
+![ABO chair — e-commerce product photo]({{< meta params.images_path >}}abo_chair.jpg)
+
+#### DeepFashion (In-Shop Retrieval)
+
+A 5-class coarse-label subset (dresses, outerwear, pants, skirts, tops) of
+the DeepFashion In-Shop Clothes Retrieval Benchmark from MMLAB/CUHK, ~3300
+images split by item ID so all views of one product stay in the same split.
+Offered as the **alternative** to ABO in 03_retrieval.. **Internal use only — do not
+redistribute** (see the dataset card for license details).
+
+![DeepFashion dress — in-shop catalogue photo]({{< meta params.images_path >}}deepfashion_dress.jpg)
+
+#### AMI-Br (Atypical Mitotic Figures — Breast)
+
+128×128 histopathology patches of mitotic figures from human breast cancer
+slides (subset of TUPAC16 + MIDOG21), with binary labels for normal vs.
+atypical mitoses. Used in 04_adaptation_lora as a small,
+domain-shifted target task for parameter-efficient fine-tuning (LoRA).
+
+![AMI-Br normal mitotic figure patch]({{< meta params.images_path >}}ami_br_normal.png)

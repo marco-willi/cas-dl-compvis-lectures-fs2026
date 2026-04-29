@@ -1,0 +1,335 @@
+---
+title: "2 - Images as Data"
+params:
+   images_path: "/assets/images/images_as_data/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+::: {.callout-tip title="Learning Objectives" collapse="true"}
+After this lecture you should be able to:
+
+- Describe how images are represented as tensors and explain the role of height, width, and channels.
+- Distinguish between RGB and grayscale representations and their implications for model input.
+- Explain the trade-offs involved in choosing image resolution for a deep learning pipeline.
+- Describe the purpose of train, validation, and test splits and identify common sources of data leakage.
+- Recognize class imbalance in a dataset and explain its effect on model training.
+- Identify label ambiguity, label noise, and hidden biases in image datasets.
+:::
+
+
+::: {.callout-tip title="TLDR Recap" collapse="true"}
+
+**Images as Tensors:**
+
+- Digital images are 3-dimensional arrays (tensors) with shape Height × Width × Channels
+- RGB images have 3 channels; grayscale images have 1 channel
+- Pixel values typically range from 0–255 (integers) or 0.0–1.0 (normalized floats)
+- PyTorch uses C × H × W ordering; NumPy and PIL use H × W × C
+
+**Resolution:**
+
+- Higher resolution preserves more detail but increases memory and compute requirements
+- Models typically require a fixed input size — images must be resized
+- Resizing can distort aspect ratios or discard important fine-grained information
+
+**Labels and Dataset Splits:**
+
+- **Labels** map images to class indices (e.g., 0 → "empty", 1 → "deer", 2 → "fox")
+- **Train split**: used to optimize model parameters
+- **Validation split**: used for hyperparameter tuning and early stopping
+- **Test split**: held out for final, unbiased evaluation
+- Data leakage occurs when information from validation or test sets influences training
+
+**Dataset Quality:**
+
+- **Class imbalance**: uneven class distributions bias the model toward majority classes
+- **Label noise**: incorrect or inconsistent annotations degrade training signal
+- **Hidden biases**: spurious correlations (e.g., background, watermarks) can be learned instead of the actual target concept
+- Always inspect the data before training
+:::
+
+## Motivation
+
+Understanding the data is a critical task, before training any model. In computer vision, this means understanding how images are represented numerically, how datasets are structured, and what pitfalls to watch for. Many classification failures can be traced back not to the model architecture or training procedure, but to problems in the data itself: imbalanced classes, noisy labels, or subtle biases that the model exploits as shortcuts.
+
+
+## Image Representations
+
+### Images as Tensors
+
+A digital image is a grid of pixels arranged in rows and columns. Each pixel holds one or more numeric values representing color intensity. This grid can be described as a three-dimensional array, a **tensor**, with dimensions for height, width, and channels.
+
+@fig-iad-tensor-anatomy illustrates the tensor structure of an RGB image. The height and width correspond to the spatial dimensions, while the three channels encode red, green, and blue intensity values.
+
+::: {#fig-iad-tensor-anatomy}
+![]({{< meta params.images_path >}}tensor_anatomy.png){width=600}
+
+An image represented as a tensor with shape H × W × C. Each pixel location holds three values (one per color channel).
+:::
+
+Pixel values are typically stored as 8-bit unsigned integers in the range $[0, 255]$. For model training, these are usually normalized to floats in $[0, 1]$ or standardized to zero mean and unit variance.
+
+#### Shape Conventions
+
+Different libraries use different axis orderings for image tensors. This is a common source of bugs when moving between frameworks:
+
+- **NumPy / PIL**: H × W × C (height, width, channels) -> channels last
+- **PyTorch**: C × H × W (channels, height, width) -> channels first
+
+A PyTorch tensor representing an RGB image of size 224 × 224 has shape `(3, 224, 224)`, while the same image in NumPy has shape `(224, 224, 3)`.
+
+::: {.callout-note appearance="simple"}
+
+**🤔 Think About It**
+
+A batch of 32 RGB images, each 224 × 224 pixels, is loaded into PyTorch. What is the shape of the resulting tensor?
+
+<details>
+<summary>Answer</summary>
+
+The batch tensor has shape `(32, 3, 224, 224)` — batch size × channels × height × width.
+
+PyTorch always prepends the batch dimension. This convention enables efficient parallel computation on GPUs.
+
+</details>
+
+:::
+
+::: {.callout-note appearance="simple"}
+
+**🤔 Think About It**
+
+How would an MRI scan be represented as a tensor? Does the standard H × W × C representation still apply, and what would the "channels" correspond to?
+
+<details>
+<summary>Key considerations</summary>
+
+The tensor paradigm generalises naturally to medical imaging — it just adds axes.
+
+- **Single 2-D slice:** A single MRI slice is a grayscale intensity image: shape H × W (or H × W × 1 if an explicit channel axis is kept).
+- **Full 3-D volume:** A complete MRI acquisition is a stack of slices — shape D × H × W, where D is the number of slices (the depth axis). Alternatively written H × W × D depending on the library convention.
+- **Multi-sequence acquisition:** Clinical MRI is typically acquired in multiple sequences (T1, T2, FLAIR, DWI, …), each sensitive to different tissue properties. The sequences act as additional "channels", yielding shape D × H × W × C — directly analogous to the channel axis in RGB, just with medically meaningful channels instead of colour primaries.
+- **4-D time series (fMRI):** Functional MRI adds a time axis, giving shape T × D × H × W.
+
+The key insight is that the H × W × C abstraction is not specific to colour images. Any multi-channel spatial measurement — MRI sequences, satellite spectral bands, depth maps paired with RGB — fits the same tensor structure. The number of spatial axes and their physical meaning change; the framework stays the same.
+
+</details>
+
+:::
+
+
+### Color and Channels
+
+The number of channels depends on the color representation. The most common formats are:
+
+- **RGB**: 3 channels (red, green, blue). Each channel encodes the intensity of one color component. The combination of all three channels produces the perceived color at each pixel.
+- **Grayscale**: 1 channel. Each pixel holds a single luminance value.
+
+@fig-iad-rgb-vs-grayscale illustrates the difference. The RGB image stores three separate intensity maps, while the grayscale version compresses all color information into a single channel.
+
+::: {#fig-iad-rgb-vs-grayscale}
+![]({{< meta params.images_path >}}rgb_vs_grayscale.png){width=600}
+
+The same image shown as RGB (three channels) and grayscale (one channel), with individual channel visualizations.
+:::
+
+::: {.callout-note appearance="simple"}
+
+**🤔 Think About It**
+
+Are 1 and 3 the only possible numbers of channels? Think of other imaging modalities you might encounter in practice.
+
+<details>
+<summary>Answer</summary>
+
+No — the number of channels depends entirely on the sensor and task:
+
+- **1 channel:** grayscale photo, depth map, thermal/infrared, most medical scans (X-ray, ultrasound frames)
+- **3 channels:** RGB (or HSV, Lab — still 3 channels, different encoding)
+- **4 channels:** RGBA (adds an alpha/transparency channel), or RGB + near-infrared
+- **N channels (tens to hundreds):** multispectral and hyperspectral imaging (remote sensing, agriculture, astronomy)
+
+The tensor shape H × W × C generalizes to all of these — only C changes.
+
+</details>
+
+:::
+
+Beyond standard photography, other imaging modalities produce images with different channel structures:
+
+- **Infrared**: captures thermal radiation, often used in night-vision or satellite imagery
+- **Depth maps**: encode distance-to-camera as pixel values
+- **Multispectral / hyperspectral**: tens to hundreds of channels capturing narrow wavelength bands, common in remote sensing and agriculture
+
+The key insight is that regardless of the modality, the data structure remains the same: a tensor of shape H × W × C. The number of channels changes, but the processing paradigm does not.
+
+RGB is also not the only way to encode color. Alternative color spaces rearrange the same information along more perceptually meaningful axes — for example, **HSV** (Hue-Saturation-Value) separates color identity (hue) from brightness (value), which can be useful for color-based retrieval, rule-based segmentation, or hue-preserving data augmentation.
+
+
+### Resolution and Resizing
+
+Image resolution — the number of pixels along height and width — directly affects both the amount of visual detail and the computational cost. @fig-iad-resolution illustrates the same image at different resolutions.
+
+::: {#fig-iad-resolution}
+![]({{< meta params.images_path >}}resolution_comparison.png){width=600}
+
+The same image shown at 224 × 224, 64 × 64, and 16 × 16 pixels. Fine details are progressively lost at lower resolutions.
+:::
+
+Most deep learning models require a fixed input size. Since real-world image datasets contain images of varying dimensions, resizing is an unavoidable preprocessing step. This introduces practical trade-offs:
+
+- **Higher resolution** preserves fine-grained details (e.g., small objects, textures) but requires more memory and compute.
+- **Lower resolution** is faster and lighter but may discard information critical for the task.
+- **Aspect ratio distortion** occurs when images are resized to a square input without preserving proportions. This can deform objects and change their visual appearance.
+
+Common strategies include resizing the shorter edge to the target size and center-cropping, or resizing with padding to preserve the aspect ratio.
+
+
+## Image Datasets
+
+### Labels and Classes
+
+In supervised learning, each image in the dataset is associated with a label — typically an integer index that maps to a class name. For example, in a camera-trap dataset the mapping might be:
+
+| Index | Class Name |
+|-------|------------|
+| 0     | empty      |
+| 1     | deer       |
+| 2     | fox        |
+| 3     | badger     |
+| 4     | bird       |
+
+: Example class mapping for a camera-trap dataset {tbl-colwidths="[10,30]"}
+
+The choice of classes is itself a design decision. Finer-grained class definitions (e.g., distinguishing between red deer and roe deer) require more training data and may introduce label ambiguity. Coarser definitions (e.g., simply "animal" vs. "empty") are easier to annotate but less informative.
+
+In **single-label classification**, each image belongs to exactly one class. In **multi-label classification**, an image can belong to multiple classes simultaneously, for example, a camera-trap image showing both a deer and a bird.
+
+
+### Dataset Splits
+
+A well-designed dataset is divided into three non-overlapping subsets, each serving a distinct purpose:
+
+- **Training set**: used to optimize the model's parameters via gradient descent. The model sees these images repeatedly during training.
+- **Validation set**: used to tune hyperparameters (learning rate, architecture choices, augmentation strategies) and to monitor for overfitting. The model never trains on these images, but they influence decisions during development.
+- **Test set**: held out entirely until final evaluation. Provides an unbiased estimate of how the model will perform on new, unseen data.
+
+The split strategy matters. Random splitting may not be appropriate for all datasets. Two important considerations:
+
+- **Stratified splits** ensure that each split has roughly the same class distribution as the full dataset. This is especially important when classes are imbalanced.
+- **Grouped splits** ensure that related images end up in the same split. For example, if a camera trap captures multiple images of the same animal within seconds, these near-duplicates should all be in the same split — otherwise the model can appear to generalize when it is actually memorizing specific individuals.
+
+@fig-iad-grouped-split-sequence shows three frames captured within a few seconds of each other by the same camera trap. Although each frame is technically a distinct image file, they depict the same individual in the same scene. A grouped split keeps all three in the same set (train, validation, or test) so that the model cannot see one frame during training and be evaluated on a near-duplicate.
+
+::: {#fig-iad-grouped-split-sequence}
+![]({{< meta params.images_path >}}grouped_split_sequence.png){width=700}
+
+Three frames from a single camera-trap trigger event. Because the images are near-duplicates, they must all be assigned to the same split.
+:::
+
+### Data Leakage
+
+Data leakage occurs when information from the validation or test set inadvertently influences the training process. A concrete camera-trap example makes this easy to see: the three frames in @fig-iad-grouped-split-sequence come from a single trigger event. If we shuffle all images and split randomly, frame 1 may land in the training set while frames 2 and 3 land in validation. The model never has to generalize — at evaluation time it is effectively being shown images it has already seen. Accuracy on the validation set looks excellent, but performance on a truly new event collapses.
+
+In image datasets, common sources of leakage include:
+
+- **Near-duplicate images** across splits (e.g., consecutive frames from a video or a camera-trap burst)
+- **Images from the same location or subject** appearing in both train and test sets
+- **Preprocessing statistics** (mean, standard deviation) computed on the entire dataset rather than on the training set alone
+
+Leakage leads to overly optimistic evaluation metrics that do not reflect real-world performance.
+
+::: {.callout-note appearance="simple"}
+
+**🤔 Think About It**
+
+A dataset of dermoscopy images (skin lesion photographs) is collected from 500 patients, with some patients having multiple images taken at different visits. The images are randomly shuffled and split 80/10/10 into train/validation/test. What could go wrong?
+
+<details>
+<summary>Key considerations</summary>
+
+Multiple images from the same patient may end up in different splits. Since images from the same patient often share visual characteristics (skin color, mole patterns, lighting conditions from the same clinic), the model may learn to recognize patients rather than lesions. Evaluation metrics will be inflated because the model has effectively seen "similar" images during training.
+
+The correct approach is to split at the patient level: all images from a given patient go into the same split.
+
+</details>
+
+:::
+
+
+### Class Imbalance
+
+Real-world image datasets are rarely balanced. Some classes naturally occur much more frequently than others. @fig-iad-class-distribution illustrates a typical camera-trap dataset where the majority of captured images are empty (no animal present).
+
+::: {#fig-iad-class-distribution}
+![]({{< meta params.images_path >}}cam_trap_dist2.jpg){width=600}
+
+Class distribution of a camera-trap dataset. The "empty" class dominates, while rare species have very few examples.
+:::
+
+Class imbalance has direct consequences for training:
+
+- A model trained on an imbalanced dataset tends to predict the majority class more often, since this minimizes the overall loss.
+- Rare classes receive fewer gradient updates, making it harder for the model to learn their distinguishing features.
+- Standard accuracy can be misleading — a model that always predicts "empty" may achieve 90% accuracy while being completely useless for the actual task of species identification.
+
+Common mitigation strategies include:
+
+- **Oversampling** minority classes or **undersampling** majority classes
+- **Weighted loss functions** that assign higher penalties to errors on underrepresented classes
+- Evaluation metrics beyond accuracy, such as per-class precision, recall, and F1 score
+
+
+### Label Quality and Ambiguity
+
+Labels in real-world datasets are created by human annotators — and humans make mistakes. Label noise refers to incorrect annotations in the training data. Even small rates of label noise can affect model performance, particularly for classes that are visually similar.
+
+@fig-iad-label-ambiguity illustrates cases where the correct label is genuinely debatable.
+
+::: {#fig-iad-label-ambiguity}
+![]({{< meta params.images_path >}}label_ambiguity.png){width=600}
+
+Examples where the correct class label is ambiguous. Is this a wolf or a large dog? Is this image "empty" if an animal's tail is barely visible at the edge?
+:::
+
+Sources of label noise include:
+
+- **Inter-annotator disagreement**: different annotators assign different labels to the same image, particularly for borderline cases
+- **Systematic errors**: an annotator consistently confuses two similar-looking classes
+- **Ambiguous category boundaries**: the class definitions themselves are unclear or overlapping
+
+Notably, models trained on noisy labels tend to first learn the "clean" patterns and then gradually memorize the noisy examples [@arpit_closer_2017]. This means that early stopping can partially mitigate the effects of label noise.
+
+The practical takeaway: always inspect the data before training. Visualize samples from each class, check for obvious mislabels, and examine the boundary cases.
+
+
+### Hidden Biases in Image Datasets
+
+Perhaps the most subtle data quality issue is hidden bias — systematic patterns in the dataset that correlate with the target labels but are not causally related to the concept being learned. A model that exploits such shortcuts will perform well on the training distribution but fail when deployed in a different context.
+
+A well-known example is illustrated in @fig-iad-dataset-bias: a classifier trained to distinguish cows from camels may instead learn to distinguish green backgrounds (grass, pastures) from sandy backgrounds (desert). The model performs well on the test set — which shares the same background correlations — but fails on images of cows on a beach or camels in a zoo.
+
+::: {#fig-iad-dataset-bias}
+![]({{< meta params.images_path >}}dataset_bias.png){width=700}
+
+Top-5 predictions of an ImageNet-trained classifier on three cow images. (A) Cow on a pasture — confidently labelled "cow". (B) The same type of animal on a beach — the model no longer recognises it as a cow and instead predicts *water*, *beach*, *seashore*. (C) A cow in a coastal setting — again labelled "mammal" but not "cow". The background, not the animal, is driving the prediction. Example adapted from @Beery2018.
+:::
+
+Other forms of dataset bias include:
+
+- **Geographic bias**: datasets collected primarily in certain regions may not represent the visual diversity of other regions (e.g., different building styles, vegetation, clothing)
+- **Selection bias**: images sourced from the internet tend to overrepresent certain demographics, settings, and photographic styles
+- **Watermark and source artifacts**: images from specific sources may carry consistent visual artifacts that correlate with certain labels
+
+Hidden biases are difficult to detect from aggregate metrics alone. They often only become apparent through careful inspection of model errors and failure patterns.
+
+
+## References
+
+::: {#refs}
+:::

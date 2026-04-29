@@ -1,0 +1,25 @@
+format:
+  revealjs:
+    theme: q-slides-theme.scss
+    slide-number: c/t
+    show-slide-number: all
+    footer: "[https://marco-willi.github.io/cas-dl-compvis-lectures-fs2026/](https://marco-willi.github.io/cas-dl-compvis-lectures-fs2026)"
+    code-copy: true
+    center-title-slide: true
+    code-link: true
+    code-overflow: wrap
+    highlight-style: a11y
+    height: 1080
+    width: 1920
+    chalkboard: true
+    logo: /assets/fhnw_logo.png
+    data-background-image: /assets/fhnw_bg.png
+    title-slide-attributes:
+      data-background-image: /assets/fhnw_bg.png
+      data-background-size: contain
+      data-background-opacity: "1.0"
+subtitle: "CAS Deep Learning - Computer Vision (Part1)"
+jupyter: /home/vscode/.venvs/cas-dl-cv-xS3fZVNL-py3.14/bin/python3
+execute:
+  eval: true
+  echo: true

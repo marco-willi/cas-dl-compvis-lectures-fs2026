@@ -1,0 +1,797 @@
+---
+title: "1 - Introduction"
+params:
+   images_path: "/assets/images/intro/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+::: {.callout-tip title="Learning Objectives"  collapse="true"}
+After this lecture you should be able to:
+
+- Distinguish core computer vision tasks (classification, detection, segmentation).
+- Describe key real-world application domains and practical challenges.
+- Explain why deep learning reshaped computer vision.
+
+:::
+
+
+::: {.callout-tip title="TLDR Recap" collapse="true"}
+
+**Applications (examples):**
+
+- Wildlife monitoring (camera traps), medical imaging, autonomous driving
+- Photo editing, image search & retrieval, facial recognition
+- On-device inference on mobile chips
+
+**Computer Vision Tasks:**
+
+- **Classification**: Assign images to predefined classes
+- **Detection**: Locate and recognize multiple objects with bounding boxes
+- **Segmentation**: Assign each pixel to objects (instance) or classes (semantic)
+- **Generation**: Transform or create images (translation, synthesis, text-to-image)
+
+There are many more, but these are core tasks.
+
+**Key Challenges:**
+
+- Semantic gap (pixels → meaning)
+- Viewpoint, illumination, occlusion
+- Intra-class variation and background clutter
+- Context dependence
+
+**Classical vs. Deep Learning:**
+
+- **Classical CV**: Hand-crafted features (HOG, SIFT, color histograms) + ML classifiers → limited scalability
+- **Deep Learning**: End-to-end learned hierarchical representations → automatic feature extraction, better scaling with data
+
+**The AlexNet Breakthrough (2012):**
+
+- Reduced ImageNet top-5 error from 25.8% to 16.4% — a 9.4 percentage point improvement
+- Marked the shift from hand-crafted features to end-to-end deep learning
+- Enabled by: large datasets, GPU computing, CNN architectures
+
+:::
+
+## Motivation
+
+_Deep Learning_ models have played a transformative role in _Computer Vision_ over the last decade, significantly enhancing and expanding the capabilities to process visual data.
+
+The integration of deep learning in computer vision has massively improved the accuracy and efficiency of visual recognition, classification, and analysis. This has opened up new possibilities in applications such as autonomous driving, facial recognition, and medical image analysis. These models are now embedded in a wide variety of products and services.
+
+Let's take a look at several applications of deep learning assisted computer vision applications.
+
+### Applications
+
+To monitor wildlife populations biologists can deploy camera traps to capture images from passing animals (see @fig-intro-kora-lynx). These images need to be analysed, for example, biologists need to know which species can be seen in each image. Deep learning can speed up that process significantly (@Images2018).
+
+
+::: {#fig-intro-kora-lynx}
+![Source: @breitenmoser-wursten_projekt_2024]({{< meta params.images_path >}}kora_lynx.png){width=600}
+
+Image from a camera trap.
+:::
+
+
+
+
+Recent advances in generative deep learning enable anyone to create photorealistic synthetic images (see @fig-intro-synthetic-images for examples). While these technologies have many positive applications (art, design, prototyping), they also raise concerns about misinformation and deepfakes, motivating research into synthetic media detection (@mathys_synthetic_2024-1 and @willi_synthetic_2026).
+
+
+::: {#fig-intro-synthetic-images layout-ncol=2}
+
+![]({{< meta params.images_path >}}application_synthetic_images_grta.png)
+
+
+![]({{< meta params.images_path >}}sid_trump.jpg)
+
+<!--
+![[Source](https://x.com/cryptomattk/status/1687908457880367104)]({{< meta params.images_path >}}sid_pope.jpg) -->
+
+Examples of synthetic images: left from @mathys_synthetic_2024, right from [Source](https://x.com/TheInfiniteDude/status/1637211568692932608).
+:::
+
+
+<!-- ![Camera Trap Image Analysis]({{< meta params.images_path >}}camtrap.jpg){width=400} -->
+
+Apple's photo library uses deep learning to automatically classify and search through your photos. The system can recognize scenes (beach, mountain), objects (dog, car), and even activities (birthday, wedding). Additionally, sophisticated safety systems scan for problematic content while preserving privacy through on-device processing (@fig-intro-apple-safety).
+
+::: {#fig-intro-apple-safety}
+![]({{< meta params.images_path >}}apple_nude_safety.png){width=600}
+
+Apple's on-device safety features detect sensitive content while maintaining user privacy. [Source](https://www.apple.com/child-safety/)
+:::
+
+
+Deep learning can be used to identify objects, to find similar images (image search / retrieval), or to find (near-)duplicates (perceptual hashing), see @fig-intro-google-lens (left). Increasingly, models can cross modalities and, for example, process visual data and produce textual outputs. An interesting example is image captioning or the detection and translation of text in images  (optical character recognition - OCR), see @fig-intro-google-lens (right).
+
+
+:::: {.columns #fig-intro-google-lens}
+
+::: {.column width="45%"}
+![Identification & Search]({{< meta params.images_path >}}google_lens_classification.png
+)
+:::
+
+::: {.column width="45%"}
+![Translation]({{< meta params.images_path >}}google_lens_ocr.png)
+:::
+
+[Google Lens](https://search.google/ways-to-search/lens/)
+
+::::
+
+
+
+One area with high commercial interest and competition is the development of self-driving capabilities. @fig-intro-self-driving shows a demonstration of the perception system required for autonomous driving, including detecting vehicles, pedestrians, cyclists, and understanding lane markings and traffic signs in real-time.
+
+::: {#fig-intro-self-driving}
+
+{{< video https://storage.googleapis.com/waymo-uploads/files/site-animations/waymo-driver/cameras.webm width=800 >}}
+
+[Example from Waymo](https://waymo.com/waymo-driver/). Observe how the system simultaneously tracks multiple objects.
+
+:::
+
+
+Face recognition technology, such as Apple's Face ID (@fig-intro-face-id), has become ubiquitous in consumer devices. The system uses infrared depth sensing to create a 3D map of facial features, making it more secure than 2D image-based recognition and robust to different lighting conditions.
+
+::: {#fig-intro-face-id}
+
+{{< video https://www.youtube.com/embed/z-t1h0Y8vuM?si=qnEOYDmqyv8zGvMV start="50" width=600 height=400 >}}
+
+[Example from Apple Face ID](https://support.apple.com/en-us/102381). Watch how the infrared dot projector creates a depth map of the face.
+:::
+
+Computer vision has also been very useful in agricultur. @fig-intro-minneapple shows an application where apples can be counted from image data. Furthermore, drones might be used to estimate crop yield, type and health.
+
+
+::: {#fig-intro-minneapple}
+
+![ ]({{< meta params.images_path >}}minneapple.png){width=600}
+
+Example from @hani_minneapple_2020
+:::
+
+Deep learning has also been applied extensively in the medical area. In particular, many imaging technologies, such as MRI or CT, can be analysed with computer vision techniques.  @fig-intro-sam illustrates a generic segmentation model which can be used to identify organs and other anatomical structures on pixel-level.
+
+
+::: {#fig-intro-sam width=400}
+
+![]({{< meta params.images_path >}}medsam.png){width=600}
+
+Example from @ma_segment_2024.
+:::
+
+Photo-editing has been brought to new levels of sophistication with AI-based capabilities.  @fig-intro-magic shows an impressive example from the Google Magic Editor. Maybe even a bit too good?
+
+
+::: {#fig-intro-magic}
+
+{{< video https://storage.googleapis.com/gweb-mobius-cdn/photos/uploads/6e54ed750f84538fd052b31818127f1e4df5711c.compressed.mp4 width=800 >}}
+
+[Example from Google Magic Editor](https://www.google.com/intl/en/photos/editing/)
+
+:::
+
+
+::: {.callout-note appearance="simple"}
+
+**🤔 Think About It**
+
+What computer vision tasks do you think the model in @fig-intro-magic must perform to enable this editing capability?
+
+<details>
+<summary>Possible tasks involved</summary>
+
+- Object detection and segmentation (identifying what to remove/move)
+- Inpainting (filling in removed areas)
+- Style transfer (matching lighting/texture)
+- Scene understanding (maintaining realistic perspective)
+
+</details>
+
+:::
+
+
+The increasingly better models and the ability to run them quickly and resource-efficiently on mobile devices have enabled such applications. @fig-intro-tensor-phone shows that special chips have been developed to process images with Deep Learning models quickly.
+
+::: {#fig-intro-tensor-phone}
+
+![]({{< meta params.images_path >}}tensor_phone.png){width=600}
+
+
+From [Link](https://store.google.com/intl/en/ideas/pixel-camera-features/).
+:::
+
+
+
+## Computer Vision Tasks
+
+
+### Image Classification
+
+In image classification, an image is assigned to a predefined set of classes. In multi-class classification, there are $\gt 2$ classes; in binary classification, there are exactly 2 classes; and in multi-label classification, there are multiple sets of classes. @fig-intro-image_clssifier shows an example of multi-class classification.
+
+::: {#fig-intro-image_clssifier width=600}
+![]({{< meta params.images_path >}}image_classification_example.png){width=600}
+
+Multi-Class Image Classification example: a model predicts the most likely class for an image along with confidence scores (@krizhevsky_imagenet_2012).
+:::
+
+
+### Object Detection
+
+Object detection involves locating and recognizing multiple objects in an image. @fig-intro-yolo-example shows an example @Redmon2016a. Each object is localized with a bounding box and assigned an object class with a confidence score.
+
+::: {#fig-intro-yolo-example}
+
+![]({{< meta params.images_path >}}yolo_object_detection_example.png){width=600}
+
+Object Detection example (from @Redmon2016a). Bounding boxes localize the objects, showing the predicted class and confidence for each detection.
+:::
+
+### Segmentation
+
+In segmentation, individual pixels are assigned to specific objects (instance segmentation) or classes (semantic segmentation). @fig-mask-rcnn-object-segmentation-example shows an example of instance segmentation from @he_mask_2018, where individual objects are detected and precisely localized at the pixel level.
+
+::: {#fig-mask-rcnn-object-segmentation-example}
+
+![]({{< meta params.images_path >}}instance_segmentation_example_maskrcnn.jpg){width=600}
+
+Instance Segmentation example (from @he_mask_2018). Each person is individually segmented with pixel-level masks.
+:::
+
+The following video shows an example of semantic segmentation:
+
+::: {#fig-intro-semantic-segmentation}
+
+{{< video https://www.youtube.com/embed/wfObVKKKJkE?si=GZ6m6vig54Z8XVie width=600 height=350 >}}
+
+Semantic segmentation applied to aerial imagery of agricultural fields. Each pixel is classified into crop types, field boundaries, and other land categories.
+:::
+
+
+### Keypoint Detection
+
+In keypoint detection, specific points on objects — typically human body joints — are localized. @fig-mask-rcnn-keypoint-detection-example shows an example from the paper by @he_mask_2018. This can be used to transfer movements from a person to an avatar or to recognize human activities (action recognition).
+
+::: {#fig-mask-rcnn-keypoint-detection-example}
+
+![]({{< meta params.images_path >}}keypoint_detection_exampe_maskrcnn.jpg){width=600}
+
+
+Keypoint Detection example (from @he_mask_2018).
+:::
+
+
+### Image Generation
+
+There are various applications where models transform input images into specific output images (image-to-image translation) or generate completely new images from scratch (unconditional generation). Below are example applications.
+
+
+#### Image Manipulation
+
+Interactive manipulation allows users to modify images by dragging points to reshape objects while maintaining realistic appearance.
+
+::: {#fig-intro-image-manipulation}
+{{< video https://vcai.mpi-inf.mpg.de/projects/DragGAN/data/DragGAN.mp4 width=800 >}}
+
+[DragGAN](https://vcai.mpi-inf.mpg.de/projects/DragGAN/) by @pan_drag_2023
+:::
+
+#### Image Translation
+
+
+@fig-intro-pix2pix-example shows an example of image generation from the paper by @image_to_image_isola2018, where images are generated conditioned on image inputs (translated). This can be used, for example, to convert a sketch of an object into a photorealistic depiction of it.
+
+::: {#fig-intro-pix2pix-example width=600}
+
+![]({{< meta params.images_path >}}pix2pix_examples.png)
+
+
+Image Generation example (from @image_to_image_isola2018).
+:::
+
+
+#### Image Super Resolution
+
+In the gaming industry, Deep Learning is used to upscale low-resolution images to high-resolution in real-time (image super resolution), as shown in @fig-intro-dssl. This enables higher frame rates while maintaining visual quality.
+
+::: {#fig-intro-dssl  width=600}
+
+![]({{< meta params.images_path >}}dssl.png)
+
+Nvidia DLSS (Deep Learning Super Sampling) improves gaming performance. [Source](https://images.nvidia.com/aem-dam/Solutions/geforce/news/control-nvidia-dlss-2-0-update/deliver-us-the-moon-nvidia-dlss-2-0-performance-boost.png)
+:::
+
+
+#### Image Colorization
+
+Image colorization can be learned with Deep Learning. This involves transforming a black-and-white image into an RGB image. @fig-intro-colorization-example shows an example.
+
+::: {#fig-intro-colorization-example width=600}
+
+![]({{< meta params.images_path >}}colorization_example.png){width=600}
+
+
+Norwegian Bride (est late 1890s) from DeOldify: [Link](https://github.com/jantic/DeOldify)
+:::
+
+
+#### View Synthesis
+
+In view synthesis, new camera viewpoints of a scene are generated from a model. Neural Radiance Fields (NeRFs) are models that can generate novel views from a set of input images taken from known viewpoints. @fig-intro-nerf shows training data (input images from different angles) and the synthesized novel views the model can generate.
+
+::: {#fig-intro-nerf width=600}
+
+![]({{< meta params.images_path >}}nerf.png){width=800}
+
+
+Neural Radiance Fields - example (from @mildenhall_nerf_2020).
+:::
+
+Modern variants can produce impressive quality, as shown in @fig-intro-gaussian-splatting.
+
+::: {#fig-intro-gaussian-splatting}
+
+{{< video https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/content/videos/bicycle.mp4 width=800 >}}
+
+3D Gaussian Splatting for real-time novel view synthesis @kerbl_3d_2023.
+:::
+
+
+
+#### Unconditional Generation
+
+In unconditional image generation, images are generated that resemble the training data distribution without specific input guidance. While you have no direct control over what specific image is generated, you can often manipulate latent variables to modify generated images or interpolate between samples. @fig-intro-stylegan3 shows photorealistic portraits generated by a model trained on human faces.
+
+::: {#fig-intro-stylegan3 width=400}
+
+![]({{< meta params.images_path >}}stylegan3_examples.png){width=400}
+
+
+StyleGan3 (from @karras_alias-free_2021).
+:::
+
+
+
+#### Text to Image
+
+@fig-stable-diffusion-example shows an example of image generation from the paper by @rombach_high-resolution_2022, where images are generated conditioned on text inputs.
+
+::: {#fig-stable-diffusion-example width=600}
+
+![]({{< meta params.images_path >}}stable_diffusion_example.png){width=600}
+
+
+Image Generation example (from @rombach_high-resolution_2022.)
+:::
+
+On [civitai](https://civitai.com/), there are numerous examples and models to admire or download.
+
+
+
+### Further tasks
+
+There are many more computer vision tasks. The following list is not exhaustive:
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Image Classification
+- Object Detection (and Tracking)
+- Image Segmentation
+  - Semantic Segmentation
+  - Instance Segmentation
+- Optical Character Recognition (OCR)
+- Pose Estimation
+- Facial Recognition
+- Action Recognition
+
+:::
+
+::: {.column width="50%"}
+- Image Generation
+  - Style Transfer
+  - Image Inpainting
+  - Super-Resolution
+  - Text-to-Image (and more)
+- Image Captioning
+- 3D Reconstruction
+- Image Retrieval
+:::
+
+
+::::
+
+### What about videos?
+
+Many of the image-level tasks can be extended to videos. After all, videos are nothing but a sequence of images.
+
+The most recent impressive examples are from video generative models:
+
+
+::: {#fig-intro-sora2}
+
+{{< video https://openaiassets.blob.core.windows.net/$web/nf2/blog-final2/20250929_0337_New%20Video_simple_compose_01k6agr8ctey29mze208t29w38%20(1).mp4 width=800 >}}
+
+[OpenAI Sora 2](https://openai.com/index/sora-2/) - Prompt: a man rides a horse which is on another horse
+:::
+
+
+But also object / keypoint tracking:
+
+::: {#fig-intro-cotracker}
+
+{{< video https://co-tracker.github.io/videos/teaser/rollerblade.mp4 width=800 >}}
+
+[CoTracker](https://co-tracker.github.io/) - Tracking points across video frames for motion analysis (@karaev_cotracker_2024)
+::::
+
+
+::: {.callout-note title="Quiz: Which Application belongs to which task?" collapse="true"}
+
+Match each application to the most appropriate computer vision task:
+
+**Applications:**
+
+1. **Analyzing camera trap images** - Identifying which animals appear in wildlife monitoring photos
+2. **Apple's on-device image categorization and safety filters** - Classifying photos into categories or detecting inappropriate content
+3. **Image search** - Finding visually similar images in a large database
+4. **Finding tumors in medical images** - Precisely localizing and delineating abnormal tissue in CT or MRI scans
+5. **Counting apples in an orchard** - Detecting and tallying individual fruits on trees
+
+**Available Tasks:**
+
+- Image Classification
+- Object Detection
+- Image Segmentation
+- Image Retrieval/Embedding
+
+<details>
+<summary>Click for result</summary>
+
+1. **Analyzing camera trap images** → **Image Classification or Object Detection**
+   - *Image Classification* if you only need to know which species are present (one or more labels per image)
+   - *Object Detection* if you need to count individuals or localize where each animal appears in the frame
+   - The choice depends on the specific analysis requirements and label availability
+
+2. **Apple's on-device image categorization and safety filters** → **Image Classification**
+   - This involves assigning images to predefined categories (e.g., "food", "people", "landscape") or detecting inappropriate content
+   - Multi-label classification is used when an image can belong to multiple categories
+
+3. **Image search** → **Tricky - Not directly a standard task**
+   - This doesn't fit neatly into classification, detection, or segmentation
+   - Closest to *Image Classification* conceptually, as it relies on learned image representations/embeddings
+   - In practice, uses feature extraction (embedding) to compute similarity between images
+   - Often leverages classification networks trained on large datasets, but applied for retrieval rather than classification
+
+4. **Finding tumors in medical images** → **Image Segmentation**
+   - Requires pixel-level precision to delineate tumor boundaries
+   - *Semantic Segmentation* if identifying tumor vs. non-tumor tissue
+   - *Instance Segmentation* if distinguishing between multiple separate tumors
+
+5. **Counting apples in an orchard** → **Object Detection**
+   - Need to localize and count individual apples
+   - Each apple gets a bounding box, and counting is straightforward from detection results
+   - Could also use instance segmentation for more precise boundaries, but detection is typically sufficient
+
+</details>
+
+:::
+
+
+
+
+## Challenges
+
+A number of fundamental challenges must be overcome when analyzing images with machine learning models.
+
+### Semantic Gap {#sec-intro-challenges-semantic-gap}
+
+The semantic gap refers to the discrepancy between the low-level pixel information that can be directly extracted from an image and the high-level semantic interpretation understood by humans. An image consists of millions of pixel values, but deriving semantically meaningful concepts like "cat" or "sitting" from these raw numbers is extremely challenging.
+
+::: {#fig-cat-number-grid}
+
+![]({{< meta params.images_path >}}semantic_gap_comparison.png){width=600}
+
+Illustration of the semantic gap: computers see numbers, humans see meaning.
+:::
+
+### Viewpoint
+
+The semantic meaning of an image remains constant regardless of camera viewpoint, but the pixel values change dramatically. A model must learn to recognize the same object from different angles.
+
+::: {#fig-intro-challenge-viewpoint}
+
+![]({{< meta params.images_path >}}viewpoint_challenge.png){width=600}
+
+The same cat from different viewpoints looks completely different at the pixel level.
+:::
+
+### Deformation
+
+Objects, especially living beings, are often flexible and can appear in vastly different shapes and poses. Models must recognize a cat whether it's curled up sleeping or stretched out running.
+
+::: {#fig-challenge-deformation}
+
+![]({{< meta params.images_path >}}challenge_deformation.png){width=600}
+
+Cats exhibit significant shape variation due to pose changes. [Source](http://cs231n.stanford.edu/)
+:::
+
+### Illumination
+
+Changes in lighting conditions dramatically affect pixel values and can obscure object features. The same object under different lighting can produce vastly different images.
+
+::: {#fig-challenge-illumination}
+
+![]({{< meta params.images_path >}}challenge_illumination.png){width=600}
+
+The same scene under different lighting conditions. [Source](http://cs231n.stanford.edu/)
+:::
+
+### Background Clutter
+
+Background pixels can visually resemble the object of interest, making precise object localization and segmentation difficult. The model must learn to distinguish foreground from background.
+
+::: {#fig-challenge-background}
+
+![]({{< meta params.images_path >}}challenge_background.png){width=600}
+
+Cat camouflaged against a similarly-textured background. [Source](http://cs231n.stanford.edu/)
+:::
+
+### Occlusion
+
+Objects are often partially hidden by other objects in the scene. Models must learn to recognize objects even when only part of them is visible.
+
+::: {#fig-challenge-occlusion}
+
+![]({{< meta params.images_path >}}challenge_occlusion.png){width=600}
+
+Partially occluded cat - only part of the object is visible. [Source](http://cs231n.stanford.edu/)
+:::
+
+### Intra-Class Variation
+
+Objects belonging to the same class can exhibit enormous variability in appearance, color, size, and texture. All cats are cats, but they can look very different from each other.
+
+::: {#fig-challenge-intra-class}
+
+![]({{< meta params.images_path >}}challenge_intra_class_variation.jpg){width=600}
+
+High intra-class variation: all are cats but with vastly different appearances. [Source](https://www.maxpixel.net/Cat-Kittens-Free-Float-Kitten-Rush-Cat-Puppy-555822)
+:::
+
+### Context Dependence
+
+@fig-tiger-context shows that contextual information can be crucial for correct object classification. The surrounding scene provides important cues about what objects are likely to be present.
+
+::: {#fig-tiger-context}
+
+![]({{< meta params.images_path >}}tiger_context.jpg){width=600}
+
+Is this a tiger? Context clues help determine the answer. [Source](https://www.linkedin.com/posts/ralph-aboujaoude-diaz-40838313_technology-artificialintelligence-computervision-activity-6912446088364875776-h-Iq?utm_source=linkedin_share&utm_medium=member_desktop_web)
+:::
+
+@fig-blop-context represents an interesting example where context is important: Shown are four images with severe quality degradation (blur) and oval objects indicated with dashed black lines. Notably, each marked object is exactly identical on pixel level (apart from a rotation) — yet we can form clear hypotheses what each of the objects represents.
+
+::: {#fig-blop-context}
+
+![]({{< meta params.images_path >}}challenges_context_blop.png){width=600}
+
+In the presence of image degradation a visual system (e.g. humans) heavily uses context information. Even though the circled blobs are identical, we interpret them as either: plate, bottle, cell phone, car, pedestrian or shoe. Source @torralba_using_2010
+:::
+
+## From Classical Computer Vision to Deep Learning
+
+
+### The Limitations of Hand-Crafted Features
+
+
+Images typically have very high dimensionality. For example, an RGB image with a resolution of $800 \times 600$ has a dimensionality of $800 \times 600 \times 3 = 1,440,000$. Classical machine learning algorithms often struggle with such high dimensionalities:
+
+- They are very slow or require a lot of memory.
+- They cannot exploit the 2-D structure of images.
+- They are very sensitive to slight changes in images (e.g., rotations).
+- They can easily overfit, as the number of features is close to the number of observations (training set).
+
+When modeling images with (classical) machine learning algorithms, methods from (classical) computer vision are often used. With the help of such methods, features can be extracted from images, and the algorithms can learn on these features. This avoids modeling high-dimensional raw data. @fig-intro-color-histograms, @fig-intro-hog-features, and @fig-intro-bow-features show various feature extraction methods.
+
+@fig-intro-color-histograms shows that, for example, the distribution over the color spectrum can be extracted from an image. This could be an important feature.
+
+::: {#fig-intro-color-histograms}
+
+![]({{< meta params.images_path >}}color_histogram.png){width=600}
+
+
+Color Histograms as Features (Source: @johnson_eecs_2022)
+:::
+
+@fig-intro-hog-features shows that techniques like Histogram of Oriented Gradients (HOG) @dalal_histograms_2005 can be used to extract structures from images. Such features were successfully used for pedestrian detection @dalal_histograms_2005.
+
+::: {#fig-intro-hog-features}
+
+![]({{< meta params.images_path >}}hog_features.png){width=600}
+
+
+HOG as Features (Source: @johnson_eecs_2022)
+:::
+
+@fig-intro-bow-features shows another feature variant. Visual patches can be extracted from a dataset, clustered, and then used as descriptors.
+
+::: {#fig-intro-bow-features}
+
+![]({{< meta params.images_path >}}bag_of_words_features.png){width=600}
+
+
+Bag of (visual) words Features (Source: @johnson_eecs_2022)
+:::
+
+Finally, all features can be combined, often more is better, as shown in @fig-intro-concat-features.
+
+::: {#fig-intro-concat-features}
+
+![]({{< meta params.images_path >}}features_concat.png){width=600}
+
+
+Image Features (Source: @johnson_eecs_2022)
+:::
+
+Depending on the parameterization, HOG descriptors, for example, can be very large for images. The resulting feature vector from @fig-intro-concat-features can still be reduced in dimensionality, e.g., with Principal Component Analysis.
+
+@fig-intro-cifar10 shows the CIFAR10 dataset. A well-known dataset for testing models, consisting of 10 classes with 6,000 images each.
+
+::: {#fig-intro-cifar10}
+
+![]({{< meta params.images_path >}}cifar10.jpg){width=600}
+
+
+CIFAR10 Dataset [Source](https://www.cs.toronto.edu/~kriz/cifar.html)
+:::
+
+
+
+### The ImageNet Breakthrough (2012)
+
+
+To accelerate research in computer vision and make progress more measurable, the PASCAL VOC Challenges were introduced @everingham_pascal_2007. These involved various tasks, such as detecting objects in photographs (@fig-intro-pascal).
+
+::: {#fig-intro-pascal}
+
+![]({{< meta params.images_path >}}pascal_voc_2007.png){width=600}
+
+
+Images/illustrations from [Link](http://host.robots.ox.ac.uk/pascal/VOC/voc2007/) and @johnson_eecs_2022. On the left, you see object annotations in images, and on the right, you see the development of Mean Average Precision over the years.
+:::
+
+The easy availability of images on the internet has made it possible to collect increasingly larger datasets. [ImageNet](https://www.image-net.org/) is such a very large, hierarchically annotated image dataset @deng_imagenet_2009 with over 1.4 million images, categorized into 1,000 object classes. @fig-intro-imagenet illustrates the dataset.
+
+::: {#fig-intro-imagenet}
+
+![]({{< meta params.images_path >}}imagenet.jpg){width=600}
+
+
+[ImageNet](https://www.image-net.org/), [Image Source](https://cs.stanford.edu/people/karpathy/cnnembed/cnn_embed_full_1k.jpg), details in @deng_imagenet_2009
+:::
+
+Since 2010, challenges have been regularly conducted on the ImageNet dataset @russakovsky_imagenet_2015, such as image classification and object detection. @fig-intro-imagenet-perf shows the development of the error rate over time.
+
+::: {#fig-intro-imagenet-perf}
+
+![]({{< meta params.images_path >}}image_net_perf.png){width=600}
+
+
+Source: @johnson_eecs_2022
+:::
+
+
+### End-to-End Learning
+
+The key conceptual shift is from hand-designed feature pipelines to **end-to-end learning**. Rather than designing features manually, the model learns to extract relevant features directly from raw pixels. @fig-intro-end-to-end illustrates this paradigm.
+
+::: {#fig-intro-end-to-end}
+
+![]({{< meta params.images_path >}}end-to-end-ml.png){width=600}
+
+
+Illustration from @johnson_eecs_2022
+:::
+
+Deep learning-based approaches have several key advantages over classical methods:
+
+- **Automatic feature extraction**: No need for hand-crafted features like SIFT or HOG.
+- **Hierarchical representations**: Learn features at multiple levels of abstraction (edges → textures → parts → objects).
+- **Better scaling**: Performance improves with more training data and compute.
+- **End-to-end optimization**: Unified optimization from raw inputs to task outputs.
+- **Transfer learning**: Pre-trained models can be adapted to new tasks with limited data.
+
+
+### Deep Learning History
+
+We will now explore the most important milestones in deep learning for image analysis.
+
+#### Hubel and Wiesel
+
+@hubel_receptive_1959 showed in experiments on cats that there are complex cells/neurons in the visual cortex that only respond to certain patterns. In addition to these complex cells, there are also simple cells that only respond to lines at a certain angle.
+
+::: {#fig-huber-wiesel}
+
+![]({{< meta params.images_path >}}huber_wiesel_cat_experiment.jpg){width=600}
+
+
+Illustration [Source](https://link.springer.com/chapter/10.1007/978-3-030-28954-6_4/figures/1)
+:::
+
+#### Neocognitron
+
+@fukushima_neocognitron_1980 defined a model of a neural network that can recognize visual patterns. It already has the hierarchical structure of a modern convolutional neural network and is inspired by biological neural networks, particularly from the insights of @hubel_receptive_1959.
+
+::: {#fig-neocognitron}
+
+![]({{< meta params.images_path >}}neocogitron.png){width=600}
+
+
+The Neocognitron @fukushima_neocognitron_1980.
+:::
+
+#### Backpropagation
+
+@rumelhart_learning_1986 introduced the backpropagation algorithm in the context of neural networks. This algorithm is used to train modern neural networks: it finds the parameters of an artificial neural network (ANN) to solve a specific task. Backpropagation is based on the chain rule from calculus and is also important for other machine learning models.
+
+::: {#fig-rumalhart-backprop}
+
+![]({{< meta params.images_path >}}rumelhart_backprop.png){width=600}
+
+
+Backpropagation in neural networks @rumelhart_learning_1986.
+:::
+
+
+::: {.callout-tip}
+
+A good video on backpropagation: [3Blue1Brown Backpropagation Calculus](https://www.youtube.com/watch?v=tIeHLnjs5U8)
+
+:::
+
+
+
+#### Convolutional Neural Networks (CNNs)
+
+@lecun_gradient-based_1998 implemented convolutional neural networks (CNNs) to recognize handwritten digits. The architecture is specialized for the 2-D structure of image data and trained a model very similar to modern CNNs, as shown in @fig-lecun-cnn.
+
+::: {#fig-lecun-cnn}
+
+![]({{< meta params.images_path >}}lecun_cnn.png){width=600}
+
+LeNet-5 architecture @lecun_gradient-based_1998: the first successful CNN for digit recognition.
+:::
+
+After AlexNet's breakthrough in 2012 (see previous section), CNNs rapidly evolved and were applied to increasingly complex tasks. Notable developments include:
+
+- **VGGNet (2014)**: Showed that depth matters—16-19 layers with small 3×3 filters
+- **ResNet (2015)**: Introduced skip connections, enabling networks with 50-152 layers
+- **COCO Challenges**: Expanded beyond ImageNet to multi-task benchmarks (detection, segmentation, keypoints)
+- **Mobile architectures**: Efficient CNNs for deployment on phones and embedded devices
+
+#### Other Architectures in Computer Vision
+
+CNNs are still in use today (2025). Meanwhile, there are alternative architectures, such as transformer-based models (@dosovitskiy_image_2020), which are extremely successful in language modeling, or multilayer perceptron-based architectures (@liu_pay_2021).
+
+The question of which architecture type will prevail is open. Currently, it seems that both CNNs and transformer-based models have their place, and often perform similarly (@smith_convnets_2023). Furthermore, hybrid-architectures, combining the strengths of CNNs and transformers have been proposed @vasu_fastvit_2023. Some works use both architecture types, depending on whether parameter efficiency (CNNs) or raw performance (transformers) are prioritized @simeoni_dinov3_2025.
+
+
+
+
+
+
+## References
+
+::: {#refs}
+:::

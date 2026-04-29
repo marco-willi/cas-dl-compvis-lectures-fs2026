@@ -1,0 +1,142 @@
+project:
+  type: website
+  output-dir: _output
+  resources:
+    - assets/augmentation_demo/**
+  render:
+    #- "*.qmd"
+    - pages/lectures/*.qmd
+    - pages/lectures_hs2025/intro.qmd
+    - pages/lectures_hs2025/cnns.qmd
+    - pages/lectures_hs2025/classification.qmd
+    - pages/lectures_hs2025/practical.qmd
+    - pages/lectures_hs2025/representation_learning.qmd
+    - pages/lectures_hs2025/vision_transformers.qmd
+    - pages/background/*.qmd
+    - pages/misc/*.qmd
+    - pages/misc/augmentation_invariance.qmd
+    - pages/slides/*.qmd
+    - "index.qmd"
+    - "!NOTES.md"
+    - "!demos/*"
+
+author: "Marco Willi"
+affiliation: "Institute for Data Science I4DS, FHNW"
+
+execute:
+  freeze: True
+
+pdf-engine: xelatex
+
+website:
+  page-navigation: true
+  title: "CAS Deep Learning - Computer Vision"
+  description: "Homepage for CAS Deep Learning - Computer Vision (Part1) with reading materials and exercises"
+  favicon: "/assets/cv_logo_small.png"
+
+  site-url: "https://marco-willi.github.io/cas-dl-compvis-lectures-fs2026/"
+  repo-url: https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026
+  repo-actions: [issue]
+
+  google-analytics: "G-HZKTBW9290"
+
+  page-footer:
+    right: "This page is built with [Quarto](https://quarto.org/)."
+    left: "&copy; Copyright 2026, Marco Willi"
+    #background: "#D9E3E4"
+
+  sidebar:
+    logo: "/assets/cv_logo_small.png"
+    pinned: true
+    search: true
+    align: center
+    style: "docked"
+    collapse-level: 1
+    tools:
+      - icon: github
+        href: https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026
+        text: "GitHub organization"
+      - icon: code-square
+
+    contents:
+      - text: "Home"
+        href: index.qmd
+      # ------ Background & Preparation------------ #
+      - section: Background & Preparation
+        contents:
+          - pages/background/machine_learning.qmd
+          - pages/background/neural_networks.qmd
+          - pages/background/frameworks.qmd
+      # ------ Lecture ---------------------------- #
+      - section: Lectures
+        contents:
+          - pages/lectures/intro.qmd
+          - pages/lectures/images_as_data.qmd
+          - pages/lectures/cnns.qmd
+          - pages/lectures/classification.qmd
+          - pages/lectures/representation_learning.qmd
+          - pages/lectures/downstream_adaptation.qmd
+          - pages/lectures/vision_transformers.qmd
+          # - pages/lectures/recent_advances.qmd
+          # - pages/lectures/intro_genai.qmd
+          # - pages/lectures/generative_models.qmd
+      # - section: Lectures - Legacy
+      #   contents:
+      #     - pages/lectures_hs2025/intro.qmd
+      #     - pages/lectures_hs2025/cnns.qmd
+      #     - pages/lectures_hs2025/classification.qmd
+      #     - pages/lectures_hs2025/practical.qmd
+      #     - pages/lectures_hs2025/representation_learning.qmd
+      #     - pages/lectures_hs2025/vision_transformers.qmd
+      # - pages/lectures/recent_advances.qmd
+      # - pages/lectures/intro_genai.qmd
+      # - pages/lectures/generative_models.qmd
+      # ------ SLIDES ---------------------------- #
+      - section: Slides
+        contents:
+          - pages/slides/intro.qmd
+          # - pages/slides/images_as_data.qmd
+          # - pages/slides/cnns.qmd
+          # - pages/slides/classification.qmd
+          # - pages/slides/representation_learning.qmd
+          # - pages/slides/downstream_adaptation.qmd
+          # - pages/slides/vision_transformers.qmd
+      # ------ Exercises ---------------------------- #
+      - text: "Exercises"
+        href: pages/misc/exercises.qmd
+      # ------ Training Guide -------------------- #
+      - text: "Training Guide"
+        href: pages/lectures/practical.qmd
+      # # ------ Quiz & Exam Prep---------------------------- #
+      - text: "Quiz & Exam Prep"
+        href: pages/misc/quiz.qmd
+
+      # ------ Demos ---------------------------- #
+      # - section: Demos
+      #   contents:
+      #     - pages/misc/demos.qmd
+      #     - text: "Augmentation Invariance"
+      #       href: pages/misc/augmentation_invariance.qmd
+      # ------ Misc ---------------------------- #
+      - section: Resources
+        contents:
+          - pages/misc/literature.qmd
+          - pages/misc/links.qmd
+          - pages/misc/notation.qmd
+          - pages/misc/student_projects.qmd
+
+bibliography: assets/references.bib
+
+institute: "Institute for Data Science I4DS, FHNW"
+
+format:
+  html:
+    theme: yeti
+    css: styles.css
+    toc: true
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+  # pdf:
+  #   include-in-header:
+  #     - "./assets/_macros.tex"

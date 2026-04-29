@@ -1,0 +1,633 @@
+---
+title: "Visual Representations"
+params:
+   images_path: "/assets/images/representation_learning/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Learning Objectives {.center}
+
+::: {.incremental}
+- Define a representation; why compact embeddings beat raw pixels
+- Distinguish supervised, weakly supervised, self-supervised paradigms
+- Invariance vs. selectivity trade-off
+- Global vs. local representations
+- Adaptation strategies: k-NN, linear probe, LoRA, fine-tune
+:::
+
+
+## Overview {.center}
+
+- Motivation
+- What Is a Representation?
+- Learning Paradigms
+- Global vs. Local
+- Comparing Representations
+- Adaptation
+- Quiz
+
+
+# Motivation
+
+
+## The Semantic Gap
+
+::: {#fig-raw-elephant}
+![[Source](https://unsplash.com/de/fotos/elefantenwanderung-tagsuber-QJbyG6O0ick)]({{< meta params.images_path >}}elephant.jpg){width=55%}
+:::
+
+::: {.fragment}
+A human can describe this image in a sentence — pixels alone are a poor representation of what it depicts.
+:::
+
+
+## Natural Language as Compression {.center}
+
+::: {.fragment}
+"A photograph of an elephant facing the camera, large tusks and ears, standing in a flat savannah, bright daylight, cloudy sky."
+:::
+
+::: {.fragment}
+**Far fewer bits** than the raw RGB image — yet preserves what matters.
+:::
+
+
+## Information Content
+
+::: {.incremental}
+- Raw image: $640 \times 360 \times 3 \times 8 = 5{,}529{,}600$ bits
+- Description: ~$170 \times 8 = 1{,}360$ bits
+- **Compression: ~4000×**
+:::
+
+::: {.fragment}
+This is the spirit of **representation learning** — compact embeddings that retain *task-relevant* information.
+:::
+
+
+## The Vastness of Image Space
+
+::: {#fig-rl-set-of-images}
+![]({{< meta params.images_path >}}set_of_images.png){width=55%}
+
+Possible images: $255^{256 \times 256 \times 3}$ — astronomical. Natural images occupy a tiny manifold.
+:::
+
+::: {.fragment}
+A good embedding finds **coordinates within the natural-image manifold**.
+:::
+
+
+# What Is a Representation?
+
+
+## Definition {.center}
+
+$$
+\vect{z} = f(\vect{x}) \in \mathbb{R}^d
+$$
+
+::: {.fragment}
+- $f$ — encoder
+- $\vect{z}$ — representation / embedding
+- Goal: distances $\|\vect{z}_i - \vect{z}_j\|_2$ reflect **semantic similarity**
+:::
+
+
+## Example Images
+
+::: {#fig-rl-examples layout-nrow=2}
+
+![Elephant — Day 1]({{< meta params.images_path >}}examples/elephant_day_01.png)
+
+![Flipped]({{< meta params.images_path >}}augmented/elephant_flip_horizontal.png)
+
+![Bright]({{< meta params.images_path >}}augmented/elephant_brightness_1.8x.png)
+
+![Elephant — Day 2]({{< meta params.images_path >}}examples/elephant_day_02.png)
+
+![Giraffe — Day]({{< meta params.images_path >}}examples/giraffe_day_01.png)
+
+![Rhino — Night]({{< meta params.images_path >}}examples/rhino_night_01.png)
+
+![Elephant — Night]({{< meta params.images_path >}}examples/elephant_night_01.png)
+
+![Car — Day]({{< meta params.images_path >}}examples/car_day_01.png)
+
+:::
+
+
+## Quiz: How would *you* embed these in 2-D?
+
+::: {#fig-representation-space}
+![]({{< meta params.images_path >}}representation_space.png){width=40%}
+:::
+
+::: {.fragment}
+- Same class & conditions → very close (intra-class variation)
+- Same class, different lighting → moderate distance (illumination invariance)
+- Different classes → far apart (inter-class)
+- Animals vs. cars → very far (domain shift)
+:::
+
+
+## Data Space → Representation Space
+
+::: {#fig-data-representation-spaces}
+![]({{< meta params.images_path >}}data_and_representation_space.png){width=70%}
+
+The encoder $f$ maps $\vect{x}_i$ to $\vect{z}_i$. Semantic relationships emerge as distances and clusters.
+:::
+
+
+## Invariance vs. Selectivity
+
+::: {.fragment}
+**Invariance:**
+$$\|f(\vect{x}) - f(g(\vect{x}))\|_2 < \epsilon$$
+for nuisance $g$ (lighting, flips, crops).
+:::
+
+::: {.fragment}
+**Selectivity:**
+$$\|f(\vect{x}_i) - f(\vect{x}_j)\|_2 > \delta$$
+for semantically distinct $\vect{x}_i, \vect{x}_j$.
+:::
+
+
+## "Nuisance" Is Task-Dependent {.center}
+
+::: {.incremental}
+- **Product retrieval** — color is discriminative; color-invariant ≠ helpful
+- **Medical imaging** — orientation is meaningful; rotation-invariant can destroy info
+- **Size estimation** — scale matters; scale-invariant kills the signal
+:::
+
+::: {.fragment .highlight-red}
+Match invariances to your task. Discard only true nuisances.
+:::
+
+
+## Representation vs. Classification {.center}
+
+::: {.fragment}
+Classification: predict a fixed label.
+:::
+
+::: {.fragment}
+Representation learning: build a **reusable embedding** that transfers across many tasks — *without retraining the encoder*.
+:::
+
+
+# Learning Paradigms
+
+
+## Three Paradigms, Same Architecture {.center}
+
+::: {.incremental}
+- **Supervised** — labels (ResNet/ViT on ImageNet)
+- **Weakly supervised** — image–text pairs (CLIP)
+- **Self-supervised** — no labels (MAE, SimCLR, DINO)
+:::
+
+
+## Supervised Pretraining
+
+::: {#fig-supervised-architecture}
+![]({{< meta params.images_path >}}supervised_learning_representations.png){width=60%}
+
+Encoder + classification head, cross-entropy loss. The penultimate-layer embedding transfers well.
+:::
+
+
+## CLIP — Weak Supervision at Scale
+
+::: {#fig-clip-contrastive}
+![]({{< meta params.images_path >}}clip_contrastive_pre_training.png){width=60%}
+
+Image and text encoders aligned via contrastive loss. Matching pairs pulled together; non-matching pushed apart.
+:::
+
+
+## CLIP — Zero-Shot Classification
+
+::: {.fragment}
+At inference, text prompts become classifiers:
+:::
+
+::: {.fragment}
+"a photo of a {dog, cat, beach, …}" → text embeddings → pick the closest to the image embedding.
+:::
+
+::: {.fragment}
+**No labeled images needed for the target task.**
+:::
+
+
+## CLIP Loss (optional)
+
+Symmetric InfoNCE over image–text pairs:
+
+$$
+\mathcal{L}_{i \to t} = -\frac{1}{N}\sum_i \log \frac{\exp(s_{ii})}{\sum_j \exp(s_{ij})}
+$$
+
+::: {.fragment}
+$s_{ij} = \alpha \, \tilde{\mathbf{v}}_i^\top \tilde{\mathbf{t}}_j$ — cosine similarity scaled by learned temperature $\alpha$.
+:::
+
+::: {.fragment}
+$$\mathcal{L}_{\text{CLIP}} = \tfrac{1}{2}(\mathcal{L}_{i \to t} + \mathcal{L}_{t \to i})$$
+:::
+
+
+## Self-Supervised Learning {.center}
+
+::: {.fragment}
+**No human labels.** Training signal comes from the data itself.
+:::
+
+::: {.fragment}
+- Reconstruct masked patches (MAE)
+- Match augmented views (SimCLR)
+- Match teacher's distribution (DINO)
+:::
+
+
+## Masked Autoencoding (MAE)
+
+::: {#fig-mae-architecture}
+![]({{< meta params.images_path >}}masked_auto_encoder.png){width=70%}
+
+Mask ~75% of patches → encoder sees only visible patches → decoder reconstructs the rest.
+:::
+
+::: {.fragment}
+Post-training, **discard the decoder** and use the encoder for downstream tasks.
+:::
+
+
+## MAE Loss (optional)
+
+$$
+\mathcal{L}_{\text{MAE}} = \frac{1}{|\mathcal{M}|} \sum_{p \in \mathcal{M}} \|\hat{X}_p - \tilde{X}_p\|_2^2
+$$
+
+::: {.fragment}
+Only the masked patches contribute. Targets are normalized pixels.
+:::
+
+::: {.fragment}
+High mask ratio + asymmetric encoder/decoder → **efficient pretraining, strong transfer**.
+:::
+
+
+## Contrastive Learning — SimCLR
+
+::: {#fig-ssl-contrastive layout-ncol=2}
+
+![]({{< meta params.images_path >}}self_supervised_contrastive1.png)
+
+![]({{< meta params.images_path >}}self_supervised_contrastive2.png)
+
+Pull augmented views of the same image together; push other images apart.
+:::
+
+
+## InfoNCE Loss (optional)
+
+$$
+\mathcal{L}_{\text{InfoNCE}} = -\log \frac{\exp(\text{sim}(z_i, z_i^+)/\tau)}{\exp(\text{sim}(z_i, z_i^+)/\tau) + \sum_j \exp(\text{sim}(z_i, z_j^-)/\tau)}
+$$
+
+::: {.fragment}
+- $z_i^+$ — augmented view of same image
+- $z_j^-$ — other images in the batch
+- Needs **large batches** (256–4096) for enough negatives
+:::
+
+
+## Self-Distillation — DINO
+
+::: {#fig-dino-principle}
+![]({{< meta params.images_path >}}dino_principle.png){width=55%}
+
+Student matches the **teacher**'s output distribution. Teacher = EMA of student weights.
+:::
+
+::: {.fragment}
+**No explicit negatives.** Smaller batches work.
+:::
+
+
+## DINO Series {.center}
+
+::: {.incremental}
+- **DINO** (@caron_emerging_2021)
+- **DINOv2** (@oquab_dinov2_2024)
+- **DINOv3** (@simeoni_dinov3_2025)
+:::
+
+::: {.fragment}
+Bonus: produces strong **global** ([CLS]) **and local** (patch) features.
+:::
+
+
+## DINOv3 Composite Loss (optional)
+
+::: {#fig-rl-dinov3-losses}
+![]({{< meta params.images_path >}}dinov3_losses_overview.png){width=70%}
+
+Global DINO · Local iBOT · KoLeo uniformity · Gram anchoring.
+:::
+
+
+## DINOv3 Components (optional)
+
+$$
+\mathcal{L} = \mathcal{L}_{\text{DINO}} + \lambda_{\text{iBOT}}\, \mathcal{L}_{\text{iBOT}} + \lambda_{\text{KoLeo}}\, \mathcal{L}_{\text{KoLeo}} + \lambda_{\text{Gram}}\, \mathcal{L}_{\text{Gram}}
+$$
+
+::: {.fragment}
+- **DINO** — student matches teacher distribution (global crops)
+- **iBOT** — masked patch prediction
+- **KoLeo** — push [CLS] embeddings apart (uniformity)
+- **Gram** — patch similarity consistency (refinement)
+:::
+
+
+## DINOv3 Overview Video
+
+{{< video https://www.youtube.com/watch?v=-eOYWK6m3i8 width=1200 height=600 >}}
+
+Meta's intro to DINOv3 — improvements over DINOv2 and the self-distillation approach.
+
+
+# Global vs. Local Representations
+
+
+## Global
+
+::: {.fragment}
+A **single embedding** per image — [CLS] token or global average pooling.
+:::
+
+::: {.fragment}
+Captures image-level semantics. Use for:
+
+- Image classification
+- Image retrieval
+- Zero-shot recognition (CLIP)
+:::
+
+
+## Local
+
+::: {.fragment}
+**Spatially-resolved** patch tokens. Each token describes a region.
+:::
+
+::: {.fragment}
+Preserves position. Use for:
+
+- Semantic segmentation
+- Object detection
+- Dense prediction (depth, pose)
+:::
+
+
+## DINOv3 Local Features
+
+::: {#fig-dinov3-local-features}
+![]({{< meta params.images_path >}}dinov3_local_cosine_similarity_example.png){width=60%}
+
+Cosine similarity at query points (red crosses). Semantically similar regions cluster — even **across images**.
+:::
+
+
+## Quiz: Web-Shop Product Retrieval
+
+Find shoes that look similar to the one a customer is viewing.
+
+**Global or local embedding?**
+
+::: {.fragment}
+**Global** — the query is image-level ("looks like *this* shoe overall").
+:::
+
+::: {.fragment}
+A single [CLS] token enables fast **approximate nearest-neighbor** search over millions of items.
+:::
+
+::: {.fragment}
+For *defect detection on the product surface* → local patch tokens.
+:::
+
+
+# Comparing Representations
+
+
+## The Test Images
+
+::: {#fig-images-overview}
+![]({{< meta params.images_path >}}images_overview.png){width=80%}
+
+Example images used to compare representations.
+:::
+
+
+## Cosine Similarity & Euclidean
+
+$$
+\text{sim}_{\cos}(\vect{z}_i, \vect{z}_j) = \frac{\vect{z}_i^\top \vect{z}_j}{\|\vect{z}_i\|_2 \|\vect{z}_j\|_2} \in [-1, 1]
+$$
+
+::: {.fragment}
+$$
+d_{\text{L2}}(\vect{z}_i, \vect{z}_j) = \|\vect{z}_i - \vect{z}_j\|_2
+$$
+:::
+
+
+## Pixel Space
+
+::: {#fig-rl-similarity-pixel-space}
+![]({{< meta params.images_path >}}similarity_pixel_space.png){width=55%}
+
+Raw pixels → low-level appearance, **no semantic structure**.
+:::
+
+
+## ResNet-50 (Supervised)
+
+::: {#fig-rl-similarity-resnet}
+![]({{< meta params.images_path >}}similarity_resnet50.png){width=55%}
+
+Semantic grouping (elephants cluster), some sensitivity to lighting.
+:::
+
+
+## CLIP (Multimodal)
+
+::: {#fig-rl-similarity-clip}
+![]({{< meta params.images_path >}}similarity_clip.png){width=55%}
+
+Language-aligned structure. Good across categories; less differentiation **within** a category.
+:::
+
+
+## DINOv2 (Self-Supervised)
+
+::: {#fig-rl-similarity-dinov2}
+![]({{< meta params.images_path >}}similarity_dinov2.png){width=55%}
+
+Sharp class boundaries, strong within-category structure. Pure vision objective preserves visual detail.
+:::
+
+
+## Which Representation Wins?
+
+::: {.incremental}
+1. **DINOv2/v3** — default for vision-centric tasks
+2. **CLIP** — when zero-shot or text alignment is critical
+3. **Supervised CNN** — when compute is limited and broad categories suffice
+4. **Pixel space** — never (only exact-duplicate detection)
+:::
+
+
+## Warning: Task-Relevant Invariance {.center}
+
+::: {.incremental}
+- Color-invariant for **flower** classification → red vs. yellow tulips collapse
+- Rotation-invariant for **medical** imaging → orientation matters
+- Scale-invariant for **size** estimation → kills the signal
+:::
+
+::: {.fragment .highlight-red}
+**Preserve information** — let the downstream model decide what to ignore.
+:::
+
+
+# Adapting Pretrained Models {.center}
+
+
+## Adaptation Hierarchy
+
+::: {.incremental}
+1. **k-NN** — no training, instant quality check
+2. **Linear probe** — frozen encoder, train a linear head
+3. **LoRA / Adapters** — parameter-efficient fine-tuning
+4. **Partial fine-tune** — unfreeze top layers
+5. **Full fine-tune** — last resort, large datasets
+:::
+
+::: {.fragment}
+Choose by **dataset size**, **domain similarity**, **compute budget**.
+:::
+
+::: {.fragment}
+Next lecture: code, decision framework, examples.
+:::
+
+
+# Quiz
+
+
+## Q1: Why Pixel Similarity Fails
+
+Why don't raw-pixel distances capture semantic relationships?
+
+::: {.fragment}
+Pixels measure **low-level appearance** (color, lighting, alignment) — not semantics.
+:::
+
+::: {.fragment}
+Same elephant under different lighting → large pixel distance, despite identical semantics.
+:::
+
+::: {.fragment}
+Good representations compress $255^{H \times W \times C}$ → semantic coordinate system.
+:::
+
+
+## Q2: Invariance ↔ Selectivity Trade-off
+
+Give an example where **too much invariance** hurts.
+
+::: {.fragment}
+**Flower classification with color-invariant features** — red rose vs. yellow rose collapse to the same embedding.
+:::
+
+::: {.fragment}
+Other examples:
+
+- Medical: rotation-invariance kills anatomical orientation
+- Size estimation: scale-invariance removes the signal
+- Materials: texture-invariance destroys wood vs. metal
+:::
+
+
+## Q3: DINO vs. SimCLR
+
+What is the key advantage of self-distillation (DINO) over contrastive (SimCLR)?
+
+::: {.fragment}
+**No explicit negatives needed** — works with smaller batches.
+:::
+
+::: {.fragment}
+- SimCLR — needs 256–4096 batches for enough negatives
+- DINO — student matches teacher (EMA), centering + sharpening yield emergent clustering
+:::
+
+::: {.fragment}
+Bonus: DINO produces **both global and local** features.
+:::
+
+
+## Q4: Global vs. Local
+
+When global, when local?
+
+::: {.fragment}
+**Global** — image-level: classification, retrieval, zero-shot
+:::
+
+::: {.fragment}
+**Local** — pixel/region-level: segmentation, detection, depth
+:::
+
+::: {.fragment}
+Modern ViTs (DINOv2/v3) provide **both** — [CLS] for global, patch tokens for dense.
+:::
+
+
+# Summary {.center}
+
+
+## Key Takeaways
+
+::: {.incremental}
+- Representation = compact embedding $\vect{z} = f(\vect{x})$ where distances reflect semantics
+- **Invariance vs. selectivity** — match to your task
+- Three paradigms: supervised · weakly supervised (CLIP) · self-supervised (MAE, SimCLR, DINO)
+- **Global vs. local** — image-level vs. region-level tasks
+- For vision-centric retrieval: **DINOv2/v3 > CLIP > supervised > pixels**
+- Adaptation: start simple (k-NN, linear probe) → fine-tune only when needed
+:::
+
+
+# References
+
+::: {style="font-size: 50%;"}
+
+::: {#refs}
+:::
+
+:::

@@ -1,0 +1,438 @@
+---
+title: "Image Classification"
+params:
+   images_path: "/assets/images/classification/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Learning Objectives {.center}
+
+::: {.incremental}
+- Distinguish multi-class, binary, multi-label, multi-task classification
+- Role of **softmax**: logits → probabilities
+- **Cross-entropy** loss and why it punishes confident wrong predictions
+- Architecture progression: AlexNet → VGG → ResNet → ConvNeXt
+- Why **residual connections** matter
+:::
+
+
+## Overview {.center}
+
+- The Classification Task
+- Modelling: Softmax & Cross-Entropy
+- Architecture Overview
+
+
+# The Classification Task
+
+
+## Image Classification
+
+::: {#fig-classification-classification-illustration}
+![]({{< meta params.images_path >}}classification_illustration.jpg){width=60%}
+
+Assign an image to one of $K$ predefined categories.
+:::
+
+::: {.fragment}
+The task that sparked the deep learning revolution (@krizhevsky_imagenet_2012).
+:::
+
+
+## Variants
+
+::: {.incremental}
+- **Multi-class**: exactly one of $K > 2$ classes (species ID)
+- **Binary**: $K = 2$ (animal present vs. empty)
+- **Multi-label**: multiple labels from *one* shared set (deer + bird)
+- **Multi-task**: multiple *separate* label sets (species, behavior, time-of-day)
+:::
+
+
+## Multi-label vs. Multi-task
+
+| Property | Multi-label | Multi-task |
+|----------|-------------|------------|
+| Label sets | One shared set | Multiple separate sets |
+| Example | deer ✓, bird ✓, fox ✗ | species: deer / behavior: grazing / time: day |
+| Output head | One head, sigmoid per class | One head per task |
+| Loss | BCE per class | Sum of per-task losses |
+
+
+## Example: ImageNet
+
+::: {#fig-image-classifier-example}
+![Source: @krizhevsky_imagenet_2012]({{< meta params.images_path >}}image_classification_example.png){width=70%}
+
+1,000 classes. AlexNet's breakthrough demonstration.
+:::
+
+
+## Example: Camera Traps
+
+::: {#fig-classification-camera-traps}
+![]({{< meta params.images_path >}}camera_traps.png){width=60%}
+
+Classify wildlife images by species.
+:::
+
+
+# Modelling Classification
+
+
+## Parametric Approach
+
+A model with parameters $\theta$ outputs a score $\hat{y}^{(i)}$:
+
+$$
+\hat{y}^{(i)} = f(\theta, \vect{x}^{(i)})
+$$
+
+::: {.fragment}
+$\theta$ — all learnable parameters (conv filters, FC weights, biases, …).
+:::
+
+
+## Softmax Classifier
+
+Interpret outputs as **class probabilities**:
+
+$$
+P(Y = k \mid X = \vect{x}^{(i)}) = \sigma(\vect{z})_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}
+$$
+
+::: {.fragment}
+- $\vect{z}$ — **logits** (unbounded, real-valued)
+- $\sigma(\vect{z})$ — valid probability distribution (sums to 1, all in $[0, 1]$)
+:::
+
+
+## Logits → Probabilities
+
+```{python}
+#| eval: true
+#| echo: false
+#| label: fig-classification-logits-to-probs
+#| fig-cap: "Logits (left) → probabilities via softmax (right)."
+
+from matplotlib import pyplot as plt
+import numpy as np
+import seaborn as sns
+
+np.random.seed(123)
+logits = np.random.normal(size=(10,)) * 2
+probs = np.exp(logits) / np.exp(logits).sum()
+
+fig, ax = plt.subplots(ncols=2, figsize=(9, 3))
+sns.barplot(x=list(range(10)), y=logits, ax=ax[0]).set(title="Logits")
+sns.barplot(x=list(range(10)), y=probs, ax=ax[1]).set(title="Softmax", ylim=(0, 1))
+plt.tight_layout()
+plt.show()
+```
+
+::: {.fragment}
+Logits can be any real number — softmax always produces a valid distribution.
+:::
+
+
+## Cross-Entropy: The Idea
+
+::: {.fragment}
+A good model assigns **high probability to the correct class**.
+:::
+
+::: {.fragment}
+- True class "deer", $P(\text{deer}) = 0.95$ → small loss
+- True class "deer", $P(\text{deer}) = 0.02$ → very large loss (confidently wrong)
+:::
+
+
+## Cross-Entropy Formula
+
+For one sample with one-hot label $\vect{y}$ and prediction $\hat{\vect{y}}$:
+
+$$
+CE = -\sum_{j=1}^K y_j \log \hat{y}_j
+$$
+
+::: {.fragment}
+Since $\vect{y}$ is one-hot (only true class $c$ has $y_c = 1$):
+
+$$
+CE = -\log \hat{y}_c
+$$
+:::
+
+::: {.fragment}
+Just the **negative log-probability of the correct class**.
+:::
+
+
+## Cross-Entropy: Full Dataset
+
+$$
+L(\m{X}, \vect{y}, \theta) = -\frac{1}{N} \sum_{i=1}^N \sum_{j=1}^K y_j^{(i)} \log \hat{y}_j^{(i)}
+$$
+
+::: {.fragment}
+Equivalent to **maximum likelihood** under the categorical model.
+:::
+
+
+## True vs. Predicted
+
+```{python}
+#| eval: true
+#| echo: false
+#| label: fig-classification-cross-entropy
+#| fig-cap: "True distribution (left) vs. predicted (right). CE measures the mismatch."
+
+from matplotlib import pyplot as plt
+import numpy as np
+import seaborn as sns
+
+np.random.seed(123)
+k = 5
+logits = np.random.normal(size=(5,)) * 2
+y_hat = np.exp(logits) / np.exp(logits).sum()
+y_true = np.zeros_like(logits)
+y_true[1] = 1
+
+fig, ax = plt.subplots(ncols=2, figsize=(9, 3))
+sns.barplot(x=list(range(k)), y=y_true, ax=ax[0]).set(title="True Distribution")
+sns.barplot(x=list(range(k)), y=y_hat, ax=ax[1]).set(title="Predicted Distribution", ylim=(0, 1))
+plt.tight_layout()
+plt.show()
+```
+
+
+## Asymmetric Penalty {.center}
+
+::: {.incremental}
+- **Confident & correct** ($\hat{y}_c \to 1$) → loss $\to 0$
+- **Uncertain** ($\hat{y}_c = 0.5$) → loss $\approx 0.69$
+- **Confident & wrong** ($\hat{y}_c \to 0$) → loss $\to \infty$
+:::
+
+::: {.fragment}
+Drives models to be both **accurate** and **well-calibrated**.
+:::
+
+
+## Quiz: Which Loss is Higher?
+
+A model predicts:
+
+- $P(\text{deer}) = 0.4$ for an image that **is** a deer
+- $P(\text{deer}) = 0.6$ for an image that is a **fox**
+
+Which prediction gives the higher cross-entropy?
+
+::: {.fragment}
+**The first.** $-\log(0.4) \approx 0.92$ — low probability assigned to the true class.
+:::
+
+::: {.fragment}
+For the second image, the true class is *fox* — only $P(\text{fox})$ matters, not $P(\text{deer})$.
+:::
+
+
+## Maximum Likelihood Connection
+
+::: {.fragment}
+Likelihood of the dataset:
+$$
+P(\vect{y} \mid \theta, \m{X}) = \prod_{i=1}^N \prod_{j=1}^K P(Y = j \mid X = \vect{x}^{(i)})^{y_j^{(i)}}
+$$
+:::
+
+::: {.fragment}
+Take $-\log$ → minimize → identical to cross-entropy.
+:::
+
+::: {.fragment}
+**Minimizing CE = maximizing likelihood.**
+:::
+
+
+# Architecture Overview
+
+
+## The CNN Pipeline
+
+::: {.fragment}
+A CNN backbone extracts hierarchical features.
+:::
+
+::: {.fragment}
+A classification head (e.g. an FC layer) maps features → $K$ logits.
+:::
+
+::: {.fragment}
+Softmax + cross-entropy turn logits into a learnable classifier.
+:::
+
+
+## Architecture Progression {.center}
+
+::: {.incremental}
+- **AlexNet (2012)** — 8 layers, GPU-trained, won ImageNet
+- **VGG (2014)** — 16–19 layers, all $3 \times 3$ kernels
+- **ResNet (2015)** — 50–152+ layers via residual connections
+- **ConvNeXt (2022)** — modernized CNN, competitive with Vision Transformers
+:::
+
+
+## AlexNet (2012)
+
+::: {#fig-classification-alexnet2}
+![@prince_understanding_2023]({{< meta params.images_path >}}alexnet_illustration.jpg){width=55%}
+
+5 conv + 3 FC layers, 1000-way softmax. Trained on **two** GTX 580 GPUs (3 GB each).
+:::
+
+::: {.fragment}
+The network had to be **split across GPUs** due to memory limits.
+:::
+
+
+## AlexNet — Loading via torchvision
+
+```{python}
+#| eval: false
+#| echo: true
+
+import torch
+import torchvision.models as models
+import torchinfo
+
+alexnet = models.alexnet()
+x = torch.zeros(1, 3, 224, 224)
+yhat = alexnet(x)
+
+print(torchinfo.summary(alexnet, input_size=(1, 3, 224, 224)))
+```
+
+
+## VGG (2014)
+
+::: {#fig-classification-vgg-arch}
+![@prince_understanding_2023]({{< meta params.images_path >}}vgg_illustration.jpg){width=55%}
+
+16–19 layers using only $3 \times 3$ kernels.
+:::
+
+::: {.fragment}
+**Design rule:** when spatial size halves, double the number of filters (preserves time complexity).
+:::
+
+
+## ResNet — The Problem
+
+::: {#fig-classification-resnet-motivation1}
+![Source: @He2016]({{< meta params.images_path >}}resnet_test_error.jpg){width=55%}
+
+A 56-layer net is **worse** than a 20-layer net — on **train and test**.
+:::
+
+::: {.fragment}
+Not overfitting — an **optimization problem**.
+:::
+
+
+## Residual Connections
+
+::: {#fig-classification-residual-connection}
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}residual_connection.jpg){width=55%}
+:::
+
+$$
+\vect{x}_{l+1} = \vect{x}_l + F(\vect{x}_l)
+$$
+
+::: {.fragment}
+Learn the **change**, not the full transformation.
+
+If a layer has nothing to add: $F(\vect{x}_l) \approx 0$ → identity.
+:::
+
+
+## Why Residuals Work
+
+::: {#fig-classification-skip-loss-landscape}
+![Source: @li_visualizing_2018]({{< meta params.images_path >}}loss_landscape_skip.png){width=70%}
+
+Loss landscape: without (left) vs. with (right) skip connections.
+:::
+
+::: {.fragment}
+Skip connections **smooth the loss surface** → optimization works.
+:::
+
+
+## ConvNeXt (2022)
+
+::: {#fig-classification-convnext}
+![@liu_convnet_2022]({{< meta params.images_path >}}convnext.png){width=60%}
+
+Modernizes ResNet with ideas from the Transformer era.
+:::
+
+::: {.fragment}
+- Larger kernels
+- Different activations
+- LayerNorm instead of BatchNorm
+- Depthwise separable convolutions
+:::
+
+
+## Which Architecture? {.center}
+
+::: {.fragment .highlight-red}
+**Don't be a hero.**
+:::
+
+::: {.fragment}
+Use proven, off-the-shelf architectures:
+:::
+
+::: {.incremental}
+- **ResNet-50 / ResNet-101** — reliable baseline (slightly dated)
+- **EfficientNet** — when size or speed matters
+- **ConvNeXt** — SOTA CNN, competitive with ViTs
+:::
+
+::: {.fragment}
+Choose based on accuracy, FLOPs, memory, available data.
+:::
+
+
+# Summary {.center}
+
+
+## Key Takeaways
+
+::: {.incremental}
+- Classification has variants — **multi-class, binary, multi-label, multi-task**
+- **Softmax** turns logits into a valid probability distribution
+- **Cross-entropy** = $-\log \hat{y}_c$ — punishes confident wrong predictions hard
+- Architecture trend: **AlexNet → VGG → ResNet → ConvNeXt**
+- **Residual connections** smooth the loss landscape, enable depth
+- **Don't be a hero** — start with a proven backbone
+:::
+
+
+# References
+
+::: {style="font-size: 50%;"}
+
+::: {#refs}
+:::
+
+:::

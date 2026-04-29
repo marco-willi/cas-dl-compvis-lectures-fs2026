@@ -1,0 +1,301 @@
+---
+title: "Training Guide"
+params:
+   images_path: "/assets/images/practical/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+::: {.callout-tip title="Learning Objectives" collapse="true"}
+After reading this guide you should be able to:
+
+- Apply a systematic recipe for training deep learning models from data inspection through regularization.
+- Identify common issues in image datasets: corrupted images, class imbalance, ambiguous labels, and resolution requirements.
+- Set up a debugging pipeline using input-independent baselines, batch overfitting, and input visualization.
+- Select appropriate regularization techniques — data augmentation, early stopping, weight decay, transfer learning — for a given scenario.
+- Choose a modern pretrained backbone (DINOv2/v3, SigLIP, ConvNeXt-V2, SAM, EVA) and decide on a fine-tuning strategy given dataset size and domain.
+:::
+
+::: {.callout-tip title="TLDR Recap" collapse="true"}
+
+**4-Step Training Recipe**
+
+1. **Know the data** — inspect distributions, corrupted samples, class imbalance, label quality
+2. **Build a baseline pipeline** — define metrics, fix random seeds, verify with simple models
+3. **Overfit first** — achieve strong training performance before worrying about generalization
+4. **Regularize** — augmentation, early stopping, weight decay, transfer learning
+
+**Key Insights**
+
+- ML frameworks are "leaky abstractions" — bad hyperparameters fail silently, not loudly
+- An input-independent baseline reveals whether a model is learning from the data at all
+- Data augmentation is the most practical form of regularization for image tasks
+- Transfer learning is the default starting point — pre-trained features generalize well
+- Modern pretrained backbones (DINOv2/v3, SigLIP, ConvNeXt-V2) dramatically outperform ImageNet-only pretraining; choose based on task, domain, and compute budget
+
+**Weight Decay**
+
+$$\theta_{t+1} = \theta_t (1 - \lambda) - \eta \nabla J(\theta)$$
+
+- Penalizes large weights at each update step, encouraging simpler models
+
+:::
+
+
+## A Recipe for Training Neural Networks
+
+How does one successfully train a deep learning model? Modern ML frameworks make training appear straightforward, but Karpathy observed that these abstractions are **leaky**: without a solid understanding of what happens inside, backpropagation, gradient descent, loss dynamics, mistakes creep in undetected. A model with a learning rate that is too high may converge to a poor solution without raising any error. A data preprocessing bug may silently corrupt every batch. **Training neural networks fails silently.**
+
+```{python}
+#| eval: false
+#| echo: true
+
+your_data = # plug your awesome dataset here
+model = SuperCrossValidator(SuperDuper.fit, your_data, ResNet50, SGDOptimizer)
+```
+
+
+
+The recipe below, based on Karpathy's approach [A Recipe for Training Neural Networks](http://karpathy.github.io/2019/04/25/recipe/), structures the process into four phases and helps avoid the most significant pitfalls. Steps 5 (hyperparameter search) and 6 (final squeezing techniques such as ensembling and Mixup) exist but are beyond the scope of this guide.
+
+
+## Step 1: Know the Data
+
+Before fitting any model, inspect the dataset thoroughly. For images in particular, one can examine sample data points, their distribution, label quality, and potential anomalies. Corrupted images, skewed class distributions, duplicates, and ambiguous labels can all be found at this stage. Addressing them early is far cheaper than debugging a trained model.
+
+@fig-practical-camera-traps-corrupt illustrates that even technically usable images may be severely distorted. Detecting these early informs preprocessing decisions.
+
+::: {#fig-practical-camera-traps-corrupt}
+![ ]({{< meta params.images_path >}}camera_traps_corrupt.jpg){width=600}
+
+Examples of images from camera traps distorted by heat. They may still be usable, but their quality must be assessed.
+:::
+
+@fig-practical-camera-traps-difficulties shows typical challenging cases in modeling images from camera traps.  For example, small regions of interest  (e.g. a small or distant animal) suggest that aggressive downscaling (e.g., to 224×224) may removes the relevant patterns entirely.
+
+::: {#fig-practical-camera-traps-difficulties}
+![ ]({{< meta params.images_path >}}cam_trap_difficulties.png){width=600}
+
+Examples of challenging cases in camera trap images. Small ROIs suggest that resolution requirements should be assessed carefully. Source: @Beery2018.
+:::
+
+@fig-practical-camera-traps-dist shows that class imbalance, for camera trap datasets, is the norm rather than the exception. In this camera trap dataset, a single species ("Deer") comprises approximately 65% of images. A model trained on such a distribution might be biased to predict the majority class.
+
+::: {#fig-practical-camera-traps-dist}
+![ ]({{< meta params.images_path >}}cam_trap_dist2.jpg){width=600}
+
+Species distribution in a typical camera trap dataset. Heavy imbalance toward a few dominant species is common.
+:::
+
+
+Sometimes, one may also encounter certain limitations, such as images that are ambiguous or belong to multiple classes. @fig-practical-camera-traps-multi shows an example with a herd of animals containing multiple species (Thomson's and Grant's Gazelle). Here, image classification does not work well and object detection is a more natural choice.
+
+::: {#fig-practical-camera-traps-multi}
+![ ]({{< meta params.images_path >}}multi_species.JPG){width=600}
+
+An image from a camera trap containing multiple species simultaneously. Standard multi-class classification cannot handle this without modification.
+:::
+
+**A practical data inspection checklist:**
+
+- Sample and examine images across all classes
+- Check class distribution; flag severe imbalances
+- Look for corrupted, blurry, or ambiguous images
+- Assess whether the default image resolution is sufficient for the task
+- Evaluate label quality: Can a domain expert reliably label each image?
+
+
+## Step 2: Build a Baseline Pipeline
+
+With a clear picture of the dataset, the next step is to establish a training / evaluation pipeline (see @fig-ml-prozess) before fitting any serious model. Define the performance metric, create train/validation/test splits, and implement logging. Starting with a simple, well-understood model reduces the chance of undetected bugs.
+
+::: {#fig-ml-prozess}
+![ ]({{< meta params.images_path >}}ml_process_raschka.png){width=800}
+
+The components of a typical machine learning process. Source: @raschka_python_2020.
+:::
+
+
+**Debugging tips for the baseline phase:**
+
+1. **Fix the random seed.** Results must be reproducible before any meaningful comparison can be made.
+2. **Train an input-independent baseline.** Set all input pixels to zero and train. Since the model receives no signal from the image, it will learn to predict the class distribution of the training set. Any model that performs *worse* than this has a fundamental pipeline error.
+3. **Overfit a single batch.** Feed the same small batch repeatedly. If training loss does not reach near-zero, there is a bug in the forward pass or loss computation.
+4. **Visualize inputs just before the forward pass.** Inspect what the model actually receives — augmentation bugs and preprocessing errors are often invisible until rendered.
+5. **Track fixed validation samples throughout training.** Watching the same examples evolve over epochs reveals how the model's behavior changes.
+
+::: {.callout-note title="Quiz: Input-Independent Baseline" collapse="true"}
+
+What output would you expect from a model trained on zeroed-out inputs?
+
+<details>
+<summary>Click for result</summary>
+
+Since the model receives no information from the image, it cannot distinguish between individual samples. To minimize average cross-entropy loss, the optimal strategy is to output the class distribution of the training set. For example, if 65% of images are deer, the model will predict approximately $P(\text{deer}) \approx 0.65$ for every input.
+
+This serves as a sanity check: if the actual model performs *worse* than this baseline, something is fundamentally wrong with the training pipeline.
+
+</details>
+
+:::
+
+A human baseline is also worth establishing where possible. For certain tasks, labels are subjective — annotators may disagree — which implies an upper bound on achievable performance. In the Snapshot Serengeti camera trap dataset, amateur annotators achieved 96.6% agreement with expert labels, setting a concrete ceiling for automated classification.
+
+::: {#fig-practical-camera-trap-difficult}
+![ ]({{< meta params.images_path >}}camera_trap_difficult.jpeg){width=600}
+
+A challenging image from a camera trap dataset. Establishing how reliably humans can label such images sets a meaningful performance ceiling.
+:::
+
+
+## Step 3: Overfit First
+
+At this point the dataset is understood and the evaluation pipeline is verified. The focus now shifts to achieving strong *training* performance, deliberately setting aside generalization for the moment.
+
+For model selection, follow the principle: **don't be a hero.** Use an established architecture such as ResNet-50 rather than designing a custom one. For the optimizer, Adam is a conservative and generally effective choice — it is less sensitive to the learning rate than SGD, which reduces the chance of a poor hyperparameter choice masking a real problem.
+
+If the model cannot overfit the training set at this stage, the problem is in the architecture or training setup — not in regularization. Only move to Step 4 once training performance is strong.
+
+
+## Step 4: Regularize
+
+With strong training performance established, the goal is now to improve performance on the validation set. Regularization techniques reduce the gap between training and validation by limiting overfitting.
+
+### More Training Data
+
+The most effective regularizer is simply more labeled data. If collecting additional data is feasible, a learning curve — training models on subsets of increasing size and observing validation performance — estimates how much additional data would help.
+
+::: {#fig-practical-learning-curve}
+![ ]({{< meta params.images_path >}}learning_curve.jpg){width=600}
+
+Example of a learning curve. As training set size increases, validation performance improves. Source: @raschka_python_2020.
+:::
+
+### Data Augmentation
+
+When additional data cannot be collected, augmentation generates new training examples by applying random transformations to existing images on-the-fly. Each epoch the model sees slightly different versions of the same images, which reduces memorization.
+
+Common augmentation families:
+
+- **Geometric**: random horizontal flips, crops, rotations, scaling
+- **Photometric**: brightness, contrast, saturation, grayscale
+- **Advanced**: Mixup (blending two images), CutMix (swapping patches between images), RandAugment (automated policy search)
+
+Libraries such as [AugLy](https://github.com/facebookresearch/AugLy) (@fig-practical-augly), [Albumentations](https://github.com/albumentations-team/albumentations) (@fig-practical-albumentations), and [Kornia](https://kornia.readthedocs.io/) (@fig-practical-kornia) extend PyTorch's built-in transforms with more complex augmentation pipelines.
+
+::: {#fig-practical-augly}
+![ ]({{< meta params.images_path >}}augly.jpg){width=600}
+
+AugLy augmentation library.
+:::
+
+::: {#fig-practical-albumentations}
+![ ]({{< meta params.images_path >}}albumentations.jpg){width=600}
+
+Albumentations augmentation library.
+:::
+
+::: {#fig-practical-kornia}
+![ ]({{< meta params.images_path >}}kornia.png){width=600}
+
+Kornia augmentation library.
+:::
+
+@fig-practical-augmentation-rhino illustrates augmentations applied to a single image: color changes, cropping, and rotations all produce new training examples from the same source.
+
+::: {#fig-practical-augmentation-rhino}
+![ ]({{< meta params.images_path >}}augmentation_rhino.png){width=600}
+
+Data augmentation applied to a single image. Each transformed copy becomes a distinct training example.
+:::
+
+A practical guideline: when fine-tuning a pre-trained model, use minimal augmentation (random crops and horizontal flips). When training from scratch, heavier augmentation is typically beneficial.
+
+Synthetic data is another option. @fig-practical-synthetic-examples shows an example where 3D animal models were composited into real and synthetic backgrounds, effectively expanding the camera trap training set.
+
+::: {#fig-practical-synthetic-examples}
+![ ]({{< meta params.images_path >}}synthetic_camera_trap_images.jpg){width=600}
+
+Synthetic and semi-synthetic camera trap images generated using 3D animal models. Source: @Beery2020.
+:::
+
+### Early Stopping
+
+Early stopping monitors validation performance in regular intervals (e.g. after each epoch) and halts training when no improvement is observed for a set number of cycles. This prevents the model from continuing to memorize training data after the point of best generalization.
+
+::: {#fig-practical-early-stopping}
+![ ]({{< meta params.images_path >}}early_stopping.png){width=600}
+
+Early stopping halts training at the point of best validation performance. [Source](https://www.oreilly.com/library/view/hands-on-transfer-learning/9781788831307/41172567-9482-4cad-ac87-1cfbd46026df.xhtml)
+:::
+
+### Weight Decay
+
+Weight decay penalizes large parameter values at each gradient update, encouraging simpler models. The modified update step is:
+
+$$
+\theta_{t+1} = \theta_t (1 - \lambda) - \eta \nabla J(\theta)
+$$
+
+where $\lambda$ is the decay factor, $\eta$ is the learning rate, and $\theta$ are the model parameters. Implementations are available directly in PyTorch optimizers via the `weight_decay` argument.
+
+### Transfer Learning
+
+Transfer learning is the practical default for image classification: start from a model pre-trained on a large dataset such as ImageNet and adapt it to the target task. Pre-trained features — edges, textures, shapes — generalize broadly across vision domains, making fine-tuning far more data-efficient than training from scratch.
+
+::: {#fig-practical-transfer-learning}
+![ ]({{< meta params.images_path >}}transfer_learning.jpg){width=600}
+
+Transfer learning: adapt a pre-trained backbone to a new task by replacing and training the final classification head. Source: @johnson_eecs_2021.
+:::
+
+Adaptation strategies range from freezing the backbone entirely (feature extraction) to fine-tuning all layers. The appropriate strategy depends on dataset size and domain similarity. More strategies are covered in the Downstream Adaptation lecture.
+
+## Modern Pretrained Backbones
+
+ImageNet-pretrained ResNets remain solid baselines, but a new generation of foundation-model backbones trained on orders-of-magnitude more data consistently outperforms them, often with less fine-tuning data required. The table below summarizes some practical options:
+
+| Model | Pretraining | Strengths | Good for |
+|-------|-------------|-----------|----------|
+| **DINOv(2|3)** | Self-supervised (images) | Strong general-purpose features; no labels needed | Feature extraction, k-NN, linear probe |
+| **SigLIP | CLIP | *EVA-CLIP** | Vision–language (image–text) | Zero-shot and few-shot transfer; multilingual | Open-vocabulary classification, retrieval |
+| **ConvNeXt-V2** | Self-supervised (FCMAE) | Pure CNN; no attention; fast inference | When ViT overhead is a concern |
+| **SAM (2|3)**  | Large-scale segmentation | Powerful spatial features; click-based prompting | Segmentation, detection pre-training |
+
+: {tbl-colwidths="[18,25,30,27]"}
+
+**Choosing a backbone:**
+
+- **Default choice**: DINOv3 is a strong all-round starting point for feature extraction and fine-tuning on domain-specific data.
+
+All of these backbones are available via [timm](https://github.com/huggingface/pytorch-image-models) (`pip install timm`) with a consistent API:
+
+```python
+import timm
+
+model = timm.create_model("vit_base_patch14_dinov2", pretrained=True, num_classes=0)
+features = model(images)  # (B, 768) feature vectors, no head
+```
+
+How to *adapt* a chosen backbone to a target task — k-NN, linear probe, LoRA, partial or full fine-tuning, and how to choose between them based on dataset size and domain similarity — is covered in the Downstream Adaptation lecture.
+
+
+## Monitoring Training Progress
+
+Beyond loss and accuracy curves, it is valuable to track model behaviour on a **fixed set of validation images** throughout training. For each checkpoint, run inference on the same small set of examples (e.g., 16–32 images spanning all classes) and log the top predictions alongside the images. This reveals qualitative changes — the model gaining confidence on easy examples, reducing confusion between similar classes — that aggregate metrics can obscure.
+
+A complementary view is a **prediction-confidence plot over epochs**: for the same fixed samples, track how the predicted probability for the correct class evolves. An ideal trajectory rises steadily; oscillation or sudden drops signal instability or learning-rate issues.
+
+::: {.callout-note title="Tip: Track fixed samples in Weights & Biases / MLflow"}
+Both W&B and MLflow support logging images with annotations per step. Log the fixed validation grid at the end of each epoch with predicted class and confidence overlaid. Reviewing this timeline at the end of training is one of the fastest ways to diagnose where the model still fails.
+:::
+
+
+## References
+
+::: {#refs}
+:::

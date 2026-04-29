@@ -1,0 +1,146 @@
+---
+title: "Augmentation Invariance Explorer"
+format:
+  html:
+    echo: false
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+A classifier is *invariant* to a transformation if its top prediction does not change when the transformation is applied to the input. Common augmentations used during training — rotation, brightness shifts, cropping — are intended to make models more robust to natural variation. But how much can the input change before the prediction breaks?
+
+Use the controls below to explore. The image shows an elephant from a camera trap. Predictions come from **MobileNetV3-Small** pretrained on ImageNet-1k. The <span style="display:inline-block;width:11px;height:11px;background:#DD8452;border-radius:2px;vertical-align:middle"></span> **orange** bar marks the model's prediction on the unaugmented image — when it disappears from the top position, the augmentation has broken invariance.
+
+---
+
+```{ojs}
+data = FileAttachment("../../assets/augmentation_demo/precomputed.json").json()
+img_base = "../../assets/augmentation_demo/"
+
+// Neutral top-1 prediction (rotation = 0, all defaults)
+default_key = data.sweeps.rotation.keys[data.sweeps.rotation.values.indexOf(0)]
+original_top1 = data.results.elephant.rotation[default_key].names[0]
+```
+
+```{ojs}
+viewof aug_sel = Inputs.radio(
+  ["rotation", "brightness", "contrast", "crop_scale", "flip"],
+  {
+    value: "rotation",
+    label: "Augmentation",
+    format: x => ({
+      rotation:   "Rotation",
+      brightness: "Brightness",
+      contrast:   "Contrast",
+      crop_scale: "Crop scale",
+      flip:       "Flip",
+    })[x]
+  }
+)
+```
+
+```{ojs}
+viewof step_idx = {
+  const vals = data.sweeps[aug_sel].values
+  const max  = vals.length - 1
+
+  const neutral = {
+    rotation:   vals.indexOf(0),
+    brightness: vals.map(v => Math.abs(v - 1.0)).indexOf(Math.min(...vals.map(v => Math.abs(v - 1.0)))),
+    contrast:   vals.map(v => Math.abs(v - 1.0)).indexOf(Math.min(...vals.map(v => Math.abs(v - 1.0)))),
+    crop_scale: max,
+    flip:       0,
+  }
+
+  const label_map = {
+    rotation:   "Rotation (°)",
+    brightness: "Brightness factor",
+    contrast:   "Contrast factor",
+    crop_scale: "Crop scale",
+    flip:       "Flip (0 = off, 1 = on)",
+  }
+
+  return Inputs.range([0, max], {
+    step:  1,
+    value: neutral[aug_sel],
+    label: label_map[aug_sel],
+    width: 360,
+  })
+}
+```
+
+```{ojs}
+aug_key     = data.sweeps[aug_sel].keys[step_idx]
+entry       = data.results.elephant[aug_sel][aug_key]
+current_val = typeof entry.value === "boolean"
+  ? (entry.value ? "on" : "off")
+  : entry.value
+```
+
+```{ojs}
+bar_data = entry.names
+  .map((n, i) => ({name: n, prob: entry.probs[i], is_original: n === original_top1}))
+  .reverse()
+
+bar_chart = Plot.plot({
+  marginLeft: 150,
+  marginRight: 50,
+  width: 420,
+  height: 210,
+  x: {
+    domain: [0, 1],
+    label: "Confidence →",
+    tickFormat: d => (d * 100).toFixed(0) + "%",
+  },
+  y: {label: null},
+  color: {
+    domain: [false, true],
+    range:  ["#4C72B0", "#DD8452"],
+  },
+  marks: [
+    Plot.barX(bar_data, {
+      x:    "prob",
+      y:    "name",
+      fill: "is_original",
+      sort: {y: "x"},
+    }),
+    Plot.text(bar_data, {
+      x:        "prob",
+      y:        "name",
+      text:     d => (d.prob * 100).toFixed(1) + "%",
+      dx:       5,
+      fontSize: 11,
+      fill:     "#333",
+      textAnchor: "start",
+    }),
+    Plot.ruleX([0.5], {stroke: "#BBBBBB", strokeDasharray: "4,3"}),
+  ],
+})
+```
+
+```{ojs}
+htl.html`
+<div style="display:flex;gap:32px;align-items:flex-start;padding:8px 0 4px">
+  <div style="flex-shrink:0">
+    <p style="margin:0 0 6px 0;font-size:13px;color:#555">
+      ${aug_sel} = <strong>${current_val}</strong>
+    </p>
+    <img src="${img_base}${entry.img_path}" width="240"
+         style="border-radius:6px;display:block;border:1px solid #e0e0e0">
+  </div>
+  <div style="padding-top:20px">${bar_chart}</div>
+</div>
+<p style="font-size:12px;color:#888;margin-top:4px">
+  <span style="display:inline-block;width:11px;height:11px;background:#DD8452;
+               border-radius:2px;vertical-align:middle;margin-right:3px"></span>
+  Original top-1: <em>${original_top1}</em>
+  &ensp;
+  <span style="display:inline-block;width:11px;height:11px;background:#4C72B0;
+               border-radius:2px;vertical-align:middle;margin-right:3px"></span>
+  Other class
+</p>`
+```

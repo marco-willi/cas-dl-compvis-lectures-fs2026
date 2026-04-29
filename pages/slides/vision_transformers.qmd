@@ -1,0 +1,340 @@
+---
+title: "Modern Vision Backbones"
+params:
+   images_path: "/assets/images/vision_transformers/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Learning Objectives {.center}
+
+::: {.incremental}
+- Adapt the transformer to images via **patch embeddings**
+- Role of **positional embeddings** and the **[CLS] token**
+- CNNs vs. ViTs — inductive biases, receptive fields, data efficiency
+- Pick CNN, ViT, or hybrid based on data, compute, task
+- Hybrid architectures: combining the two
+:::
+
+
+## Overview {.center}
+
+- From Sequences to Patches
+- Self-Attention on Patches
+- CNNs vs. ViTs
+- Practical Architecture Selection
+
+
+# Motivation {.center}
+
+
+## Transformers in Vision
+
+::: {.fragment}
+Transformers dominate **language** — long-range dependencies, scale.
+:::
+
+::: {.fragment}
+Can the **same architecture** work for images?
+:::
+
+::: {.fragment}
+- CNNs: strong inductive biases (locality, translation equivariance)
+- Transformers: minimal assumptions, treat input as a generic sequence
+:::
+
+::: {.fragment}
+**ViT (2020, @dosovitskiy_image_2020)** — yes, with enough pretraining data.
+:::
+
+
+# From Sequences to Patches
+
+
+## The Trick: Treat Images as Patches {.center}
+
+::: {.fragment}
+A 2-D image grid → a **sequence of patches**.
+:::
+
+
+## Patchifying
+
+::: {#fig-vit-patch-embedding}
+![]({{< meta params.images_path >}}patchify.png){width=60%}
+
+Split the image into fixed-size, non-overlapping patches.
+:::
+
+::: {.fragment}
+$224 \times 224$ image, $16 \times 16$ patches → **196 patches**.
+:::
+
+
+## The Patch Embedding Pipeline
+
+::: {.incremental}
+1. **Divide** image into a grid of patches
+2. **Flatten** each patch ($16 \times 16 \times 3 = 768$)
+3. **Project** through a learnable linear layer → embedding of dim $D$
+4. **Add positional embeddings** — encode spatial position
+5. **Prepend [CLS] token** — image-level representation (à la BERT)
+:::
+
+::: {.fragment}
+Result: a sequence of $N + 1$ embeddings → standard transformer encoder.
+:::
+
+
+## ViT Architecture
+
+::: {#fig-vit-paper}
+![Source: @dosovitskiy_image_2020]({{< meta params.images_path >}}vit.png){width=70%}
+
+Image → patches → linear projection → positional embeddings → transformer encoder.
+:::
+
+
+## Quiz: Patch Size 32 × 32
+
+What changes if patch size goes from 16 to 32?
+
+::: {.fragment}
+- Number of patches: $\frac{224}{32}^2 = \mathbf{49}$ — **4× fewer**
+:::
+
+::: {.fragment}
+- **Faster** — self-attention is quadratic in sequence length
+- **Less detail** — each patch covers a larger area
+- **Trade-off** — same as resolution choice in CNNs
+:::
+
+
+## Why Positional Embeddings?
+
+::: {.fragment}
+Without them: a transformer treats patches as an **unordered set**.
+:::
+
+::: {.fragment}
+A 2-D image grid would be lost.
+:::
+
+::: {.fragment}
+**Learned positional embeddings** acquire 2-D structure during training: nearby patches end up with similar embeddings (@dosovitskiy_image_2020).
+:::
+
+
+# Self-Attention on Image Patches
+
+
+## Receptive Field — The Big Difference {.center}
+
+::: {.fragment}
+**CNN** — local kernel → grows gradually with depth
+:::
+
+::: {.fragment}
+**ViT** — every patch attends to every other patch from **layer 1**
+:::
+
+::: {.fragment}
+ViT receptive field is **global from the start**.
+:::
+
+
+## Strength and Weakness
+
+::: {.incremental}
+- ✅ **Long-range dependencies** for free (wheel ↔ road)
+- ❌ **No locality prior** — must be learned from data
+- ❌ Needs **far more training examples**
+:::
+
+
+## Quiz: Receptive Fields
+
+A CNN with three 3×3 conv layers (stride 1) has a 7×7 receptive field.
+
+A ViT with the same depth has a receptive field that covers...?
+
+1. 7×7 pixels
+2. The entire patch
+3. The entire image
+
+::: {.fragment}
+**3 — the entire image.**
+:::
+
+::: {.fragment}
+After even **one** transformer layer, every output has aggregated information from all patches.
+:::
+
+
+## What Attention Learns
+
+::: {#fig-vit-attention-maps layout-nrow=2}
+
+![Attention weight matrices.]({{< meta params.images_path >}}attention_matrices.png)
+
+![Spatial attention maps overlaid on the image.]({{< meta params.images_path >}}attention_spatial.png)
+
+The model learns to focus on **semantically relevant regions** — even from early layers.
+:::
+
+
+# CNNs vs. Vision Transformers
+
+
+## At a Glance
+
+| Aspect | CNNs | ViTs |
+|--------|------|------|
+| **Inductive biases** | Strong (locality, equivariance) | Minimal |
+| **Receptive field** | Local → global | Global from layer 1 |
+| **Data efficiency** | Good with small/medium | Needs large pretraining (10M+) |
+| **Scalability** | Plateaus | Keeps improving with scale |
+| **Compute** | Linear in spatial size | Quadratic in patches |
+
+
+## Inductive Biases — Help or Hindrance?
+
+::: {.fragment}
+CNNs assume **locality** + **translation equivariance** — generally true for natural images.
+:::
+
+::: {.fragment}
+ViTs assume nothing — must learn structure from data.
+:::
+
+::: {.fragment}
+- **Small data** → CNNs win (priors are useful)
+- **Massive data** → ViTs catch up and surpass
+:::
+
+
+## Quiz: When Locality Hurts
+
+Where might CNN locality be a *disadvantage*?
+
+::: {.fragment}
+- **Scene classification** — "kitchen" vs. "office" needs global arrangement
+:::
+
+::: {.fragment}
+- **Long-range relations** — person *holding* a leash *attached to* a dog
+:::
+
+::: {.fragment}
+- **Non-local textures** — patterns defined by distant regions
+:::
+
+::: {.fragment}
+ViT's global attention from layer 1 can shine here.
+:::
+
+
+# Practical Architecture Selection
+
+
+## Decision Guide {.center}
+
+::: {.incremental}
+- **Limited data + compute** → pretrained **CNN** (ResNet, EfficientNet)
+- **Large data + compute** → **ViT** or hybrid
+- **Global context early** → ViT
+- **Edge deployment / fast inference** → CNN or efficient hybrid
+:::
+
+::: {.fragment}
+With *massive* pretraining, both perform similarly (@smith_convnets_2023).
+:::
+
+
+## Hybrid Architectures {.center}
+
+::: {.fragment}
+**Convs early** (efficient local features) + **Transformers late** (global reasoning).
+:::
+
+::: {.fragment}
+Examples: **FastViT** (@vasu_fastvit_2023), **EfficientViT**.
+:::
+
+::: {.fragment}
+Conversely: **ConvNeXt** modernizes ResNet with ViT-style training and design.
+:::
+
+
+## Loading Pretrained Models
+
+```{python}
+#| eval: false
+#| echo: true
+
+import timm
+
+# Pretrained CNN
+cnn_model = timm.create_model("resnet50", pretrained=True)
+
+# Pretrained ViT
+vit_model = timm.create_model("vit_base_patch16_224", pretrained=True)
+```
+
+::: {.fragment}
+[timm](https://github.com/huggingface/pytorch-image-models) — hundreds of pretrained models, both architectures.
+:::
+
+
+## What Actually Matters
+
+::: {.incremental}
+- No conclusive winner with massive pretraining (@smith_convnets_2023)
+- **Pretraining data + adaptation strategy** often matter more than the backbone
+- Hybrids increasingly common
+:::
+
+::: {.fragment}
+The question of which architecture prevails — **still open**.
+:::
+
+
+## Beyond Classification — Multimodal ViTs
+
+::: {.incremental}
+- **BLIP-2** (@li_blip-2_2023) — frozen ViT + LLM via Q-Former → visual QA
+- **Flamingo** (@alayrac_flamingo_2022) — few-shot multimodal across image-text sequences
+:::
+
+::: {.fragment}
+The patch-embedding approach has become a **universal interface** between visual and language representations.
+:::
+
+
+# Summary {.center}
+
+
+## Key Takeaways
+
+::: {.incremental}
+- ViTs treat images as **sequences of patches** — works with the standard transformer encoder
+- **Global receptive field** from layer 1 — strength *and* weakness
+- CNNs: strong priors, data-efficient · ViTs: flexible, scale-hungry
+- **Hybrids** (FastViT, EfficientViT) combine the strengths
+- Pretraining + adaptation strategy often matter more than the backbone
+:::
+
+
+# References
+
+::: {style="font-size: 50%;"}
+
+::: {#refs}
+:::
+
+:::
