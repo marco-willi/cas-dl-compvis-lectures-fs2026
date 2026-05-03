@@ -261,10 +261,10 @@ ImageNet-pretrained ResNets remain solid baselines, but a new generation of foun
 
 | Model | Pretraining | Strengths | Good for |
 |-------|-------------|-----------|----------|
-| **DINOv(2|3)** | Self-supervised (images) | Strong general-purpose features; no labels needed | Feature extraction, k-NN, linear probe |
-| **SigLIP | CLIP | *EVA-CLIP** | Vision–language (image–text) | Zero-shot and few-shot transfer; multilingual | Open-vocabulary classification, retrieval |
+| **DINOv3** | Self-supervised (images) | Strong general-purpose features; no labels needed | Feature extraction, k-NN, linear probe |
+| **CLIP and variants** | Vision–language (image–text) | Zero-shot and few-shot transfer; multilingual | Open-vocabulary classification, retrieval |
 | **ConvNeXt-V2** | Self-supervised (FCMAE) | Pure CNN; no attention; fast inference | When ViT overhead is a concern |
-| **SAM (2|3)**  | Large-scale segmentation | Powerful spatial features; click-based prompting | Segmentation, detection pre-training |
+| **SAM3**  | Large-scale segmentation | Powerful spatial features; click-based prompting | Segmentation, detection pre-training |
 
 : {tbl-colwidths="[18,25,30,27]"}
 
