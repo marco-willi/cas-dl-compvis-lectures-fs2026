@@ -491,7 +491,7 @@ window.Quarto = {
 <section id="a-recipe-for-training-neural-networks" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="a-recipe-for-training-neural-networks"><span class="header-section-number">1</span> A Recipe for Training Neural Networks</h2>
 <p>How does one successfully train a deep learning model? Modern ML frameworks make training appear straightforward, but Karpathy observed that these abstractions are <strong>leaky</strong>: without a solid understanding of what happens inside, backpropagation, gradient descent, loss dynamics, mistakes creep in undetected. A model with a learning rate that is too high may converge to a poor solution without raising any error. A data preprocessing bug may silently corrupt every batch. <strong>Training neural networks fails silently.</strong></p>
-<div id="6fcf9f40" class="cell" data-execution_count="1">
+<div id="9a18b6e9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>your_data <span class="op">=</span> <span class="co"># plug your awesome dataset here</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SuperCrossValidator(SuperDuper.fit, your_data, ResNet50, SGDOptimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -754,16 +754,16 @@ Figure&nbsp;14: Transfer learning: adapt a pre-trained backbone to a new task by
 </thead>
 <tbody>
 <tr class="odd">
-<td>**DINOv(2</td>
-<td>3)**</td>
+<td><strong>DINOv3</strong></td>
 <td>Self-supervised (images)</td>
 <td>Strong general-purpose features; no labels needed</td>
+<td>Feature extraction, k-NN, linear probe</td>
 </tr>
 <tr class="even">
-<td>**SigLIP</td>
-<td>CLIP</td>
-<td>*EVA-CLIP**</td>
+<td><strong>CLIP and variants</strong></td>
 <td>Vision–language (image–text)</td>
+<td>Zero-shot and few-shot transfer; multilingual</td>
+<td>Open-vocabulary classification, retrieval</td>
 </tr>
 <tr class="odd">
 <td><strong>ConvNeXt-V2</strong></td>
@@ -772,10 +772,10 @@ Figure&nbsp;14: Transfer learning: adapt a pre-trained backbone to a new task by
 <td>When ViT overhead is a concern</td>
 </tr>
 <tr class="even">
-<td>**SAM (2</td>
-<td>3)**</td>
+<td><strong>SAM3</strong></td>
 <td>Large-scale segmentation</td>
 <td>Powerful spatial features; click-based prompting</td>
+<td>Segmentation, detection pre-training</td>
 </tr>
 </tbody>
 </table>
@@ -1557,10 +1557,10 @@ Raschka, Sebastian, and Vahid Mirjalili. 2020. <em>Python Machine Learning: Mach
 <span id="cb3-263"><a href="#cb3-263" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-264"><a href="#cb3-264" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Model <span class="pp">|</span> Pretraining <span class="pp">|</span> Strengths <span class="pp">|</span> Good for <span class="pp">|</span></span>
 <span id="cb3-265"><a href="#cb3-265" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------|-------------|-----------|----------|</span></span>
-<span id="cb3-266"><a href="#cb3-266" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **DINOv(2|3)** <span class="pp">|</span> Self-supervised (images) <span class="pp">|</span> Strong general-purpose features; no labels needed <span class="pp">|</span> Feature extraction, k-NN, linear probe <span class="pp">|</span></span>
-<span id="cb3-267"><a href="#cb3-267" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **SigLIP | CLIP | *EVA-CLIP** <span class="pp">|</span> Vision–language (image–text) <span class="pp">|</span> Zero-shot and few-shot transfer; multilingual <span class="pp">|</span> Open-vocabulary classification, retrieval <span class="pp">|</span></span>
+<span id="cb3-266"><a href="#cb3-266" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **DINOv3** <span class="pp">|</span> Self-supervised (images) <span class="pp">|</span> Strong general-purpose features; no labels needed <span class="pp">|</span> Feature extraction, k-NN, linear probe <span class="pp">|</span></span>
+<span id="cb3-267"><a href="#cb3-267" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **CLIP and variants** <span class="pp">|</span> Vision–language (image–text) <span class="pp">|</span> Zero-shot and few-shot transfer; multilingual <span class="pp">|</span> Open-vocabulary classification, retrieval <span class="pp">|</span></span>
 <span id="cb3-268"><a href="#cb3-268" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **ConvNeXt-V2** <span class="pp">|</span> Self-supervised (FCMAE) <span class="pp">|</span> Pure CNN; no attention; fast inference <span class="pp">|</span> When ViT overhead is a concern <span class="pp">|</span></span>
-<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **SAM (2|3)**  <span class="pp">|</span> Large-scale segmentation <span class="pp">|</span> Powerful spatial features; click-based prompting <span class="pp">|</span> Segmentation, detection pre-training <span class="pp">|</span></span>
+<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **SAM3**  <span class="pp">|</span> Large-scale segmentation <span class="pp">|</span> Powerful spatial features; click-based prompting <span class="pp">|</span> Segmentation, detection pre-training <span class="pp">|</span></span>
 <span id="cb3-270"><a href="#cb3-270" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-271"><a href="#cb3-271" aria-hidden="true" tabindex="-1"></a>: {tbl-colwidths="<span class="co">[</span><span class="ot">18,25,30,27</span><span class="co">]</span>"}</span>
 <span id="cb3-272"><a href="#cb3-272" aria-hidden="true" tabindex="-1"></a></span>

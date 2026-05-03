@@ -432,7 +432,7 @@ window.Quarto = {
 <p>An der Prüfung wird nur Wissen abgefragt, welches im Unterricht vorgestellt und/oder diskutiert worden ist.</p>
 <p>Beachten Sie auch die Quiz-Fragen in den Unerrichtsunterlagen.</p>
 <p>Die gelisteten Operationen sind mit folgenden (default) Parametern definiert:</p>
-<div id="5ebb0290" class="cell" data-execution_count="1">
+<div id="e64d79c9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>torch.nn.Conv2d(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    in_channels, out_channels, kernel_size,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    stride<span class="op">=</span><span class="dv">1</span>, padding<span class="op">=</span><span class="dv">0</span>, dilation<span class="op">=</span><span class="dv">1</span>,</span>
@@ -611,7 +611,7 @@ Figure&nbsp;1
 <ol start="4" type="1">
 <li>Ihr Kollege ist am verzweifeln. Sein MLP funktioniert nicht sehr gut. Das kann natürlich viele Gründe haben. Nachdem Sie jedoch seinen Code angeschaut haben, haben Sie einen Verdacht. Welcher?</li>
 </ol>
-<div id="85c916e6" class="cell" data-execution_count="2">
+<div id="913682cb" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLP(nn.Module):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size1, hidden_size2, hidden_size3, output_size):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(MLP, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -644,7 +644,7 @@ Figure&nbsp;1
 <p>Mathematisch: Die Komposition mehrerer linearer Funktionen ist wieder eine lineare Funktion: <span class="math display">\[f_4(f_3(f_2(f_1(\vec{x})))) = W_4 W_3 W_2 W_1 x = W_{\text{combined}} \vec{x}\]</span></p>
 <p>Das Netzwerk ist also äquivalent zu einem einzigen linearen Layer!</p>
 <p>Lösung:</p>
-<div id="53c420b3" class="cell" data-execution_count="3">
+<div id="9cd39f4b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> F.relu(<span class="va">self</span>.fc1(x))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> F.relu(<span class="va">self</span>.fc2(x))</span>
@@ -675,7 +675,7 @@ Figure&nbsp;1
 <div class="callout-body-container callout-body">
 <p><strong>Ziel:</strong> <span class="math inline">\(64 \times 16 \times 16 \rightarrow 128 \times 8 \times 8\)</span></p>
 <p><strong>Parametrisierung:</strong></p>
-<div id="5b3045f0" class="cell" data-execution_count="4">
+<div id="9d820008" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nn.Conv2d(in_channels<span class="op">=</span><span class="dv">64</span>, out_channels<span class="op">=</span><span class="dv">128</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, stride<span class="op">=</span><span class="dv">2</span>, padding<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Begründung:</strong></p>
@@ -798,7 +798,7 @@ Figure&nbsp;1
 <li>Medizinische Bilder können mehrere Modalitäten kombinieren (CT + MRI)</li>
 </ul>
 <p><strong>Beispiel:</strong></p>
-<div id="4dd520be" class="cell" data-execution_count="5">
+<div id="9d60ca79" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Satellitendaten mit 12 Bändern</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>nn.Conv2d(in_channels<span class="op">=</span><span class="dv">12</span>, out_channels<span class="op">=</span><span class="dv">64</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, padding<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -873,7 +873,7 @@ Figure&nbsp;1
 <div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Asymmetrische Stride-Parameter verwenden:</p>
-<div id="4e4be4a9" class="cell" data-execution_count="6">
+<div id="9ebe3cd8" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nn.Conv2d(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    in_channels<span class="op">=</span><span class="dv">3</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    out_channels<span class="op">=</span><span class="dv">64</span>,</span>
@@ -888,7 +888,7 @@ Figure&nbsp;1
 <li>Nach Conv mit <code>stride=(2, 1)</code>: <span class="math inline">\(400 \times 400\)</span></li>
 </ul>
 <p>Alternative mit Pooling:</p>
-<div id="0bf8b3b7" class="cell" data-execution_count="7">
+<div id="be4f4ccf" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asymmetrisches Pooling</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pool <span class="op">=</span> nn.MaxPool2d(kernel_size<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">1</span>), stride<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -933,7 +933,7 @@ Figure&nbsp;1
 <ol start="8" type="1">
 <li>Schauen Sie sich das folgende CNN an. Können Sie die räumliche Auflösung der Bilder ableiten? Wenn ja, berechnen Sie diese. Wenn nein, begründen Sie.</li>
 </ol>
-<div id="e2f32b60" class="cell" data-execution_count="8">
+<div id="9385f65d" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN1(nn.Module):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(CNN1, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -984,7 +984,7 @@ Figure&nbsp;1
 <ol start="9" type="1">
 <li>Schauen Sie sich die folgenden beiden CNNs an. Was sind die wichtigsten praktischen Unterschiede?</li>
 </ol>
-<div id="f5ae653a" class="cell" data-execution_count="9">
+<div id="a3156970" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN1(nn.Module):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(CNN1, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -1003,7 +1003,7 @@ Figure&nbsp;1
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc(x)</span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="78fb437b" class="cell" data-execution_count="10">
+<div id="8c16dd78" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN2(nn.Module):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(CNN2, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -1364,7 +1364,7 @@ Figure&nbsp;4
 </ul>
 <p>Modellierung:</p>
 <p>Shared Backbone + Two Heads (empfohlen)</p>
-<div id="941df8e0" class="cell" data-execution_count="11">
+<div id="f4062b13" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiTaskModel(nn.Module):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_species, num_activities<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -1383,7 +1383,7 @@ Figure&nbsp;4
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> species_logits, activity_logits</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Loss Function:</p>
-<div id="8bff98cc" class="cell" data-execution_count="12">
+<div id="4b320220" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> lambda_species <span class="op">*</span> CE_loss(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    species_logits, species_labels</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> lambda_activity <span class="op">*</span> CE_loss(activity_logits, activity_labels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
