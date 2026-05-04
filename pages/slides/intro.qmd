@@ -238,7 +238,7 @@ Neural Radiance Fields generate novel views from a set of input images (@mildenh
 
 3D Gaussian Splatting — real-time, high-quality novel view synthesis (@kerbl_3d_2023). -->
 
-<!-- 
+<!--
 ## Unconditional Generation — StyleGAN3
 
 ::: {#fig-intro-stylegan3}
