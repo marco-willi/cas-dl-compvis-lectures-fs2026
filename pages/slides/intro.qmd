@@ -11,15 +11,6 @@ $$
 :::
 
 
-## Learning Objectives {.center}
-
-::: {.incremental}
-- Distinguish core computer vision tasks (classification, detection, segmentation)
-- Describe key application domains and practical challenges
-- Explain why deep learning reshaped computer vision
-:::
-
-
 # Applications
 
 
@@ -120,7 +111,7 @@ Generic segmentation model identifies organs and anatomical structures at the pi
 [Google Magic Editor](https://www.google.com/intl/en/photos/editing/) — maybe even a bit too good?
 
 ::: {.fragment}
-**🤔 What CV tasks must this model perform?**
+** What CV tasks must this model perform?**
 :::
 
 ::: {.fragment}
@@ -147,12 +138,6 @@ Specialized hardware enables real-time deep learning inference on mobile.
 ![]({{< meta params.images_path >}}image_classification_example.png){width=55%}
 
 Multi-class classification: predict the most likely class with confidence (@krizhevsky_imagenet_2012).
-:::
-
-::: {.fragment}
-- **Binary**: 2 classes
-- **Multi-class**: > 2 classes
-- **Multi-label**: multiple sets of classes
 :::
 
 
@@ -237,7 +222,7 @@ Black-and-white → RGB.
 :::
 
 
-## View Synthesis — NeRF
+<!-- ## View Synthesis — NeRF
 
 ::: {#fig-intro-nerf}
 
@@ -251,9 +236,9 @@ Neural Radiance Fields generate novel views from a set of input images (@mildenh
 
 {{< video https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/content/videos/bicycle.mp4 width=1400 >}}
 
-3D Gaussian Splatting — real-time, high-quality novel view synthesis (@kerbl_3d_2023).
+3D Gaussian Splatting — real-time, high-quality novel view synthesis (@kerbl_3d_2023). -->
 
-
+<!-- 
 ## Unconditional Generation — StyleGAN3
 
 ::: {#fig-intro-stylegan3}
@@ -261,10 +246,10 @@ Neural Radiance Fields generate novel views from a set of input images (@mildenh
 ![]({{< meta params.images_path >}}stylegan3_examples.png){width=45%}
 
 StyleGAN3 — photorealistic synthetic faces (@karras_alias-free_2021).
-:::
+::: -->
 
 
-## Text-to-Image — Stable Diffusion
+<!-- ## Text-to-Image — Stable Diffusion
 
 ::: {#fig-stable-diffusion-example}
 
@@ -275,7 +260,7 @@ Generate images conditioned on natural language (@rombach_high-resolution_2022).
 
 ::: {.fragment}
 Browse [civitai](https://civitai.com/) for examples and models.
-:::
+::: -->
 
 
 ## Many More Tasks
@@ -341,7 +326,7 @@ After all — videos are sequences of images.
 :::
 
 
-## Quiz: Application → Task
+## Quiz: Application Task
 
 Match each application to a CV task:
 
@@ -456,213 +441,17 @@ Is this a tiger? Context provides crucial cues.
 :::
 
 
-## Context — Identical Blobs, Different Meanings
+## Context Dependence 2
 
 ::: {#fig-blop-context}
 
 ![]({{< meta params.images_path >}}challenges_context_blop.png){width=60%}
 
-Each blob is **identical** (up to rotation) — interpreted as plate, bottle, cell phone, car, pedestrian, shoe (@torralba_using_2010).
+From (@torralba_using_2010).
 :::
 
 ::: {.fragment}
 Visual systems lean heavily on **context** when input is degraded.
-:::
-
-
-# From Classical CV to Deep Learning
-
-
-## High-Dimensional Images {.center}
-
-An $800 \times 600$ RGB image: $800 \times 600 \times 3 = 1{,}440{,}000$ dims.
-
-::: {.incremental}
-- Slow / memory-heavy for classical ML
-- Doesn't exploit 2-D structure
-- Sensitive to small changes (rotation, shift)
-- Easy to overfit (features ≈ observations)
-:::
-
-
-## Hand-Crafted Features — Color Histograms
-
-::: {#fig-intro-color-histograms}
-
-![]({{< meta params.images_path >}}color_histogram.png){width=55%}
-
-Color histograms summarize the spectrum (Source: @johnson_eecs_2022).
-:::
-
-
-## Hand-Crafted Features — HOG
-
-::: {#fig-intro-hog-features}
-
-![]({{< meta params.images_path >}}hog_features.png){width=55%}
-
-Histogram of Oriented Gradients — used for pedestrian detection (@dalal_histograms_2005, @johnson_eecs_2022).
-:::
-
-
-## Hand-Crafted Features — Bag of Visual Words
-
-::: {#fig-intro-bow-features}
-
-![]({{< meta params.images_path >}}bag_of_words_features.png){width=55%}
-
-Cluster patches → use cluster IDs as descriptors.
-:::
-
-
-## Hand-Crafted Features — Concatenated
-
-::: {#fig-intro-concat-features}
-
-![]({{< meta params.images_path >}}features_concat.png){width=55%}
-
-Combine multiple feature types — often more is better (@johnson_eecs_2022).
-:::
-
-::: {.fragment}
-Followed by dimensionality reduction (e.g. PCA) and a classical ML classifier.
-:::
-
-
-## CIFAR-10
-
-::: {#fig-intro-cifar10}
-
-![]({{< meta params.images_path >}}cifar10.jpg){width=55%}
-
-CIFAR-10: 10 classes × 6,000 images. [Source](https://www.cs.toronto.edu/~kriz/cifar.html)
-:::
-
-
-## PASCAL VOC
-
-::: {#fig-intro-pascal}
-
-![]({{< meta params.images_path >}}pascal_voc_2007.png){width=60%}
-
-Object annotations (left) and Mean Average Precision over years (right). @everingham_pascal_2007, @johnson_eecs_2022.
-:::
-
-
-## ImageNet
-
-::: {#fig-intro-imagenet}
-
-![]({{< meta params.images_path >}}imagenet.jpg){width=55%}
-
-ImageNet — 1.4M images, 1000 classes, hierarchically annotated (@deng_imagenet_2009).
-:::
-
-
-## ImageNet — Performance Over Time
-
-::: {#fig-intro-imagenet-perf}
-
-![]({{< meta params.images_path >}}image_net_perf.png){width=55%}
-
-Source: @johnson_eecs_2022.
-:::
-
-::: {.fragment}
-**AlexNet (2012)**: top-5 error 25.8% → 16.4% — the deep learning era begins.
-:::
-
-
-## End-to-End Learning
-
-::: {#fig-intro-end-to-end}
-
-![]({{< meta params.images_path >}}end-to-end-ml.png){width=60%}
-
-From hand-designed features to learned features (@johnson_eecs_2022).
-:::
-
-
-## Why Deep Learning Wins
-
-::: {.incremental}
-- **Automatic features** — no SIFT/HOG engineering
-- **Hierarchical representations** — edges → textures → parts → objects
-- **Scales with data + compute**
-- **End-to-end optimization** — pixels → task output
-- **Transfer learning** — pretrain once, adapt anywhere
-:::
-
-
-# Deep Learning History
-
-
-## Hubel & Wiesel (1959)
-
-::: {#fig-huber-wiesel}
-
-![]({{< meta params.images_path >}}huber_wiesel_cat_experiment.jpg){width=55%}
-
-Simple and complex cells in the cat visual cortex respond to specific patterns (@hubel_receptive_1959).
-:::
-
-
-## Neocognitron (1980)
-
-::: {#fig-neocognitron}
-
-![]({{< meta params.images_path >}}neocogitron.png){width=60%}
-
-Hierarchical, biology-inspired pattern-recognition network — precursor to modern CNNs (@fukushima_neocognitron_1980).
-:::
-
-
-## Backpropagation (1986)
-
-::: {#fig-rumalhart-backprop}
-
-![]({{< meta params.images_path >}}rumelhart_backprop.png){width=55%}
-
-Gradient-based training of neural networks via the chain rule (@rumelhart_learning_1986).
-:::
-
-::: {.fragment}
-A good intro: [3Blue1Brown — Backpropagation Calculus](https://www.youtube.com/watch?v=tIeHLnjs5U8)
-:::
-
-
-## LeNet-5 (1998)
-
-::: {#fig-lecun-cnn}
-
-![]({{< meta params.images_path >}}lecun_cnn.png){width=60%}
-
-First successful CNN — handwritten digit recognition (@lecun_gradient-based_1998).
-:::
-
-
-## After AlexNet — Modern CNNs
-
-::: {.incremental}
-- **VGGNet (2014)** — depth matters; 16–19 layers, small 3×3 filters
-- **ResNet (2015)** — skip connections enable 50–152 layers
-- **COCO** — multi-task benchmarks (detection, segmentation, keypoints)
-- **Mobile architectures** — efficient on phones / embedded
-:::
-
-
-## CNNs vs. Transformers Today
-
-::: {.incremental}
-- **CNNs** — still widely used; parameter-efficient
-- **Transformers** — strong raw performance, especially at scale (@dosovitskiy_image_2020)
-- **MLP-based** alternatives also competitive (@liu_pay_2021)
-- **Hybrids** combine the strengths of both (@vasu_fastvit_2023)
-- Architecture choice often depends on efficiency vs. peak performance (@simeoni_dinov3_2025)
-:::
-
-::: {.fragment}
-Both perform similarly in many settings (@smith_convnets_2023) — the question is open.
 :::
 
 
