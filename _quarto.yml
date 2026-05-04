@@ -95,7 +95,7 @@ website:
       - section: Slides
         contents:
           - pages/slides/intro.qmd
-          # - pages/slides/images_as_data.qmd
+          - pages/slides/images_as_data.qmd
           # - pages/slides/cnns.qmd
           # - pages/slides/classification.qmd
           # - pages/slides/representation_learning.qmd

@@ -11,23 +11,10 @@ $$
 :::
 
 
-## Learning Objectives {.center}
-
-::: {.incremental}
-- Represent images as tensors (H, W, C)
-- Distinguish RGB vs. grayscale
-- Reason about resolution trade-offs
-- Design train / val / test splits and avoid leakage
-- Recognize class imbalance, label noise, hidden biases
-:::
-
-
 ## Why It Matters {.center}
 
-::: {.fragment}
-Many classification failures aren't model failures —
-they're **data** failures.
-:::
+
+Many classification failures aren't model failures, they're **data** failures.
 
 ::: {.fragment}
 Imbalance, noisy labels, hidden shortcuts.
@@ -74,7 +61,7 @@ A 224×224 RGB image:
 :::
 
 ::: {.fragment}
-Mismatched conventions → silent bugs.
+Mismatched conventions can lead to silent bugs.
 :::
 
 
@@ -89,7 +76,7 @@ What is the tensor shape?
 :::
 
 ::: {.fragment}
-The batch dimension is always **first** in PyTorch — enables parallel GPU computation.
+The batch dimension is always **first** in PyTorch, enables parallel GPU computation.
 :::
 
 
@@ -105,7 +92,7 @@ How would an MRI scan be represented? Does H × W × C still apply?
 :::
 
 ::: {.fragment}
-The H × W × C abstraction generalizes — sequences/depth become extra axes.
+The H × W × C abstraction generalizes, sequences/depth become extra axes.
 :::
 
 
@@ -122,23 +109,23 @@ RGB (3 channels) vs. grayscale (1 channel) — same image, different representat
 
 ::: {.incremental}
 - **1**: grayscale, depth, thermal/IR, X-ray, ultrasound
-- **3**: RGB (also HSV, Lab — same info, different axes)
+- **3**: RGB (also HSV, same info, different axes)
 - **4**: RGBA (alpha) or RGB + near-infrared
 - **N (10s–100s)**: multispectral / hyperspectral (remote sensing, agriculture, astronomy)
 :::
 
 ::: {.fragment}
-Only **C** changes — the tensor structure stays the same.
+Only **C** changes, the tensor structure stays the same.
 :::
 
 
 ## Beyond RGB
 
 ::: {.incremental}
-- **Infrared** — thermal imaging, night vision, satellite
-- **Depth maps** — distance-to-camera per pixel
-- **Multispectral / Hyperspectral** — narrow wavelength bands
-- **HSV** — separates hue from brightness; useful for color-based augmentation/segmentation
+- **Infrared**: thermal imaging, night vision, satellite
+- **Depth maps**: distance-to-camera per pixel
+- **Multispectral / Hyperspectral**: narrow wavelength bands
+- **HSV**: separates hue from brightness; useful for color-based augmentation/segmentation
 :::
 
 
@@ -154,9 +141,9 @@ Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost.
 ## Resolution Trade-offs
 
 ::: {.incremental}
-- **Higher** → preserves detail, costs memory + compute
-- **Lower** → faster, lighter, but discards information
-- **Aspect-ratio distortion** → squashing to square deforms objects
+- **Higher**: preserves detail, costs memory + compute
+- **Lower**: faster, lighter, but discards information
+- **Aspect-ratio distortion**: squashing to square deforms objects
 :::
 
 ::: {.fragment}
@@ -183,31 +170,26 @@ Example mapping for a camera-trap dataset.
 ## Class Granularity
 
 ::: {.incremental}
-- **Fine-grained** (red deer vs. roe deer) → more data, more ambiguity
-- **Coarse** (animal vs. empty) → easier, less informative
-:::
-
-::: {.fragment}
-- **Single-label**: exactly one class per image
-- **Multi-label**: multiple simultaneously (e.g. deer + bird)
+- **Fine-grained**: (red deer vs. roe deer),  more data, more ambiguity
+- **Coarse**: (animal vs. empty), easier, less informative
 :::
 
 
 ## Dataset Splits
 
 ::: {.incremental}
-- **Train** — optimize parameters; seen repeatedly
-- **Validation** — tune hyperparameters, monitor overfitting; never trained on
-- **Test** — held out for final, unbiased evaluation
+- **Train**: optimize parameters; seen repeatedly
+- **Validation**: tune hyperparameters, monitor overfitting; never trained on
+- **Test**: held out for final, unbiased evaluation
 :::
 
 
 ## Splitting Strategies
 
 ::: {.incremental}
-- **Random** — not always appropriate
-- **Stratified** — preserve class distribution across splits
-- **Grouped** — keep related images (same event, patient, location) in the same split
+- **Random**: not always appropriate
+- **Stratified**: preserve class distribution across splits
+- **Grouped**: keep related images (same event, patient, location) in the same split
 :::
 
 
@@ -229,7 +211,7 @@ All three must go into the **same** split.
 Information from val/test inadvertently influences training.
 
 ::: {.fragment}
-→ Inflated metrics, real-world collapse.
+Inflated metrics, real-world collapse.
 :::
 
 
@@ -249,7 +231,7 @@ Information from val/test inadvertently influences training.
 What goes wrong?
 
 ::: {.fragment}
-**Same patient appears in train AND test.** The model learns to recognize *patients* — skin tone, mole patterns, clinic lighting — instead of lesions.
+**Same patient appears in train AND test.** The model learns to recognize *patients*. Skin tone, mole patterns, clinic lighting, instead of lesions.
 :::
 
 ::: {.fragment}
