@@ -1700,7 +1700,7 @@
     "href": "pages/background/frameworks.html#tensors",
     "title": "3 - Software & Hardware for Deep Learning",
     "section": "2.2 Tensors",
-    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.2702, 0.4845],\n        [0.1195, 0.0298]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.0083, 0.6447, 0.1503],\n        [0.0794, 0.5801, 0.2917]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
+    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.7118, 0.9271],\n        [0.4913, 0.0759]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.9554, 0.9065, 0.4293],\n        [0.0409, 0.5768, 0.8368]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware for Deep Learning"
@@ -1711,7 +1711,7 @@
     "href": "pages/background/frameworks.html#autograd",
     "title": "3 - Software & Hardware for Deep Learning",
     "section": "2.3 Autograd",
-    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.3239, 0.1725, 0.2492],\n        [0.3239, 0.1725, 0.2492],\n        [0.3239, 0.1725, 0.2492],\n        [0.3239, 0.1725, 0.2492],\n        [0.3239, 0.1725, 0.2492]])\ntensor([0.3239, 0.1725, 0.2492])",
+    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332]])\ntensor([0.0120, 0.2873, 0.3332])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware for Deep Learning"
@@ -1722,7 +1722,7 @@
     "href": "pages/background/frameworks.html#torch.nn",
     "title": "3 - Software & Hardware for Deep Learning",
     "section": "2.4 torch.nn",
-    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([8])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
+    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([4])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware for Deep Learning"
@@ -1971,7 +1971,7 @@
     "href": "pages/misc/exercises.html",
     "title": "Exercises",
     "section": "",
-    "text": "Exercises Day 1 and Day 2 can be found here: Link\nThe exercises use the following datasets:\n\n\nThe classic dataset of 28×28 grayscale handwritten digits (0–9), 60k train and 10k test images. Used in exercises/00_pytorch as a small, fast-loading dataset for first contact with PyTorch tensors, Dataset, and DataLoader. Loaded directly from torchvision.datasets.MNIST.\n\n\n\nMNIST samples\n\n\n\n\n\nA balanced subset of camera-trap images from Serengeti National Park (Snapshot Safari 2024 Expansion), curated to ten species classes plus an empty class (~1850 images total). Used as the default camera-trap dataset in:\n\n01_image_data\n02_classification\n04_adaptation\n05_backbones\n\n\n\n\nSER elephant — night IR camera-trap frame\n\n\n\n\n\nA balanced 8-class subset of the CCT20 benchmark (200 images per class: bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel). Sourced from LILA Science. Offered as an alternative camera-trap dataset in exercises 02, 04, and 05.\n\n\n\nCCT20 bobcat crossing a road at night\n\n\n\n\n\nA subset of Snapshot Kgalagadi Season 1 (Kalahari camera traps) covering six classes: empty, gemsbokoryx, birdother, steenbok, ostrich, jackalblackbacked. Heavily imbalanced, empty accounts for ~78% of the ~3400 images, can be used in exercises 02, 04, and 05.\n\n\n\nKgalagadi gemsbok at a Kalahari camera trap\n\n\n\n\n\nA curated subset of the Amazon Berkeley Objects dataset, restricted to six furniture categories (bed, chair, lamp, sofa, storage, table) with multiple views per item, ~25k centre-cropped 224×224 JPEGs. The multi-view structure (via retrieval_groups.json) makes it well-suited for image retrieval. Used as the default dataset in 03_retrieval and offered as the alternative to DeepFashion.\n\n\n\nABO chair — e-commerce product photo\n\n\n\n\n\nA 5-class coarse-label subset (dresses, outerwear, pants, skirts, tops) of the DeepFashion In-Shop Clothes Retrieval Benchmark from MMLAB/CUHK, ~3300 images split by item ID so all views of one product stay in the same split. Offered as the alternative to ABO in 03_retrieval.. Internal use only — do not redistribute.\n\n\n\nDeepFashion dress — in-shop catalogue photo\n\n\n\n\n\n128×128 histopathology patches of mitotic figures from human breast cancer slides (subset of TUPAC16 + MIDOG21), with binary labels for normal vs. atypical mitoses. Used in 04_adaptation_lora as a small, domain-shifted target task for parameter-efficient fine-tuning (LoRA).\n\n\n\nAMI-Br normal mitotic figure patch",
+    "text": "Exercises Day 1 and Day 2 can be found here: Link",
     "crumbs": [
       "Exercises"
     ]
@@ -1981,7 +1981,47 @@
     "href": "pages/misc/exercises.html#day-1-and-day-2",
     "title": "Exercises",
     "section": "",
-    "text": "Exercises Day 1 and Day 2 can be found here: Link\nThe exercises use the following datasets:\n\n\nThe classic dataset of 28×28 grayscale handwritten digits (0–9), 60k train and 10k test images. Used in exercises/00_pytorch as a small, fast-loading dataset for first contact with PyTorch tensors, Dataset, and DataLoader. Loaded directly from torchvision.datasets.MNIST.\n\n\n\nMNIST samples\n\n\n\n\n\nA balanced subset of camera-trap images from Serengeti National Park (Snapshot Safari 2024 Expansion), curated to ten species classes plus an empty class (~1850 images total). Used as the default camera-trap dataset in:\n\n01_image_data\n02_classification\n04_adaptation\n05_backbones\n\n\n\n\nSER elephant — night IR camera-trap frame\n\n\n\n\n\nA balanced 8-class subset of the CCT20 benchmark (200 images per class: bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel). Sourced from LILA Science. Offered as an alternative camera-trap dataset in exercises 02, 04, and 05.\n\n\n\nCCT20 bobcat crossing a road at night\n\n\n\n\n\nA subset of Snapshot Kgalagadi Season 1 (Kalahari camera traps) covering six classes: empty, gemsbokoryx, birdother, steenbok, ostrich, jackalblackbacked. Heavily imbalanced, empty accounts for ~78% of the ~3400 images, can be used in exercises 02, 04, and 05.\n\n\n\nKgalagadi gemsbok at a Kalahari camera trap\n\n\n\n\n\nA curated subset of the Amazon Berkeley Objects dataset, restricted to six furniture categories (bed, chair, lamp, sofa, storage, table) with multiple views per item, ~25k centre-cropped 224×224 JPEGs. The multi-view structure (via retrieval_groups.json) makes it well-suited for image retrieval. Used as the default dataset in 03_retrieval and offered as the alternative to DeepFashion.\n\n\n\nABO chair — e-commerce product photo\n\n\n\n\n\nA 5-class coarse-label subset (dresses, outerwear, pants, skirts, tops) of the DeepFashion In-Shop Clothes Retrieval Benchmark from MMLAB/CUHK, ~3300 images split by item ID so all views of one product stay in the same split. Offered as the alternative to ABO in 03_retrieval.. Internal use only — do not redistribute.\n\n\n\nDeepFashion dress — in-shop catalogue photo\n\n\n\n\n\n128×128 histopathology patches of mitotic figures from human breast cancer slides (subset of TUPAC16 + MIDOG21), with binary labels for normal vs. atypical mitoses. Used in 04_adaptation_lora as a small, domain-shifted target task for parameter-efficient fine-tuning (LoRA).\n\n\n\nAMI-Br normal mitotic figure patch",
+    "text": "Exercises Day 1 and Day 2 can be found here: Link",
+    "crumbs": [
+      "Exercises"
+    ]
+  },
+  {
+    "objectID": "pages/misc/exercises.html#datasets",
+    "href": "pages/misc/exercises.html#datasets",
+    "title": "Exercises",
+    "section": "Datasets",
+    "text": "Datasets\nThe following datasets can be used in the exercises.\n\nMNIST\nThe classic dataset of 28×28 grayscale handwritten digits (0–9), 60k train and 10k test images. Used in 00_pytorch as a small, fast-loading dataset. Loaded directly from torchvision.datasets.MNIST.\n\n\n\nMNIST samples\n\n\n\n\nSnapshot Safari SER (Serengeti)\nCamera-trap images from Serengeti National Park, curated to ten species classes plus an empty class.\n\n\n\nSER elephant — night IR camera-trap frame\n\n\nThere are different variants:\n\nbalanced classes\nrandom sample (unbalanced)\nrandom sample with crops\n\nSource: LILA BC\n\n\nCaltech Camera Traps (CCT20)\nA balanced 8-class subset of the CCT20 benchmark (200 images per class: bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel).\n\n\n\nCCT20 bobcat crossing a road at night\n\n\nSource: LILA BC\n\n\nSnapshot Kgalagadi\nA subset of Snapshot Kgalagadi Season 1 (Kalahari camera traps) covering six classes: empty, gemsbokoryx, birdother, steenbok, ostrich, jackalblackbacked. Heavily imbalanced — empty accounts for ~78% of the ~3400 images.\n\n\n\nKgalagadi oryx at a Kalahari camera trap\n\n\nSource: LILA BC\n\n\nAmazon Berkeley Objects (ABO) Furniture\nA curated subset of the Amazon Berkeley Objects dataset, restricted to six furniture categories (bed, chair, lamp, sofa, storage, table) with multiple views per item, ~25k centre-cropped 224×224 JPEGs. The multi-view structure makes it well-suited for image retrieval. Used as the default dataset in\n\n\n\nABO bed — e-commerce product photo\n\n\n\n\nDeepFashion (In-Shop Retrieval)\nA 5-class coarse-label subset (dresses, outerwear, pants, skirts, tops) of the DeepFashion In-Shop Clothes Retrieval Benchmark from MMLAB/CUHK, ~3300 images split by item ID so all views of one product stay in the same split.\n\n\n\nDeepFashion pants — in-shop catalogue photo\n\n\n\n\nAMI-Br (Atypical Mitotic Figures — Breast)\n128×128 histopathology patches of mitotic figures from human breast cancer slides (subset of TUPAC16 + MIDOG21), with binary labels for normal vs. atypical mitoses. Used in as a small, domain-shifted target task for parameter-efficient fine-tuning (LoRA).\n\n\n\nAMI-Br",
+    "crumbs": [
+      "Exercises"
+    ]
+  },
+  {
+    "objectID": "pages/misc/exercises.html#microsoft-cats-vs-dogs",
+    "href": "pages/misc/exercises.html#microsoft-cats-vs-dogs",
+    "title": "Exercises",
+    "section": "Microsoft Cats vs Dogs",
+    "text": "Microsoft Cats vs Dogs\nThe full Microsoft/Kaggle Cats and Dogs dataset (~25,000 colour photos of cats and dogs). Two corrupt source images (Cat/666.jpg, Dog/11702.jpg) are removed during preparation. Classes are balanced (50/50). Images are variable-size JPEGs, typically 150-500 px on the longer side.\n\nSource: Microsoft (https://www.microsoft.com/en-us/download/details.aspx?id=54765)\nLicense: Microsoft Terms of Use (educational/non-commercial)\nSplit: stratified 70/15/15, seed 42\nClasses: Cat, Dog (~12,500 each)\nTotal: ~25,000 images\n\n\n\n\n\n\n\nCat\n\n\n\n\n\n\n\nDog",
+    "crumbs": [
+      "Exercises"
+    ]
+  },
+  {
+    "objectID": "pages/misc/exercises.html#concrete-cracks",
+    "href": "pages/misc/exercises.html#concrete-cracks",
+    "title": "Exercises",
+    "section": "Concrete Cracks",
+    "text": "Concrete Cracks\nThe Ozgenel et al. Concrete Crack Images dataset (~40,000 227x227 JPEG images of concrete surfaces), with binary labels for intact (Negative) vs. cracked (Positive) surfaces. Well suited for teaching binary classification and industrial defect detection.\n\nSource: Mendeley Data, doi: 10.17632/5y9wdsg2zt.2\nLicense: Creative Commons Attribution 4.0 (CC BY 4.0)\nSplit: stratified 70/15/15, seed 42\nClasses: Negative (~20,000), Positive (~20,000)\nTotal: ~40,000 images, 227x227 px\n\n\n\n\nConcrete Cracks — cracked surface example",
+    "crumbs": [
+      "Exercises"
+    ]
+  },
+  {
+    "objectID": "pages/misc/exercises.html#eurosat-rgb",
+    "href": "pages/misc/exercises.html#eurosat-rgb",
+    "title": "Exercises",
+    "section": "EuroSAT RGB",
+    "text": "EuroSAT RGB\nThe EuroSAT land-use classification dataset (RGB variant, ~27,000 images across 10 classes from Sentinel-2 satellite imagery). Images are 64x64 px, making this an interesting case for discussing domain shift from ImageNet pretraining.\n\nSource: Zenodo record 7711810 (https://zenodo.org/records/7711810)\nLicense: MIT License\nAttribution: Helber et al. (2019), IEEE JSTARS, doi: 10.1109/JSTARS.2019.2918242\nSplit: stratified 70/15/15, seed 42\nClasses (10): AnnualCrop, Forest, HerbaceousVegetation, Highway, Industrial, Pasture, PermanentCrop, Residential, River, SeaLake (~1,900-3,000 each)\nTotal: ~27,000 images, 64x64 px\n\n\n\n\n\n\n\nEuroSAT — permanent crop\n\n\n\n\n\n\n\nEuroSAT — forest\n\n\n\n\n\n\n\nEuroSAT — highway",
     "crumbs": [
       "Exercises"
     ]
@@ -2454,17 +2494,6 @@
     "text": "Key Takeaways\n\nFive strategies — k-NN → linear probe → LoRA → partial FT → full FT\nPick based on data size, domain similarity, compute\nAlways start at the top, descend only when performance demands it\nBig domain shift: freeze low layers, adapt high layers; consider domain-specific backbone\nLoRA can be merged at inference — best parameter-efficient default"
   },
   {
-    "objectID": "pages/slides/intro.html#learning-objectives",
-    "href": "pages/slides/intro.html#learning-objectives",
-    "title": "Introduction",
-    "section": "Learning Objectives",
-    "text": "Learning Objectives\n\nDistinguish core computer vision tasks (classification, detection, segmentation)\nDescribe key application domains and practical challenges\nExplain why deep learning reshaped computer vision",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
     "objectID": "pages/slides/intro.html#wildlife-monitoring",
     "href": "pages/slides/intro.html#wildlife-monitoring",
     "title": "Introduction",
@@ -2557,7 +2586,7 @@
     "href": "pages/slides/intro.html#photo-editing-magic-editor",
     "title": "Introduction",
     "section": "Photo Editing — Magic Editor",
-    "text": "Photo Editing — Magic Editor\n\nGoogle Magic Editor — maybe even a bit too good?\n\n🤔 What CV tasks must this model perform?\n\n\n\nObject detection & segmentation (what to remove/move)\nInpainting (filling removed areas)\nStyle transfer (lighting/texture matching)\nScene understanding (realistic perspective)",
+    "text": "Photo Editing — Magic Editor\n\nGoogle Magic Editor — maybe even a bit too good?\n\n** What CV tasks must this model perform?**\n\n\n\nObject detection & segmentation (what to remove/move)\nInpainting (filling removed areas)\nStyle transfer (lighting/texture matching)\nScene understanding (realistic perspective)",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2579,7 +2608,7 @@
     "href": "pages/slides/intro.html#image-classification",
     "title": "Introduction",
     "section": "Image Classification",
-    "text": "Image Classification\n\n\nFigure 6: Multi-class classification: predict the most likely class with confidence (Krizhevsky et al. (2012)).\n\n\nBinary: 2 classes\nMulti-class: &gt; 2 classes\nMulti-label: multiple sets of classes",
+    "text": "Image Classification\n\n\nFigure 6: Multi-class classification: predict the most likely class with confidence (Krizhevsky et al. (2012)).",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2667,51 +2696,7 @@
     "href": "pages/slides/intro.html#colorization",
     "title": "Introduction",
     "section": "Colorization",
-    "text": "Colorization\n\nNorwegian Bride (est. late 1890s) — DeOldify: Link",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#view-synthesis-nerf",
-    "href": "pages/slides/intro.html#view-synthesis-nerf",
-    "title": "Introduction",
-    "section": "View Synthesis — NeRF",
-    "text": "View Synthesis — NeRF\n\n\nFigure 14: Neural Radiance Fields generate novel views from a set of input images (Mildenhall et al. (2020)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#view-synthesis-gaussian-splatting",
-    "href": "pages/slides/intro.html#view-synthesis-gaussian-splatting",
-    "title": "Introduction",
-    "section": "View Synthesis — Gaussian Splatting",
-    "text": "View Synthesis — Gaussian Splatting\n\n3D Gaussian Splatting — real-time, high-quality novel view synthesis (Kerbl et al. (2023)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#unconditional-generation-stylegan3",
-    "href": "pages/slides/intro.html#unconditional-generation-stylegan3",
-    "title": "Introduction",
-    "section": "Unconditional Generation — StyleGAN3",
-    "text": "Unconditional Generation — StyleGAN3\n\n\nFigure 15: StyleGAN3 — photorealistic synthetic faces (Karras et al. (2021)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#text-to-image-stable-diffusion",
-    "href": "pages/slides/intro.html#text-to-image-stable-diffusion",
-    "title": "Introduction",
-    "section": "Text-to-Image — Stable Diffusion",
-    "text": "Text-to-Image — Stable Diffusion\n\n\nFigure 16: Generate images conditioned on natural language (Rombach et al. (2022)).\n\nBrowse civitai for examples and models.",
+    "text": "Colorization\n\n\n\n\nNorwegian Bride (est. late 1890s) — DeOldify: Link",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2733,7 +2718,7 @@
     "href": "pages/slides/intro.html#what-about-videos-generation",
     "title": "Introduction",
     "section": "What About Videos? — Generation",
-    "text": "What About Videos? — Generation\n\n\n\n\n\n\nFigure 17: OpenAI Sora 2 — Prompt: a man rides a horse which is on another horse.",
+    "text": "What About Videos? — Generation\n\n\n\n\n\n\nFigure 14: OpenAI Sora 2 — Prompt: a man rides a horse which is on another horse.",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2744,7 +2729,7 @@
     "href": "pages/slides/intro.html#what-about-videos-tracking",
     "title": "Introduction",
     "section": "What About Videos? — Tracking",
-    "text": "What About Videos? — Tracking\n\n\n\n\n\n\nFigure 18: CoTracker — tracking points across frames (Karaev et al. (2024)).",
+    "text": "What About Videos? — Tracking\n\n\n\n\n\n\nFigure 15: CoTracker — tracking points across frames (Karaev et al. (2024)).",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2765,8 +2750,8 @@
     "objectID": "pages/slides/intro.html#quiz-application-task",
     "href": "pages/slides/intro.html#quiz-application-task",
     "title": "Introduction",
-    "section": "Quiz: Application → Task",
-    "text": "Quiz: Application → Task\nMatch each application to a CV task:\n\nCamera trap image analysis\nApple’s photo categorization & safety filters\nImage search\nFinding tumors in medical images\nCounting apples in an orchard\n\n\nTasks: Classification · Detection · Segmentation · Retrieval/Embedding",
+    "section": "Quiz: Application Task",
+    "text": "Quiz: Application Task\nMatch each application to a CV task:\n\nCamera trap image analysis\nApple’s photo categorization & safety filters\nImage search\nFinding tumors in medical images\nCounting apples in an orchard\n\n\nTasks: Classification · Detection · Segmentation · Retrieval/Embedding",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2788,7 +2773,7 @@
     "href": "pages/slides/intro.html#semantic-gap",
     "title": "Introduction",
     "section": "Semantic Gap",
-    "text": "Semantic Gap\n\n\nFigure 19: Computers see numbers, humans see meaning.\n\nBridging raw pixels → high-level concepts is the central problem.",
+    "text": "Semantic Gap\n\n\nFigure 16: Computers see numbers, humans see meaning.\n\nBridging raw pixels → high-level concepts is the central problem.",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2799,7 +2784,7 @@
     "href": "pages/slides/intro.html#viewpoint",
     "title": "Introduction",
     "section": "Viewpoint",
-    "text": "Viewpoint\n\n\nFigure 20: Same object — wildly different pixels.",
+    "text": "Viewpoint\n\n\nFigure 17: Same object — wildly different pixels.",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2810,7 +2795,7 @@
     "href": "pages/slides/intro.html#deformation",
     "title": "Introduction",
     "section": "Deformation",
-    "text": "Deformation\n\n\nFigure 21: Living things bend, twist, curl. Source",
+    "text": "Deformation\n\n\nFigure 18: Living things bend, twist, curl. Source",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2821,7 +2806,7 @@
     "href": "pages/slides/intro.html#illumination",
     "title": "Introduction",
     "section": "Illumination",
-    "text": "Illumination\n\n\nFigure 22: Lighting changes pixels dramatically. Source",
+    "text": "Illumination\n\n\nFigure 19: Lighting changes pixels dramatically. Source",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2832,7 +2817,7 @@
     "href": "pages/slides/intro.html#background-clutter",
     "title": "Introduction",
     "section": "Background Clutter",
-    "text": "Background Clutter\n\n\nFigure 23: Foreground vs. background — when textures match. Source",
+    "text": "Background Clutter\n\n\nFigure 20: Foreground vs. background — when textures match. Source",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2843,7 +2828,7 @@
     "href": "pages/slides/intro.html#occlusion",
     "title": "Introduction",
     "section": "Occlusion",
-    "text": "Occlusion\n\n\nFigure 24: Recognize from partial views. Source",
+    "text": "Occlusion\n\n\nFigure 21: Recognize from partial views. Source",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2854,7 +2839,7 @@
     "href": "pages/slides/intro.html#intra-class-variation",
     "title": "Introduction",
     "section": "Intra-Class Variation",
-    "text": "Intra-Class Variation\n\n\nFigure 25: All cats — but very different. Source",
+    "text": "Intra-Class Variation\n\n\nFigure 22: All cats — but very different. Source",
     "crumbs": [
       "Slides",
       "Introduction"
@@ -2865,205 +2850,18 @@
     "href": "pages/slides/intro.html#context-dependence",
     "title": "Introduction",
     "section": "Context Dependence",
-    "text": "Context Dependence\n\n\nFigure 26: Is this a tiger? Context provides crucial cues.",
+    "text": "Context Dependence\n\n\nFigure 23: Is this a tiger? Context provides crucial cues.",
     "crumbs": [
       "Slides",
       "Introduction"
     ]
   },
   {
-    "objectID": "pages/slides/intro.html#context-identical-blobs-different-meanings",
-    "href": "pages/slides/intro.html#context-identical-blobs-different-meanings",
+    "objectID": "pages/slides/intro.html#context-dependence-2",
+    "href": "pages/slides/intro.html#context-dependence-2",
     "title": "Introduction",
-    "section": "Context — Identical Blobs, Different Meanings",
-    "text": "Context — Identical Blobs, Different Meanings\n\n\nFigure 27: Each blob is identical (up to rotation) — interpreted as plate, bottle, cell phone, car, pedestrian, shoe (Torralba et al. (2010)).\n\nVisual systems lean heavily on context when input is degraded.",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#high-dimensional-images",
-    "href": "pages/slides/intro.html#high-dimensional-images",
-    "title": "Introduction",
-    "section": "High-Dimensional Images",
-    "text": "High-Dimensional Images\nAn \\(800 \\times 600\\) RGB image: \\(800 \\times 600 \\times 3 = 1{,}440{,}000\\) dims.\n\nSlow / memory-heavy for classical ML\nDoesn’t exploit 2-D structure\nSensitive to small changes (rotation, shift)\nEasy to overfit (features ≈ observations)",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#hand-crafted-features-color-histograms",
-    "href": "pages/slides/intro.html#hand-crafted-features-color-histograms",
-    "title": "Introduction",
-    "section": "Hand-Crafted Features — Color Histograms",
-    "text": "Hand-Crafted Features — Color Histograms\n\n\nFigure 28: Color histograms summarize the spectrum (Source: Johnson (2022)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#hand-crafted-features-hog",
-    "href": "pages/slides/intro.html#hand-crafted-features-hog",
-    "title": "Introduction",
-    "section": "Hand-Crafted Features — HOG",
-    "text": "Hand-Crafted Features — HOG\n\n\nFigure 29: Histogram of Oriented Gradients — used for pedestrian detection (Dalal and Triggs (2005), Johnson (2022)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#hand-crafted-features-bag-of-visual-words",
-    "href": "pages/slides/intro.html#hand-crafted-features-bag-of-visual-words",
-    "title": "Introduction",
-    "section": "Hand-Crafted Features — Bag of Visual Words",
-    "text": "Hand-Crafted Features — Bag of Visual Words\n\n\nFigure 30: Cluster patches → use cluster IDs as descriptors.",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#hand-crafted-features-concatenated",
-    "href": "pages/slides/intro.html#hand-crafted-features-concatenated",
-    "title": "Introduction",
-    "section": "Hand-Crafted Features — Concatenated",
-    "text": "Hand-Crafted Features — Concatenated\n\n\nFigure 31: Combine multiple feature types — often more is better (Johnson (2022)).\n\nFollowed by dimensionality reduction (e.g. PCA) and a classical ML classifier.",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#cifar-10",
-    "href": "pages/slides/intro.html#cifar-10",
-    "title": "Introduction",
-    "section": "CIFAR-10",
-    "text": "CIFAR-10\n\n\nFigure 32: CIFAR-10: 10 classes × 6,000 images. Source",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#pascal-voc",
-    "href": "pages/slides/intro.html#pascal-voc",
-    "title": "Introduction",
-    "section": "PASCAL VOC",
-    "text": "PASCAL VOC\n\n\nFigure 33: Object annotations (left) and Mean Average Precision over years (right). Everingham et al. (2007), Johnson (2022).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#imagenet",
-    "href": "pages/slides/intro.html#imagenet",
-    "title": "Introduction",
-    "section": "ImageNet",
-    "text": "ImageNet\n\n\nFigure 34: ImageNet — 1.4M images, 1000 classes, hierarchically annotated (Deng et al. (2009)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#imagenet-performance-over-time",
-    "href": "pages/slides/intro.html#imagenet-performance-over-time",
-    "title": "Introduction",
-    "section": "ImageNet — Performance Over Time",
-    "text": "ImageNet — Performance Over Time\n\n\nFigure 35: Source: Johnson (2022).\n\nAlexNet (2012): top-5 error 25.8% → 16.4% — the deep learning era begins.",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#end-to-end-learning",
-    "href": "pages/slides/intro.html#end-to-end-learning",
-    "title": "Introduction",
-    "section": "End-to-End Learning",
-    "text": "End-to-End Learning\n\n\nFigure 36: From hand-designed features to learned features (Johnson (2022)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#why-deep-learning-wins",
-    "href": "pages/slides/intro.html#why-deep-learning-wins",
-    "title": "Introduction",
-    "section": "Why Deep Learning Wins",
-    "text": "Why Deep Learning Wins\n\nAutomatic features — no SIFT/HOG engineering\nHierarchical representations — edges → textures → parts → objects\nScales with data + compute\nEnd-to-end optimization — pixels → task output\nTransfer learning — pretrain once, adapt anywhere",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#hubel-wiesel-1959",
-    "href": "pages/slides/intro.html#hubel-wiesel-1959",
-    "title": "Introduction",
-    "section": "Hubel & Wiesel (1959)",
-    "text": "Hubel & Wiesel (1959)\n\n\nFigure 37: Simple and complex cells in the cat visual cortex respond to specific patterns (Hubel and Wiesel (1959)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#neocognitron-1980",
-    "href": "pages/slides/intro.html#neocognitron-1980",
-    "title": "Introduction",
-    "section": "Neocognitron (1980)",
-    "text": "Neocognitron (1980)\n\n\nFigure 38: Hierarchical, biology-inspired pattern-recognition network — precursor to modern CNNs (Fukushima (1980)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#backpropagation-1986",
-    "href": "pages/slides/intro.html#backpropagation-1986",
-    "title": "Introduction",
-    "section": "Backpropagation (1986)",
-    "text": "Backpropagation (1986)\n\n\nFigure 39: Gradient-based training of neural networks via the chain rule (Rumelhart et al. (1986)).\n\nA good intro: 3Blue1Brown — Backpropagation Calculus",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#lenet-5-1998",
-    "href": "pages/slides/intro.html#lenet-5-1998",
-    "title": "Introduction",
-    "section": "LeNet-5 (1998)",
-    "text": "LeNet-5 (1998)\n\n\nFigure 40: First successful CNN — handwritten digit recognition (Lecun et al. (1998)).",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#after-alexnet-modern-cnns",
-    "href": "pages/slides/intro.html#after-alexnet-modern-cnns",
-    "title": "Introduction",
-    "section": "After AlexNet — Modern CNNs",
-    "text": "After AlexNet — Modern CNNs\n\nVGGNet (2014) — depth matters; 16–19 layers, small 3×3 filters\nResNet (2015) — skip connections enable 50–152 layers\nCOCO — multi-task benchmarks (detection, segmentation, keypoints)\nMobile architectures — efficient on phones / embedded",
-    "crumbs": [
-      "Slides",
-      "Introduction"
-    ]
-  },
-  {
-    "objectID": "pages/slides/intro.html#cnns-vs.-transformers-today",
-    "href": "pages/slides/intro.html#cnns-vs.-transformers-today",
-    "title": "Introduction",
-    "section": "CNNs vs. Transformers Today",
-    "text": "CNNs vs. Transformers Today\n\nCNNs — still widely used; parameter-efficient\nTransformers — strong raw performance, especially at scale (Dosovitskiy et al. (2020))\nMLP-based alternatives also competitive (Liu et al. (2021))\nHybrids combine the strengths of both (Vasu et al. (2023))\nArchitecture choice often depends on efficiency vs. peak performance (Siméoni et al. (2025))\n\n\nBoth perform similarly in many settings (Smith et al. (2023)) — the question is open.",
+    "section": "Context Dependence 2",
+    "text": "Context Dependence 2\n\n\nFigure 24: From (Torralba et al. (2010)).\n\nVisual systems lean heavily on context when input is degraded.",
     "crumbs": [
       "Slides",
       "Introduction"
