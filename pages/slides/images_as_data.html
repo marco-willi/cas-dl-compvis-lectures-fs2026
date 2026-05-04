@@ -176,21 +176,9 @@ Marco Willi
 </div>
 
 </section>
-<section id="learning-objectives" class="slide level2 center">
-<h2>Learning Objectives</h2>
-<ul>
-<li class="fragment">Represent images as tensors (H, W, C)</li>
-<li class="fragment">Distinguish RGB vs.&nbsp;grayscale</li>
-<li class="fragment">Reason about resolution trade-offs</li>
-<li class="fragment">Design train / val / test splits and avoid leakage</li>
-<li class="fragment">Recognize class imbalance, label noise, hidden biases</li>
-</ul>
-</section>
 <section id="why-it-matters" class="slide level2 center">
 <h2>Why It Matters</h2>
-<div class="fragment">
-<p>Many classification failures aren’t model failures — they’re <strong>data</strong> failures.</p>
-</div>
+<p>Many classification failures aren’t model failures, they’re <strong>data</strong> failures.</p>
 <div class="fragment">
 <p>Imbalance, noisy labels, hidden shortcuts.</p>
 </div>
@@ -231,7 +219,7 @@ Figure&nbsp;1: An image as a tensor of shape H × W × C.
 </ul>
 </div>
 <div class="fragment">
-<p>Mismatched conventions → silent bugs.</p>
+<p>Mismatched conventions can lead to silent bugs.</p>
 </div>
 </section>
 <section id="quiz-batch-shape" class="slide level2">
@@ -242,7 +230,7 @@ Figure&nbsp;1: An image as a tensor of shape H × W × C.
 <p><strong>Answer:</strong> <code>(32, 3, 224, 224)</code> — batch × channels × height × width</p>
 </div>
 <div class="fragment">
-<p>The batch dimension is always <strong>first</strong> in PyTorch — enables parallel GPU computation.</p>
+<p>The batch dimension is always <strong>first</strong> in PyTorch, enables parallel GPU computation.</p>
 </div>
 </section>
 <section id="quiz-mri-as-a-tensor" class="slide level2">
@@ -257,7 +245,7 @@ Figure&nbsp;1: An image as a tensor of shape H × W × C.
 </ul>
 </div>
 <div class="fragment">
-<p>The H × W × C abstraction generalizes — sequences/depth become extra axes.</p>
+<p>The H × W × C abstraction generalizes, sequences/depth become extra axes.</p>
 </div>
 </section>
 <section id="color-and-channels" class="slide level2">
@@ -270,21 +258,21 @@ Figure&nbsp;2: RGB (3 channels) vs.&nbsp;grayscale (1 channel) — same image, d
 <h2>Channel Counts in the Wild</h2>
 <ul>
 <li class="fragment"><strong>1</strong>: grayscale, depth, thermal/IR, X-ray, ultrasound</li>
-<li class="fragment"><strong>3</strong>: RGB (also HSV, Lab — same info, different axes)</li>
+<li class="fragment"><strong>3</strong>: RGB (also HSV, same info, different axes)</li>
 <li class="fragment"><strong>4</strong>: RGBA (alpha) or RGB + near-infrared</li>
 <li class="fragment"><strong>N (10s–100s)</strong>: multispectral / hyperspectral (remote sensing, agriculture, astronomy)</li>
 </ul>
 <div class="fragment">
-<p>Only <strong>C</strong> changes — the tensor structure stays the same.</p>
+<p>Only <strong>C</strong> changes, the tensor structure stays the same.</p>
 </div>
 </section>
 <section id="beyond-rgb" class="slide level2">
 <h2>Beyond RGB</h2>
 <ul>
-<li class="fragment"><strong>Infrared</strong> — thermal imaging, night vision, satellite</li>
-<li class="fragment"><strong>Depth maps</strong> — distance-to-camera per pixel</li>
-<li class="fragment"><strong>Multispectral / Hyperspectral</strong> — narrow wavelength bands</li>
-<li class="fragment"><strong>HSV</strong> — separates hue from brightness; useful for color-based augmentation/segmentation</li>
+<li class="fragment"><strong>Infrared</strong>: thermal imaging, night vision, satellite</li>
+<li class="fragment"><strong>Depth maps</strong>: distance-to-camera per pixel</li>
+<li class="fragment"><strong>Multispectral / Hyperspectral</strong>: narrow wavelength bands</li>
+<li class="fragment"><strong>HSV</strong>: separates hue from brightness; useful for color-based augmentation/segmentation</li>
 </ul>
 </section>
 <section id="resolution" class="slide level2">
@@ -296,9 +284,9 @@ Figure&nbsp;3: Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressi
 <section id="resolution-trade-offs" class="slide level2">
 <h2>Resolution Trade-offs</h2>
 <ul>
-<li class="fragment"><strong>Higher</strong> → preserves detail, costs memory + compute</li>
-<li class="fragment"><strong>Lower</strong> → faster, lighter, but discards information</li>
-<li class="fragment"><strong>Aspect-ratio distortion</strong> → squashing to square deforms objects</li>
+<li class="fragment"><strong>Higher</strong>: preserves detail, costs memory + compute</li>
+<li class="fragment"><strong>Lower</strong>: faster, lighter, but discards information</li>
+<li class="fragment"><strong>Aspect-ratio distortion</strong>: squashing to square deforms objects</li>
 </ul>
 <div class="fragment">
 <p>Common: resize shortest edge + center-crop, <em>or</em> resize with padding.</p>
@@ -346,30 +334,24 @@ Figure&nbsp;3: Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressi
 <section id="class-granularity" class="slide level2">
 <h2>Class Granularity</h2>
 <ul>
-<li class="fragment"><strong>Fine-grained</strong> (red deer vs.&nbsp;roe deer) → more data, more ambiguity</li>
-<li class="fragment"><strong>Coarse</strong> (animal vs.&nbsp;empty) → easier, less informative</li>
+<li class="fragment"><strong>Fine-grained</strong>: (red deer vs.&nbsp;roe deer), more data, more ambiguity</li>
+<li class="fragment"><strong>Coarse</strong>: (animal vs.&nbsp;empty), easier, less informative</li>
 </ul>
-<div class="fragment">
-<ul>
-<li><strong>Single-label</strong>: exactly one class per image</li>
-<li><strong>Multi-label</strong>: multiple simultaneously (e.g.&nbsp;deer + bird)</li>
-</ul>
-</div>
 </section>
 <section id="dataset-splits" class="slide level2">
 <h2>Dataset Splits</h2>
 <ul>
-<li class="fragment"><strong>Train</strong> — optimize parameters; seen repeatedly</li>
-<li class="fragment"><strong>Validation</strong> — tune hyperparameters, monitor overfitting; never trained on</li>
-<li class="fragment"><strong>Test</strong> — held out for final, unbiased evaluation</li>
+<li class="fragment"><strong>Train</strong>: optimize parameters; seen repeatedly</li>
+<li class="fragment"><strong>Validation</strong>: tune hyperparameters, monitor overfitting; never trained on</li>
+<li class="fragment"><strong>Test</strong>: held out for final, unbiased evaluation</li>
 </ul>
 </section>
 <section id="splitting-strategies" class="slide level2">
 <h2>Splitting Strategies</h2>
 <ul>
-<li class="fragment"><strong>Random</strong> — not always appropriate</li>
-<li class="fragment"><strong>Stratified</strong> — preserve class distribution across splits</li>
-<li class="fragment"><strong>Grouped</strong> — keep related images (same event, patient, location) in the same split</li>
+<li class="fragment"><strong>Random</strong>: not always appropriate</li>
+<li class="fragment"><strong>Stratified</strong>: preserve class distribution across splits</li>
+<li class="fragment"><strong>Grouped</strong>: keep related images (same event, patient, location) in the same split</li>
 </ul>
 </section>
 <section id="grouped-splits" class="slide level2">
@@ -385,7 +367,7 @@ Figure&nbsp;4: Three frames from a single camera-trap trigger event — near-dup
 <h2>Data Leakage</h2>
 <p>Information from val/test inadvertently influences training.</p>
 <div class="fragment">
-<p>→ Inflated metrics, real-world collapse.</p>
+<p>Inflated metrics, real-world collapse.</p>
 </div>
 </section>
 <section id="common-leakage-sources" class="slide level2">
@@ -401,7 +383,7 @@ Figure&nbsp;4: Three frames from a single camera-trap trigger event — near-dup
 <p>500 patients, multiple visits each. Images shuffled and split 80/10/10.</p>
 <p>What goes wrong?</p>
 <div class="fragment">
-<p><strong>Same patient appears in train AND test.</strong> The model learns to recognize <em>patients</em> — skin tone, mole patterns, clinic lighting — instead of lesions.</p>
+<p><strong>Same patient appears in train AND test.</strong> The model learns to recognize <em>patients</em>. Skin tone, mole patterns, clinic lighting, instead of lesions.</p>
 </div>
 <div class="fragment">
 <p><strong>Fix:</strong> split at the <strong>patient</strong> level.</p>

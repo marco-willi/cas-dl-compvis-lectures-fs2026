@@ -352,200 +352,301 @@
     "text": "Key Takeaways\n\nRepresentation = compact embedding \\(\\mathbf{z} = f(\\mathbf{x})\\) where distances reflect semantics\nInvariance vs. selectivity — match to your task\nThree paradigms: supervised · weakly supervised (CLIP) · self-supervised (MAE, SimCLR, DINO)\nGlobal vs. local — image-level vs. region-level tasks\nFor vision-centric retrieval: DINOv2/v3 &gt; CLIP &gt; supervised &gt; pixels\nAdaptation: start simple (k-NN, linear probe) → fine-tune only when needed"
   },
   {
-    "objectID": "pages/slides/images_as_data.html#learning-objectives",
-    "href": "pages/slides/images_as_data.html#learning-objectives",
-    "title": "Images as Data",
-    "section": "Learning Objectives",
-    "text": "Learning Objectives\n\nRepresent images as tensors (H, W, C)\nDistinguish RGB vs. grayscale\nReason about resolution trade-offs\nDesign train / val / test splits and avoid leakage\nRecognize class imbalance, label noise, hidden biases"
-  },
-  {
     "objectID": "pages/slides/images_as_data.html#why-it-matters",
     "href": "pages/slides/images_as_data.html#why-it-matters",
     "title": "Images as Data",
     "section": "Why It Matters",
-    "text": "Why It Matters\n\nMany classification failures aren’t model failures — they’re data failures.\n\n\nImbalance, noisy labels, hidden shortcuts."
+    "text": "Why It Matters\nMany classification failures aren’t model failures, they’re data failures.\n\nImbalance, noisy labels, hidden shortcuts.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#images-as-tensors",
     "href": "pages/slides/images_as_data.html#images-as-tensors",
     "title": "Images as Data",
     "section": "Images as Tensors",
-    "text": "Images as Tensors\n\n\nFigure 1: An image as a tensor of shape H × W × C.\n\nEach pixel holds one or more numeric values per channel."
+    "text": "Images as Tensors\n\n\nFigure 1: An image as a tensor of shape H × W × C.\n\nEach pixel holds one or more numeric values per channel.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#pixel-values",
     "href": "pages/slides/images_as_data.html#pixel-values",
     "title": "Images as Data",
     "section": "Pixel Values",
-    "text": "Pixel Values\n\nStored as 8-bit unsigned int, range \\([0, 255]\\)\nNormalized to floats \\([0, 1]\\) for training\nOr standardized to zero mean, unit variance"
+    "text": "Pixel Values\n\nStored as 8-bit unsigned int, range \\([0, 255]\\)\nNormalized to floats \\([0, 1]\\) for training\nOr standardized to zero mean, unit variance",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#shape-conventions",
     "href": "pages/slides/images_as_data.html#shape-conventions",
     "title": "Images as Data",
     "section": "Shape Conventions",
-    "text": "Shape Conventions\n\nNumPy / PIL: H × W × C (channels last)\nPyTorch: C × H × W (channels first)\n\n\nA 224×224 RGB image:\n\nNumPy: (224, 224, 3)\nPyTorch: (3, 224, 224)\n\n\n\nMismatched conventions → silent bugs."
+    "text": "Shape Conventions\n\nNumPy / PIL: H × W × C (channels last)\nPyTorch: C × H × W (channels first)\n\n\nA 224×224 RGB image:\n\nNumPy: (224, 224, 3)\nPyTorch: (3, 224, 224)\n\n\n\nMismatched conventions can lead to silent bugs.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#quiz-batch-shape",
     "href": "pages/slides/images_as_data.html#quiz-batch-shape",
     "title": "Images as Data",
     "section": "Quiz: Batch Shape",
-    "text": "Quiz: Batch Shape\nA batch of 32 RGB images, each 224 × 224, in PyTorch.\nWhat is the tensor shape?\n\nAnswer: (32, 3, 224, 224) — batch × channels × height × width\n\n\nThe batch dimension is always first in PyTorch — enables parallel GPU computation."
+    "text": "Quiz: Batch Shape\nA batch of 32 RGB images, each 224 × 224, in PyTorch.\nWhat is the tensor shape?\n\nAnswer: (32, 3, 224, 224) — batch × channels × height × width\n\n\nThe batch dimension is always first in PyTorch, enables parallel GPU computation.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#quiz-mri-as-a-tensor",
     "href": "pages/slides/images_as_data.html#quiz-mri-as-a-tensor",
     "title": "Images as Data",
     "section": "Quiz: MRI as a Tensor",
-    "text": "Quiz: MRI as a Tensor\nHow would an MRI scan be represented? Does H × W × C still apply?\n\n\n2-D slice: H × W (or H × W × 1)\n3-D volume: D × H × W\nMulti-sequence (T1, T2, FLAIR, …): D × H × W × C\nfMRI (time series): T × D × H × W\n\n\n\nThe H × W × C abstraction generalizes — sequences/depth become extra axes."
+    "text": "Quiz: MRI as a Tensor\nHow would an MRI scan be represented? Does H × W × C still apply?\n\n\n2-D slice: H × W (or H × W × 1)\n3-D volume: D × H × W\nMulti-sequence (T1, T2, FLAIR, …): D × H × W × C\nfMRI (time series): T × D × H × W\n\n\n\nThe H × W × C abstraction generalizes, sequences/depth become extra axes.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#color-and-channels",
     "href": "pages/slides/images_as_data.html#color-and-channels",
     "title": "Images as Data",
     "section": "Color and Channels",
-    "text": "Color and Channels\n\n\nFigure 2: RGB (3 channels) vs. grayscale (1 channel) — same image, different representations."
+    "text": "Color and Channels\n\n\nFigure 2: RGB (3 channels) vs. grayscale (1 channel) — same image, different representations.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#channel-counts-in-the-wild",
     "href": "pages/slides/images_as_data.html#channel-counts-in-the-wild",
     "title": "Images as Data",
     "section": "Channel Counts in the Wild",
-    "text": "Channel Counts in the Wild\n\n1: grayscale, depth, thermal/IR, X-ray, ultrasound\n3: RGB (also HSV, Lab — same info, different axes)\n4: RGBA (alpha) or RGB + near-infrared\nN (10s–100s): multispectral / hyperspectral (remote sensing, agriculture, astronomy)\n\n\nOnly C changes — the tensor structure stays the same."
+    "text": "Channel Counts in the Wild\n\n1: grayscale, depth, thermal/IR, X-ray, ultrasound\n3: RGB (also HSV, same info, different axes)\n4: RGBA (alpha) or RGB + near-infrared\nN (10s–100s): multispectral / hyperspectral (remote sensing, agriculture, astronomy)\n\n\nOnly C changes, the tensor structure stays the same.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#beyond-rgb",
     "href": "pages/slides/images_as_data.html#beyond-rgb",
     "title": "Images as Data",
     "section": "Beyond RGB",
-    "text": "Beyond RGB\n\nInfrared — thermal imaging, night vision, satellite\nDepth maps — distance-to-camera per pixel\nMultispectral / Hyperspectral — narrow wavelength bands\nHSV — separates hue from brightness; useful for color-based augmentation/segmentation"
+    "text": "Beyond RGB\n\nInfrared: thermal imaging, night vision, satellite\nDepth maps: distance-to-camera per pixel\nMultispectral / Hyperspectral: narrow wavelength bands\nHSV: separates hue from brightness; useful for color-based augmentation/segmentation",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#resolution",
     "href": "pages/slides/images_as_data.html#resolution",
     "title": "Images as Data",
     "section": "Resolution",
-    "text": "Resolution\n\n\nFigure 3: Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost."
+    "text": "Resolution\n\n\nFigure 3: Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#resolution-trade-offs",
     "href": "pages/slides/images_as_data.html#resolution-trade-offs",
     "title": "Images as Data",
     "section": "Resolution Trade-offs",
-    "text": "Resolution Trade-offs\n\nHigher → preserves detail, costs memory + compute\nLower → faster, lighter, but discards information\nAspect-ratio distortion → squashing to square deforms objects\n\n\nCommon: resize shortest edge + center-crop, or resize with padding."
+    "text": "Resolution Trade-offs\n\nHigher: preserves detail, costs memory + compute\nLower: faster, lighter, but discards information\nAspect-ratio distortion: squashing to square deforms objects\n\n\nCommon: resize shortest edge + center-crop, or resize with padding.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#labels-and-classes",
     "href": "pages/slides/images_as_data.html#labels-and-classes",
     "title": "Images as Data",
     "section": "Labels and Classes",
-    "text": "Labels and Classes\n\n\n\nIndex\nClass Name\n\n\n\n\n0\nempty\n\n\n1\ndeer\n\n\n2\nfox\n\n\n3\nbadger\n\n\n4\nbird\n\n\n\nExample mapping for a camera-trap dataset."
+    "text": "Labels and Classes\n\n\n\nIndex\nClass Name\n\n\n\n\n0\nempty\n\n\n1\ndeer\n\n\n2\nfox\n\n\n3\nbadger\n\n\n4\nbird\n\n\n\nExample mapping for a camera-trap dataset.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#class-granularity",
     "href": "pages/slides/images_as_data.html#class-granularity",
     "title": "Images as Data",
     "section": "Class Granularity",
-    "text": "Class Granularity\n\nFine-grained (red deer vs. roe deer) → more data, more ambiguity\nCoarse (animal vs. empty) → easier, less informative\n\n\n\nSingle-label: exactly one class per image\nMulti-label: multiple simultaneously (e.g. deer + bird)"
+    "text": "Class Granularity\n\nFine-grained: (red deer vs. roe deer), more data, more ambiguity\nCoarse: (animal vs. empty), easier, less informative",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#dataset-splits",
     "href": "pages/slides/images_as_data.html#dataset-splits",
     "title": "Images as Data",
     "section": "Dataset Splits",
-    "text": "Dataset Splits\n\nTrain — optimize parameters; seen repeatedly\nValidation — tune hyperparameters, monitor overfitting; never trained on\nTest — held out for final, unbiased evaluation"
+    "text": "Dataset Splits\n\nTrain: optimize parameters; seen repeatedly\nValidation: tune hyperparameters, monitor overfitting; never trained on\nTest: held out for final, unbiased evaluation",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#splitting-strategies",
     "href": "pages/slides/images_as_data.html#splitting-strategies",
     "title": "Images as Data",
     "section": "Splitting Strategies",
-    "text": "Splitting Strategies\n\nRandom — not always appropriate\nStratified — preserve class distribution across splits\nGrouped — keep related images (same event, patient, location) in the same split"
+    "text": "Splitting Strategies\n\nRandom: not always appropriate\nStratified: preserve class distribution across splits\nGrouped: keep related images (same event, patient, location) in the same split",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#grouped-splits",
     "href": "pages/slides/images_as_data.html#grouped-splits",
     "title": "Images as Data",
     "section": "Grouped Splits",
-    "text": "Grouped Splits\n\n\nFigure 4: Three frames from a single camera-trap trigger event — near-duplicates.\n\nAll three must go into the same split."
+    "text": "Grouped Splits\n\n\nFigure 4: Three frames from a single camera-trap trigger event — near-duplicates.\n\nAll three must go into the same split.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#data-leakage",
     "href": "pages/slides/images_as_data.html#data-leakage",
     "title": "Images as Data",
     "section": "Data Leakage",
-    "text": "Data Leakage\nInformation from val/test inadvertently influences training.\n\n→ Inflated metrics, real-world collapse."
+    "text": "Data Leakage\nInformation from val/test inadvertently influences training.\n\nInflated metrics, real-world collapse.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#common-leakage-sources",
     "href": "pages/slides/images_as_data.html#common-leakage-sources",
     "title": "Images as Data",
     "section": "Common Leakage Sources",
-    "text": "Common Leakage Sources\n\nNear-duplicates across splits (camera-trap bursts, video frames)\nSame subject / location in multiple splits\nPreprocessing stats computed over the full dataset (not just training)"
+    "text": "Common Leakage Sources\n\nNear-duplicates across splits (camera-trap bursts, video frames)\nSame subject / location in multiple splits\nPreprocessing stats computed over the full dataset (not just training)",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#quiz-dermoscopy-splits",
     "href": "pages/slides/images_as_data.html#quiz-dermoscopy-splits",
     "title": "Images as Data",
     "section": "Quiz: Dermoscopy Splits",
-    "text": "Quiz: Dermoscopy Splits\n500 patients, multiple visits each. Images shuffled and split 80/10/10.\nWhat goes wrong?\n\nSame patient appears in train AND test. The model learns to recognize patients — skin tone, mole patterns, clinic lighting — instead of lesions.\n\n\nFix: split at the patient level."
+    "text": "Quiz: Dermoscopy Splits\n500 patients, multiple visits each. Images shuffled and split 80/10/10.\nWhat goes wrong?\n\nSame patient appears in train AND test. The model learns to recognize patients. Skin tone, mole patterns, clinic lighting, instead of lesions.\n\n\nFix: split at the patient level.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#class-imbalance",
     "href": "pages/slides/images_as_data.html#class-imbalance",
     "title": "Images as Data",
     "section": "Class Imbalance",
-    "text": "Class Imbalance\n\n\nFigure 5: Camera-trap class distribution. “Empty” dominates; rare species are scarce."
+    "text": "Class Imbalance\n\n\nFigure 5: Camera-trap class distribution. “Empty” dominates; rare species are scarce.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#consequences-of-imbalance",
     "href": "pages/slides/images_as_data.html#consequences-of-imbalance",
     "title": "Images as Data",
     "section": "Consequences of Imbalance",
-    "text": "Consequences of Imbalance\n\nModel favors the majority class — minimizes overall loss\nRare classes get few gradient updates\nAccuracy lies — predicting always “empty” can hit 90%"
+    "text": "Consequences of Imbalance\n\nModel favors the majority class — minimizes overall loss\nRare classes get few gradient updates\nAccuracy lies — predicting always “empty” can hit 90%",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#mitigations",
     "href": "pages/slides/images_as_data.html#mitigations",
     "title": "Images as Data",
     "section": "Mitigations",
-    "text": "Mitigations\n\nOversample minorities / undersample majorities\nWeighted loss — penalize errors on rare classes more\nBetter metrics: per-class precision, recall, F1"
+    "text": "Mitigations\n\nOversample minorities / undersample majorities\nWeighted loss — penalize errors on rare classes more\nBetter metrics: per-class precision, recall, F1",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#label-noise",
     "href": "pages/slides/images_as_data.html#label-noise",
     "title": "Images as Data",
     "section": "Label Noise",
-    "text": "Label Noise\n\n\nFigure 6: Wolf or large dog? Empty, or a tail at the edge of the frame?"
+    "text": "Label Noise\n\n\nFigure 6: Wolf or large dog? Empty, or a tail at the edge of the frame?",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#sources-of-label-noise",
     "href": "pages/slides/images_as_data.html#sources-of-label-noise",
     "title": "Images as Data",
     "section": "Sources of Label Noise",
-    "text": "Sources of Label Noise\n\nInter-annotator disagreement on borderline cases\nSystematic errors — annotators consistently confuse two classes\nAmbiguous category boundaries — class definitions overlap\n\n\nModels first learn clean patterns, then memorize noise (Arpit et al. 2017) — early stopping helps.\n\n\nPractical takeaway: always inspect the data before training."
+    "text": "Sources of Label Noise\n\nInter-annotator disagreement on borderline cases\nSystematic errors — annotators consistently confuse two classes\nAmbiguous category boundaries — class definitions overlap\n\n\nModels first learn clean patterns, then memorize noise (Arpit et al. 2017) — early stopping helps.\n\n\nPractical takeaway: always inspect the data before training.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#hidden-bias-cows-on-beaches",
     "href": "pages/slides/images_as_data.html#hidden-bias-cows-on-beaches",
     "title": "Images as Data",
     "section": "Hidden Bias — Cows on Beaches",
-    "text": "Hidden Bias — Cows on Beaches\n\n\nFigure 7: Same animal, different background → different prediction. The background, not the cow, drives the prediction. Adapted from Beery et al. (2018)."
+    "text": "Hidden Bias — Cows on Beaches\n\n\nFigure 7: Same animal, different background → different prediction. The background, not the cow, drives the prediction. Adapted from Beery et al. (2018).",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#forms-of-hidden-bias",
     "href": "pages/slides/images_as_data.html#forms-of-hidden-bias",
     "title": "Images as Data",
     "section": "Forms of Hidden Bias",
-    "text": "Forms of Hidden Bias\n\nGeographic — limited regional diversity (architecture, vegetation, clothing)\nSelection — internet-sourced images overrepresent certain demographics/styles\nWatermark / source artifacts — visual quirks correlate with labels\n\n\nHard to detect from aggregate metrics — surface only via failure analysis."
+    "text": "Forms of Hidden Bias\n\nGeographic — limited regional diversity (architecture, vegetation, clothing)\nSelection — internet-sourced images overrepresent certain demographics/styles\nWatermark / source artifacts — visual quirks correlate with labels\n\n\nHard to detect from aggregate metrics — surface only via failure analysis.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/images_as_data.html#key-takeaways",
     "href": "pages/slides/images_as_data.html#key-takeaways",
     "title": "Images as Data",
     "section": "Key Takeaways",
-    "text": "Key Takeaways\n\nImages = tensors of shape H × W × C (PyTorch: C × H × W)\nResolution is a trade-off — detail vs. compute\nSplits matter: stratify, group, avoid leakage\nImbalance, noise, bias — inspect data before training\n\n\nThe model can only be as good as the data it learns from."
+    "text": "Key Takeaways\n\nImages = tensors of shape H × W × C (PyTorch: C × H × W)\nResolution is a trade-off — detail vs. compute\nSplits matter: stratify, group, avoid leakage\nImbalance, noise, bias — inspect data before training\n\n\nThe model can only be as good as the data it learns from.",
+    "crumbs": [
+      "Slides",
+      "Images as Data"
+    ]
   },
   {
     "objectID": "pages/slides/cnns.html#learning-objectives",
@@ -1700,7 +1801,7 @@
     "href": "pages/background/frameworks.html#tensors",
     "title": "3 - Software & Hardware for Deep Learning",
     "section": "2.2 Tensors",
-    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.7118, 0.9271],\n        [0.4913, 0.0759]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.9554, 0.9065, 0.4293],\n        [0.0409, 0.5768, 0.8368]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
+    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.7317, 0.5832],\n        [0.0510, 0.5721]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.9702, 0.1741, 0.5940],\n        [0.1875, 0.7835, 0.3365]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware for Deep Learning"
@@ -1711,7 +1812,7 @@
     "href": "pages/background/frameworks.html#autograd",
     "title": "3 - Software & Hardware for Deep Learning",
     "section": "2.3 Autograd",
-    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332],\n        [0.0120, 0.2873, 0.3332]])\ntensor([0.0120, 0.2873, 0.3332])",
+    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.3240, 0.2222, 0.3173],\n        [0.3240, 0.2222, 0.3173],\n        [0.3240, 0.2222, 0.3173],\n        [0.3240, 0.2222, 0.3173],\n        [0.3240, 0.2222, 0.3173]])\ntensor([0.3240, 0.2222, 0.3173])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware for Deep Learning"
@@ -1722,7 +1823,7 @@
     "href": "pages/background/frameworks.html#torch.nn",
     "title": "3 - Software & Hardware for Deep Learning",
     "section": "2.4 torch.nn",
-    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([4])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
+    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([9])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware for Deep Learning"

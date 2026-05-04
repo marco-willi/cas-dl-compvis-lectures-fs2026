@@ -359,7 +359,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="k-nn-code" class="slide level2">
 <h2>k-NN — Code</h2>
-<div id="4069cc51" class="cell" data-execution_count="1">
+<div id="716a6cda" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> torch, sklearn.neighbors <span class="im">as</span> sk</span>
 <span id="cb1-2"><a></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel, AutoImageProcessor</span>
 <span id="cb1-3"><a></a></span>
@@ -389,7 +389,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="linear-probe-code" class="slide level2">
 <h2>Linear Probe — Code</h2>
-<div id="6324ed01" class="cell" data-execution_count="2">
+<div id="490fc5b5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb2-2"><a></a><span class="im">from</span> torch <span class="im">import</span> nn, optim</span>
 <span id="cb2-3"><a></a><span class="im">import</span> timm</span>
@@ -421,7 +421,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="lora-code" class="slide level2">
 <h2>LoRA — Code</h2>
-<div id="466f02e3" class="cell" data-execution_count="3">
+<div id="077bdfb9" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel</span>
 <span id="cb3-2"><a></a><span class="im">from</span> peft <span class="im">import</span> LoraConfig, get_peft_model</span>
 <span id="cb3-3"><a></a><span class="im">import</span> torch</span>
@@ -449,7 +449,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="partial-ft-code" class="slide level2">
 <h2>Partial FT — Code</h2>
-<div id="bded51b1" class="cell" data-execution_count="4">
+<div id="550b1ea4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> timm, torch</span>
 <span id="cb4-2"><a></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
 <span id="cb4-3"><a></a></span>
@@ -479,7 +479,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="full-ft-code" class="slide level2">
 <h2>Full FT — Code</h2>
-<div id="b9c27823" class="cell" data-execution_count="5">
+<div id="0cfaca06" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb5-2"><a></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForImageClassification</span>
 <span id="cb5-3"><a></a></span>
