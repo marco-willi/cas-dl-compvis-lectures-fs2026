@@ -19,73 +19,136 @@ $$
 
 Exercises Day 1 and Day 2 can be found here: [Link](https://github.com/marco-willi/cas-dl-compvis-exercises-fs2026/tree/main)
 
-The exercises use the following datasets:
+
+## Datasets
+
+The following datasets can be used in the exercises.
 
 ### MNIST
 
 The classic dataset of 28×28 grayscale handwritten digits (0–9), 60k train
-and 10k test images. Used in [exercises/00_pytorch](../exercises/00_pytorch)
-as a small, fast-loading dataset for first contact with PyTorch tensors,
-`Dataset`, and `DataLoader`. Loaded directly from `torchvision.datasets.MNIST`.
+and 10k test images. Used in [00_pytorch](../exercises/00_pytorch) as a small, fast-loading dataset. Loaded directly from `torchvision.datasets.MNIST`.
 
 ![MNIST samples]({{< meta params.images_path >}}mnist_samples.png)
 
 ### Snapshot Safari SER (Serengeti)
 
-A balanced subset of camera-trap images from Serengeti National Park
-(Snapshot Safari 2024 Expansion), curated to ten species classes plus an
-`empty` class (~1850 images total). Used as the  **default** camera-trap dataset in:
+Camera-trap images from Serengeti National Park, curated to ten species classes plus an `empty` class.
 
-- 01_image_data
-- 02_classification
-- 04_adaptation
-- 05_backbones
+![SER elephant — night IR camera-trap frame]({{< meta params.images_path >}}snapshot_serengeti_elephant.jpg){width=512}
 
-![SER elephant — night IR camera-trap frame]({{< meta params.images_path >}}ser_elephant.jpg)
+There are different variants:
+
+- balanced classes
+- random sample (unbalanced)
+- random sample with crops
+
+
+Source: [LILA BC](https://lila.science/)
 
 ### Caltech Camera Traps (CCT20)
 
 A balanced 8-class subset of the CCT20 benchmark (200 images per class:
-bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel). Sourced
-from LILA Science. Offered as an **alternative** camera-trap dataset in
-exercises 02, 04, and 05.
+bobcat, cat, coyote, empty, opossum, rabbit, raccoon, squirrel).
 
-![CCT20 bobcat crossing a road at night]({{< meta params.images_path >}}cct20_bobcat.jpg)
+![CCT20 bobcat crossing a road at night]({{< meta params.images_path >}}cct20_bobcat.jpg){width=1024}
+
+Source: [LILA BC](https://lila.science/)
 
 ### Snapshot Kgalagadi
 
 A subset of Snapshot Kgalagadi Season 1 (Kalahari camera traps) covering
 six classes: empty, gemsbokoryx, birdother, steenbok, ostrich,
-jackalblackbacked. Heavily imbalanced, `empty` accounts for ~78% of the
-~3400 images, can be used in exercises 02, 04, and 05.
+jackalblackbacked. Heavily imbalanced — `empty` accounts for ~78% of the
+~3400 images.
 
-![Kgalagadi gemsbok at a Kalahari camera trap]({{< meta params.images_path >}}kgalagadi_gemsbok.jpg)
+![Kgalagadi oryx at a Kalahari camera trap]({{< meta params.images_path >}}kgalgadi_oryx.JPG){width=512}
+
+
+Source: [LILA BC](https://lila.science/)
 
 ### Amazon Berkeley Objects (ABO) Furniture
 
 A curated subset of the Amazon Berkeley Objects dataset, restricted to six
 furniture categories (bed, chair, lamp, sofa, storage, table) with multiple
-views per item, ~25k centre-cropped 224×224 JPEGs. The multi-view structure
-(via `retrieval_groups.json`) makes it well-suited for image retrieval.
-Used as the **default** dataset in 03_retrieval and offered as the **alternative** to DeepFashion.
+views per item, ~25k centre-cropped 224×224 JPEGs. The multi-view structure makes it well-suited for image retrieval.
+Used as the **default** dataset in
 
-![ABO chair — e-commerce product photo]({{< meta params.images_path >}}abo_chair.jpg)
+![ABO bed — e-commerce product photo]({{< meta params.images_path >}}abo_bed.jpg)
 
 ### DeepFashion (In-Shop Retrieval)
 
 A 5-class coarse-label subset (dresses, outerwear, pants, skirts, tops) of
 the DeepFashion In-Shop Clothes Retrieval Benchmark from MMLAB/CUHK, ~3300
 images split by item ID so all views of one product stay in the same split.
-Offered as the **alternative** to ABO in 03_retrieval.. **Internal use only — do not
-redistribute**.
 
-![DeepFashion dress — in-shop catalogue photo]({{< meta params.images_path >}}deepfashion_dress.jpg)
+
+![DeepFashion pants — in-shop catalogue photo]({{< meta params.images_path >}}deepfashion_pants.jpg)
 
 ### AMI-Br (Atypical Mitotic Figures — Breast)
 
 128×128 histopathology patches of mitotic figures from human breast cancer
 slides (subset of TUPAC16 + MIDOG21), with binary labels for normal vs.
-atypical mitoses. Used in 04_adaptation_lora as a small,
-domain-shifted target task for parameter-efficient fine-tuning (LoRA).
+atypical mitoses. Used in as a small, domain-shifted target task for parameter-efficient fine-tuning (LoRA).
 
-![AMI-Br normal mitotic figure patch]({{< meta params.images_path >}}ami_br_normal.png)
+![AMI-Br]({{< meta params.images_path >}}ami_br_normal.png)
+
+## Microsoft Cats vs Dogs
+
+The full Microsoft/Kaggle Cats and Dogs dataset (~25,000 colour photos of cats
+and dogs). Two corrupt source images (`Cat/666.jpg`, `Dog/11702.jpg`) are
+removed during preparation. Classes are balanced (50/50). Images are
+variable-size JPEGs, typically 150-500 px on the longer side.
+
+- **Source:** Microsoft (<https://www.microsoft.com/en-us/download/details.aspx?id=54765>)
+- **License:** Microsoft Terms of Use (educational/non-commercial)
+- **Split:** stratified 70/15/15, seed 42
+- **Classes:** Cat, Dog (~12,500 each)
+- **Total:** ~25,000 images
+
+
+::: {layout-ncol=2}
+![Cat]({{< meta params.images_path >}}cat.jpg){width=300}
+
+![Dog]({{< meta params.images_path >}}dog.jpg){width=300}
+:::
+
+
+## Concrete Cracks
+
+The Ozgenel et al. Concrete Crack Images dataset (~40,000 227x227 JPEG images
+of concrete surfaces), with binary labels for intact (Negative) vs. cracked
+(Positive) surfaces. Well suited for teaching binary classification and
+industrial defect detection.
+
+- **Source:** Mendeley Data, doi: 10.17632/5y9wdsg2zt.2
+- **License:** Creative Commons Attribution 4.0 (CC BY 4.0)
+- **Split:** stratified 70/15/15, seed 42
+- **Classes:** Negative (~20,000), Positive (~20,000)
+- **Total:** ~40,000 images, 227x227 px
+
+
+![Concrete Cracks — cracked surface example]({{< meta params.images_path >}}crack_example.jpg)
+
+## EuroSAT RGB
+
+The EuroSAT land-use classification dataset (RGB variant, ~27,000 images across
+10 classes from Sentinel-2 satellite imagery). Images are 64x64 px, making
+this an interesting case for discussing domain shift from ImageNet pretraining.
+
+- **Source:** Zenodo record 7711810 (<https://zenodo.org/records/7711810>)
+- **License:** MIT License
+- **Attribution:** Helber et al. (2019), IEEE JSTARS, doi: 10.1109/JSTARS.2019.2918242
+- **Split:** stratified 70/15/15, seed 42
+- **Classes (10):** AnnualCrop, Forest, HerbaceousVegetation, Highway, Industrial,
+  Pasture, PermanentCrop, Residential, River, SeaLake (~1,900-3,000 each)
+- **Total:** ~27,000 images, 64x64 px
+
+
+::: {layout-ncol=3}
+![EuroSAT — permanent crop]({{< meta params.images_path >}}sat_crop.jpg){width=200}
+
+![EuroSAT — forest]({{< meta params.images_path >}}sat_forest.jpg){width=200}
+
+![EuroSAT — highway]({{< meta params.images_path >}}sat_highway.jpg){width=200}
+:::
