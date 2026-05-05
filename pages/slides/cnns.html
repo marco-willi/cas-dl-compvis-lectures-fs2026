@@ -176,100 +176,71 @@ Marco Willi
 </div>
 
 </section>
-<section id="learning-objectives" class="slide level2 center">
-<h2>Learning Objectives</h2>
-<ul>
-<li class="fragment">Why MLPs are a poor fit for images</li>
-<li class="fragment">Three CNN principles: locality, parameter sharing, translation equivariance</li>
-<li class="fragment">Invariance vs.&nbsp;equivariance</li>
-<li class="fragment">Conv hyperparameters: kernel, stride, padding, dilation</li>
-<li class="fragment">Compute output shape &amp; parameter counts</li>
-<li class="fragment">Hierarchical features and growing receptive fields</li>
-<li class="fragment">Role of pooling, 1×1 conv, global average pooling</li>
-</ul>
-</section>
-<section id="overview" class="slide level2 center">
-<h2>Overview</h2>
-<ul>
-<li>Why CNNs Work for Images</li>
-<li>How CNNs Work</li>
-</ul>
-</section>
 <section>
 <section id="why-cnns-work-for-images" class="title-slide slide level1 center">
 <h1>Why CNNs Work for Images</h1>
 
 </section>
-<section id="image-properties" class="slide level2">
-<h2>Image Properties</h2>
+<section id="properties-of-image-data" class="slide level2">
+<h2>Properties of Image Data</h2>
 
-<img data-src="../../assets/images/cnns/cows2_small.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-example-rgb-image"><p class="caption"><a href="https://unsplash.com/de/fotos/braune-schafe-auf-grunem-grasfeld-tagsuber-olonUwUrmQk">Image Source</a></p><ul>
-<li class="fragment"><strong>High-dimensional</strong> — <span class="math inline">\(224 \times 224 \times 3 = 150{,}528\)</span> values</li>
-<li class="fragment"><strong>Locality</strong> — nearby pixels are correlated</li>
-<li class="fragment"><strong>Stability under transformations</strong> — translations, color, rotations</li>
-<li class="fragment"><strong>Hierarchical structure</strong> — pixels → edges → textures → objects</li>
+<img data-src="../../assets/images/cnns/cows2_small.png" style="width:100.0%" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://unsplash.com/de/fotos/braune-schafe-auf-grunem-grasfeld-tagsuber-olonUwUrmQk">Image Source</a></p><ul>
+<li class="fragment"><strong>High-Dimensional</strong>: An RGB image of size <span class="math inline">\(224 \times 224\)</span> has <span class="math inline">\(224 \times 224 \times 3 = 150{,}528\)</span> values</li>
+<li class="fragment"><strong>Locality</strong>: Nearby pixels are statistically related (edges, textures, objects)</li>
+<li class="fragment"><strong>Stability under transformations</strong>: A cat should be recognized regardless of position</li>
+<li class="fragment"><strong>Hierarchical Structure</strong>: Features at multiple scales (pixels → edges → textures → objects)</li>
 </ul>
-</section>
-<section id="how-are-nearby-pixels-related" class="slide level2">
-<h2>How are Nearby Pixels Related?</h2>
-<div class="fragment">
-<ul>
-<li><strong>Object coherence</strong> — pixels in an object share color/texture</li>
-<li><strong>Smooth transitions</strong> — gradual, not random</li>
-<li><strong>Texture patterns</strong> — repeating local statistics</li>
-<li><strong>Edges/boundaries</strong> — span multiple neighbors</li>
-</ul>
-</div>
 </section>
 <section id="mlps-need-flat-inputs" class="slide level2">
 <h2>MLPs Need Flat Inputs</h2>
 
-<img data-src="../../assets/images/cnns/mlp_images_example.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-mlp"><p class="caption">
-Figure&nbsp;2: Image <span class="math inline">\(\in \mathbb{R}^{H \times W \times C}\)</span> → flatten → vector <span class="math inline">\(\in \mathbb{R}^p\)</span>.
+<img data-src="../../assets/images/cnns/mlp_images_example.png" class="r-stretch quarto-figure-center" id="fig-cnn-mlp"><p class="caption">
+Figure&nbsp;1: Image <span class="math inline">\(\in \mathbb{R}^{H \times W \times C}\)</span> → flatten → vector <span class="math inline">\(\in \mathbb{R}^p\)</span>.
 </p><div class="fragment">
 <p>Flattening <strong>destroys spatial structure</strong>.</p>
 </div>
 </section>
-<section id="mlps-explode-in-size" class="slide level2">
-<h2>MLPs Explode in Size</h2>
+<section id="mlps-and-high-dimensional-inputs" class="slide level2">
+<h2>MLPs and High-Dimensional Inputs</h2>
 
-<img data-src="../../assets/images/cnns/mlp_images.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-mlp-images"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p><div class="fragment">
-<p>CIFAR-10 (<span class="math inline">\(3 \times 32 \times 32\)</span>): a single first-layer neuron has <strong>3,072 weights</strong>.</p>
-</div>
-</section>
-<section id="what-does-a-neuron-learn" class="slide level2">
-<h2>What Does a Neuron Learn?</h2>
-
-<img data-src="../../assets/images/cnns/mlp_images_example_weights.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-mlp-example-weights"><p class="caption">
-Figure&nbsp;4: A neuron’s weights reshaped to image dimensionality reveal the pattern it detects.
-</p></section>
-<section id="mlps-dont-generalize-across-positions" class="slide level2">
-<h2>MLPs Don’t Generalize Across Positions</h2>
-
-<img data-src="../../assets/images/cnns/mlp_images_example_pattern_shifts.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnns-mlp-pattern-shift"><p class="caption">
-Figure&nbsp;5: Same pattern, different positions — different weights light up.
-</p></section>
-<section id="patterns-at-different-locations" class="slide level2">
-<h2>Patterns at Different Locations</h2>
-<p>If an MLP learns “cat in the center”, what about “cat in the corner”?</p>
-<div class="fragment">
-<ul>
-<li><strong>Parameter explosion</strong> — separate weights per position</li>
-<li><strong>Data hungry</strong> — must see the pattern at every location</li>
-<li><strong>Poor generalization</strong> — fails on unseen positions</li>
-</ul>
+<img data-src="../../assets/images/cnns/mlp_images_example_weights.png" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<p>Weight matrix <span class="math inline">\(\mathbf{W} \in \mathbb{R}^{d \times k}\)</span> scales with input size (<span class="math inline">\(d\)</span> = input dimensionality, <span class="math inline">\(k\)</span> = number of neurons)</p>
 </div>
 <div class="fragment">
-<p><a href="https://adamharley.com/nn_vis/mlp/2d.html">MLP Demo</a> — try drawing a digit at different positions.</p>
+<p>Columns of <span class="math inline">\(\mathbf{W}\)</span> can be visualized as images to show what patterns each neuron learns</p>
 </div>
 </section>
-<section id="mlps-on-images-three-limitations" class="slide level2 center">
-<h2>MLPs on Images — Three Limitations</h2>
+<section id="mlps-and-translations" class="slide level2">
+<h2>MLPs and Translations</h2>
+
+<img data-src="../../assets/images/cnns/mlp_images_example_pattern_shifts.png" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<p>Patterns or objects often occur at different positions -&gt; need to recognize them everywhere!</p>
+</div>
+<div class="fragment">
+<p><strong>How do MLPs deal with this?</strong></p>
+</div>
+</section>
+<section id="mlps-and-how-they-learn" class="slide level2">
+<h2>MLPs and How they Learn</h2>
+
+<img data-src="../../assets/images/cnns/mlp_images_examples_permutation.png" class="quarto-figure quarto-figure-center r-stretch"><div class="fragment">
+<p><strong>Question</strong>: Can an MLP successfully learn patterns in images <span class="math inline">\(\mathbf{x}\)</span> that are permuted with a fixed permutation matrix <span class="math inline">\(\mathbf{P}\)</span>, i.e.&nbsp;<span class="math inline">\(f(P(\mathbf{x}))\)</span>?</p>
+</div>
+</section>
+<section id="mlps-and-images-often-not-the-best-choice" class="slide level2">
+<h2>MLPs and Images: Often Not the Best Choice</h2>
 <ul>
-<li class="fragment"><strong>High-dimensional</strong> — size scales with input</li>
-<li class="fragment"><strong>No locality</strong> — ignores spatial structure</li>
-<li class="fragment"><strong>No translation stability</strong> — must learn position-specific patterns</li>
+<li class="fragment"><strong>High-Dimensional</strong>: MLP size scales with input dimensionality → memory/compute issues</li>
+<li class="fragment"><strong>No Locality</strong>: MLPs can’t exploit spatial relationships in images</li>
+<li class="fragment"><strong>Inefficient Translation Handling</strong>: Must learn position-dependent patterns separately</li>
 </ul>
+<div class="fragment">
+<p><strong>Interactive Demo</strong>: <a href="https://adamharley.com/nn_vis/mlp/2d.html">https://adamharley.com/nn_vis/mlp/2d.html</a></p>
+<p>-&gt; explore for yourself!</p>
+</div>
+<div class="fragment">
+<p><strong>Solution?</strong> → Need architecture with <strong>inductive biases</strong> for images!</p>
+</div>
 </section>
 <section id="invariance-and-equivariance" class="slide level2">
 <h2>Invariance and Equivariance</h2>
@@ -289,7 +260,7 @@ Figure&nbsp;5: Same pattern, different positions — different weights light up.
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_invariance_original.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_invariance_original.png" style="width:75.0%"></p>
 <figcaption>Original</figcaption>
 </figure>
 </div>
@@ -297,7 +268,7 @@ Figure&nbsp;5: Same pattern, different positions — different weights light up.
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_invariance_translate.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_invariance_translate.png" style="width:75.0%"></p>
 <figcaption>Translated</figcaption>
 </figure>
 </div>
@@ -307,7 +278,7 @@ Figure&nbsp;5: Same pattern, different positions — different weights light up.
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_invariance_color.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_invariance_color.png" style="width:75.0%"></p>
 <figcaption>Color-jittered</figcaption>
 </figure>
 </div>
@@ -315,7 +286,7 @@ Figure&nbsp;5: Same pattern, different positions — different weights light up.
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_invariance_rotate.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_invariance_rotate.png" style="width:75.0%"></p>
 <figcaption>Rotated</figcaption>
 </figure>
 </div>
@@ -323,7 +294,7 @@ Figure&nbsp;5: Same pattern, different positions — different weights light up.
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cnns-invariance-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: A classifier should produce <strong>“cow”</strong> in all four cases.
+Figure&nbsp;2: A classifier should produce <strong>“cow”</strong> in all four cases.
 </figcaption>
 </figure>
 </div>
@@ -337,7 +308,7 @@ Figure&nbsp;6: A classifier should produce <strong>“cow”</strong> in all fou
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_equivariance_original.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_equivariance_original.png" style="width:75.0%"></p>
 <figcaption>Original</figcaption>
 </figure>
 </div>
@@ -345,7 +316,7 @@ Figure&nbsp;6: A classifier should produce <strong>“cow”</strong> in all fou
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_equivariance_shift_right.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_equivariance_shift_right.png" style="width:75.0%"></p>
 <figcaption>Shifted right</figcaption>
 </figure>
 </div>
@@ -355,7 +326,7 @@ Figure&nbsp;6: A classifier should produce <strong>“cow”</strong> in all fou
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_equivariance_shift_left.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_equivariance_shift_left.png" style="width:75.0%"></p>
 <figcaption>Shifted left</figcaption>
 </figure>
 </div>
@@ -363,7 +334,7 @@ Figure&nbsp;6: A classifier should produce <strong>“cow”</strong> in all fou
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/cnns/cows2_equivariance_shift_up.png"></p>
+<p><img data-src="../../assets/images/cnns/cows2_equivariance_shift_up.png" style="width:75.0%"></p>
 <figcaption>Shifted up + right</figcaption>
 </figure>
 </div>
@@ -371,61 +342,20 @@ Figure&nbsp;6: A classifier should produce <strong>“cow”</strong> in all fou
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cnns-equivariance-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: The bounding boxes <strong>move with</strong> the cows.
+Figure&nbsp;3: The bounding boxes <strong>move with</strong> the cows.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="task-required-property" class="slide level2">
-<h2>Task → Required Property</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 28%">
-<col style="width: 47%">
-<col style="width: 23%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Task</th>
-<th>Property</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Classification</strong></td>
-<td>Translation invariance</td>
-<td>A cat is a cat anywhere</td>
-</tr>
-<tr class="even">
-<td><strong>Detection</strong></td>
-<td>Translation equivariance</td>
-<td>Box moves with the object</td>
-</tr>
-<tr class="odd">
-<td><strong>Segmentation</strong></td>
-<td>Translation equivariance</td>
-<td>Pixel labels shift with input</td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="the-cnn-idea" class="slide level2 center">
 <h2>The CNN Idea</h2>
 <ol type="1">
-<li class="fragment"><strong>Local connectivity</strong> — neuron sees a small spatial region</li>
-<li class="fragment"><strong>Parameter sharing</strong> — same filter at every position</li>
-<li class="fragment"><strong>Translation equivariance</strong> — input shifts → output shifts</li>
+<li class="fragment"><strong>Local connectivity</strong>: neuron sees a small spatial region</li>
+<li class="fragment"><strong>Parameter sharing</strong>: same filter at every position</li>
+<li class="fragment"><strong>Translation equivariance</strong>: input shifts → output shifts</li>
 </ol>
 <div class="fragment">
 <p>These encode our <strong>prior knowledge</strong> about images.</p>
-</div>
-</section>
-<section id="local-connectivity" class="slide level2">
-<h2>Local Connectivity</h2>
-
-<img data-src="../../assets/images/cnns/cnn_spatial.jpg" style="width:25.0%" class="r-stretch quarto-figure-center" id="fig-cnn-cnn-spatial"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p><div class="fragment">
-<p>Result: fewer parameters, preserved structure, position-agnostic detectors.</p>
 </div>
 </section>
 <section id="inductive-bias" class="slide level2">
@@ -445,291 +375,492 @@ Figure&nbsp;7: The bounding boxes <strong>move with</strong> the cows.
 <h1>How CNNs Work</h1>
 
 </section>
-<section id="cnn-architecture" class="slide level2">
-<h2>CNN Architecture</h2>
+<section id="history-experiments-on-cats" class="slide level2">
+<h2>History: Experiments on Cats</h2>
 
-<img data-src="../../assets/images/cnns/convnet.jpeg" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-convnet"><p class="caption">Source: <span class="citation" data-cites="li_cs231n_2022">Li (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></p></section>
-<section id="the-convolution-operation" class="slide level2">
-<h2>The Convolution Operation</h2>
-<p><span class="math display">\[
-S(i, j) = (K * I)(i, j) = \sum_m \sum_n I(i + m, j + n)\, K(m, n)
-\]</span></p>
-<div class="fragment">
+<img data-src="../../assets/images/cnns/huber_wiesel_cat_experiment.jpg" class="r-stretch quarto-figure-center" id="fig-cnns-huber-wiesel"><p class="caption">Illustration <a href="https://link.springer.com/chapter/10.1007/978-3-030-28954-6_4/figures/1">Source</a></p></section>
+<section id="visual-cortex" class="slide level2">
+<h2>Visual Cortex</h2>
+
+<img data-src="../../assets/images/cnns/ventralvisualstream_v2.png" class="r-stretch quarto-figure-center" id="fig-cnns-visual-cortex"><p class="caption">Representation of transformations in the visual cortex. Source: <span class="citation" data-cites="kubilius_ventral_2017">Kubilius (<a href="#/references" role="doc-biblioref" onclick="">2017</a>)</span></p></section>
+<section id="local-connectivity" class="slide level2">
+<h2>Local Connectivity</h2>
+
+<img data-src="../../assets/images/cnns/cnn_spatial.jpg" style="width:25.0%" class="r-stretch quarto-figure-center" id="fig-cnn-cnn-spatial"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p><div class="fragment">
+<p>Result: fewer parameters, preserved structure, position-agnostic detectors.</p>
+</div>
+</section>
+<section id="convolutional-neural-networks" class="slide level2">
+<h2>Convolutional Neural Networks</h2>
+
+<img data-src="../../assets/images/cnns/convnet.jpeg" class="r-stretch quarto-figure-center" id="fig-cnns-intro-example"><p class="caption">The activations of a ConvNet architecture. The input image is on the left, and the predictions are on the right. Source: <span class="citation" data-cites="li_cs231n_2022">Li (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></p></section>
+<section id="convolution-on-rgb-images" class="slide level2">
+<h2>Convolution on RGB Images</h2>
+
+<img data-src="../../assets/images/cnns/convolution_prince_rgb.png" class="r-stretch quarto-figure-center" id="fig-cnns-intro-example"><p class="caption">Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p><div class="fragment">
+<p><span class="math display">\[\begin{equation}
+S(i, j) = (K * I)(i, j) = \sum_m \sum_n I(i + m, j + n) K(m, n) + b
+\end{equation}\]</span></p>
 <ul>
-<li><span class="math inline">\(I\)</span> — input</li>
-<li><span class="math inline">\(K\)</span> — kernel (smaller than <span class="math inline">\(I\)</span>)</li>
-<li><span class="math inline">\(i, j\)</span> — spatial position in the output</li>
+<li><span class="math inline">\(I\)</span>: Input (e.g., image)</li>
+<li><span class="math inline">\(K\)</span>: Kernel (typically smaller than <span class="math inline">\(I\)</span>)</li>
+<li>Bias term <span class="math inline">\(b\)</span> added to weighted sum</li>
 </ul>
 </div>
-<div class="fragment">
-<p><a href="https://poloclub.github.io/cnn-explainer/">CNN Explainer</a> — interactive demo.</p>
-</div>
 </section>
-<section id="filter-vs.-kernel" class="slide level2">
-<h2>Filter vs.&nbsp;Kernel</h2>
+<section id="convolutional-layers" class="slide level2">
+<h2>Convolutional Layers</h2>
+
+<img data-src="../../assets/images/cnns/cnn_conv_one_number.jpg" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p></section>
+<section id="convolutional-layers-1" class="slide level2">
+<h2>Convolutional Layers</h2>
+
+<img data-src="../../assets/images/cnns/conv_activation_map.jpg" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p></section>
+<section id="convolutional-layers-2" class="slide level2">
+<h2>Convolutional Layers</h2>
+
+<img data-src="../../assets/images/cnns/conv_activation_map2.jpg" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p></section>
+<section id="convolutional-layers-3" class="slide level2">
+<h2>Convolutional Layers</h2>
+
+<img data-src="../../assets/images/cnns/conv_activation_map3.jpg" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p></section>
+<section id="convolutional-layers-4" class="slide level2">
+<h2>Convolutional Layers</h2>
+
+<!--
+## Convolution on RGB Images
+
+::: {#fig-cnns-intro-example}
+
+![A 2D convolution applied to an image. Illustrated is the element-wise multiplication of the kernel weights $\Omega$ with the corresponding RGB input values at a specific position. Source:  @prince_understanding_2023](/assets/images/cnns/convolution_prince_rgb.png)
+
+::: -->
+<img data-src="../../assets/images/cnns/conv_activation_map4.jpg" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p></section>
+<section id="convolution-hyperparameters" class="slide level2">
+<h2>Convolution Hyperparameters</h2>
+<p>Key parameters to configure a convolutional layer:</p>
 <ul>
-<li class="fragment"><strong>Kernel</strong> — 2-D (<span class="math inline">\(H \times W\)</span>)</li>
-<li class="fragment"><strong>Filter</strong> — 3-D (<span class="math inline">\(C \times H \times W\)</span>); a stack of <span class="math inline">\(C\)</span> kernels</li>
+<li class="fragment"><strong>Padding</strong> (<span class="math inline">\(p\)</span>): Zero-padding added to input borders</li>
+<li class="fragment"><strong>Stride</strong> (<span class="math inline">\(s\)</span>): Step size when moving the kernel</li>
+<li class="fragment"><strong>Kernel Size</strong> (<span class="math inline">\(k\)</span>): Spatial extent (typically <span class="math inline">\(3\times3\)</span> or <span class="math inline">\(5\times5\)</span>)</li>
+<li class="fragment"><strong>Dilation</strong> (<span class="math inline">\(d\)</span>): Spacing between kernel elements</li>
 </ul>
-</section>
-<section id="convolution-on-rgb" class="slide level2">
-<h2>Convolution on RGB</h2>
-
-<img data-src="../../assets/images/cnns/convolution_prince_rgb.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnns-intro-example"><p class="caption">Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p></section>
-<section id="step-by-step" class="slide level2">
-<h2>Step by Step</h2>
-
-<img data-src="../../assets/images/cnns/conv_step_by_step.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-conv-step-by-step"><p class="caption">
-Figure&nbsp;11: Slide the filter, compute <span class="math inline">\(\sum (\text{patch} \odot \text{kernel}) + b\)</span> at each position.
-</p></section>
-<section id="multi-channel-convolution" class="slide level2">
-<h2>Multi-Channel Convolution</h2>
-
-<img data-src="../../assets/images/cnns/conv_rgb_channels.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-conv-multi-channel"><p class="caption">
-Figure&nbsp;12: Each channel filtered separately; per-channel sums add up + bias → one scalar.
-</p></section>
-<section id="multiple-filters-output-volume" class="slide level2">
-<h2>Multiple Filters → Output Volume</h2>
-
-<img data-src="../../assets/images/cnns/conv_multi_filter.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-conv-multi-filter"><p class="caption">
-Figure&nbsp;13: Stack activation maps along the channel axis → output volume with <span class="math inline">\(C_\text{out}\)</span> channels.
-</p><div class="fragment">
-<p>In practice: 4-D tensors — <span class="math inline">\(N \times C_\text{in} \times H \times W \to N \times C_\text{out} \times H' \times W'\)</span>.</p>
-</div>
-</section>
-<section id="translation-equivariance" class="slide level2">
-<h2>Translation Equivariance</h2>
-<div id="fig-cnn-translation-equivariance" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-cnn-translation-equivariance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<iframe data-external="1" src="https://www.youtube.com/embed/qoWAFBYOtoU?start=50" width="1200" height="600" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cnn-translation-equivariance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: Same filter at every position → output shifts when input shifts.
-</figcaption>
-</figure>
-</div>
-<div class="fragment">
-<p>For <strong>invariance</strong> (classification), add pooling or global average pooling.</p>
-</div>
-</section>
-<section id="stride" class="slide level2">
-<h2>Stride</h2>
-
-<img data-src="../../assets/images/cnns/stride1_example.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-stride1"><p class="caption">
-Figure&nbsp;15: Stride 1 — filter moves one pixel at a time.
-</p></section>
-<section id="stride-2-downsampling" class="slide level2">
-<h2>Stride 2 — Downsampling</h2>
-
-<img data-src="../../assets/images/cnns/stride2_example.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-stride2"><p class="caption">
-Figure&nbsp;16: Stride 2 — moves two pixels at a time, halving the spatial size.
-</p><div class="fragment">
-<p>Strided convolution = <strong>learned downsampling</strong> (vs.&nbsp;fixed pooling).</p>
-</div>
 </section>
 <section id="padding" class="slide level2">
 <h2>Padding</h2>
+<div class="fragment">
+<p><strong>Question</strong>: Output size when convolving with <span class="math inline">\(3\times3\)</span> kernel?</p>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="fragment">
+<p><strong>Without padding:</strong></p>
+<p><img data-src="../../assets/images/cnns/padding_input_activations_5x5.jpg"></p>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="fragment">
+<p><strong>With zero-padding:</strong></p>
+<p><img data-src="../../assets/images/cnns/padding_input_activations_5x5_with_zero_padding.jpg"></p>
+</div>
+</div></div>
+</section>
+<section id="padding-effect" class="slide level2">
+<h2>Padding Effect</h2>
 
-<img data-src="../../assets/images/cnns/padding_example_result.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-padding"><p class="caption">
-Figure&nbsp;17: Zero-padding the border preserves spatial size — essential for segmentation.
-</p></section>
+<img data-src="../../assets/images/cnns/padding_example_result.jpg" class="r-stretch quarto-figure-center"><p class="caption">Left: Input (Yellow) with Zero-Padding (white border), Middle: Filter, Right: Output.</p><div class="fragment">
+<p><strong>Key Use</strong>: Preserve spatial dimensions → essential for segmentation!</p>
+</div>
+</section>
+<section id="stride-1" class="slide level2">
+<h2>Stride = 1</h2>
+
+<img data-src="../../assets/images/cnns/stride1_example.jpg" class="r-stretch quarto-figure-center"><p class="caption">Convolution with stride <span class="math inline">\((1, 1)\)</span></p><div class="fragment">
+<p>Kernel moves <strong>1 pixel</strong> at a time → <strong>preserves spatial resolution</strong></p>
+</div>
+</section>
+<section id="stride-2" class="slide level2">
+<h2>Stride = 2</h2>
+
+<img data-src="../../assets/images/cnns/stride2_example.jpg" class="r-stretch quarto-figure-center"><p class="caption">Convolution with stride <span class="math inline">\((2, 2)\)</span></p><div class="fragment">
+<p>Kernel moves <strong>2 pixels</strong> at a time → <strong>downsamples</strong> by factor of 2</p>
+</div>
+<div class="fragment">
+<p><strong>Advantage</strong>: Learned downsampling (vs.&nbsp;fixed pooling)</p>
+</div>
+</section>
 <section id="kernel-size" class="slide level2">
-<h2>Kernel Size</h2>
+<h2>Kernel-Size</h2>
 
-<img data-src="../../assets/images/cnns/kernel_size_example_3x3.jpg" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-cnn-kernel-size3x3"><p class="caption">
-Figure&nbsp;18: <span class="math inline">\(3 \times 3\)</span> kernel with padding — output size unchanged.
-</p></section>
-<section id="larger-kernels" class="slide level2">
-<h2>Larger Kernels</h2>
+<img data-src="../../assets/images/cnns/kernel_size_example_3x3.jpg" class="r-stretch"></section>
+<section id="kernel-size-1" class="slide level2">
+<h2>Kernel-Size</h2>
 
-<img data-src="../../assets/images/cnns/kernel_size_example_5x5.jpg" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-cnn-kernel-size5x5"><p class="caption">
-Figure&nbsp;19: <span class="math inline">\(5 \times 5\)</span> kernel — wider receptive field, more parameters.
-</p><div class="fragment">
-<p><strong>Modern design:</strong> stack multiple <span class="math inline">\(3 \times 3\)</span> — fewer params, more nonlinearities.</p>
+<img data-src="../../assets/images/cnns/kernel_size_example_5x5.jpg" class="r-stretch"><div class="fragment">
+<p>What is the difference between using 3x3 vs 5x5 kernels? What is the same?</p>
 </div>
 </section>
 <section id="dilation" class="slide level2">
 <h2>Dilation</h2>
 
-<img data-src="../../assets/images/cnns/dilation_example.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-dilation"><p class="caption">
-Figure&nbsp;20: Spread the kernel — larger receptive field, <strong>same parameters</strong>.
-</p></section>
-<section id="why-dilation" class="slide level2">
-<h2>Why Dilation?</h2>
+<img data-src="../../assets/images/cnns/dilation_example.jpg" class="r-stretch"><div class="fragment">
+<p>Why would we use dilation <span class="math inline">\(d \gt 1\)</span>?</p>
+</div>
+</section>
+<section id="calculations-spatial-dimensionality-of-activation-maps" class="slide level2">
+<h2>Calculations: Spatial Dimensionality of Activation Maps</h2>
+<p>You can calculate the dimensionality of the activation maps with the following formulas:</p>
 <ul>
-<li class="fragment"><strong>Larger receptive field</strong> without more layers</li>
-<li class="fragment"><strong>Same parameter count</strong></li>
-<li class="fragment"><strong>Multi-scale features</strong> with varying dilation rates</li>
+<li><span class="math inline">\(i\)</span>: Side length of the input activations (assumption: square inputs)</li>
+<li><span class="math inline">\(k\)</span>: Kernel size (assumption: square kernel)</li>
+<li><span class="math inline">\(o\)</span>: Side length of the output activation maps</li>
+<li><span class="math inline">\(s\)</span>: Stride (assumption: same stride along spatial dimensions)</li>
+<li><span class="math inline">\(p\)</span>: Number of paddings on each side (assumption: same number of paddings along spatial dimensions)</li>
+<li><span class="math inline">\(d\)</span>: Dilation rate.</li>
 </ul>
 <div class="fragment">
-<p>Used in DeepLab (segmentation), WaveNet (audio), Dilated ResNets.</p>
-</div>
-<div class="fragment">
-<p>3×3 with dilation 2 → receptive field of 5×5, only 9 params (vs.&nbsp;25).</p>
+<p><span class="math display">\[\begin{equation}
+o = \left\lfloor \frac{i + 2p - d\cdot(k-1) - 1}{s} + 1 \right\rfloor
+\end{equation}\]</span></p>
 </div>
 </section>
-<section id="conv-animations" class="slide level2">
-<h2>Conv Animations</h2>
-<div class="fragment">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="../../assets/images/cnns/no_padding_no_strides.gif" style="width:20.0%"></p>
-<figcaption>Source <span class="citation" data-cites="dumoulin_guide_2016">Dumoulin and Visin (<a href="#/references" role="doc-biblioref" onclick="">2016</a>)</span></figcaption>
-</figure>
-</div>
-<p>3×3 kernel over 5×5 input, no padding, stride 1.</p>
-</div>
-<p><a href="https://github.com/vdumoulin/conv_arithmetic">github.com/vdumoulin/conv_arithmetic</a></p>
-</section>
-<section id="output-size-formula" class="slide level2">
-<h2>Output Size Formula</h2>
-<p><span class="math display">\[
-o = \left\lfloor \frac{i + 2p - d \cdot (k-1) - 1}{s} + 1 \right\rfloor
-\]</span></p>
-<div class="fragment">
+<section id="calculations-number-of-weights-in-a-convolutional-layer" class="slide level2">
+<h2>Calculations: Number of Weights in a Convolutional Layer</h2>
+<p>You can calculate the total number of weights in a convolutional layer with the following formula:</p>
 <ul>
-<li><span class="math inline">\(i\)</span> — input side length</li>
-<li><span class="math inline">\(k\)</span> — kernel size</li>
-<li><span class="math inline">\(p\)</span> — padding (per side)</li>
-<li><span class="math inline">\(s\)</span> — stride</li>
-<li><span class="math inline">\(d\)</span> — dilation</li>
+<li><span class="math inline">\(k\)</span>: Kernel size (assumption: square kernel, so kernel has dimensions <span class="math inline">\(k \times k\)</span>)</li>
+<li><span class="math inline">\(C_{in}\)</span>: Number of input channels</li>
+<li><span class="math inline">\(C_{out}\)</span>: Number of output channels</li>
 </ul>
+<div class="fragment">
+<p><span class="math display">\[\begin{equation}
+\text{Total Weights} = (k \times k) \times C_{in} \times C_{out}
+\end{equation}\]</span></p>
+</div>
+<div class="fragment">
+<p>Each filter has a size of <span class="math inline">\(k \times k \times C_{in}\)</span>, and there are <span class="math inline">\(C_{out}\)</span> filters in total, resulting in <span class="math inline">\((k \times k \times C_{in}) \times C_{out}\)</span> weights.</p>
+</div>
+<div class="fragment">
+<p><strong>Biases:</strong> If each output channel has a bias term, add an additional <span class="math inline">\(C_{out}\)</span> weights for the biases.</p>
+<p><span class="math display">\[\begin{equation}
+\text{Total Parameters} = (k \times k \times C_{in} \times C_{out}) + C_{out}
+\end{equation}\]</span></p>
 </div>
 </section>
-<section id="quiz-output-shape" class="slide level2">
-<h2>Quiz: Output Shape</h2>
-<p><span class="math inline">\(i = 32, \; k = 3, \; p = 1, \; s = 2, \; d = 1\)</span>. Find <span class="math inline">\(o\)</span>.</p>
-<div class="fragment">
-<p><span class="math display">\[o = \left\lfloor \frac{32 + 2 - 1 \cdot 2 - 1}{2} + 1 \right\rfloor = \left\lfloor \frac{31}{2} + 1 \right\rfloor = 16\]</span></p>
-</div>
-<div class="fragment">
-<p><strong>Intuition:</strong> stride 2 ≈ halves the spatial dim; padding preserves a bit.</p>
-</div>
-</section>
-<section id="parameter-count" class="slide level2">
-<h2>Parameter Count</h2>
-<p><span class="math display">\[
-\text{Weights} = k \times k \times C_\text{in} \times C_\text{out}
-\]</span></p>
-<div class="fragment">
-<p><span class="math display">\[
-\text{Total} = k \times k \times C_\text{in} \times C_\text{out} + C_\text{out}
-\]</span> (plus one bias per output channel)</p>
-</div>
-</section>
-<section id="quiz-parameter-counting" class="slide level2">
-<h2>Quiz: Parameter Counting</h2>
-<p>Layer: <span class="math inline">\(C_\text{in} = 3, \; C_\text{out} = 64, \; k = 5\)</span>, with bias.</p>
-<div class="fragment">
+<section id="quiz-output-shape-parameters" class="slide level2">
+<h2>Quiz: Output Shape &amp; Parameters</h2>
+<p><strong>Scenario:</strong></p>
 <ul>
-<li><strong>Weights</strong>: <span class="math inline">\(5 \times 5 \times 3 \times 64 = 4{,}800\)</span></li>
-<li><strong>Biases</strong>: <span class="math inline">\(64\)</span></li>
-<li><strong>Total</strong>: <span class="math inline">\(4{,}864\)</span></li>
+<li>Input: <span class="math inline">\(3 \times 32 \times 32\)</span> (C, H, W)</li>
+<li>Convolution: 10 filters, kernel <span class="math inline">\(5 \times 5\)</span>, stride=1, pad=2</li>
 </ul>
+<div class="fragment">
+<p><strong>Questions:</strong></p>
+<ol type="1">
+<li>What is the size of the output activation map?</li>
+<li>How many parameters does this operation have?</li>
+</ol>
+</div>
+</section>
+<section id="quiz-output-shape-parameters-1" class="slide level2">
+<h2>Quiz: Output Shape &amp; Parameters</h2>
+<p><strong>Formulas:</strong></p>
+<div class="fragment">
+<p><span class="math display">\[\begin{equation}
+o = \left\lfloor \frac{i + 2p - d\cdot(k-1) - 1}{s} + 1 \right\rfloor
+\end{equation}\]</span></p>
 </div>
 <div class="fragment">
-<p>A fully connected alternative (<span class="math inline">\(32 \times 32 \times 3 \to 64\)</span>): <span class="math display">\[
-196{,}608 \quad \text{parameters} \;\; (\text{40× more!})
-\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\text{Total Parameters} = (k \times k \times C_{in} \times C_{out}) + C_{out}
+\end{equation}\]</span></p>
+</div>
+</section>
+<section id="quiz-solutions" class="slide level2">
+<h2>Quiz: Solutions</h2>
+<div class="fragment">
+<p><strong>1. Output size:</strong></p>
+<p><span class="math inline">\(o = \lfloor \frac{32 + 2(2) - 1(5-1) - 1}{1} + 1 \rfloor = \lfloor \frac{32 + 4 - 4 - 1}{1} + 1 \rfloor = 32\)</span></p>
+</div>
+<div class="fragment">
+<p>Output shape: <span class="math inline">\(10 \times 32 \times 32\)</span></p>
+</div>
+<div class="fragment">
+<p><strong>2. Parameters:</strong></p>
+<p><span class="math inline">\((5 \times 5 \times 3 \times 10) + 10 = 750 + 10 = 760\)</span> parameters</p>
+</div>
+<div class="fragment">
+<p><strong>Key Insight:</strong> Padding=2 preserves spatial dimensions with kernel=5!</p>
+</div>
+</section></section>
+<section>
+<section id="properties" class="title-slide slide level1 center">
+<h1>Properties</h1>
+
+</section>
+<section id="cnn-key-properties" class="slide level2">
+<h2>CNN Key Properties</h2>
+<div class="fragment">
+<p><strong>1. Local (Sparse) Connectivity</strong></p>
+<p>Neurons only connect to small spatial regions</p>
+</div>
+<div class="fragment">
+<p><strong>2. Parameter Sharing</strong></p>
+<p>Same weights applied across entire input (translation equivariance!)</p>
+</div>
+</section>
+<section id="think-about-it" class="slide level2">
+<h2>Think About It</h2>
+<ul>
+<li class="fragment">Can we recognize cats with a one-layer CNN?</li>
+<li class="fragment">Can we recognize cats <strong>anywhere</strong> in an image with a CNN?</li>
+<li class="fragment">Is parameter sharing <strong>always</strong> useful?</li>
+<li class="fragment">What about images with position-dependent features?</li>
+</ul>
+</section>
+<section id="translation-invariance-equivariance" class="slide level2">
+<h2>Translation Invariance / Equivariance</h2>
+<p>Given a translation <span class="math inline">\(g()\)</span>, which spatially shifts inputs:</p>
+<ul>
+<li>Translation invariance: <span class="math inline">\(f(g(x))=f(x)\)</span></li>
+<li>Translation equivariance: <span class="math inline">\(f(g(x))=g(f(x))\)</span></li>
+</ul>
+<div class="fragment">
+<p>Are convolutions translation invariant, equivariant, or both?</p>
+</div>
+<div class="fragment">
+<iframe data-external="1" src="https://www.youtube.com/embed/qoWAFBYOtoU?start=50" width="800" height="400" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
 </div>
 </section>
 <section id="stacking-convolutions" class="slide level2">
 <h2>Stacking Convolutions</h2>
-
-<img data-src="../../assets/images/cnns/conv_stacking.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-conv-stacking"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p><div class="fragment">
-<p>Non-linear activations between layers are <strong>essential</strong> — otherwise it collapses to a single linear conv.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/cnns/conv_stacking.jpg" style="width:100.0%;height:70.0%"></p>
+<figcaption>Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></figcaption>
+</figure>
 </div>
 </section>
-<section id="hierarchical-features" class="slide level2">
-<h2>Hierarchical Features</h2>
+<section id="receptive-field" class="slide level2">
+<h2>Receptive Field</h2>
 
-<img data-src="../../assets/images/cnns/zeiler_learned_filters.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-cnn-conv-zeiler"><p class="caption">Source: <span class="citation" data-cites="Zeiler2014">Zeiler and Fergus (<a href="#/references" role="doc-biblioref" onclick="">2014</a>)</span></p></section>
-<section id="receptive-field-one-layer" class="slide level2">
-<h2>Receptive Field — One Layer</h2>
+<img data-src="../../assets/images/cnns/receptive_field1.jpg" class="r-stretch quarto-figure-center"><p class="caption">Using a 5x5 kernel</p></section>
+<section id="receptive-field-1" class="slide level2">
+<h2>Receptive Field</h2>
 
-<img data-src="../../assets/images/cnns/receptive_field1.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-receptive-field-1"><p class="caption">
-Figure&nbsp;23: Single layer with a 5×5 kernel.
-</p></section>
-<section id="receptive-field-two-layers" class="slide level2">
-<h2>Receptive Field — Two Layers</h2>
+<img data-src="../../assets/images/cnns/receptive_field2.jpg" class="r-stretch quarto-figure-center"><p class="caption">Using a 5x5 kernel and two layers</p></section>
+<section id="receptive-field-2" class="slide level2">
+<h2>Receptive Field</h2>
 
-<img data-src="../../assets/images/cnns/receptive_field4.jpg" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-receptive-field-4"><p class="caption">
-Figure&nbsp;24: Two stacked 5×5 convolutions → <strong>9×9</strong> receptive field.
-</p></section>
+<img data-src="../../assets/images/cnns/receptive_field3.jpg" class="r-stretch"></section>
+<section id="receptive-field-3" class="slide level2">
+<h2>Receptive Field</h2>
+
+<img data-src="../../assets/images/cnns/receptive_field4.jpg" class="r-stretch"></section>
 <section id="receptive-field-formula" class="slide level2">
-<h2>Receptive Field Formula</h2>
-<p><span class="math display">\[
-r_0 = \sum_{l=1}^L \left( (k_l - 1) \prod_{i=1}^{l-1} s_i \right) + 1
-\]</span></p>
+<h2>Receptive Field: Formula</h2>
+<p>The receptive field of a CNN <span class="math inline">\(r_0\)</span>:</p>
 <div class="fragment">
-<p>Stacking small kernels grows the field efficiently.</p>
+<p><span class="math display">\[\begin{equation}
+r_0 = \sum_{l=1}^L \left( (k_l - 1) \prod_{i=1}^{l-1} s_i \right) + 1
+\end{equation}\]</span></p>
+</div>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(L\)</span>: Total number of layers</li>
+<li><span class="math inline">\(k_l\)</span>: Kernel size at layer <span class="math inline">\(l\)</span></li>
+<li><span class="math inline">\(s_i\)</span>: Stride at layer <span class="math inline">\(i\)</span>, from layer 1 up to <span class="math inline">\(l-1\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Special case</strong>: If all strides <span class="math inline">\(s_i=1\)</span>, receptive field = <span class="math inline">\(\sum (k_l - 1) + 1\)</span></p>
 </div>
 </section>
 <section id="quiz-receptive-field" class="slide level2">
 <h2>Quiz: Receptive Field</h2>
+<p><strong>Network Architecture:</strong></p>
 <ul>
-<li>Layer 1: kernel=3, stride=1</li>
-<li>Layer 2: kernel=3, stride=2</li>
-<li>Layer 3: kernel=5, stride=1</li>
+<li>Layer 1: <span class="math inline">\(k_1 = 3\)</span>, <span class="math inline">\(s_1 = 1\)</span></li>
+<li>Layer 2: <span class="math inline">\(k_2 = 3\)</span>, <span class="math inline">\(s_2 = 1\)</span></li>
+<li>Layer 3: <span class="math inline">\(k_3 = 3\)</span>, <span class="math inline">\(s_3 = 1\)</span></li>
 </ul>
 <div class="fragment">
-<p><span class="math inline">\(r_0 = (3-1)\cdot 1 + (3-1)\cdot 1 + (5-1)\cdot(1 \cdot 2) + 1\)</span></p>
-</div>
-<div class="fragment">
-<p><span class="math inline">\(r_0 = 2 + 2 + 8 + 1 = \mathbf{13}\)</span> → <strong>13 × 13</strong> receptive field.</p>
+<p><strong>Question</strong>: What is the receptive field <span class="math inline">\(r_0\)</span>?</p>
 </div>
 </section>
-<section id="pooling" class="slide level2">
-<h2>Pooling</h2>
-
-<img data-src="../../assets/images/cnns/downsampling_with_pooling.jpg" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-cnn-downsampling-pooling"><p class="caption">Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p></section>
-<section id="convolutions" class="slide level2">
-<h2>1×1 Convolutions</h2>
-
-<img data-src="../../assets/images/cnns/1x1_conv_example.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-1x1-conv"><p class="caption">Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p></section>
-<section id="global-average-pooling" class="slide level2">
-<h2>Global Average Pooling</h2>
-
-<img data-src="../../assets/images/cnns/global_average_pooling.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cnn-global-avg-pooling"><p class="caption">
-Figure&nbsp;27: Average each map → <span class="math inline">\((C \times H \times W) \to (C \times 1 \times 1)\)</span>.
-</p><div class="fragment">
-<p>Provides translation <strong>invariance</strong> — and replaces fully-connected heads.</p>
+<section id="quiz-receptive-field-solution" class="slide level2">
+<h2>Quiz: Receptive Field Solution</h2>
+<div class="fragment">
+<p>Using formula: <span class="math inline">\(r_0 = \sum_{l=1}^L \left( (k_l - 1) \prod_{i=1}^{l-1} s_i \right) + 1\)</span></p>
 </div>
+<div class="fragment">
+<p>Since all <span class="math inline">\(s_i = 1\)</span>: <span class="math display">\[r_0 = (3-1) + (3-1) + (3-1) + 1 = 2 + 2 + 2 + 1 = 7\]</span></p>
+</div>
+<div class="fragment">
+<p><strong>Key Insight</strong>: Stacking three <span class="math inline">\(3\times3\)</span> convs gives <span class="math inline">\(7\times7\)</span> receptive field!</p>
+</div>
+<div class="fragment">
+<p><strong>Efficiency</strong>: Three <span class="math inline">\(3\times3\)</span> = <span class="math inline">\(3 \times 9 = 27\)</span> params vs one <span class="math inline">\(7\times7\)</span> = 49 params</p>
+</div>
+</section>
+<section id="architecture" class="slide level2">
+<h2>Architecture</h2>
+<p>Sequence of layers and their hyper-parameters defines an architecture.</p>
+<div class="fragment">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/cnns/vgg_illustration.jpg"></p>
+<figcaption>VGG - Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="learned-filters" class="slide level2">
+<h2>Learned Filters</h2>
+
+<img data-src="../../assets/images/cnns/learned_filters.png" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="krizhevsky_imagenet_2012">Krizhevsky et al. (<a href="#/references" role="doc-biblioref" onclick="">2012</a>)</span></p></section>
+<section id="lets-test-it" class="slide level2">
+<h2>Let’s test it!</h2>
+<p>Let’s train a CNN.</p>
+<p>Here is an interesting demo: <a href="https://poloclub.github.io/cnn-explainer/">https://poloclub.github.io/cnn-explainer/</a></p>
 </section></section>
 <section>
-<section id="summary" class="title-slide slide level1 center">
-<h1>Summary</h1>
+<section id="more-layers-operations" class="title-slide slide level1 center">
+<h1>More Layers &amp; Operations</h1>
 
 </section>
-<section id="key-takeaways" class="slide level2">
-<h2>Key Takeaways</h2>
+<section id="downsampling" class="slide level2">
+<h2>Downsampling</h2>
+<div class="fragment">
+<p>Spatial downsampling reduces resolution (H×W → H’×W’)</p>
+</div>
+<div class="fragment">
+<p><strong>Options:</strong></p>
+<ol type="1">
+<li>Stride <span class="math inline">\(&gt; 1\)</span> (learned downsampling)</li>
+<li>Pooling layers (fixed operation)</li>
+</ol>
+</div>
+<div class="fragment">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/cnns/downsampling_with_pooling.jpg" style="width:80.0%"></p>
+<figcaption>a) Sub-Sampling, b) Max Pooling, c) Average Pooling. Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="upsampling" class="slide level2">
+<h2>Upsampling</h2>
+<div class="fragment">
+<p>Need to <strong>increase</strong> spatial dimensions (H×W → H’×W’)</p>
+</div>
+<div class="fragment">
+<p><strong>Example use case?</strong></p>
+</div>
+<div class="fragment">
+<p><strong>Image Segmentation</strong> - need pixel-level predictions!</p>
+</div>
+</section>
+<section id="upsampling-methods" class="slide level2">
+<h2>Upsampling Methods</h2>
+
+<img data-src="../../assets/images/cnns/upsampling_options.jpg" style="width:80.0%" class="r-stretch quarto-figure-center"><p class="caption">a) Duplicate, b) Max-Unpooling, c) Bilinear Interpolation. Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p><div class="fragment">
+<p>Also: <strong>Transposed Convolutions</strong> (learnable upsampling)</p>
+</div>
+</section>
+<section id="upsampling-with-transposed-convolutions" class="slide level2">
+<h2>Upsampling with Transposed Convolutions</h2>
+
+<img data-src="../../assets/images/cnns/transposed_convolution.jpg" class="r-stretch"><p>More details in image segmentation!</p>
+</section>
+<section id="convolutions" class="slide level2">
+<h2>1×1 Convolutions</h2>
+<div class="fragment">
+<p><strong>Purpose</strong>: Change number of channels without spatial mixing</p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\((C_{in} \times H \times W) \rightarrow (C_{out} \times H \times W)\)</span></p>
+</div>
+<div class="fragment">
+<p><strong>Use cases:</strong></p>
 <ul>
-<li class="fragment">MLPs flatten images → lose structure, explode in size</li>
-<li class="fragment">CNNs encode <strong>locality + parameter sharing + translation equivariance</strong> as inductive biases</li>
-<li class="fragment">Conv hyperparameters: kernel, stride, padding, dilation — control receptive field &amp; output size</li>
-<li class="fragment">Stacked convs grow receptive fields and learn <strong>hierarchical features</strong></li>
-<li class="fragment">Pooling, 1×1 conv, global avg pool — workhorse layers around convolutions</li>
+<li>Dimensionality reduction (bottleneck layers)</li>
+<li>Increase model depth without parameters explosion</li>
+<li>Cross-channel information mixing</li>
 </ul>
+</div>
+<!-- ::: {#fig-cnn-1x1}
+
+![Source: @johnson_eecs_2019](/assets/images/cnns/1x1_conv.jpg){width=100% height=70%}
+
+::: -->
+
+<img data-src="../../assets/images/cnns/1x1_conv_example.jpg" class="r-stretch quarto-figure-center" id="fig-cnn-1x1"><p class="caption">Source: <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></p></section>
+<section id="global-average-pooling" class="slide level2">
+<h2>Global Average Pooling</h2>
+<p>Global Average Pooling is often an important component. It computes the average of the activations along the depth dimension, reducing activation maps from (C x H x W) to (C x 1 x 1). This is useful for directly modeling logits in a classification problem with C classes, enabling architectures that completely eliminate fully-connected layers.</p>
+
+<img data-src="../../assets/images/cnns/global_average_pooling.jpg" class="r-stretch quarto-figure-center" id="fig-cnn-global-avg-pooling"><p class="caption">Global Average pooling, input (left) and output (right).</p></section>
+<section id="other-layers" class="slide level2">
+<h2>Other Layers</h2>
+<div class="fragment">
+<p>Many other layer types exist:</p>
+</div>
+<ul>
+<li class="fragment">Depthwise separable convolutions (efficiency)</li>
+<li class="fragment">Dilated convolutions (large receptive fields)</li>
+<li class="fragment">Grouped convolutions (parameter reduction)</li>
+<li class="fragment">Batch normalization (training stability)</li>
+<li class="fragment">Dropout (regularization)</li>
+</ul>
+</section>
+<section id="quiz-mlp-vs-cnn-efficiency" class="slide level2">
+<h2>Quiz: MLP vs CNN Efficiency</h2>
+<p><strong>CIFAR-10 Images</strong>: <span class="math inline">\(32 \times 32 \times 3\)</span></p>
+<div class="fragment">
+<p><strong>MLP</strong>: 2 hidden layers (256, 128 neurons)</p>
+<p>How many parameters in first layer?</p>
+</div>
+<div class="fragment">
+<p><strong>CNN</strong>: 2 conv layers (16 filters, <span class="math inline">\(3\times3\)</span>, then 32 filters, <span class="math inline">\(3\times3\)</span>)</p>
+<p>How many parameters in first layer?</p>
+</div>
+</section>
+<section id="quiz-solutions-1" class="slide level2">
+<h2>Quiz: Solutions</h2>
+<div class="fragment">
+<p><strong>MLP first layer:</strong></p>
+<p><span class="math inline">\((32 \times 32 \times 3) \times 256 = 3{,}072 \times 256 = 786{,}432\)</span> parameters</p>
+</div>
+<div class="fragment">
+<p><strong>CNN first layer:</strong></p>
+<p><span class="math inline">\((3 \times 3 \times 3 \times 16) + 16 = 432 + 16 = 448\)</span> parameters</p>
+</div>
+<div class="fragment">
+<p><strong>CNN uses 1,755× fewer parameters!</strong> 🚀</p>
+</div>
+<div class="fragment">
+<p><strong>Why?</strong> Local connectivity + parameter sharing = massive efficiency!</p>
+</div>
 </section></section>
 <section id="references" class="title-slide slide level1 smaller scrollable">
 <h1>References</h1>
 <div style="font-size: 50%;">
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-dumoulin_guide_2016" class="csl-entry" role="listitem">
-Dumoulin, Vincent, and Francesco Visin. 2016. <span>“A Guide to Convolution Arithmetic for Deep Learning.”</span> <em>ArXiv e-Prints</em>, March.
-</div>
 <div id="ref-johnson_eecs_2019" class="csl-entry" role="listitem">
 Johnson, Justin. 2019. <em><span>EECS</span> 498-007 / 598-005: <span>Deep</span> <span>Learning</span> for <span>Computer</span> <span>Vision</span></em>. Lecture {Notes} / {Slides}. <a href="https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2019/">https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2019/</a>.
+</div>
+<div id="ref-krizhevsky_imagenet_2012" class="csl-entry" role="listitem">
+Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E Hinton. 2012. <span>“<span>ImageNet</span> <span>Classification</span> with <span>Deep</span> <span>Convolutional</span> <span>Neural</span> <span>Networks</span>.”</span> In <em>Advances in <span>Neural</span> <span>Information</span> <span>Processing</span> <span>Systems</span></em>, edited by F. Pereira, C. J. Burges, L. Bottou, and K. Q. Weinberger, vol. 25. Curran Associates, Inc. <a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf</a>.
+</div>
+<div id="ref-kubilius_ventral_2017" class="csl-entry" role="listitem">
+Kubilius, Jonas. 2017. <em>Ventral Visual Stream</em>. <a href="https://figshare.com/articles/figure/Ventral_visual_stream/106794">https://figshare.com/articles/figure/Ventral_visual_stream/106794</a>.
 </div>
 <div id="ref-li_cs231n_2022" class="csl-entry" role="listitem">
 Li, Fei-Fei. 2022. <em><span>CS231n</span> <span>Convolutional</span> <span>Neural</span> <span>Networks</span> for <span>Visual</span> <span>Recognition</span></em>. Lecture {Notes}. <a href="https://cs231n.github.io">https://cs231n.github.io</a>.
 </div>
 <div id="ref-prince_understanding_2023" class="csl-entry" role="listitem">
 Prince, Simon J. D. 2023. <em>Understanding <span>Deep</span> <span>Learning</span></em>. MIT Press. <a href="https://udlbook.github.io/udlbook/">https://udlbook.github.io/udlbook/</a>.
-</div>
-<div id="ref-Zeiler2014" class="csl-entry" role="listitem">
-Zeiler, Matthew D., and Rob Fergus. 2014. <span>“Visualizing and Understanding Convolutional Networks.”</span> <em>Lecture Notes in Computer Science (Including Subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)</em> 8689 LNCS (PART 1): 818–33. <a href="https://doi.org/10.1007/978-3-319-10590-1_53">https://doi.org/10.1007/978-3-319-10590-1_53</a>.
 </div>
 </div>
 </div>

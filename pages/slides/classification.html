@@ -242,16 +242,6 @@ Marco Willi
 </div>
 
 </section>
-<section id="learning-objectives" class="slide level2 center">
-<h2>Learning Objectives</h2>
-<ul>
-<li class="fragment">Distinguish multi-class, binary, multi-label, multi-task classification</li>
-<li class="fragment">Role of <strong>softmax</strong>: logits → probabilities</li>
-<li class="fragment"><strong>Cross-entropy</strong> loss and why it punishes confident wrong predictions</li>
-<li class="fragment">Architecture progression: AlexNet → VGG → ResNet → ConvNeXt</li>
-<li class="fragment">Why <strong>residual connections</strong> matter</li>
-</ul>
-</section>
 <section id="overview" class="slide level2 center">
 <h2>Overview</h2>
 <ul>
@@ -265,63 +255,26 @@ Marco Willi
 <h1>The Classification Task</h1>
 
 </section>
+<section id="adversarial-panda" class="slide level2">
+<h2>Adversarial Panda</h2>
+
+<img data-src="../../assets/images/classification/adversarial_panda.jpg" style="width:40.0%" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="goodfellow_explaining_2015">Goodfellow et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span></p></section>
+<section id="adversarial-panda-1" class="slide level2">
+<h2>Adversarial Panda</h2>
+
+<img data-src="../../assets/images/classification/adversarial_panda2.jpg" style="width:80.0%" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="goodfellow_explaining_2015">Goodfellow et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span></p></section>
 <section id="image-classification" class="slide level2">
 <h2>Image Classification</h2>
 
 <img data-src="../../assets/images/classification/classification_illustration.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-classification-classification-illustration"><p class="caption">
 Figure&nbsp;1: Assign an image to one of <span class="math inline">\(K\)</span> predefined categories.
-</p><div class="fragment">
-<p>The task that sparked the deep learning revolution (<span class="citation" data-cites="krizhevsky_imagenet_2012">Krizhevsky et al. (<a href="#/references" role="doc-biblioref" onclick="">2012</a>)</span>).</p>
-</div>
-</section>
-<section id="variants" class="slide level2">
-<h2>Variants</h2>
-<ul>
-<li class="fragment"><strong>Multi-class</strong>: exactly one of <span class="math inline">\(K &gt; 2\)</span> classes (species ID)</li>
-<li class="fragment"><strong>Binary</strong>: <span class="math inline">\(K = 2\)</span> (animal present vs.&nbsp;empty)</li>
-<li class="fragment"><strong>Multi-label</strong>: multiple labels from <em>one</em> shared set (deer + bird)</li>
-<li class="fragment"><strong>Multi-task</strong>: multiple <em>separate</em> label sets (species, behavior, time-of-day)</li>
-</ul>
-</section>
-<section id="multi-label-vs.-multi-task" class="slide level2">
-<h2>Multi-label vs.&nbsp;Multi-task</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 28%">
-<col style="width: 37%">
-<col style="width: 34%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Property</th>
-<th>Multi-label</th>
-<th>Multi-task</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Label sets</td>
-<td>One shared set</td>
-<td>Multiple separate sets</td>
-</tr>
-<tr class="even">
-<td>Example</td>
-<td>deer ✓, bird ✓, fox ✗</td>
-<td>species: deer / behavior: grazing / time: day</td>
-</tr>
-<tr class="odd">
-<td>Output head</td>
-<td>One head, sigmoid per class</td>
-<td>One head per task</td>
-</tr>
-<tr class="even">
-<td>Loss</td>
-<td>BCE per class</td>
-<td>Sum of per-task losses</td>
-</tr>
-</tbody>
-</table>
-</section>
+</p></section>
+<section id="classification-variants" class="slide level2">
+<h2>Classification Variants</h2>
+
+<img data-src="../../assets/images/classification/classification_tasks.png" class="r-stretch quarto-figure-center" id="fig-classification-tasks"><p class="caption">
+Figure&nbsp;2
+</p></section>
 <section id="example-imagenet" class="slide level2">
 <h2>Example: ImageNet</h2>
 
@@ -330,7 +283,7 @@ Figure&nbsp;1: Assign an image to one of <span class="math inline">\(K\)</span> 
 <h2>Example: Camera Traps</h2>
 
 <img data-src="../../assets/images/classification/camera_traps.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-classification-camera-traps"><p class="caption">
-Figure&nbsp;3: Classify wildlife images by species.
+Figure&nbsp;4: Classify wildlife images by species.
 </p></section></section>
 <section>
 <section id="modelling-classification" class="title-slide slide level1 center">
@@ -362,15 +315,15 @@ P(Y = k \mid X = \mathbf{x}^{(i)}) = \sigma(\mathbf{z})_k = \frac{e^{z_k}}{\sum_
 </section>
 <section id="logits-probabilities" class="slide level2">
 <h2>Logits → Probabilities</h2>
-<div id="cell-fig-classification-logits-to-probs" class="cell" data-execution_count="1">
+<div id="cell-fig-classification-logits-to-probs" class="cell" data-fig-height="4.5" data-fig-width="11" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div id="fig-classification-logits-to-probs" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig">
 <div aria-describedby="fig-classification-logits-to-probs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img data-src="classification_files/figure-revealjs/fig-classification-logits-to-probs-output-1.png" width="854" height="278">
+<img data-src="classification_files/figure-revealjs/fig-classification-logits-to-probs-output-1.png" width="1046" height="422">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-classification-logits-to-probs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Logits (left) → probabilities via softmax (right).
+Figure&nbsp;5: Logits (left) → probabilities via softmax (right).
 </figcaption>
 </figure>
 </div>
@@ -380,6 +333,10 @@ Figure&nbsp;4: Logits (left) → probabilities via softmax (right).
 <p>Logits can be any real number — softmax always produces a valid distribution.</p>
 </div>
 </section>
+<section id="probabilities" class="slide level2">
+<h2>Probabilities</h2>
+
+<img data-src="../../assets/images/classification/confidences.jpg" style="width:80.0%" class="r-stretch quarto-figure-center"><p class="caption">Image classifier with confidences.</p></section>
 <section id="cross-entropy-the-idea" class="slide level2">
 <h2>Cross-Entropy: The Idea</h2>
 <div class="fragment">
@@ -427,7 +384,7 @@ L(\mathbf{X}, \mathbf{y}, \theta) = -\frac{1}{N} \sum_{i=1}^N \sum_{j=1}^K y_j^{
 <img data-src="classification_files/figure-revealjs/fig-classification-cross-entropy-output-1.png" width="854" height="278">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-classification-cross-entropy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: True distribution (left) vs.&nbsp;predicted (right). CE measures the mismatch.
+Figure&nbsp;6: True distribution (left) vs.&nbsp;predicted (right). CE measures the mismatch.
 </figcaption>
 </figure>
 </div>
@@ -509,7 +466,7 @@ P(\mathbf{y} \mid \theta, \mathbf{X}) = \prod_{i=1}^N \prod_{j=1}^K P(Y = j \mid
 </section>
 <section id="alexnet-loading-via-torchvision" class="slide level2">
 <h2>AlexNet — Loading via torchvision</h2>
-<div id="abbc37de" class="cell" data-execution_count="3">
+<div id="9a93674a" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a></a><span class="im">import</span> torchvision.models <span class="im">as</span> models</span>
 <span id="cb1-3"><a></a><span class="im">import</span> torchinfo</span>
@@ -555,15 +512,17 @@ P(\mathbf{y} \mid \theta, \mathbf{X}) = \prod_{i=1}^N \prod_{j=1}^K P(Y = j \mid
 </section>
 <section id="convnext-2022" class="slide level2">
 <h2>ConvNeXt (2022)</h2>
-
-<img data-src="../../assets/images/classification/convnext.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-classification-convnext"><p class="caption"><span class="citation" data-cites="liu_convnet_2022">Liu et al. (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></p><div class="fragment">
-<ul>
-<li>Larger kernels</li>
-<li>Different activations</li>
-<li>LayerNorm instead of BatchNorm</li>
-<li>Depthwise separable convolutions</li>
-</ul>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="fragment">
+<p><img data-src="../../assets/images/classification/convnext_part1.jpg"></p>
 </div>
+</div><div class="column" style="width:50%;">
+<div class="fragment">
+<p><img data-src="../../assets/images/classification/convnext_part2.jpg"></p>
+</div>
+</div></div>
+<p>Figures from <span class="citation" data-cites="liu_convnet_2022">Liu et al. (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span>.</p>
 </section>
 <section id="which-architecture" class="slide level2 center">
 <h2>Which Architecture?</h2>
@@ -602,6 +561,9 @@ P(\mathbf{y} \mid \theta, \mathbf{X}) = \prod_{i=1}^N \prod_{j=1}^K P(Y = j \mid
 <h1>References</h1>
 <div style="font-size: 50%;">
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-goodfellow_explaining_2015" class="csl-entry" role="listitem">
+Goodfellow, Ian J., Jonathon Shlens, and Christian Szegedy. 2015. <em>Explaining and <span>Harnessing</span> <span>Adversarial</span> <span>Examples</span></em>. arXiv. <a href="http://arxiv.org/abs/1412.6572">http://arxiv.org/abs/1412.6572</a>.
+</div>
 <div id="ref-He2016" class="csl-entry" role="listitem">
 He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep <span>Residual</span> <span>Learning</span> for <span>Image</span> <span>Recognition</span>.”</span> <em>2016 <span>IEEE</span> <span>Conference</span> on <span>Computer</span> <span>Vision</span> and <span>Pattern</span> <span>Recognition</span> (<span>CVPR</span>)</em>, June, 770–78. <a href="https://doi.org/10.1109/CVPR.2016.90">https://doi.org/10.1109/CVPR.2016.90</a>.
 </div>
