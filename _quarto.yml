@@ -96,11 +96,11 @@ website:
         contents:
           - pages/slides/intro.qmd
           - pages/slides/images_as_data.qmd
-          # - pages/slides/cnns.qmd
-          # - pages/slides/classification.qmd
-          # - pages/slides/representation_learning.qmd
-          # - pages/slides/downstream_adaptation.qmd
-          # - pages/slides/vision_transformers.qmd
+          - pages/slides/cnns.qmd
+          - pages/slides/classification.qmd
+          - pages/slides/representation_learning.qmd
+          - pages/slides/downstream_adaptation.qmd
+          - pages/slides/vision_transformers.qmd
       # ------ Exercises ---------------------------- #
       - text: "Exercises"
         href: pages/misc/exercises.qmd

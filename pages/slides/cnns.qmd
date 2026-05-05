@@ -11,56 +11,28 @@ $$
 :::
 
 
-## Learning Objectives {.center}
-
-::: {.incremental}
-- Why MLPs are a poor fit for images
-- Three CNN principles: locality, parameter sharing, translation equivariance
-- Invariance vs. equivariance
-- Conv hyperparameters: kernel, stride, padding, dilation
-- Compute output shape & parameter counts
-- Hierarchical features and growing receptive fields
-- Role of pooling, 1×1 conv, global average pooling
-:::
-
-
-## Overview {.center}
-
-- Why CNNs Work for Images
-- How CNNs Work
-
 
 # Why CNNs Work for Images
 
 
-## Image Properties
+## Properties of Image Data
 
-::: {#fig-cnn-example-rgb-image}
-![[Image Source](https://unsplash.com/de/fotos/braune-schafe-auf-grunem-grasfeld-tagsuber-olonUwUrmQk)]({{< meta params.images_path >}}cows2_small.png){width=70%}
-:::
+
+![[Image Source](https://unsplash.com/de/fotos/braune-schafe-auf-grunem-grasfeld-tagsuber-olonUwUrmQk)]({{< meta params.images_path >}}cows2_small.png){width=100%}
 
 ::: {.incremental}
-- **High-dimensional** — $224 \times 224 \times 3 = 150{,}528$ values
-- **Locality** — nearby pixels are correlated
-- **Stability under transformations** — translations, color, rotations
-- **Hierarchical structure** — pixels → edges → textures → objects
+- **High-Dimensional**: An RGB image of size $224 \times 224$ has $224 \times 224 \times 3 = 150{,}528$ values
+- **Locality**: Nearby pixels are statistically related (edges, textures, objects)
+- **Stability under transformations**: A cat should be recognized regardless of position
+- **Hierarchical Structure**: Features at multiple scales (pixels → edges → textures → objects)
 :::
 
-
-## How are Nearby Pixels Related?
-
-::: {.fragment}
-- **Object coherence** — pixels in an object share color/texture
-- **Smooth transitions** — gradual, not random
-- **Texture patterns** — repeating local statistics
-- **Edges/boundaries** — span multiple neighbors
-:::
 
 
 ## MLPs Need Flat Inputs
 
 ::: {#fig-cnn-mlp}
-![]({{< meta params.images_path >}}mlp_images_example.png){width=60%}
+![ ]({{< meta params.images_path >}}mlp_images_example.png)
 
 Image $\in \mathbb{R}^{H \times W \times C}$ → flatten → vector $\in \mathbb{R}^p$.
 :::
@@ -70,56 +42,55 @@ Flattening **destroys spatial structure**.
 :::
 
 
-## MLPs Explode in Size
+## MLPs and High-Dimensional Inputs
 
-::: {#fig-cnn-mlp-images}
-![Source: @johnson_eecs_2019]({{< meta params.images_path >}}mlp_images.jpg){width=60%}
+![ ]({{< meta params.images_path >}}mlp_images_example_weights.png){fig-align="center"}
+
+::: {.fragment}
+Weight matrix $\m{W} \in \mathbb{R}^{d \times k}$ scales with input size ($d$ = input dimensionality, $k$ = number of neurons)
 :::
 
 ::: {.fragment}
-CIFAR-10 ($3 \times 32 \times 32$): a single first-layer neuron has **3,072 weights**.
+Columns of $\m{W}$ can be visualized as images to show what patterns each neuron learns
 :::
 
+## MLPs and Translations
 
-## What Does a Neuron Learn?
-
-::: {#fig-cnn-mlp-example-weights}
-![]({{< meta params.images_path >}}mlp_images_example_weights.png){width=60%}
-
-A neuron's weights reshaped to image dimensionality reveal the pattern it detects.
-:::
-
-
-## MLPs Don't Generalize Across Positions
-
-::: {#fig-cnns-mlp-pattern-shift}
-![]({{< meta params.images_path >}}mlp_images_example_pattern_shifts.png){width=60%}
-
-Same pattern, different positions — different weights light up.
-:::
-
-
-## Patterns at Different Locations
-
-If an MLP learns "cat in the center", what about "cat in the corner"?
+![]({{< meta params.images_path >}}mlp_images_example_pattern_shifts.png){fig-align="center"}
 
 ::: {.fragment}
-- **Parameter explosion** — separate weights per position
-- **Data hungry** — must see the pattern at every location
-- **Poor generalization** — fails on unseen positions
+Patterns or objects often occur at different positions -> need to recognize them everywhere!
 :::
 
 ::: {.fragment}
-[MLP Demo](https://adamharley.com/nn_vis/mlp/2d.html) — try drawing a digit at different positions.
+**How do MLPs deal with this?**
+:::
+
+## MLPs and How they Learn
+
+![]({{< meta params.images_path >}}mlp_images_examples_permutation.png){fig-align="center"}
+
+::: {.fragment}
+**Question**: Can an MLP successfully learn patterns in images $\vect{x}$ that are permuted with a fixed permutation matrix $\m{P}$, i.e. $f(P(\vect{x}))$?
 :::
 
 
-## MLPs on Images — Three Limitations {.center}
+## MLPs and Images: Often Not the Best Choice
 
 ::: {.incremental}
-- **High-dimensional** — size scales with input
-- **No locality** — ignores spatial structure
-- **No translation stability** — must learn position-specific patterns
+- **High-Dimensional**: MLP size scales with input dimensionality → memory/compute issues
+- **No Locality**: MLPs can't exploit spatial relationships in images
+- **Inefficient Translation Handling**: Must learn position-dependent patterns separately
+:::
+
+::: {.fragment}
+**Interactive Demo**: [https://adamharley.com/nn_vis/mlp/2d.html](https://adamharley.com/nn_vis/mlp/2d.html)
+
+-> explore for yourself!
+:::
+
+::: {.fragment}
+**Solution?** → Need architecture with **inductive biases** for images!
 :::
 
 
@@ -140,15 +111,15 @@ $$f(g(\vect{x})) = g(f(\vect{x}))$$
 
 ## Invariance — Classification
 
-::: {#fig-cnns-invariance-example layout-ncol=2}
+::: {#fig-cnns-invariance-example layout-ncol=2 fig-width=6}
 
-![Original]({{< meta params.images_path >}}cows2_invariance_original.png)
+![Original]({{< meta params.images_path >}}cows2_invariance_original.png){width=75%}
 
-![Translated]({{< meta params.images_path >}}cows2_invariance_translate.png)
+![Translated]({{< meta params.images_path >}}cows2_invariance_translate.png){width=75%}
 
-![Color-jittered]({{< meta params.images_path >}}cows2_invariance_color.png)
+![Color-jittered]({{< meta params.images_path >}}cows2_invariance_color.png){width=75%}
 
-![Rotated]({{< meta params.images_path >}}cows2_invariance_rotate.png)
+![Rotated]({{< meta params.images_path >}}cows2_invariance_rotate.png){width=75%}
 
 A classifier should produce **"cow"** in all four cases.
 :::
@@ -156,52 +127,30 @@ A classifier should produce **"cow"** in all four cases.
 
 ## Equivariance — Detection
 
-::: {#fig-cnns-equivariance-example layout-ncol=2}
+::: {#fig-cnns-equivariance-example layout-ncol=2 fig-width=6}
 
-![Original]({{< meta params.images_path >}}cows2_equivariance_original.png)
+![Original]({{< meta params.images_path >}}cows2_equivariance_original.png){width=75%}
 
-![Shifted right]({{< meta params.images_path >}}cows2_equivariance_shift_right.png)
+![Shifted right]({{< meta params.images_path >}}cows2_equivariance_shift_right.png){width=75%}
 
-![Shifted left]({{< meta params.images_path >}}cows2_equivariance_shift_left.png)
+![Shifted left]({{< meta params.images_path >}}cows2_equivariance_shift_left.png){width=75%}
 
-![Shifted up + right]({{< meta params.images_path >}}cows2_equivariance_shift_up.png)
+![Shifted up + right]({{< meta params.images_path >}}cows2_equivariance_shift_up.png){width=75%}
 
 The bounding boxes **move with** the cows.
 :::
 
 
-## Task → Required Property
-
-| Task | Property | Why |
-|------|----------|-----|
-| **Classification** | Translation invariance | A cat is a cat anywhere |
-| **Detection** | Translation equivariance | Box moves with the object |
-| **Segmentation** | Translation equivariance | Pixel labels shift with input |
-
-
 ## The CNN Idea {.center}
 
 ::: {.incremental}
-1. **Local connectivity** — neuron sees a small spatial region
-2. **Parameter sharing** — same filter at every position
-3. **Translation equivariance** — input shifts → output shifts
+1. **Local connectivity**:  neuron sees a small spatial region
+2. **Parameter sharing**:  same filter at every position
+3. **Translation equivariance**:  input shifts → output shifts
 :::
 
 ::: {.fragment}
 These encode our **prior knowledge** about images.
-:::
-
-
-## Local Connectivity
-
-::: {#fig-cnn-cnn-spatial}
-![Source: @johnson_eecs_2019]({{< meta params.images_path >}}cnn_spatial.jpg){width=25%}
-
-A neuron only connects to a small spatial patch of the input.
-:::
-
-::: {.fragment}
-Result: fewer parameters, preserved structure, position-agnostic detectors.
 :::
 
 
@@ -221,354 +170,588 @@ Choosing an architecture = choosing which assumptions to bake in.
 
 # How CNNs Work
 
+## History: Experiments on Cats
 
-## CNN Architecture
+::: {#fig-cnns-huber-wiesel}
 
-::: {#fig-cnn-convnet}
-![Source: @li_cs231n_2022]({{< meta params.images_path >}}convnet.jpeg){width=70%}
+![Illustration [Source](https://link.springer.com/chapter/10.1007/978-3-030-28954-6_4/figures/1)]({{< meta params.images_path >}}huber_wiesel_cat_experiment.jpg)
 
-A sequence of layers transforms activations from input to predictions.
 :::
 
 
-## The Convolution Operation
+## Visual Cortex
 
-$$
-S(i, j) = (K * I)(i, j) = \sum_m \sum_n I(i + m, j + n)\, K(m, n)
-$$
+::: {#fig-cnns-visual-cortex}
+
+![Representation of transformations in the visual cortex. Source: @kubilius_ventral_2017]({{< meta params.images_path >}}ventralvisualstream_v2.png)
+
+:::
+
+
+
+
+## Local Connectivity
+
+::: {#fig-cnn-cnn-spatial}
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}cnn_spatial.jpg){width=25%}
+
+A neuron only connects to a small spatial patch of the input.
+:::
 
 ::: {.fragment}
-- $I$ — input
-- $K$ — kernel (smaller than $I$)
-- $i, j$ — spatial position in the output
-:::
-
-::: {.fragment}
-[CNN Explainer](https://poloclub.github.io/cnn-explainer/) — interactive demo.
+Result: fewer parameters, preserved structure, position-agnostic detectors.
 :::
 
 
-## Filter vs. Kernel
-
-::: {.incremental}
-- **Kernel** — 2-D ($H \times W$)
-- **Filter** — 3-D ($C \times H \times W$); a stack of $C$ kernels
-:::
 
 
-## Convolution on RGB
+
+## Convolutional Neural Networks
 
 ::: {#fig-cnns-intro-example}
-![Source: @prince_understanding_2023]({{< meta params.images_path >}}convolution_prince_rgb.png){width=70%}
 
-A $3 \times 3 \times 3$ filter is multiplied element-wise with the input volume; sum → one output value.
+![The activations of a ConvNet architecture. The input image is on the left, and the predictions are on the right. Source: @li_cs231n_2022]({{< meta params.images_path >}}convnet.jpeg)
+
 :::
 
 
-## Step by Step
+## Convolution on RGB Images
 
-::: {#fig-cnn-conv-step-by-step}
-![]({{< meta params.images_path >}}conv_step_by_step.png){width=70%}
+::: {#fig-cnns-intro-example}
 
-Slide the filter, compute $\sum (\text{patch} \odot \text{kernel}) + b$ at each position.
-:::
+![Source:  @prince_understanding_2023]({{< meta params.images_path >}}convolution_prince_rgb.png)
 
-
-## Multi-Channel Convolution
-
-::: {#fig-cnn-conv-multi-channel}
-![]({{< meta params.images_path >}}conv_rgb_channels.png){width=70%}
-
-Each channel filtered separately; per-channel sums add up + bias → one scalar.
-:::
-
-
-## Multiple Filters → Output Volume
-
-::: {#fig-cnn-conv-multi-filter}
-![]({{< meta params.images_path >}}conv_multi_filter.png){width=70%}
-
-Stack activation maps along the channel axis → output volume with $C_\text{out}$ channels.
 :::
 
 ::: {.fragment}
-In practice: 4-D tensors — $N \times C_\text{in} \times H \times W \to N \times C_\text{out} \times H' \times W'$.
+\begin{equation}
+S(i, j) = (K * I)(i, j) = \sum_m \sum_n I(i + m, j + n) K(m, n) + b
+\end{equation}
+
+- $I$: Input (e.g., image)
+- $K$: Kernel (typically smaller than $I$)
+- Bias term $b$ added to weighted sum
 :::
 
 
-## Translation Equivariance
+## Convolutional Layers
 
-::: {#fig-cnn-translation-equivariance}
-
-{{< video https://www.youtube.com/embed/qoWAFBYOtoU start="50" width=1200 height=600 >}}
-
-Same filter at every position → output shifts when input shifts.
-:::
-
-::: {.fragment}
-For **invariance** (classification), add pooling or global average pooling.
-:::
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}cnn_conv_one_number.jpg)
 
 
-## Stride
+## Convolutional Layers
 
-::: {#fig-cnn-stride1}
-![]({{< meta params.images_path >}}stride1_example.jpg){width=60%}
-
-Stride 1 — filter moves one pixel at a time.
-:::
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}conv_activation_map.jpg)
 
 
-## Stride 2 — Downsampling
 
-::: {#fig-cnn-stride2}
-![]({{< meta params.images_path >}}stride2_example.jpg){width=60%}
+## Convolutional Layers
 
-Stride 2 — moves two pixels at a time, halving the spatial size.
-:::
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}conv_activation_map2.jpg)
 
-::: {.fragment}
-Strided convolution = **learned downsampling** (vs. fixed pooling).
+
+
+## Convolutional Layers
+
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}conv_activation_map3.jpg)
+
+
+
+## Convolutional Layers
+
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}conv_activation_map4.jpg)
+
+
+<!--
+## Convolution on RGB Images
+
+::: {#fig-cnns-intro-example}
+
+![A 2D convolution applied to an image. Illustrated is the element-wise multiplication of the kernel weights $\Omega$ with the corresponding RGB input values at a specific position. Source:  @prince_understanding_2023]({{< meta params.images_path >}}convolution_prince_rgb.png)
+
+::: -->
+
+
+## Convolution Hyperparameters
+
+Key parameters to configure a convolutional layer:
+
+::: {.incremental}
+- **Padding** ($p$): Zero-padding added to input borders
+- **Stride** ($s$): Step size when moving the kernel
+- **Kernel Size** ($k$): Spatial extent (typically $3\times3$ or $5\times5$)
+- **Dilation** ($d$): Spacing between kernel elements
 :::
 
 
 ## Padding
 
-::: {#fig-cnn-padding}
-![]({{< meta params.images_path >}}padding_example_result.jpg){width=60%}
+::: {.fragment}
+**Question**: Output size when convolving with $3\times3$ kernel?
+:::
 
-Zero-padding the border preserves spatial size — essential for segmentation.
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.fragment}
+**Without padding:**
+
+![ ]({{< meta params.images_path >}}padding_input_activations_5x5.jpg)
+:::
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+**With zero-padding:**
+
+![ ]({{< meta params.images_path >}}padding_input_activations_5x5_with_zero_padding.jpg)
+:::
+:::
+
+::::
+
+## Padding Effect
+
+![Left: Input (Yellow) with Zero-Padding (white border), Middle: Filter, Right: Output.]({{< meta params.images_path >}}padding_example_result.jpg)
+
+::: {.fragment}
+**Key Use**: Preserve spatial dimensions → essential for segmentation!
 :::
 
 
-## Kernel Size
+## Stride = 1
 
-::: {#fig-cnn-kernel-size3x3}
-![]({{< meta params.images_path >}}kernel_size_example_3x3.jpg){width=55%}
+![Convolution with stride $(1, 1)$]({{< meta params.images_path >}}stride1_example.jpg)
 
-$3 \times 3$ kernel with padding — output size unchanged.
+::: {.fragment}
+Kernel moves **1 pixel** at a time → **preserves spatial resolution**
 :::
 
+## Stride = 2
 
-## Larger Kernels
+![Convolution with stride $(2, 2)$]({{< meta params.images_path >}}stride2_example.jpg)
 
-::: {#fig-cnn-kernel-size5x5}
-![]({{< meta params.images_path >}}kernel_size_example_5x5.jpg){width=55%}
-
-$5 \times 5$ kernel — wider receptive field, more parameters.
+::: {.fragment}
+Kernel moves **2 pixels** at a time → **downsamples** by factor of 2
 :::
 
 ::: {.fragment}
-**Modern design:** stack multiple $3 \times 3$ — fewer params, more nonlinearities.
+**Advantage**: Learned downsampling (vs. fixed pooling)
 :::
+
+
+## Kernel-Size
+
+
+
+![ ]({{< meta params.images_path >}}kernel_size_example_3x3.jpg)
+
+## Kernel-Size
+
+![ ]({{< meta params.images_path >}}kernel_size_example_5x5.jpg)
+
+::: {.fragment}
+What is the difference between using 3x3 vs 5x5 kernels? What is the same?
+:::
+
 
 
 ## Dilation
 
-::: {#fig-cnn-dilation}
-![]({{< meta params.images_path >}}dilation_example.jpg){width=60%}
+![ ]({{< meta params.images_path >}}dilation_example.jpg)
 
-Spread the kernel — larger receptive field, **same parameters**.
+::: {.fragment}
+Why would we use dilation $d \gt 1$?
+:::
+
+## Calculations: Spatial Dimensionality of Activation Maps
+
+You can calculate the dimensionality of the activation maps with the following formulas:
+
+- $i$: Side length of the input activations (assumption: square inputs)
+- $k$: Kernel size (assumption: square kernel)
+- $o$: Side length of the output activation maps
+- $s$: Stride (assumption: same stride along spatial dimensions)
+- $p$: Number of paddings on each side (assumption: same number of paddings along spatial dimensions)
+- $d$: Dilation rate.
+
+
+::: {.fragment}
+\begin{equation}
+o = \left\lfloor \frac{i + 2p - d\cdot(k-1) - 1}{s} + 1 \right\rfloor
+\end{equation}
 :::
 
 
-## Why Dilation?
+## Calculations: Number of Weights in a Convolutional Layer
+
+You can calculate the total number of weights in a convolutional layer with the following formula:
+
+- $k$: Kernel size (assumption: square kernel, so kernel has dimensions $k \times k$)
+- $C_{in}$: Number of input channels
+- $C_{out}$: Number of output channels
+
+::: {.fragment}
+\begin{equation}
+\text{Total Weights} = (k \times k) \times C_{in} \times C_{out}
+\end{equation}
+:::
+
+::: {.fragment}
+Each filter has a size of $k \times k \times C_{in}$, and there are $C_{out}$ filters in total, resulting in $(k \times k \times C_{in}) \times C_{out}$ weights.
+:::
+
+::: {.fragment}
+**Biases:**
+If each output channel has a bias term, add an additional $C_{out}$ weights for the biases.
+
+
+\begin{equation}
+\text{Total Parameters} = (k \times k \times C_{in} \times C_{out}) + C_{out}
+\end{equation}
+:::
+
+
+## Quiz: Output Shape & Parameters
+
+**Scenario:**
+
+- Input: $3 \times 32 \times 32$ (C, H, W)
+- Convolution: 10 filters, kernel $5 \times 5$, stride=1, pad=2
+
+::: {.fragment}
+**Questions:**
+
+1. What is the size of the output activation map?
+2. How many parameters does this operation have?
+:::
+
+## Quiz: Output Shape & Parameters
+
+**Formulas:**
+
+::: {.fragment}
+\begin{equation}
+o = \left\lfloor \frac{i + 2p - d\cdot(k-1) - 1}{s} + 1 \right\rfloor
+\end{equation}
+:::
+
+::: {.fragment}
+\begin{equation}
+\text{Total Parameters} = (k \times k \times C_{in} \times C_{out}) + C_{out}
+\end{equation}
+:::
+
+## Quiz: Solutions
+
+::: {.fragment}
+**1. Output size:**
+
+$o = \lfloor \frac{32 + 2(2) - 1(5-1) - 1}{1} + 1 \rfloor = \lfloor \frac{32 + 4 - 4 - 1}{1} + 1 \rfloor = 32$
+:::
+
+::: {.fragment}
+Output shape: $10 \times 32 \times 32$
+:::
+
+::: {.fragment}
+**2. Parameters:**
+
+$(5 \times 5 \times 3 \times 10) + 10 = 750 + 10 = 760$ parameters
+:::
+
+::: {.fragment}
+**Key Insight:** Padding=2 preserves spatial dimensions with kernel=5!
+:::
+
+
+# Properties
+
+## CNN Key Properties
+
+::: {.fragment}
+**1. Local (Sparse) Connectivity**
+
+Neurons only connect to small spatial regions
+:::
+
+::: {.fragment}
+**2. Parameter Sharing**
+
+Same weights applied across entire input (translation equivariance!)
+:::
+
+## Think About It
 
 ::: {.incremental}
-- **Larger receptive field** without more layers
-- **Same parameter count**
-- **Multi-scale features** with varying dilation rates
+- Can we recognize cats with a one-layer CNN?
+- Can we recognize cats **anywhere** in an image with a CNN?
+- Is parameter sharing **always** useful?
+- What about images with position-dependent features?
+:::
+
+
+## Translation Invariance / Equivariance
+
+Given a translation $g()$, which spatially shifts inputs:
+
+- Translation invariance: $f(g(x))=f(x)$
+- Translation equivariance: $f(g(x))=g(f(x))$
+
+::: {.fragment}
+Are convolutions translation invariant, equivariant, or both?
 :::
 
 ::: {.fragment}
-Used in DeepLab (segmentation), WaveNet (audio), Dilated ResNets.
+{{< video https://www.youtube.com/embed/qoWAFBYOtoU?start=50 width=800 height=400 >}}
 :::
-
-::: {.fragment}
-3×3 with dilation 2 → receptive field of 5×5, only 9 params (vs. 25).
-:::
-
-
-## Conv Animations
-
-::: {.fragment}
-![Source @dumoulin_guide_2016]({{< meta params.images_path >}}no_padding_no_strides.gif){width=20%}
-
-3×3 kernel over 5×5 input, no padding, stride 1.
-:::
-
-[github.com/vdumoulin/conv_arithmetic](https://github.com/vdumoulin/conv_arithmetic)
-
-
-## Output Size Formula
-
-$$
-o = \left\lfloor \frac{i + 2p - d \cdot (k-1) - 1}{s} + 1 \right\rfloor
-$$
-
-::: {.fragment}
-- $i$ — input side length
-- $k$ — kernel size
-- $p$ — padding (per side)
-- $s$ — stride
-- $d$ — dilation
-:::
-
-
-## Quiz: Output Shape
-
-$i = 32, \; k = 3, \; p = 1, \; s = 2, \; d = 1$. Find $o$.
-
-::: {.fragment}
-$$o = \left\lfloor \frac{32 + 2 - 1 \cdot 2 - 1}{2} + 1 \right\rfloor = \left\lfloor \frac{31}{2} + 1 \right\rfloor = 16$$
-:::
-
-::: {.fragment}
-**Intuition:** stride 2 ≈ halves the spatial dim; padding preserves a bit.
-:::
-
-
-## Parameter Count
-
-$$
-\text{Weights} = k \times k \times C_\text{in} \times C_\text{out}
-$$
-
-::: {.fragment}
-$$
-\text{Total} = k \times k \times C_\text{in} \times C_\text{out} + C_\text{out}
-$$
-(plus one bias per output channel)
-:::
-
-
-## Quiz: Parameter Counting
-
-Layer: $C_\text{in} = 3, \; C_\text{out} = 64, \; k = 5$, with bias.
-
-::: {.fragment}
-- **Weights**: $5 \times 5 \times 3 \times 64 = 4{,}800$
-- **Biases**: $64$
-- **Total**: $4{,}864$
-:::
-
-::: {.fragment}
-A fully connected alternative ($32 \times 32 \times 3 \to 64$):
-$$
-196{,}608 \quad \text{parameters} \;\; (\text{40× more!})
-$$
-:::
-
 
 ## Stacking Convolutions
 
-::: {#fig-cnn-conv-stacking}
-![Source: @johnson_eecs_2019]({{< meta params.images_path >}}conv_stacking.jpg){width=60%}
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}conv_stacking.jpg){width=100% height=70%}
 
-Each layer operates on the previous layer's activation maps.
-:::
+
+## Receptive Field
+
+
+![Using a 5x5 kernel]({{< meta params.images_path >}}receptive_field1.jpg)
+
+
+
+## Receptive Field
+
+
+![Using a 5x5 kernel and two layers]({{< meta params.images_path >}}receptive_field2.jpg)
+
+
+
+## Receptive Field
+
+
+![ ]({{< meta params.images_path >}}receptive_field3.jpg)
+
+
+
+## Receptive Field
+
+
+![ ]({{< meta params.images_path >}}receptive_field4.jpg)
+
+## Receptive Field: Formula
+
+The receptive field of a CNN $r_0$:
 
 ::: {.fragment}
-Non-linear activations between layers are **essential** — otherwise it collapses to a single linear conv.
-:::
-
-
-## Hierarchical Features
-
-::: {#fig-cnn-conv-zeiler}
-![Source: @Zeiler2014]({{< meta params.images_path >}}zeiler_learned_filters.png){width=55%}
-
-Filters: edges → textures → parts → objects (deeper layers respond to more complex patterns).
-:::
-
-
-## Receptive Field — One Layer
-
-::: {#fig-cnn-receptive-field-1}
-![]({{< meta params.images_path >}}receptive_field1.jpg){width=60%}
-
-Single layer with a 5×5 kernel.
-:::
-
-
-## Receptive Field — Two Layers
-
-::: {#fig-cnn-receptive-field-4}
-![]({{< meta params.images_path >}}receptive_field4.jpg){width=70%}
-
-Two stacked 5×5 convolutions → **9×9** receptive field.
-:::
-
-
-## Receptive Field Formula
-
-$$
+\begin{equation}
 r_0 = \sum_{l=1}^L \left( (k_l - 1) \prod_{i=1}^{l-1} s_i \right) + 1
-$$
-
-::: {.fragment}
-Stacking small kernels grows the field efficiently.
+\end{equation}
 :::
 
+::: {.fragment}
+- $L$: Total number of layers
+- $k_l$: Kernel size at layer $l$
+- $s_i$: Stride at layer $i$, from layer 1 up to $l-1$
+:::
+
+::: {.fragment}
+**Special case**: If all strides $s_i=1$, receptive field = $\sum (k_l - 1) + 1$
+:::
 
 ## Quiz: Receptive Field
 
-- Layer 1: kernel=3, stride=1
-- Layer 2: kernel=3, stride=2
-- Layer 3: kernel=5, stride=1
+**Network Architecture:**
+
+- Layer 1: $k_1 = 3$, $s_1 = 1$
+- Layer 2: $k_2 = 3$, $s_2 = 1$
+- Layer 3: $k_3 = 3$, $s_3 = 1$
 
 ::: {.fragment}
-$r_0 = (3-1)\cdot 1 + (3-1)\cdot 1 + (5-1)\cdot(1 \cdot 2) + 1$
+**Question**: What is the receptive field $r_0$?
+:::
+
+## Quiz: Receptive Field Solution
+
+::: {.fragment}
+Using formula: $r_0 = \sum_{l=1}^L \left( (k_l - 1) \prod_{i=1}^{l-1} s_i \right) + 1$
 :::
 
 ::: {.fragment}
-$r_0 = 2 + 2 + 8 + 1 = \mathbf{13}$ → **13 × 13** receptive field.
+Since all $s_i = 1$:
+$$r_0 = (3-1) + (3-1) + (3-1) + 1 = 2 + 2 + 2 + 1 = 7$$
+:::
+
+::: {.fragment}
+**Key Insight**: Stacking three $3\times3$ convs gives $7\times7$ receptive field!
+:::
+
+::: {.fragment}
+**Efficiency**: Three $3\times3$ = $3 \times 9 = 27$ params vs one $7\times7$ = 49 params
 :::
 
 
-## Pooling
+## Architecture
 
-::: {#fig-cnn-downsampling-pooling}
-![Source: @prince_understanding_2023]({{< meta params.images_path >}}downsampling_with_pooling.jpg){width=70%}
+Sequence of layers and their hyper-parameters defines an architecture.
 
-(a) Sub-sampling, (b) Max pooling, (c) Average pooling.
+::: {.fragment}
+![VGG - Source: @prince_understanding_2023]({{< meta params.images_path >}}vgg_illustration.jpg)
 :::
+
+## Learned Filters
+
+![Source: @krizhevsky_imagenet_2012]({{< meta params.images_path >}}learned_filters.png)
+
+## Let's test it!
+
+Let's train a CNN.
+
+Here is an interesting demo: [https://poloclub.github.io/cnn-explainer/](https://poloclub.github.io/cnn-explainer/)
+
+
+# More Layers & Operations
+
+## Downsampling
+
+::: {.fragment}
+Spatial downsampling reduces resolution (H×W → H'×W')
+:::
+
+::: {.fragment}
+**Options:**
+
+1. Stride $> 1$ (learned downsampling)
+2. Pooling layers (fixed operation)
+:::
+
+::: {.fragment}
+![a) Sub-Sampling, b) Max Pooling, c) Average Pooling. Source: @prince_understanding_2023]({{< meta params.images_path >}}downsampling_with_pooling.jpg){width=80%}
+:::
+
+## Upsampling
+
+::: {.fragment}
+Need to **increase** spatial dimensions (H×W → H'×W')
+:::
+
+::: {.fragment}
+**Example use case?**
+:::
+
+::: {.fragment}
+**Image Segmentation** - need pixel-level predictions!
+:::
+
+## Upsampling Methods
+
+![a) Duplicate, b) Max-Unpooling, c) Bilinear Interpolation. Source: @prince_understanding_2023]({{< meta params.images_path >}}upsampling_options.jpg){width=80%}
+
+::: {.fragment}
+Also: **Transposed Convolutions** (learnable upsampling)
+:::
+
+## Upsampling with Transposed Convolutions
+
+
+![ ]({{< meta params.images_path >}}transposed_convolution.jpg)
+
+More details in image segmentation!
 
 
 ## 1×1 Convolutions
 
-::: {#fig-cnn-1x1-conv}
-![Source: @prince_understanding_2023]({{< meta params.images_path >}}1x1_conv_example.jpg){width=60%}
-
-Change number of channels with few parameters: $C \times H \times W \to C_2 \times H \times W$ uses only $C_2 \times (C + 1)$ params.
+::: {.fragment}
+**Purpose**: Change number of channels without spatial mixing
 :::
+
+::: {.fragment}
+$(C_{in} \times H \times W) \rightarrow (C_{out} \times H \times W)$
+:::
+
+::: {.fragment}
+**Use cases:**
+
+- Dimensionality reduction (bottleneck layers)
+- Increase model depth without parameters explosion
+- Cross-channel information mixing
+:::
+<!-- ::: {#fig-cnn-1x1}
+
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}1x1_conv.jpg){width=100% height=70%}
+
+::: -->
+
+
+::: {#fig-cnn-1x1}
+
+![Source: @prince_understanding_2023]({{< meta params.images_path >}}1x1_conv_example.jpg)
+
+:::
+
+
 
 
 ## Global Average Pooling
 
-::: {#fig-cnn-global-avg-pooling}
-![]({{< meta params.images_path >}}global_average_pooling.jpg){width=60%}
+Global Average Pooling is often an important component. It computes the average of the activations along the depth dimension, reducing activation maps from (C x H x W) to (C x 1 x 1). This is useful for directly modeling logits in a classification problem with C classes, enabling architectures that completely eliminate fully-connected layers.
 
-Average each map → $(C \times H \times W) \to (C \times 1 \times 1)$.
+::: {#fig-cnn-global-avg-pooling}
+
+![Global Average pooling, input (left) and output (right).]({{< meta params.images_path >}}global_average_pooling.jpg)
+:::
+
+
+## Other Layers
+
+::: {.fragment}
+Many other layer types exist:
+:::
+
+::: {.incremental}
+- Depthwise separable convolutions (efficiency)
+- Dilated convolutions (large receptive fields)
+- Grouped convolutions (parameter reduction)
+- Batch normalization (training stability)
+- Dropout (regularization)
+:::
+
+## Quiz: MLP vs CNN Efficiency
+
+**CIFAR-10 Images**: $32 \times 32 \times 3$
+
+::: {.fragment}
+**MLP**: 2 hidden layers (256, 128 neurons)
+
+How many parameters in first layer?
 :::
 
 ::: {.fragment}
-Provides translation **invariance** — and replaces fully-connected heads.
+**CNN**: 2 conv layers (16 filters, $3\times3$, then 32 filters, $3\times3$)
+
+How many parameters in first layer?
 :::
 
+## Quiz: Solutions
 
-# Summary {.center}
+::: {.fragment}
+**MLP first layer:**
 
-
-## Key Takeaways
-
-::: {.incremental}
-- MLPs flatten images → lose structure, explode in size
-- CNNs encode **locality + parameter sharing + translation equivariance** as inductive biases
-- Conv hyperparameters: kernel, stride, padding, dilation — control receptive field & output size
-- Stacked convs grow receptive fields and learn **hierarchical features**
-- Pooling, 1×1 conv, global avg pool — workhorse layers around convolutions
+$(32 \times 32 \times 3) \times 256 = 3{,}072 \times 256 = 786{,}432$ parameters
 :::
+
+::: {.fragment}
+**CNN first layer:**
+
+$(3 \times 3 \times 3 \times 16) + 16 = 432 + 16 = 448$ parameters
+:::
+
+::: {.fragment}
+**CNN uses 1,755× fewer parameters!** 🚀
+:::
+
+::: {.fragment}
+**Why?** Local connectivity + parameter sharing = massive efficiency!
+:::
+
 
 
 # References

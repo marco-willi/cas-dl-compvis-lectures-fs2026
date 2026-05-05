@@ -11,15 +11,6 @@ $$
 :::
 
 
-## Learning Objectives {.center}
-
-::: {.incremental}
-- Distinguish multi-class, binary, multi-label, multi-task classification
-- Role of **softmax**: logits → probabilities
-- **Cross-entropy** loss and why it punishes confident wrong predictions
-- Architecture progression: AlexNet → VGG → ResNet → ConvNeXt
-- Why **residual connections** matter
-:::
 
 
 ## Overview {.center}
@@ -31,6 +22,14 @@ $$
 
 # The Classification Task
 
+## Adversarial Panda
+
+![Source: @goodfellow_explaining_2015]({{< meta params.images_path >}}adversarial_panda.jpg){width=40%}
+
+## Adversarial Panda
+
+![Source: @goodfellow_explaining_2015]({{< meta params.images_path >}}adversarial_panda2.jpg){width=80%}
+
 
 ## Image Classification
 
@@ -40,29 +39,15 @@ $$
 Assign an image to one of $K$ predefined categories.
 :::
 
-::: {.fragment}
-The task that sparked the deep learning revolution (@krizhevsky_imagenet_2012).
+
+
+## Classification Variants
+
+::: {#fig-classification-tasks}
+![]({{< meta params.images_path >}}classification_tasks.png)
+
 :::
 
-
-## Variants
-
-::: {.incremental}
-- **Multi-class**: exactly one of $K > 2$ classes (species ID)
-- **Binary**: $K = 2$ (animal present vs. empty)
-- **Multi-label**: multiple labels from *one* shared set (deer + bird)
-- **Multi-task**: multiple *separate* label sets (species, behavior, time-of-day)
-:::
-
-
-## Multi-label vs. Multi-task
-
-| Property | Multi-label | Multi-task |
-|----------|-------------|------------|
-| Label sets | One shared set | Multiple separate sets |
-| Example | deer ✓, bird ✓, fox ✗ | species: deer / behavior: grazing / time: day |
-| Output head | One head, sigmoid per class | One head per task |
-| Loss | BCE per class | Sum of per-task losses |
 
 
 ## Example: ImageNet
@@ -120,6 +105,9 @@ $$
 #| echo: false
 #| label: fig-classification-logits-to-probs
 #| fig-cap: "Logits (left) → probabilities via softmax (right)."
+#| fig-width: 11
+#| fig-height: 4.5
+#| out-width: 100%
 
 from matplotlib import pyplot as plt
 import numpy as np
@@ -129,9 +117,16 @@ np.random.seed(123)
 logits = np.random.normal(size=(10,)) * 2
 probs = np.exp(logits) / np.exp(logits).sum()
 
-fig, ax = plt.subplots(ncols=2, figsize=(9, 3))
+fig, ax = plt.subplots(ncols=2, figsize=(11, 4.5))
+
 sns.barplot(x=list(range(10)), y=logits, ax=ax[0]).set(title="Logits")
 sns.barplot(x=list(range(10)), y=probs, ax=ax[1]).set(title="Softmax", ylim=(0, 1))
+
+ax[0].set_xlabel("Class")
+ax[0].set_ylabel("Logit")
+ax[1].set_xlabel("Class")
+ax[1].set_ylabel("Probability")
+
 plt.tight_layout()
 plt.show()
 ```
@@ -139,6 +134,11 @@ plt.show()
 ::: {.fragment}
 Logits can be any real number — softmax always produces a valid distribution.
 :::
+
+
+## Probabilities
+
+![Image classifier with confidences.]({{< meta params.images_path >}}confidences.jpg){width=80%}
 
 
 ## Cross-Entropy: The Idea
@@ -378,18 +378,26 @@ Skip connections **smooth the loss surface** → optimization works.
 
 ## ConvNeXt (2022)
 
-::: {#fig-classification-convnext}
-![@liu_convnet_2022]({{< meta params.images_path >}}convnext.png){width=60%}
+:::: {.columns}
 
-Modernizes ResNet with ideas from the Transformer era.
-:::
+::: {.column width="50%"}
 
 ::: {.fragment}
-- Larger kernels
-- Different activations
-- LayerNorm instead of BatchNorm
-- Depthwise separable convolutions
+![ ]({{< meta params.images_path >}}convnext_part1.jpg)
 :::
+
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+![ ]({{< meta params.images_path >}}convnext_part2.jpg)
+:::
+:::
+
+::::
+
+Figures from @liu_convnet_2022.
+
 
 
 ## Which Architecture? {.center}
