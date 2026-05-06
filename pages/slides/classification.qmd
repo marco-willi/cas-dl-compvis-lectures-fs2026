@@ -31,6 +31,7 @@ $$
 ![Source: @goodfellow_explaining_2015]({{< meta params.images_path >}}adversarial_panda2.jpg){width=80%}
 
 
+
 ## Image Classification
 
 ::: {#fig-classification-classification-illustration}
@@ -40,37 +41,340 @@ Assign an image to one of $K$ predefined categories.
 :::
 
 
-
 ## Classification Variants
 
 ::: {#fig-classification-tasks}
 ![]({{< meta params.images_path >}}classification_tasks.png)
 
+Different variants of classification.
+
 :::
 
-
-
-## Example: ImageNet
-
-::: {#fig-image-classifier-example}
-![Source: @krizhevsky_imagenet_2012]({{< meta params.images_path >}}image_classification_example.png){width=70%}
-
-1,000 classes. AlexNet's breakthrough demonstration.
-:::
-
-
-## Example: Camera Traps
-
-::: {#fig-classification-camera-traps}
-![]({{< meta params.images_path >}}camera_traps.png){width=60%}
-
-Classify wildlife images by species.
-:::
 
 
 # Modelling Classification
 
+## From Image to Logits
 
+A classifier maps an input image to one score per class:
+
+$$
+\vect{z} = f_\theta(\vect{x})
+$$
+
+::: {.fragment}
+- $\vect{x}$: input image tensor
+- $f_\theta$: neural network with learnable parameters
+- $\vect{z} \in \mathbb{R}^K$: logits, one score for each class
+:::
+
+::: {.fragment}
+Logits are **not probabilities**, they can be negative, positive, small, or large.
+:::
+
+
+## Softmax Classifier
+
+A classifier outputs one **logit** per class:
+
+$$
+\vect{z} = f_\theta(\vect{x}), \qquad \vect{z} \in \mathbb{R}^K
+$$
+
+
+Softmax converts logits into class probabilities:
+
+$$
+P(Y = k \mid X = \vect{x}^{(i)}) = \sigma(\vect{z})_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}
+$$
+
+
+::: {.fragment}
+- $\vect{z}$  logits: unbounded class scores
+- $\sigma(\vect{z})$ probabilities: positive and sum to 1
+- Larger logits receive larger probabilities
+:::
+
+
+
+
+## Logits → Probabilities
+
+```{python}
+#| eval: true
+#| echo: false
+#| label: fig-classification-logits-to-probs
+#| fig-cap: "Logits are arbitrary real-valued scores. Softmax converts them into probabilities."
+#| fig-width: 14
+#| fig-height: 4.8
+#| out-width: 100%
+#| fig-align: center
+
+from matplotlib import pyplot as plt
+import numpy as np
+import seaborn as sns
+
+np.random.seed(123)
+
+logits = np.random.normal(size=(10,)) * 2
+probs = np.exp(logits) / np.exp(logits).sum()
+
+fig, ax = plt.subplots(ncols=2, figsize=(14, 4.8), constrained_layout=True)
+
+sns.barplot(x=list(range(10)), y=logits, ax=ax[0])
+ax[0].set_title("Logits")
+ax[0].set_xlabel("Class")
+ax[0].set_ylabel("Logit")
+
+sns.barplot(x=list(range(10)), y=probs, ax=ax[1])
+ax[1].set_title("Softmax probabilities")
+ax[1].set_xlabel("Class")
+ax[1].set_ylabel("Probability")
+ax[1].set_ylim(0, 1)
+
+plt.show()
+```
+
+::: {.fragment}
+Logits can be any real number — softmax always produces a valid probability distribution.
+:::
+
+
+
+## Cross-Entropy: The Idea
+
+A good classifier assigns **high probability to the correct class**.
+
+::: {.fragment}
+For an image whose true class is **deer**:
+:::
+
+::: {.incremental}
+- $P(\text{deer}) = 0.95$ → small loss
+- $P(\text{deer}) = 0.40$ → moderate loss
+- $P(\text{deer}) = 0.02$ → very large loss
+:::
+
+::: {.fragment}
+Cross-entropy only cares about the probability assigned to the **true class**.
+:::
+
+
+
+## Cross-Entropy Formula
+
+For one sample with one-hot label $\vect{y}$ and predicted probabilities $\hat{\vect{y}}$:
+
+$$
+CE(\vect{y}, \hat{\vect{y}})
+= -\sum_{j=1}^K y_j \log \hat{y}_j
+$$
+
+::: {.fragment}
+Because $\vect{y}$ is one-hot, only the true class $c$ contributes:
+:::
+
+$$
+CE = -\log \hat{y}_c
+$$
+
+::: {.fragment}
+So training minimizes the **negative log-probability of the correct class**.
+:::
+
+
+
+## Quiz: Which Loss is Higher?
+
+A model predicts:
+
+- $P(\text{deer}) = 0.4$ for an image that **is** a deer
+- $P(\text{deer}) = 0.6$ for an image that is a **fox**
+
+Which prediction gives the higher cross-entropy?
+
+::: {.fragment}
+**The first prediction.**
+
+For the deer image:
+
+$$
+CE = -\log(0.4) \approx 0.92
+$$
+:::
+
+::: {.fragment}
+For the fox image, $P(\text{deer})$ is irrelevant.
+Cross-entropy depends only on the probability assigned to the **true class**, here $P(\text{fox})$.
+:::
+
+
+## The Classification Pipeline
+
+A classification model usually has two parts:
+
+::: {.incremental}
+- **Backbone**: extracts visual features from the image
+- **Classification head**: maps features to $K$ logits
+:::
+
+::: {.fragment}
+Conceptually:
+
+$$
+\text{image} \rightarrow \text{features} \rightarrow \text{logits} \rightarrow \text{probabilities}
+$$
+
+:::
+
+::: {.fragment}
+Training uses logits + labels to compute cross-entropy loss.
+:::
+
+
+## Architecture Progression {.center}
+
+::: {.incremental}
+- **AlexNet (2012)**: 8 layers, made deep CNNs dominant on ImageNet
+- **VGG (2014)**: 16–19 layers, simple repeated $3 \times 3$ convolution blocks
+- **ResNet (2015)**: 50–152+ layers, residual connections enabled much deeper networks
+- **ConvNeXt (2022)**: modernized CNN design, competitive with Vision Transformers
+:::
+
+::: {.fragment}
+The common pattern: better feature extractors → better classification backbones.
+:::
+
+
+## AlexNet (2012)
+
+::: {#fig-classification-alexnet2}
+![@prince_understanding_2023]({{< meta params.images_path >}}alexnet_illustration.jpg){width=55%}
+
+5 conv + 3 FC layers, 1000-way softmax. Trained on **two** GTX 580 GPUs (3 GB each).
+:::
+
+::: {.fragment}
+The network had to be **split across GPUs** due to memory limits.
+:::
+
+
+## VGG (2014)
+
+::: {#fig-classification-vgg-arch}
+![@prince_understanding_2023]({{< meta params.images_path >}}vgg_illustration.jpg){width=55%}
+
+16–19 layers using only $3 \times 3$ kernels.
+:::
+
+::: {.fragment}
+**Design rule:** when spatial size halves, double the number of filters (preserves time complexity).
+:::
+
+
+## ResNet — The Problem
+
+::: {#fig-classification-resnet-motivation1}
+![Source: @He2016]({{< meta params.images_path >}}resnet_test_error.jpg){width=55%}
+
+A 56-layer net is **worse** than a 20-layer net — on **train and test**.
+:::
+
+::: {.fragment}
+Not overfitting — an **optimization problem**.
+:::
+
+
+## Residual Connections
+
+::: {#fig-classification-residual-connection}
+![Source: @johnson_eecs_2019]({{< meta params.images_path >}}residual_connection.jpg){width=55%}
+:::
+
+$$
+\vect{x}_{l+1} = \vect{x}_l + F(\vect{x}_l)
+$$
+
+::: {.fragment}
+Learn the **change**, not the full transformation.
+
+If a layer has nothing to add: $F(\vect{x}_l) \approx 0$ → identity.
+:::
+
+
+## Why Residuals Work
+
+::: {#fig-classification-skip-loss-landscape}
+![Source: @li_visualizing_2018]({{< meta params.images_path >}}loss_landscape_skip.png){width=70%}
+
+Loss landscape: without (left) vs. with (right) skip connections.
+:::
+
+::: {.fragment}
+Skip connections **smooth the loss surface** → optimization works.
+:::
+
+
+## ConvNeXt (2022)
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.fragment}
+![ ]({{< meta params.images_path >}}convnext_part1.jpg)
+:::
+
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+![ ]({{< meta params.images_path >}}convnext_part2.jpg)
+:::
+:::
+
+::::
+
+Figures from @liu_convnet_2022.
+
+
+
+## Which Architecture? {.center}
+
+::: {.fragment .highlight-red}
+**Don't be a hero.**
+:::
+
+::: {.fragment}
+Start with a proven pretrained backbone:
+:::
+
+::: {.incremental}
+- **ResNet-50 / ResNet-101**: reliable baseline
+- **EfficientNet**: good when size or speed matters
+- **ConvNeXt**: strong modern CNN backbone
+- **Vision Transformer / Swin / DINO-style features**: strong when data and compute allow
+:::
+
+::: {.fragment}
+Choose based on accuracy, speed, memory, available data, and deployment constraints.
+:::
+
+
+# Summary {.center}
+
+## Key Takeaways
+
+::: {.incremental}
+- Image classification maps an image to **class logits**.
+- **Softmax** converts logits into class probabilities.
+- **Cross-entropy** penalizes low probability assigned to the true class.
+- Most classifiers use a **backbone** plus a small classification head.
+- Architecture evolution: **AlexNet → VGG → ResNet → ConvNeXt / ViT**.
+- Start with a proven pretrained backbone; only customize when needed.
+:::
+
+<!--
 ## Parametric Approach
 
 A model with parameters $\theta$ outputs a score $\hat{y}^{(i)}$:
@@ -103,7 +407,7 @@ $$
 ```{python}
 #| eval: true
 #| echo: false
-#| label: fig-classification-logits-to-probs
+#| label: fig-classification-logits-to-probs-old
 #| fig-cap: "Logits (left) → probabilities via softmax (right)."
 #| fig-width: 11
 #| fig-height: 4.5
@@ -418,10 +722,10 @@ Use proven, off-the-shelf architectures:
 
 ::: {.fragment}
 Choose based on accuracy, FLOPs, memory, available data.
-:::
+::: -->
 
 
-# Summary {.center}
+<!-- # Summary {.center}
 
 
 ## Key Takeaways
@@ -433,7 +737,7 @@ Choose based on accuracy, FLOPs, memory, available data.
 - Architecture trend: **AlexNet → VGG → ResNet → ConvNeXt**
 - **Residual connections** smooth the loss landscape, enable depth
 - **Don't be a hero** — start with a proven backbone
-:::
+::: -->
 
 
 # References

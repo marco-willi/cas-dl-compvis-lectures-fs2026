@@ -132,7 +132,7 @@ Specialized hardware enables real-time deep learning inference on mobile.
 # Computer Vision Tasks
 
 
-## Image Classification
+## Core Task: Image Classification
 
 ::: {#fig-intro-image_clssifier}
 ![]({{< meta params.images_path >}}image_classification_example.png){width=55%}
@@ -141,7 +141,7 @@ Multi-class classification: predict the most likely class with confidence (@kriz
 :::
 
 
-## Object Detection
+## Core Task: Object Detection
 
 ::: {#fig-intro-yolo-example}
 
@@ -151,68 +151,48 @@ Bounding boxes localize multiple objects, each with a class and confidence (@Red
 :::
 
 
-## Segmentation
+## Core Task: Segmentation
 
 ::: {#fig-mask-rcnn-object-segmentation-example}
 
 ![]({{< meta params.images_path >}}instance_segmentation_example_maskrcnn.jpg){width=55%}
 
-Instance segmentation — pixel-level masks per object (@he_mask_2018).
-:::
-
-::: {.fragment}
-**Semantic** (class per pixel) vs. **Instance** (object per pixel)
+In segmentation, individual pixels are assigned to specific objects (instance segmentation, here) or classes (semantic segmentation). From @he_mask_2018.
 :::
 
 
-## Semantic Segmentation — Aerial
 
-::: {#fig-intro-semantic-segmentation}
+## Core Task: Generation
 
-{{< video https://www.youtube.com/embed/wfObVKKKJkE?si=GZ6m6vig54Z8XVie width=1200 height=600 >}}
 
-Each pixel classified into crop type, field boundary, or land category.
+::: {#fig-intro-stylegan3 width=400}
+
+![]({{< meta params.images_path >}}stylegan3_examples.png){width=400}
+
+
+StyleGan3 (from @karras_alias-free_2021).
 :::
 
 
-## Keypoint Detection
+## Beyond Core Tasks
+
+Many applications are combinations or extensions of core tasks.
+
+
+## Example: Keypoint Detection
 
 ::: {#fig-mask-rcnn-keypoint-detection-example}
 
 ![]({{< meta params.images_path >}}keypoint_detection_exampe_maskrcnn.jpg){width=55%}
 
-Localize specific points (e.g. body joints) — used for action recognition and avatar control (@he_mask_2018).
+Localize specific points (e.g. body joints),  used for action recognition and avatar control (@he_mask_2018).
 :::
 
-
-## Image Manipulation — DragGAN
-
-{{< video https://vcai.mpi-inf.mpg.de/projects/DragGAN/data/DragGAN.mp4 width=1400 >}}
-
-[DragGAN](https://vcai.mpi-inf.mpg.de/projects/DragGAN/) — drag points to reshape objects realistically (@pan_drag_2023).
-
-
-## Image Translation — pix2pix
-
-::: {#fig-intro-pix2pix-example}
-
-![]({{< meta params.images_path >}}pix2pix_examples.png){width=60%}
-
-Conditional image-to-image generation: sketch → photo, day → night, etc. (@image_to_image_isola2018).
+::: {.fragment}
+Quiz: What core task(s) does keypoint detection combine?
 :::
 
-
-## Super Resolution — DLSS
-
-::: {#fig-intro-dssl}
-
-![]({{< meta params.images_path >}}dssl.png){width=60%}
-
-Nvidia DLSS — real-time upscaling for higher gaming framerates. [Source](https://images.nvidia.com/aem-dam/Solutions/geforce/news/control-nvidia-dlss-2-0-update/deliver-us-the-moon-nvidia-dlss-2-0-performance-boost.png)
-:::
-
-
-## Colorization
+## Example: Colorization
 
 ::: {#fig-intro-colorization-example}
 
@@ -269,7 +249,8 @@ Browse [civitai](https://civitai.com/) for examples and models.
 
 ::: {.column width="50%"}
 - Image Classification
-- Object Detection (and Tracking)
+- Object Detection
+  - Object Tracking
 - Image Segmentation
   - Semantic Segmentation
   - Instance Segmentation
@@ -297,7 +278,7 @@ List is not exhaustive!
 :::
 
 
-## What About Videos? — Generation
+## What About Videos?
 
 ::: {#fig-intro-sora2}
 
@@ -307,7 +288,7 @@ List is not exhaustive!
 :::
 
 
-## What About Videos? — Tracking
+## What About Videos?
 
 ::: {#fig-intro-cotracker}
 
@@ -322,7 +303,7 @@ List is not exhaustive!
 Many image-level tasks extend to videos.
 
 ::: {.fragment}
-After all — videos are sequences of images.
+After all, videos are nothing but a sequence of images.
 :::
 
 
@@ -346,11 +327,11 @@ Match each application to a CV task:
 ## Quiz: Answers
 
 ::: {.incremental}
-1. **Camera traps** → Classification *or* Detection (depends on need: presence vs. count/localize)
-2. **Photo categorization** → Multi-label Classification
-3. **Image search** → Retrieval via learned **embeddings** (not a "standard" task)
-4. **Tumors** → Segmentation (pixel-level boundaries)
-5. **Counting apples** → Object Detection
+1. **Camera traps**: Classification *or* Detection (depends on need: presence vs. count/localize)
+2. **Photo categorization**: Classification
+3. **Image search**: Retrieval via learned **embeddings** (not a "standard" task)
+4. **Tumors**: Segmentation (pixel-level boundaries)
+5. **Counting apples**: Object Detection
 :::
 
 
@@ -437,8 +418,12 @@ All cats — but very different. [Source](https://www.maxpixel.net/)
 
 ![]({{< meta params.images_path >}}tiger_context.jpg){width=55%}
 
-Is this a tiger? Context provides crucial cues.
 :::
+
+::: {.fragment}
+**Question:** Is this a tiger?
+:::
+
 
 
 ## Context Dependence 2

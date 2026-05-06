@@ -17,7 +17,7 @@ $$
 Many classification failures aren't model failures, they're **data** failures.
 
 ::: {.fragment}
-Imbalance, noisy labels, hidden shortcuts.
+Imbalance, noisy labels, hidden shortcuts, leakage, wrong tensor assumptions.
 :::
 
 
@@ -27,42 +27,54 @@ Imbalance, noisy labels, hidden shortcuts.
 ## Images as Tensors
 
 ::: {#fig-iad-tensor-anatomy}
-![]({{< meta params.images_path >}}tensor_anatomy.png){width=60%}
+![]({{< meta params.images_path >}}tensor_anatomy.png){width=55%}
 
-An image as a tensor of shape H × W × C.
+An image as a tensor of shape **H × W × C**.
 :::
 
 ::: {.fragment}
-Each pixel holds one or more numeric values per channel.
+Pixel values: `uint8 [0, 255]` → float `[0, 1]` → standardized (zero mean, unit variance)
+:::
+
+::: {.fragment}
+**Shape conventions:**
+
+- NumPy / PIL: `(H, W, C)` — *channels last*
+- PyTorch: `(C, H, W)` — *channels first*
+
+Mismatched conventions → silent bugs.
 :::
 
 
-## Pixel Values
+## Channels: What Does C Mean?
+
+::: {#fig-iad-rgb-vs-grayscale}
+![]({{< meta params.images_path >}}rgb_vs_grayscale.png){width=55%}
+
+RGB (3 channels) vs. grayscale (1 channel).
+:::
 
 ::: {.incremental}
-- Stored as **8-bit unsigned int**, range $[0, 255]$
-- Normalized to floats $[0, 1]$ for training
-- Or standardized to **zero mean, unit variance**
-:::
-
-
-## Shape Conventions
-
-::: {.incremental}
-- **NumPy / PIL**: H × W × C *(channels last)*
-- **PyTorch**: C × H × W *(channels first)*
+- **1**: grayscale, depth, IR/thermal, X-ray, ultrasound
+- **3**: RGB (or HSV, same info, different axes)
+- **4**: RGBA (alpha) or RGB + near-IR
+- **N (10s–100s)**: multispectral / hyperspectral (remote sensing, agriculture, astronomy)
 :::
 
 ::: {.fragment}
-A 224×224 RGB image:
-
-- NumPy: `(224, 224, 3)`
-- PyTorch: `(3, 224, 224)`
+For ordinary 2-D images, only **C** changes , the tensor structure stays H × W × C.
+For volumes or time series, we add additional axes.
 :::
 
-::: {.fragment}
-Mismatched conventions can lead to silent bugs.
+## Thermal Imaging
+
+::: {#fig-iad-thermal-imaging}
+![]({{< meta params.images_path >}}thermal_drone.gif){width=55%}
+
+Thermal images are often single-channel sensor measurements: each pixel represents heat / infrared intensity.
+For display, they may be mapped to false-color RGB.
 :::
+
 
 
 ## Quiz: Batch Shape
@@ -80,15 +92,47 @@ The batch dimension is always **first** in PyTorch, enables parallel GPU computa
 :::
 
 
-## Quiz: MRI as a Tensor
 
-How would an MRI scan be represented? Does H × W × C still apply?
+## Resolution
+
+::: {#fig-iad-resolution}
+![]({{< meta params.images_path >}}resolution_comparison.png)
+
+Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost.
+:::
+
+::: {.incremental}
+- **Higher** → detail, more memory + compute
+- **Lower** → faster, but discards information
+- **Aspect-ratio distortion** → squashing deforms objects
+:::
 
 ::: {.fragment}
-- **2-D slice**: H × W (or H × W × 1)
-- **3-D volume**: D × H × W
-- **Multi-sequence (T1, T2, FLAIR, …)**: D × H × W × C
-- **fMRI (time series)**: T × D × H × W
+Common: resize shortest edge + center-crop, or resize with padding.
+:::
+
+## Quiz: MRI as a Tensor
+
+How would an MRI scan be represented?
+
+Is it still H × W × C?
+
+
+
+::: {#fig-iad-mri}
+![]({{< meta params.images_path >}}mri_example.png){width=100%}
+
+[Source](https://www.nzbri.org/Labs/mri/Images/)
+:::
+
+##  MRI as a Tensor
+
+How would an MRI scan be represented?
+
+::: {#fig-iad-mri}
+![]({{< meta params.images_path >}}mri.png){width=100%}
+
+MRI scans.
 :::
 
 ::: {.fragment}
@@ -96,186 +140,56 @@ The H × W × C abstraction generalizes, sequences/depth become extra axes.
 :::
 
 
-## Color and Channels
 
-::: {#fig-iad-rgb-vs-grayscale}
-![]({{< meta params.images_path >}}rgb_vs_grayscale.png){width=60%}
+<!-- ## Thermal Imaging
 
-RGB (3 channels) vs. grayscale (1 channel) — same image, different representations.
-:::
+{{< video https://www.youtube.com/embed/eiopklk5iic?si=Ff4TwfNhN8jOA2VE start="0" width=1200 height=600 >}}
 
 
-## Channel Counts in the Wild
-
-::: {.incremental}
-- **1**: grayscale, depth, thermal/IR, X-ray, ultrasound
-- **3**: RGB (also HSV, same info, different axes)
-- **4**: RGBA (alpha) or RGB + near-infrared
-- **N (10s–100s)**: multispectral / hyperspectral (remote sensing, agriculture, astronomy)
-:::
-
-::: {.fragment}
-Only **C** changes, the tensor structure stays the same.
-:::
+ -->
 
 
-## Beyond RGB
-
-::: {.incremental}
-- **Infrared**: thermal imaging, night vision, satellite
-- **Depth maps**: distance-to-camera per pixel
-- **Multispectral / Hyperspectral**: narrow wavelength bands
-- **HSV**: separates hue from brightness; useful for color-based augmentation/segmentation
-:::
-
-
-## Resolution
-
-::: {#fig-iad-resolution}
-![]({{< meta params.images_path >}}resolution_comparison.png){width=60%}
-
-Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost.
-:::
-
-
-## Resolution Trade-offs
-
-::: {.incremental}
-- **Higher**: preserves detail, costs memory + compute
-- **Lower**: faster, lighter, but discards information
-- **Aspect-ratio distortion**: squashing to square deforms objects
-:::
-
-::: {.fragment}
-Common: resize shortest edge + center-crop, *or* resize with padding.
-:::
 
 
 # Image Datasets
 
 
-## Labels and Classes
+## Real-World Camera Trap Dataset
 
-| Index | Class Name |
-|-------|------------|
-| 0     | empty      |
-| 1     | deer       |
-| 2     | fox        |
-| 3     | badger     |
-| 4     | bird       |
+::: {#fig-iad-similar-camera-trap-collage}
+![]({{< meta params.images_path >}}similar_camera_trap_collage.png){width=70%}
 
-Example mapping for a camera-trap dataset.
+[Source: Snapshot Kgalgadi](https://lila.science/datasets/snapshot-kgalagadi/)
 
-
-## Class Granularity
-
-::: {.incremental}
-- **Fine-grained**: (red deer vs. roe deer),  more data, more ambiguity
-- **Coarse**: (animal vs. empty), easier, less informative
-:::
-
-
-## Dataset Splits
-
-::: {.incremental}
-- **Train**: optimize parameters; seen repeatedly
-- **Validation**: tune hyperparameters, monitor overfitting; never trained on
-- **Test**: held out for final, unbiased evaluation
-:::
-
-
-## Splitting Strategies
-
-::: {.incremental}
-- **Random**: not always appropriate
-- **Stratified**: preserve class distribution across splits
-- **Grouped**: keep related images (same event, patient, location) in the same split
-:::
-
-
-## Grouped Splits
-
-::: {#fig-iad-grouped-split-sequence}
-![]({{< meta params.images_path >}}grouped_split_sequence.png){width=70%}
-
-Three frames from a single camera-trap trigger event — near-duplicates.
 :::
 
 ::: {.fragment}
-All three must go into the **same** split.
-:::
-
-
-## Data Leakage {.center}
-
-Information from val/test inadvertently influences training.
-
-::: {.fragment}
-Inflated metrics, real-world collapse.
-:::
-
-
-## Common Leakage Sources
-
-::: {.incremental}
-- **Near-duplicates** across splits (camera-trap bursts, video frames)
-- **Same subject / location** in multiple splits
-- **Preprocessing stats** computed over the *full* dataset (not just training)
-:::
-
-
-## Quiz: Dermoscopy Splits
-
-500 patients, multiple visits each. Images shuffled and split 80/10/10.
-
-What goes wrong?
-
-::: {.fragment}
-**Same patient appears in train AND test.** The model learns to recognize *patients*. Skin tone, mole patterns, clinic lighting, instead of lesions.
-:::
-
-::: {.fragment}
-**Fix:** split at the **patient** level.
+**Question**: What makes this dataset difficult for image classification?
 :::
 
 
 ## Class Imbalance
 
 ::: {#fig-iad-class-distribution}
-![]({{< meta params.images_path >}}cam_trap_dist2.jpg){width=60%}
+![]({{< meta params.images_path >}}cam_trap_dist2.jpg)
 
-Camera-trap class distribution. "Empty" dominates; rare species are scarce.
+Accuracy can be misleading when one class dominates.
 :::
-
-
-## Consequences of Imbalance
 
 ::: {.incremental}
 - Model favors the majority class — minimizes overall loss
 - Rare classes get few gradient updates
-- **Accuracy lies** — predicting always "empty" can hit 90%
-:::
-
-
-## Mitigations
-
-::: {.incremental}
-- **Oversample** minorities / **undersample** majorities
-- **Weighted loss** — penalize errors on rare classes more
-- Better metrics: **per-class precision, recall, F1**
+- **Accuracy lies** — predicting always "deer" can hit 65%
 :::
 
 
 ## Label Noise
 
 ::: {#fig-iad-label-ambiguity}
-![]({{< meta params.images_path >}}label_ambiguity.png){width=60%}
+![]({{< meta params.images_path >}}label_ambiguity.png){width=55%}
 
 Wolf or large dog? Empty, or a tail at the edge of the frame?
 :::
-
-
-## Sources of Label Noise
 
 ::: {.incremental}
 - **Inter-annotator disagreement** on borderline cases
@@ -284,24 +198,16 @@ Wolf or large dog? Empty, or a tail at the edge of the frame?
 :::
 
 ::: {.fragment}
-Models first learn clean patterns, then memorize noise [@arpit_closer_2017] — early stopping helps.
+Deep networks can eventually memorize noisy labels [@arpit_closer_2017], so validation monitoring and data inspection matter.
 :::
 
-::: {.fragment}
-**Practical takeaway:** always inspect the data before training.
-:::
-
-
-## Hidden Bias — Cows on Beaches
+## Hidden Bias
 
 ::: {#fig-iad-dataset-bias}
 ![]({{< meta params.images_path >}}dataset_bias.png){width=70%}
 
 Same animal, different background → different prediction. The **background**, not the cow, drives the prediction. Adapted from @Beery2018.
 :::
-
-
-## Forms of Hidden Bias
 
 ::: {.incremental}
 - **Geographic** — limited regional diversity (architecture, vegetation, clothing)
@@ -314,20 +220,89 @@ Hard to detect from aggregate metrics — surface only via failure analysis.
 :::
 
 
+## Dataset Splits
+
+::: {.incremental}
+- **Train**: used to fit model parameters
+- **Validation**: used for model selection and tuning
+- **Test**: used once for final evaluation
+:::
+
+::: {.fragment}
+**Splitting strategy** must match the data-generating process.
+:::
+
+::: {.incremental}
+- **Random**: not always appropriate
+- **Stratified**: preserve class distribution across splits
+- **Grouped**: keep related images (same event, patient, location) in the same split
+:::
+
+## Splitting a Dataset
+
+
+::: {#fig-iad-grouped-split-sequence}
+![]({{< meta params.images_path >}}train_test_leakage.avif)
+
+[Source: Voxel51](https://voxel51.com/blog/on-leaky-datasets-and-a-clever-horse)
+:::
+
+::: {.fragment}
+**Question**: What is wrong with this split?
+:::
+
+
+
+## Data Leakage {.center}
+
+Data leakage means the model receives information during training that would not be available at deployment.
+
+Result: validation/test metrics look good, but real-world performance collapses.
+
+::: {.incremental}
+- **Near-duplicates** across splits (camera-trap bursts, video frames)
+- **Same subject / location** in multiple splits
+- **Preprocessing stats** computed over the *full* dataset (not just training)
+:::
+
+
+
+
+
+
+
+
+## Quiz: Skin Cancer Detection Dataset
+
+500 patients, multiple visits each. Images randomly shuffled and split 80/10/10.
+
+What goes wrong?
+
+::: {.fragment}
+The same patient can appear in both train and test.
+The model may learn patient-specific cues instead of lesion-specific cues.
+:::
+
+::: {.fragment}
+**Fix:** split at the **patient** level.
+:::
+
+
 # Summary {.center}
 
 
 ## Key Takeaways
 
 ::: {.incremental}
-- Images = tensors of shape **H × W × C** (PyTorch: C × H × W)
-- Resolution is a **trade-off** — detail vs. compute
-- **Splits matter**: stratify, group, avoid leakage
-- **Imbalance, noise, bias** — inspect data before training
+- Images are tensors: usually H × W × C, but volumes/time series add axes.
+- Shape conventions matter: NumPy/PIL use H × W × C; PyTorch uses C × H × W.
+- Resolution is a trade-off between detail, memory, and compute.
+- Dataset quality matters: imbalance, noisy labels, hidden bias, and leakage can dominate performance.
+- Splits must respect the data structure: group related samples together.
 :::
 
 ::: {.fragment}
-The model can only be as good as the data it learns from.
+**The model can only be as good as the data it learns from.**
 :::
 
 

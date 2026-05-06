@@ -10,16 +10,107 @@ $$
 $$
 :::
 
+## Overview {.center}
 
-## Learning Objectives {.center}
+- You have a pretrained encoder
+- You have limited labeled data
+- Which adaptation strategy should you try first?
+
+
+
+# Adapting Pretrained Models
+
+## The Question {.center}
+
+::: {.fragment}
+You have a pretrained model trained on a large source dataset.
+:::
+
+::: {.fragment}
+You now have a smaller target dataset.
+:::
+
+::: {.fragment .highlight-red}
+
+::: {.highlight-red}
+How much of the model should you train?
+:::
+
+:::
+
+## Adaptation Hierarchy
+
+::: {#fig-da-hierarchy}
+![]({{< meta params.images_path >}}adaptation_hierarchy.png){width=95%}
+
+🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
+:::
+
+::: {.fragment .highlight-red}
+Start simple. Descend only when performance demands it.
+:::
+
+
+## How to Choose {.center}
 
 ::: {.incremental}
-- Pick the right strategy: k-NN, linear probe, LoRA, partial fine-tune, full fine-tune
-- Implement each in PyTorch (timm, Hugging Face, peft)
-- Apply a decision framework: data size, domain similarity, compute
-- Why **start simple** — efficient *and* diagnostic
-- Recognize when domain shift demands more aggressive adaptation
+- **Very little data** → k-NN or linear probe
+- **Good embeddings, small dataset** → linear probe
+- **Moderate data or domain shift** → LoRA / adapters
+- **Large dataset or strong domain shift** → partial fine-tuning
+- **Very large dataset** → full fine-tuning
 :::
+
+::: {.fragment}
+The main trade-off: **adaptability vs. overfitting risk**.
+:::
+
+
+## Quiz: Small Similar Dataset
+
+You have **300 labeled product images**.
+
+The images are similar to ImageNet: shoes, bags, jackets, furniture.
+
+What should you try first?
+
+::: {.fragment}
+**k-NN or linear probe.**
+:::
+
+::: {.fragment}
+The pretrained representation is likely already useful.
+Full fine-tuning would probably overfit.
+:::
+
+## Quiz: Medical Domain Shift
+
+You have **1,000 labeled chest X-rays** and a pretrained DINOv2 backbone.
+
+What should you try first?
+
+::: {.fragment}
+Start with **k-NN / linear probe** as a diagnostic.
+:::
+
+::: {.fragment}
+If performance is poor, try **LoRA** or **partial fine-tuning**.
+:::
+
+::: {.fragment}
+Full fine-tuning with 1,000 images is risky unless strongly regularized.
+:::
+
+## Key Takeaways
+
+::: {.incremental}
+- Adaptation is a hierarchy: **k-NN → linear probe → LoRA → partial FT → full FT**
+- With little data, keep most of the encoder frozen
+- Larger domain shift requires more adaptation
+- k-NN and linear probes are useful diagnostics
+- Full fine-tuning is powerful, but data-hungry and easier to overfit
+:::
+
 
 
 ## Overview {.center}
