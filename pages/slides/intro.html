@@ -283,65 +283,45 @@ Figure&nbsp;3: Apple’s on-device safety features — sensitive content detecti
 <h1>Computer Vision Tasks</h1>
 
 </section>
-<section id="image-classification" class="slide level2">
-<h2>Image Classification</h2>
+<section id="core-task-image-classification" class="slide level2">
+<h2>Core Task: Image Classification</h2>
 
 <img data-src="../../assets/images/intro/image_classification_example.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-intro-image_clssifier"><p class="caption">
 Figure&nbsp;6: Multi-class classification: predict the most likely class with confidence (<span class="citation" data-cites="krizhevsky_imagenet_2012">Krizhevsky et al. (<a href="#/references" role="doc-biblioref" onclick="">2012</a>)</span>).
 </p></section>
-<section id="object-detection" class="slide level2">
-<h2>Object Detection</h2>
+<section id="core-task-object-detection" class="slide level2">
+<h2>Core Task: Object Detection</h2>
 
 <img data-src="../../assets/images/intro/yolo_object_detection_example.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-intro-yolo-example"><p class="caption">
 Figure&nbsp;7: Bounding boxes localize multiple objects, each with a class and confidence (<span class="citation" data-cites="Redmon2016a">Redmon et al. (<a href="#/references" role="doc-biblioref" onclick="">2016</a>)</span>).
 </p></section>
-<section id="segmentation" class="slide level2">
-<h2>Segmentation</h2>
+<section id="core-task-segmentation" class="slide level2">
+<h2>Core Task: Segmentation</h2>
 
 <img data-src="../../assets/images/intro/instance_segmentation_example_maskrcnn.jpg" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-mask-rcnn-object-segmentation-example"><p class="caption">
-Figure&nbsp;8: Instance segmentation — pixel-level masks per object (<span class="citation" data-cites="he_mask_2018">He et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>).
-</p><div class="fragment">
-<p><strong>Semantic</strong> (class per pixel) vs.&nbsp;<strong>Instance</strong> (object per pixel)</p>
-</div>
+Figure&nbsp;8: In segmentation, individual pixels are assigned to specific objects (instance segmentation, here) or classes (semantic segmentation). From <span class="citation" data-cites="he_mask_2018">He et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>.
+</p></section>
+<section id="core-task-generation" class="slide level2">
+<h2>Core Task: Generation</h2>
+
+<img data-src="../../assets/images/intro/stylegan3_examples.png" width="400" class="r-stretch quarto-figure-center" id="fig-intro-stylegan3"><p class="caption">
+Figure&nbsp;9: StyleGan3 (from <span class="citation" data-cites="karras_alias-free_2021">Karras et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span>).
+</p></section>
+<section id="beyond-core-tasks" class="slide level2">
+<h2>Beyond Core Tasks</h2>
+<p>Many applications are combinations or extensions of core tasks.</p>
 </section>
-<section id="semantic-segmentation-aerial" class="slide level2">
-<h2>Semantic Segmentation — Aerial</h2>
-<div id="fig-intro-semantic-segmentation" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-intro-semantic-segmentation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<iframe data-external="1" src="https://www.youtube.com/embed/wfObVKKKJkE?si=GZ6m6vig54Z8XVie" width="1200" height="600" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-intro-semantic-segmentation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Each pixel classified into crop type, field boundary, or land category.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="keypoint-detection" class="slide level2">
-<h2>Keypoint Detection</h2>
+<section id="example-keypoint-detection" class="slide level2">
+<h2>Example: Keypoint Detection</h2>
 
 <img data-src="../../assets/images/intro/keypoint_detection_exampe_maskrcnn.jpg" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-mask-rcnn-keypoint-detection-example"><p class="caption">
-Figure&nbsp;10: Localize specific points (e.g.&nbsp;body joints) — used for action recognition and avatar control (<span class="citation" data-cites="he_mask_2018">He et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>).
-</p></section>
-<section id="image-manipulation-draggan" class="slide level2">
-<h2>Image Manipulation — DragGAN</h2>
-<video id="video_shortcode_videojs_video3" width="1400" class="video-js vjs-default-skin vjs-big-play-centered " controls="" preload="auto" data-setup="{}" title=""><source src="https://vcai.mpi-inf.mpg.de/projects/DragGAN/data/DragGAN.mp4"></video>
-<p><a href="https://vcai.mpi-inf.mpg.de/projects/DragGAN/">DragGAN</a> — drag points to reshape objects realistically (<span class="citation" data-cites="pan_drag_2023">Pan et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
+Figure&nbsp;10: Localize specific points (e.g.&nbsp;body joints), used for action recognition and avatar control (<span class="citation" data-cites="he_mask_2018">He et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>).
+</p><div class="fragment">
+<p>Quiz: What core task(s) does keypoint detection combine?</p>
+</div>
 </section>
-<section id="image-translation-pix2pix" class="slide level2">
-<h2>Image Translation — pix2pix</h2>
-
-<img data-src="../../assets/images/intro/pix2pix_examples.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-intro-pix2pix-example"><p class="caption">
-Figure&nbsp;11: Conditional image-to-image generation: sketch → photo, day → night, etc. (<span class="citation" data-cites="image_to_image_isola2018">Isola et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>).
-</p></section>
-<section id="super-resolution-dlss" class="slide level2">
-<h2>Super Resolution — DLSS</h2>
-
-<img data-src="../../assets/images/intro/dssl.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-intro-dssl"><p class="caption">
-Figure&nbsp;12: Nvidia DLSS — real-time upscaling for higher gaming framerates. <a href="https://images.nvidia.com/aem-dam/Solutions/geforce/news/control-nvidia-dlss-2-0-update/deliver-us-the-moon-nvidia-dlss-2-0-performance-boost.png">Source</a>
-</p></section>
-<section id="colorization" class="slide level2">
-<h2>Colorization</h2>
+<section id="example-colorization" class="slide level2">
+<h2>Example: Colorization</h2>
 
 <!-- ## View Synthesis — NeRF
 
@@ -386,7 +366,10 @@ Browse [civitai](https://civitai.com/) for examples and models.
 <div class="column" style="width:50%;">
 <ul>
 <li>Image Classification</li>
-<li>Object Detection (and Tracking)</li>
+<li>Object Detection
+<ul>
+<li>Object Tracking</li>
+</ul></li>
 <li>Image Segmentation
 <ul>
 <li>Semantic Segmentation</li>
@@ -415,28 +398,28 @@ Browse [civitai](https://civitai.com/) for examples and models.
 <p>List is not exhaustive!</p>
 </div>
 </section>
-<section id="what-about-videos-generation" class="slide level2">
-<h2>What About Videos? — Generation</h2>
+<section id="what-about-videos" class="slide level2">
+<h2>What About Videos?</h2>
 <div id="fig-intro-sora2" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig">
 <div aria-describedby="fig-intro-sora2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<video id="video_shortcode_videojs_video5" width="1400" class="video-js vjs-default-skin vjs-big-play-centered " controls="" preload="auto" data-setup="{}" title=""><source src="https://openaiassets.blob.core.windows.net/$web/nf2/blog-final2/20250929_0337_New%20Video_simple_compose_01k6agr8ctey29mze208t29w38%20(1).mp4"></video>
+<video id="video_shortcode_videojs_video4" width="1400" class="video-js vjs-default-skin vjs-big-play-centered " controls="" preload="auto" data-setup="{}" title=""><source src="https://openaiassets.blob.core.windows.net/$web/nf2/blog-final2/20250929_0337_New%20Video_simple_compose_01k6agr8ctey29mze208t29w38%20(1).mp4"></video>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-intro-sora2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: <a href="https://openai.com/index/sora-2/">OpenAI Sora 2</a> — Prompt: <em>a man rides a horse which is on another horse</em>.
+Figure&nbsp;12: <a href="https://openai.com/index/sora-2/">OpenAI Sora 2</a> — Prompt: <em>a man rides a horse which is on another horse</em>.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="what-about-videos-tracking" class="slide level2">
-<h2>What About Videos? — Tracking</h2>
+<section id="what-about-videos-1" class="slide level2">
+<h2>What About Videos?</h2>
 <div id="fig-intro-cotracker" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig">
 <div aria-describedby="fig-intro-cotracker-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<video id="video_shortcode_videojs_video6" width="1400" class="video-js vjs-default-skin vjs-big-play-centered " controls="" preload="auto" data-setup="{}" title=""><source src="https://co-tracker.github.io/videos/teaser/rollerblade.mp4"></video>
+<video id="video_shortcode_videojs_video5" width="1400" class="video-js vjs-default-skin vjs-big-play-centered " controls="" preload="auto" data-setup="{}" title=""><source src="https://co-tracker.github.io/videos/teaser/rollerblade.mp4"></video>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-intro-cotracker-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15: <a href="https://co-tracker.github.io/">CoTracker</a> — tracking points across frames (<span class="citation" data-cites="karaev_cotracker_2024">Karaev et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>).
+Figure&nbsp;13: <a href="https://co-tracker.github.io/">CoTracker</a> — tracking points across frames (<span class="citation" data-cites="karaev_cotracker_2024">Karaev et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>).
 </figcaption>
 </figure>
 </div>
@@ -445,7 +428,7 @@ Figure&nbsp;15: <a href="https://co-tracker.github.io/">CoTracker</a> — tracki
 <h2>Videos</h2>
 <p>Many image-level tasks extend to videos.</p>
 <div class="fragment">
-<p>After all — videos are sequences of images.</p>
+<p>After all, videos are nothing but a sequence of images.</p>
 </div>
 </section>
 <section id="quiz-application-task" class="slide level2">
@@ -465,11 +448,11 @@ Figure&nbsp;15: <a href="https://co-tracker.github.io/">CoTracker</a> — tracki
 <section id="quiz-answers" class="slide level2">
 <h2>Quiz: Answers</h2>
 <ol type="1">
-<li class="fragment"><strong>Camera traps</strong> → Classification <em>or</em> Detection (depends on need: presence vs.&nbsp;count/localize)</li>
-<li class="fragment"><strong>Photo categorization</strong> → Multi-label Classification</li>
-<li class="fragment"><strong>Image search</strong> → Retrieval via learned <strong>embeddings</strong> (not a “standard” task)</li>
-<li class="fragment"><strong>Tumors</strong> → Segmentation (pixel-level boundaries)</li>
-<li class="fragment"><strong>Counting apples</strong> → Object Detection</li>
+<li class="fragment"><strong>Camera traps</strong>: Classification <em>or</em> Detection (depends on need: presence vs.&nbsp;count/localize)</li>
+<li class="fragment"><strong>Photo categorization</strong>: Classification</li>
+<li class="fragment"><strong>Image search</strong>: Retrieval via learned <strong>embeddings</strong> (not a “standard” task)</li>
+<li class="fragment"><strong>Tumors</strong>: Segmentation (pixel-level boundaries)</li>
+<li class="fragment"><strong>Counting apples</strong>: Object Detection</li>
 </ol>
 </section></section>
 <section>
@@ -481,7 +464,7 @@ Figure&nbsp;15: <a href="https://co-tracker.github.io/">CoTracker</a> — tracki
 <h2>Semantic Gap</h2>
 
 <img data-src="../../assets/images/intro/semantic_gap_comparison.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-cat-number-grid"><p class="caption">
-Figure&nbsp;16: Computers see numbers, humans see meaning.
+Figure&nbsp;14: Computers see numbers, humans see meaning.
 </p><div class="fragment">
 <p>Bridging raw pixels → high-level concepts is the central problem.</p>
 </div>
@@ -490,49 +473,52 @@ Figure&nbsp;16: Computers see numbers, humans see meaning.
 <h2>Viewpoint</h2>
 
 <img data-src="../../assets/images/intro/viewpoint_challenge.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-intro-challenge-viewpoint"><p class="caption">
-Figure&nbsp;17: Same object — wildly different pixels.
+Figure&nbsp;15: Same object — wildly different pixels.
 </p></section>
 <section id="deformation" class="slide level2">
 <h2>Deformation</h2>
 
 <img data-src="../../assets/images/intro/challenge_deformation.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-challenge-deformation"><p class="caption">
-Figure&nbsp;18: Living things bend, twist, curl. <a href="http://cs231n.stanford.edu/">Source</a>
+Figure&nbsp;16: Living things bend, twist, curl. <a href="http://cs231n.stanford.edu/">Source</a>
 </p></section>
 <section id="illumination" class="slide level2">
 <h2>Illumination</h2>
 
 <img data-src="../../assets/images/intro/challenge_illumination.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-challenge-illumination"><p class="caption">
-Figure&nbsp;19: Lighting changes pixels dramatically. <a href="http://cs231n.stanford.edu/">Source</a>
+Figure&nbsp;17: Lighting changes pixels dramatically. <a href="http://cs231n.stanford.edu/">Source</a>
 </p></section>
 <section id="background-clutter" class="slide level2">
 <h2>Background Clutter</h2>
 
 <img data-src="../../assets/images/intro/challenge_background.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-challenge-background"><p class="caption">
-Figure&nbsp;20: Foreground vs.&nbsp;background — when textures match. <a href="http://cs231n.stanford.edu/">Source</a>
+Figure&nbsp;18: Foreground vs.&nbsp;background — when textures match. <a href="http://cs231n.stanford.edu/">Source</a>
 </p></section>
 <section id="occlusion" class="slide level2">
 <h2>Occlusion</h2>
 
 <img data-src="../../assets/images/intro/challenge_occlusion.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-challenge-occlusion"><p class="caption">
-Figure&nbsp;21: Recognize from partial views. <a href="http://cs231n.stanford.edu/">Source</a>
+Figure&nbsp;19: Recognize from partial views. <a href="http://cs231n.stanford.edu/">Source</a>
 </p></section>
 <section id="intra-class-variation" class="slide level2">
 <h2>Intra-Class Variation</h2>
 
 <img data-src="../../assets/images/intro/challenge_intra_class_variation.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-challenge-intra-class"><p class="caption">
-Figure&nbsp;22: All cats — but very different. <a href="https://www.maxpixel.net/">Source</a>
+Figure&nbsp;20: All cats — but very different. <a href="https://www.maxpixel.net/">Source</a>
 </p></section>
 <section id="context-dependence" class="slide level2">
 <h2>Context Dependence</h2>
 
 <img data-src="../../assets/images/intro/tiger_context.jpg" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-tiger-context"><p class="caption">
-Figure&nbsp;23: Is this a tiger? Context provides crucial cues.
-</p></section>
+Figure&nbsp;21
+</p><div class="fragment">
+<p><strong>Question:</strong> Is this a tiger?</p>
+</div>
+</section>
 <section id="context-dependence-2" class="slide level2">
 <h2>Context Dependence 2</h2>
 
 <img data-src="../../assets/images/intro/challenges_context_blop.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-blop-context"><p class="caption">
-Figure&nbsp;24: From (<span class="citation" data-cites="torralba_using_2010">Torralba et al. (<a href="#/references" role="doc-biblioref" onclick="">2010</a>)</span>).
+Figure&nbsp;22: From (<span class="citation" data-cites="torralba_using_2010">Torralba et al. (<a href="#/references" role="doc-biblioref" onclick="">2010</a>)</span>).
 </p><div class="fragment">
 <p>Visual systems lean heavily on <strong>context</strong> when input is degraded.</p>
 </div>
@@ -550,11 +536,11 @@ Häni, Nicolai, Pravakar Roy, and Volkan Isler. 2020. <span>“<span>MinneApple<
 <div id="ref-he_mask_2018" class="csl-entry" role="listitem">
 He, Kaiming, Georgia Gkioxari, Piotr Dollár, and Ross Girshick. 2018. <em>Mask <span>R</span>-<span>CNN</span></em>. arXiv. <a href="http://arxiv.org/abs/1703.06870">http://arxiv.org/abs/1703.06870</a>.
 </div>
-<div id="ref-image_to_image_isola2018" class="csl-entry" role="listitem">
-Isola, Phillip, Jun-Yan Zhu, Tinghui Zhou, and Alexei A. Efros. 2018. <em>Image-to-<span>Image</span> <span>Translation</span> with <span>Conditional</span> <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="http://arxiv.org/abs/1611.07004">http://arxiv.org/abs/1611.07004</a>.
-</div>
 <div id="ref-karaev_cotracker_2024" class="csl-entry" role="listitem">
 Karaev, Nikita, Ignacio Rocco, Benjamin Graham, Natalia Neverova, Andrea Vedaldi, and Christian Rupprecht. 2024. <em><span>CoTracker</span>: <span>It</span> Is <span>Better</span> to <span>Track</span> <span>Together</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2307.07635">https://doi.org/10.48550/arXiv.2307.07635</a>.
+</div>
+<div id="ref-karras_alias-free_2021" class="csl-entry" role="listitem">
+Karras, Tero, Miika Aittala, Samuli Laine, et al. 2021. <em>Alias-<span>Free</span> <span>Generative</span> <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="http://arxiv.org/abs/2106.12423">http://arxiv.org/abs/2106.12423</a>.
 </div>
 <div id="ref-krizhevsky_imagenet_2012" class="csl-entry" role="listitem">
 Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E Hinton. 2012. <span>“<span>ImageNet</span> <span>Classification</span> with <span>Deep</span> <span>Convolutional</span> <span>Neural</span> <span>Networks</span>.”</span> In <em>Advances in <span>Neural</span> <span>Information</span> <span>Processing</span> <span>Systems</span></em>, edited by F. Pereira, C. J. Burges, L. Bottou, and K. Q. Weinberger, vol. 25. Curran Associates, Inc. <a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf</a>.
@@ -567,9 +553,6 @@ Mathys, Melanie, Marco Willi, Michael Graber, and Raphael Meier. 2024. <em>Synth
 </div>
 <div id="ref-mathys_synthetic_2024-1" class="csl-entry" role="listitem">
 Mathys, Melanie, Marco Willi, and Raphael Meier. 2024. <em>Synthetic <span>Photography</span> <span>Detection</span>: <span>A</span> <span>Visual</span> <span>Guidance</span> for <span>Identifying</span> <span>Synthetic</span> <span>Images</span> <span>Created</span> by <span>AI</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2408.06398">https://doi.org/10.48550/arXiv.2408.06398</a>.
-</div>
-<div id="ref-pan_drag_2023" class="csl-entry" role="listitem">
-Pan, Xingang, Ayush Tewari, Thomas Leimkühler, Lingjie Liu, Abhimitra Meka, and Christian Theobalt. 2023. <em>Drag <span>Your</span> <span>GAN</span>: <span>Interactive</span> <span>Point</span>-Based <span>Manipulation</span> on the <span>Generative</span> <span>Image</span> <span>Manifold</span></em>. arXiv. <a href="http://arxiv.org/abs/2305.10973">http://arxiv.org/abs/2305.10973</a>.
 </div>
 <div id="ref-Redmon2016a" class="csl-entry" role="listitem">
 Redmon, Joseph, Santosh Divvala, Ross Girshick, and Ali Farhadi. 2016. <span>“You Only Look Once: <span>Unified</span>, Real-Time Object Detection.”</span> <em>Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition</em> 2016-Decem: 779–88. <a href="https://doi.org/10.1109/CVPR.2016.91">https://doi.org/10.1109/CVPR.2016.91</a>.
@@ -979,7 +962,6 @@ Willi, Marco, Ross T. Pitman, Anabelle W. Cardoso, et al. 2019. <span>“Identif
     <script>videojs(video_shortcode_videojs_video3);</script>
     <script>videojs(video_shortcode_videojs_video4);</script>
     <script>videojs(video_shortcode_videojs_video5);</script>
-    <script>videojs(video_shortcode_videojs_video6);</script>
     
 
 </body></html>

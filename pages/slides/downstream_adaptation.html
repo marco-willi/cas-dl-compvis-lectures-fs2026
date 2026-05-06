@@ -242,30 +242,105 @@ Marco Willi
 </div>
 
 </section>
-<section id="learning-objectives" class="slide level2 center">
-<h2>Learning Objectives</h2>
+<section id="overview" class="slide level2 center">
+<h2>Overview</h2>
 <ul>
-<li class="fragment">Pick the right strategy: k-NN, linear probe, LoRA, partial fine-tune, full fine-tune</li>
-<li class="fragment">Implement each in PyTorch (timm, Hugging Face, peft)</li>
-<li class="fragment">Apply a decision framework: data size, domain similarity, compute</li>
-<li class="fragment">Why <strong>start simple</strong> — efficient <em>and</em> diagnostic</li>
-<li class="fragment">Recognize when domain shift demands more aggressive adaptation</li>
+<li>You have a pretrained encoder</li>
+<li>You have limited labeled data</li>
+<li>Which adaptation strategy should you try first?</li>
 </ul>
 </section>
-<section id="overview" class="slide level2 center">
+<section>
+<section id="adapting-pretrained-models" class="title-slide slide level1 center">
+<h1>Adapting Pretrained Models</h1>
+
+</section>
+<section id="the-question" class="slide level2 center">
+<h2>The Question</h2>
+<div class="fragment">
+<p>You have a pretrained model trained on a large source dataset.</p>
+</div>
+<div class="fragment">
+<p>You now have a smaller target dataset.</p>
+</div>
+<div class="fragment highlight-red">
+<div class="highlight-red">
+<p>How much of the model should you train?</p>
+</div>
+</div>
+</section>
+<section id="adaptation-hierarchy" class="slide level2">
+<h2>Adaptation Hierarchy</h2>
+
+<img data-src="../../assets/images/downstream_adaptation/adaptation_hierarchy.png" style="width:95.0%" class="r-stretch quarto-figure-center" id="fig-da-hierarchy"><p class="caption">
+Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
+</p><div class="fragment highlight-red">
+<p>Start simple. Descend only when performance demands it.</p>
+</div>
+</section>
+<section id="how-to-choose" class="slide level2 center">
+<h2>How to Choose</h2>
+<ul>
+<li class="fragment"><strong>Very little data</strong> → k-NN or linear probe</li>
+<li class="fragment"><strong>Good embeddings, small dataset</strong> → linear probe</li>
+<li class="fragment"><strong>Moderate data or domain shift</strong> → LoRA / adapters</li>
+<li class="fragment"><strong>Large dataset or strong domain shift</strong> → partial fine-tuning</li>
+<li class="fragment"><strong>Very large dataset</strong> → full fine-tuning</li>
+</ul>
+<div class="fragment">
+<p>The main trade-off: <strong>adaptability vs.&nbsp;overfitting risk</strong>.</p>
+</div>
+</section>
+<section id="quiz-small-similar-dataset" class="slide level2">
+<h2>Quiz: Small Similar Dataset</h2>
+<p>You have <strong>300 labeled product images</strong>.</p>
+<p>The images are similar to ImageNet: shoes, bags, jackets, furniture.</p>
+<p>What should you try first?</p>
+<div class="fragment">
+<p><strong>k-NN or linear probe.</strong></p>
+</div>
+<div class="fragment">
+<p>The pretrained representation is likely already useful. Full fine-tuning would probably overfit.</p>
+</div>
+</section>
+<section id="quiz-medical-domain-shift" class="slide level2">
+<h2>Quiz: Medical Domain Shift</h2>
+<p>You have <strong>1,000 labeled chest X-rays</strong> and a pretrained DINOv2 backbone.</p>
+<p>What should you try first?</p>
+<div class="fragment">
+<p>Start with <strong>k-NN / linear probe</strong> as a diagnostic.</p>
+</div>
+<div class="fragment">
+<p>If performance is poor, try <strong>LoRA</strong> or <strong>partial fine-tuning</strong>.</p>
+</div>
+<div class="fragment">
+<p>Full fine-tuning with 1,000 images is risky unless strongly regularized.</p>
+</div>
+</section>
+<section id="key-takeaways" class="slide level2">
+<h2>Key Takeaways</h2>
+<ul>
+<li class="fragment">Adaptation is a hierarchy: <strong>k-NN → linear probe → LoRA → partial FT → full FT</strong></li>
+<li class="fragment">With little data, keep most of the encoder frozen</li>
+<li class="fragment">Larger domain shift requires more adaptation</li>
+<li class="fragment">k-NN and linear probes are useful diagnostics</li>
+<li class="fragment">Full fine-tuning is powerful, but data-hungry and easier to overfit</li>
+</ul>
+</section>
+<section id="overview-1" class="slide level2 center">
 <h2>Overview</h2>
 <ul>
 <li>Motivation</li>
 <li>The Adaptation Hierarchy</li>
 <li>Choosing a Strategy</li>
 </ul>
-</section>
+</section></section>
 <section>
 <section id="motivation" class="title-slide slide level1 center">
 <h1>Motivation</h1>
 
 </section>
-<section id="the-question" class="slide level2 center">
+<section id="the-question-1" class="slide level2 center">
 <h2>The Question</h2>
 <div class="fragment">
 <p>You have a pretrained encoder.</p>
@@ -297,7 +372,7 @@ Marco Willi
 <h2>Five Strategies, One Hierarchy</h2>
 
 <img data-src="../../assets/images/downstream_adaptation/adaptation_hierarchy.png" style="width:80.0%" class="r-stretch quarto-figure-center" id="fig-da-hierarchy"><p class="caption">
-Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
+Figure&nbsp;2: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </p><div class="fragment highlight-red">
 <p><strong>Start at the top. Descend only when performance demands it.</strong></p>
 </div>
@@ -359,7 +434,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="k-nn-code" class="slide level2">
 <h2>k-NN — Code</h2>
-<div id="f9528d90" class="cell" data-execution_count="1">
+<div id="10d6e950" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> torch, sklearn.neighbors <span class="im">as</span> sk</span>
 <span id="cb1-2"><a></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel, AutoImageProcessor</span>
 <span id="cb1-3"><a></a></span>
@@ -389,7 +464,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="linear-probe-code" class="slide level2">
 <h2>Linear Probe — Code</h2>
-<div id="e6d7ab1b" class="cell" data-execution_count="2">
+<div id="86ee4eb1" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb2-2"><a></a><span class="im">from</span> torch <span class="im">import</span> nn, optim</span>
 <span id="cb2-3"><a></a><span class="im">import</span> timm</span>
@@ -421,7 +496,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="lora-code" class="slide level2">
 <h2>LoRA — Code</h2>
-<div id="4d46ded3" class="cell" data-execution_count="3">
+<div id="f3532f71" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> transformers <span class="im">import</span> AutoModel</span>
 <span id="cb3-2"><a></a><span class="im">from</span> peft <span class="im">import</span> LoraConfig, get_peft_model</span>
 <span id="cb3-3"><a></a><span class="im">import</span> torch</span>
@@ -449,7 +524,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="partial-ft-code" class="slide level2">
 <h2>Partial FT — Code</h2>
-<div id="2b8ee34c" class="cell" data-execution_count="4">
+<div id="6ed2b004" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> timm, torch</span>
 <span id="cb4-2"><a></a><span class="im">from</span> torch <span class="im">import</span> nn</span>
 <span id="cb4-3"><a></a></span>
@@ -479,7 +554,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 </section>
 <section id="full-ft-code" class="slide level2">
 <h2>Full FT — Code</h2>
-<div id="97abe25b" class="cell" data-execution_count="5">
+<div id="35fb9a06" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb5-2"><a></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForImageClassification</span>
 <span id="cb5-3"><a></a></span>
@@ -627,7 +702,7 @@ Figure&nbsp;1: 🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
 <h1>Summary</h1>
 
 </section>
-<section id="key-takeaways" class="slide level2">
+<section id="key-takeaways-1" class="slide level2">
 <h2>Key Takeaways</h2>
 <ul>
 <li class="fragment">Five strategies — <strong>k-NN → linear probe → LoRA → partial FT → full FT</strong></li>

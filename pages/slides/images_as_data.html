@@ -180,7 +180,7 @@ Marco Willi
 <h2>Why It Matters</h2>
 <p>Many classification failures aren’t model failures, they’re <strong>data</strong> failures.</p>
 <div class="fragment">
-<p>Imbalance, noisy labels, hidden shortcuts.</p>
+<p>Imbalance, noisy labels, hidden shortcuts, leakage, wrong tensor assumptions.</p>
 </div>
 </section>
 <section>
@@ -191,37 +191,41 @@ Marco Willi
 <section id="images-as-tensors" class="slide level2">
 <h2>Images as Tensors</h2>
 
-<img data-src="../../assets/images/images_as_data/tensor_anatomy.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-iad-tensor-anatomy"><p class="caption">
-Figure&nbsp;1: An image as a tensor of shape H × W × C.
+<img data-src="../../assets/images/images_as_data/tensor_anatomy.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-iad-tensor-anatomy"><p class="caption">
+Figure&nbsp;1: An image as a tensor of shape <strong>H × W × C</strong>.
 </p><div class="fragment">
-<p>Each pixel holds one or more numeric values per channel.</p>
-</div>
-</section>
-<section id="pixel-values" class="slide level2">
-<h2>Pixel Values</h2>
-<ul>
-<li class="fragment">Stored as <strong>8-bit unsigned int</strong>, range <span class="math inline">\([0, 255]\)</span></li>
-<li class="fragment">Normalized to floats <span class="math inline">\([0, 1]\)</span> for training</li>
-<li class="fragment">Or standardized to <strong>zero mean, unit variance</strong></li>
-</ul>
-</section>
-<section id="shape-conventions" class="slide level2">
-<h2>Shape Conventions</h2>
-<ul>
-<li class="fragment"><strong>NumPy / PIL</strong>: H × W × C <em>(channels last)</em></li>
-<li class="fragment"><strong>PyTorch</strong>: C × H × W <em>(channels first)</em></li>
-</ul>
-<div class="fragment">
-<p>A 224×224 RGB image:</p>
-<ul>
-<li>NumPy: <code>(224, 224, 3)</code></li>
-<li>PyTorch: <code>(3, 224, 224)</code></li>
-</ul>
+<p>Pixel values: <code>uint8 [0, 255]</code> → float <code>[0, 1]</code> → standardized (zero mean, unit variance)</p>
 </div>
 <div class="fragment">
-<p>Mismatched conventions can lead to silent bugs.</p>
+<p><strong>Shape conventions:</strong></p>
+<ul>
+<li>NumPy / PIL: <code>(H, W, C)</code> — <em>channels last</em></li>
+<li>PyTorch: <code>(C, H, W)</code> — <em>channels first</em></li>
+</ul>
+<p>Mismatched conventions → silent bugs.</p>
 </div>
 </section>
+<section id="channels-what-does-c-mean" class="slide level2">
+<h2>Channels: What Does C Mean?</h2>
+
+<img data-src="../../assets/images/images_as_data/rgb_vs_grayscale.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-iad-rgb-vs-grayscale"><p class="caption">
+Figure&nbsp;2: RGB (3 channels) vs.&nbsp;grayscale (1 channel).
+</p><ul>
+<li class="fragment"><strong>1</strong>: grayscale, depth, IR/thermal, X-ray, ultrasound</li>
+<li class="fragment"><strong>3</strong>: RGB (or HSV, same info, different axes)</li>
+<li class="fragment"><strong>4</strong>: RGBA (alpha) or RGB + near-IR</li>
+<li class="fragment"><strong>N (10s–100s)</strong>: multispectral / hyperspectral (remote sensing, agriculture, astronomy)</li>
+</ul>
+<div class="fragment">
+<p>For ordinary 2-D images, only <strong>C</strong> changes , the tensor structure stays H × W × C. For volumes or time series, we add additional axes.</p>
+</div>
+</section>
+<section id="thermal-imaging" class="slide level2">
+<h2>Thermal Imaging</h2>
+
+<img data-src="../../assets/images/images_as_data/thermal_drone.gif" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-iad-thermal-imaging"><p class="caption">
+Figure&nbsp;3: Thermal images are often single-channel sensor measurements: each pixel represents heat / infrared intensity. For display, they may be mapped to false-color RGB.
+</p></section>
 <section id="quiz-batch-shape" class="slide level2">
 <h2>Quiz: Batch Shape</h2>
 <p>A batch of <strong>32</strong> RGB images, each <strong>224 × 224</strong>, in PyTorch.</p>
@@ -233,219 +237,141 @@ Figure&nbsp;1: An image as a tensor of shape H × W × C.
 <p>The batch dimension is always <strong>first</strong> in PyTorch, enables parallel GPU computation.</p>
 </div>
 </section>
-<section id="quiz-mri-as-a-tensor" class="slide level2">
-<h2>Quiz: MRI as a Tensor</h2>
-<p>How would an MRI scan be represented? Does H × W × C still apply?</p>
-<div class="fragment">
-<ul>
-<li><strong>2-D slice</strong>: H × W (or H × W × 1)</li>
-<li><strong>3-D volume</strong>: D × H × W</li>
-<li><strong>Multi-sequence (T1, T2, FLAIR, …)</strong>: D × H × W × C</li>
-<li><strong>fMRI (time series)</strong>: T × D × H × W</li>
-</ul>
-</div>
-<div class="fragment">
-<p>The H × W × C abstraction generalizes, sequences/depth become extra axes.</p>
-</div>
-</section>
-<section id="color-and-channels" class="slide level2">
-<h2>Color and Channels</h2>
-
-<img data-src="../../assets/images/images_as_data/rgb_vs_grayscale.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-iad-rgb-vs-grayscale"><p class="caption">
-Figure&nbsp;2: RGB (3 channels) vs.&nbsp;grayscale (1 channel) — same image, different representations.
-</p></section>
-<section id="channel-counts-in-the-wild" class="slide level2">
-<h2>Channel Counts in the Wild</h2>
-<ul>
-<li class="fragment"><strong>1</strong>: grayscale, depth, thermal/IR, X-ray, ultrasound</li>
-<li class="fragment"><strong>3</strong>: RGB (also HSV, same info, different axes)</li>
-<li class="fragment"><strong>4</strong>: RGBA (alpha) or RGB + near-infrared</li>
-<li class="fragment"><strong>N (10s–100s)</strong>: multispectral / hyperspectral (remote sensing, agriculture, astronomy)</li>
-</ul>
-<div class="fragment">
-<p>Only <strong>C</strong> changes, the tensor structure stays the same.</p>
-</div>
-</section>
-<section id="beyond-rgb" class="slide level2">
-<h2>Beyond RGB</h2>
-<ul>
-<li class="fragment"><strong>Infrared</strong>: thermal imaging, night vision, satellite</li>
-<li class="fragment"><strong>Depth maps</strong>: distance-to-camera per pixel</li>
-<li class="fragment"><strong>Multispectral / Hyperspectral</strong>: narrow wavelength bands</li>
-<li class="fragment"><strong>HSV</strong>: separates hue from brightness; useful for color-based augmentation/segmentation</li>
-</ul>
-</section>
 <section id="resolution" class="slide level2">
 <h2>Resolution</h2>
 
-<img data-src="../../assets/images/images_as_data/resolution_comparison.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-iad-resolution"><p class="caption">
-Figure&nbsp;3: Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost.
-</p></section>
-<section id="resolution-trade-offs" class="slide level2">
-<h2>Resolution Trade-offs</h2>
-<ul>
-<li class="fragment"><strong>Higher</strong>: preserves detail, costs memory + compute</li>
-<li class="fragment"><strong>Lower</strong>: faster, lighter, but discards information</li>
-<li class="fragment"><strong>Aspect-ratio distortion</strong>: squashing to square deforms objects</li>
+<img data-src="../../assets/images/images_as_data/resolution_comparison.png" class="r-stretch quarto-figure-center" id="fig-iad-resolution"><p class="caption">
+Figure&nbsp;4: Same image at 224 × 224, 64 × 64, 16 × 16. Detail is progressively lost.
+</p><ul>
+<li class="fragment"><strong>Higher</strong> → detail, more memory + compute</li>
+<li class="fragment"><strong>Lower</strong> → faster, but discards information</li>
+<li class="fragment"><strong>Aspect-ratio distortion</strong> → squashing deforms objects</li>
 </ul>
 <div class="fragment">
-<p>Common: resize shortest edge + center-crop, <em>or</em> resize with padding.</p>
+<p>Common: resize shortest edge + center-crop, or resize with padding.</p>
 </div>
+</section>
+<section id="quiz-mri-as-a-tensor" class="slide level2">
+<h2>Quiz: MRI as a Tensor</h2>
+<p>How would an MRI scan be represented?</p>
+<p>Is it still H × W × C?</p>
+
+<img data-src="../../assets/images/images_as_data/mri_example.png" style="width:100.0%" class="r-stretch quarto-figure-center" id="fig-iad-mri"><p class="caption">
+Figure&nbsp;5: <a href="https://www.nzbri.org/Labs/mri/Images/">Source</a>
+</p></section>
+<section id="mri-as-a-tensor" class="slide level2">
+<h2>MRI as a Tensor</h2>
+<p>How would an MRI scan be represented?</p>
+
+<img data-src="../../assets/images/images_as_data/mri.png" style="width:100.0%" class="r-stretch quarto-figure-center" id="fig-iad-mri"><p class="caption">
+Figure&nbsp;6: MRI scans.
+</p><div class="fragment">
+<p>The H × W × C abstraction generalizes, sequences/depth become extra axes.</p>
+</div>
+<!-- ## Thermal Imaging
+
+
+
+
+ -->
 </section></section>
 <section>
 <section id="image-datasets" class="title-slide slide level1 center">
 <h1>Image Datasets</h1>
 
 </section>
-<section id="labels-and-classes" class="slide level2">
-<h2>Labels and Classes</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Index</th>
-<th>Class Name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>0</td>
-<td>empty</td>
-</tr>
-<tr class="even">
-<td>1</td>
-<td>deer</td>
-</tr>
-<tr class="odd">
-<td>2</td>
-<td>fox</td>
-</tr>
-<tr class="even">
-<td>3</td>
-<td>badger</td>
-</tr>
-<tr class="odd">
-<td>4</td>
-<td>bird</td>
-</tr>
-</tbody>
-</table>
-<p>Example mapping for a camera-trap dataset.</p>
-</section>
-<section id="class-granularity" class="slide level2">
-<h2>Class Granularity</h2>
-<ul>
-<li class="fragment"><strong>Fine-grained</strong>: (red deer vs.&nbsp;roe deer), more data, more ambiguity</li>
-<li class="fragment"><strong>Coarse</strong>: (animal vs.&nbsp;empty), easier, less informative</li>
-</ul>
-</section>
-<section id="dataset-splits" class="slide level2">
-<h2>Dataset Splits</h2>
-<ul>
-<li class="fragment"><strong>Train</strong>: optimize parameters; seen repeatedly</li>
-<li class="fragment"><strong>Validation</strong>: tune hyperparameters, monitor overfitting; never trained on</li>
-<li class="fragment"><strong>Test</strong>: held out for final, unbiased evaluation</li>
-</ul>
-</section>
-<section id="splitting-strategies" class="slide level2">
-<h2>Splitting Strategies</h2>
-<ul>
-<li class="fragment"><strong>Random</strong>: not always appropriate</li>
-<li class="fragment"><strong>Stratified</strong>: preserve class distribution across splits</li>
-<li class="fragment"><strong>Grouped</strong>: keep related images (same event, patient, location) in the same split</li>
-</ul>
-</section>
-<section id="grouped-splits" class="slide level2">
-<h2>Grouped Splits</h2>
+<section id="real-world-camera-trap-dataset" class="slide level2">
+<h2>Real-World Camera Trap Dataset</h2>
 
-<img data-src="../../assets/images/images_as_data/grouped_split_sequence.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-iad-grouped-split-sequence"><p class="caption">
-Figure&nbsp;4: Three frames from a single camera-trap trigger event — near-duplicates.
+<img data-src="../../assets/images/images_as_data/similar_camera_trap_collage.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-iad-similar-camera-trap-collage"><p class="caption">
+Figure&nbsp;7: <a href="https://lila.science/datasets/snapshot-kgalagadi/">Source: Snapshot Kgalgadi</a>
 </p><div class="fragment">
-<p>All three must go into the <strong>same</strong> split.</p>
-</div>
-</section>
-<section id="data-leakage" class="slide level2 center">
-<h2>Data Leakage</h2>
-<p>Information from val/test inadvertently influences training.</p>
-<div class="fragment">
-<p>Inflated metrics, real-world collapse.</p>
-</div>
-</section>
-<section id="common-leakage-sources" class="slide level2">
-<h2>Common Leakage Sources</h2>
-<ul>
-<li class="fragment"><strong>Near-duplicates</strong> across splits (camera-trap bursts, video frames)</li>
-<li class="fragment"><strong>Same subject / location</strong> in multiple splits</li>
-<li class="fragment"><strong>Preprocessing stats</strong> computed over the <em>full</em> dataset (not just training)</li>
-</ul>
-</section>
-<section id="quiz-dermoscopy-splits" class="slide level2">
-<h2>Quiz: Dermoscopy Splits</h2>
-<p>500 patients, multiple visits each. Images shuffled and split 80/10/10.</p>
-<p>What goes wrong?</p>
-<div class="fragment">
-<p><strong>Same patient appears in train AND test.</strong> The model learns to recognize <em>patients</em>. Skin tone, mole patterns, clinic lighting, instead of lesions.</p>
-</div>
-<div class="fragment">
-<p><strong>Fix:</strong> split at the <strong>patient</strong> level.</p>
+<p><strong>Question</strong>: What makes this dataset difficult for image classification?</p>
 </div>
 </section>
 <section id="class-imbalance" class="slide level2">
 <h2>Class Imbalance</h2>
 
-<img data-src="../../assets/images/images_as_data/cam_trap_dist2.jpg" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-iad-class-distribution"><p class="caption">
-Figure&nbsp;5: Camera-trap class distribution. “Empty” dominates; rare species are scarce.
-</p></section>
-<section id="consequences-of-imbalance" class="slide level2">
-<h2>Consequences of Imbalance</h2>
-<ul>
+<img data-src="../../assets/images/images_as_data/cam_trap_dist2.jpg" class="r-stretch quarto-figure-center" id="fig-iad-class-distribution"><p class="caption">
+Figure&nbsp;8: Accuracy can be misleading when one class dominates.
+</p><ul>
 <li class="fragment">Model favors the majority class — minimizes overall loss</li>
 <li class="fragment">Rare classes get few gradient updates</li>
-<li class="fragment"><strong>Accuracy lies</strong> — predicting always “empty” can hit 90%</li>
-</ul>
-</section>
-<section id="mitigations" class="slide level2">
-<h2>Mitigations</h2>
-<ul>
-<li class="fragment"><strong>Oversample</strong> minorities / <strong>undersample</strong> majorities</li>
-<li class="fragment"><strong>Weighted loss</strong> — penalize errors on rare classes more</li>
-<li class="fragment">Better metrics: <strong>per-class precision, recall, F1</strong></li>
+<li class="fragment"><strong>Accuracy lies</strong> — predicting always “deer” can hit 65%</li>
 </ul>
 </section>
 <section id="label-noise" class="slide level2">
 <h2>Label Noise</h2>
 
-<img data-src="../../assets/images/images_as_data/label_ambiguity.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-iad-label-ambiguity"><p class="caption">
-Figure&nbsp;6: Wolf or large dog? Empty, or a tail at the edge of the frame?
-</p></section>
-<section id="sources-of-label-noise" class="slide level2">
-<h2>Sources of Label Noise</h2>
-<ul>
+<img data-src="../../assets/images/images_as_data/label_ambiguity.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-iad-label-ambiguity"><p class="caption">
+Figure&nbsp;9: Wolf or large dog? Empty, or a tail at the edge of the frame?
+</p><ul>
 <li class="fragment"><strong>Inter-annotator disagreement</strong> on borderline cases</li>
 <li class="fragment"><strong>Systematic errors</strong> — annotators consistently confuse two classes</li>
 <li class="fragment"><strong>Ambiguous category boundaries</strong> — class definitions overlap</li>
 </ul>
 <div class="fragment">
-<p>Models first learn clean patterns, then memorize noise <span class="citation" data-cites="arpit_closer_2017">(<a href="#/references" role="doc-biblioref" onclick="">Arpit et al. 2017</a>)</span> — early stopping helps.</p>
-</div>
-<div class="fragment">
-<p><strong>Practical takeaway:</strong> always inspect the data before training.</p>
+<p>Deep networks can eventually memorize noisy labels <span class="citation" data-cites="arpit_closer_2017">(<a href="#/references" role="doc-biblioref" onclick="">Arpit et al. 2017</a>)</span>, so validation monitoring and data inspection matter.</p>
 </div>
 </section>
-<section id="hidden-bias-cows-on-beaches" class="slide level2">
-<h2>Hidden Bias — Cows on Beaches</h2>
+<section id="hidden-bias" class="slide level2">
+<h2>Hidden Bias</h2>
 
 <img data-src="../../assets/images/images_as_data/dataset_bias.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-iad-dataset-bias"><p class="caption">
-Figure&nbsp;7: Same animal, different background → different prediction. The <strong>background</strong>, not the cow, drives the prediction. Adapted from <span class="citation" data-cites="Beery2018">Beery et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>.
-</p></section>
-<section id="forms-of-hidden-bias" class="slide level2">
-<h2>Forms of Hidden Bias</h2>
-<ul>
+Figure&nbsp;10: Same animal, different background → different prediction. The <strong>background</strong>, not the cow, drives the prediction. Adapted from <span class="citation" data-cites="Beery2018">Beery et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>.
+</p><ul>
 <li class="fragment"><strong>Geographic</strong> — limited regional diversity (architecture, vegetation, clothing)</li>
 <li class="fragment"><strong>Selection</strong> — internet-sourced images overrepresent certain demographics/styles</li>
 <li class="fragment"><strong>Watermark / source artifacts</strong> — visual quirks correlate with labels</li>
 </ul>
 <div class="fragment">
 <p>Hard to detect from aggregate metrics — surface only via failure analysis.</p>
+</div>
+</section>
+<section id="dataset-splits" class="slide level2">
+<h2>Dataset Splits</h2>
+<ul>
+<li class="fragment"><strong>Train</strong>: used to fit model parameters</li>
+<li class="fragment"><strong>Validation</strong>: used for model selection and tuning</li>
+<li class="fragment"><strong>Test</strong>: used once for final evaluation</li>
+</ul>
+<div class="fragment">
+<p><strong>Splitting strategy</strong> must match the data-generating process.</p>
+</div>
+<ul>
+<li class="fragment"><strong>Random</strong>: not always appropriate</li>
+<li class="fragment"><strong>Stratified</strong>: preserve class distribution across splits</li>
+<li class="fragment"><strong>Grouped</strong>: keep related images (same event, patient, location) in the same split</li>
+</ul>
+</section>
+<section id="splitting-a-dataset" class="slide level2">
+<h2>Splitting a Dataset</h2>
+
+<img data-src="../../assets/images/images_as_data/train_test_leakage.avif" class="r-stretch quarto-figure-center" id="fig-iad-grouped-split-sequence"><p class="caption">
+Figure&nbsp;11: <a href="https://voxel51.com/blog/on-leaky-datasets-and-a-clever-horse">Source: Voxel51</a>
+</p><div class="fragment">
+<p><strong>Question</strong>: What is wrong with this split?</p>
+</div>
+</section>
+<section id="data-leakage" class="slide level2 center">
+<h2>Data Leakage</h2>
+<p>Data leakage means the model receives information during training that would not be available at deployment.</p>
+<p>Result: validation/test metrics look good, but real-world performance collapses.</p>
+<ul>
+<li class="fragment"><strong>Near-duplicates</strong> across splits (camera-trap bursts, video frames)</li>
+<li class="fragment"><strong>Same subject / location</strong> in multiple splits</li>
+<li class="fragment"><strong>Preprocessing stats</strong> computed over the <em>full</em> dataset (not just training)</li>
+</ul>
+</section>
+<section id="quiz-skin-cancer-detection-dataset" class="slide level2">
+<h2>Quiz: Skin Cancer Detection Dataset</h2>
+<p>500 patients, multiple visits each. Images randomly shuffled and split 80/10/10.</p>
+<p>What goes wrong?</p>
+<div class="fragment">
+<p>The same patient can appear in both train and test. The model may learn patient-specific cues instead of lesion-specific cues.</p>
+</div>
+<div class="fragment">
+<p><strong>Fix:</strong> split at the <strong>patient</strong> level.</p>
 </div>
 </section></section>
 <section>
@@ -456,13 +382,14 @@ Figure&nbsp;7: Same animal, different background → different prediction. The <
 <section id="key-takeaways" class="slide level2">
 <h2>Key Takeaways</h2>
 <ul>
-<li class="fragment">Images = tensors of shape <strong>H × W × C</strong> (PyTorch: C × H × W)</li>
-<li class="fragment">Resolution is a <strong>trade-off</strong> — detail vs.&nbsp;compute</li>
-<li class="fragment"><strong>Splits matter</strong>: stratify, group, avoid leakage</li>
-<li class="fragment"><strong>Imbalance, noise, bias</strong> — inspect data before training</li>
+<li class="fragment">Images are tensors: usually H × W × C, but volumes/time series add axes.</li>
+<li class="fragment">Shape conventions matter: NumPy/PIL use H × W × C; PyTorch uses C × H × W.</li>
+<li class="fragment">Resolution is a trade-off between detail, memory, and compute.</li>
+<li class="fragment">Dataset quality matters: imbalance, noisy labels, hidden bias, and leakage can dominate performance.</li>
+<li class="fragment">Splits must respect the data structure: group related samples together.</li>
 </ul>
 <div class="fragment">
-<p>The model can only be as good as the data it learns from.</p>
+<p><strong>The model can only be as good as the data it learns from.</strong></p>
 </div>
 </section></section>
 <section id="references" class="title-slide slide level1 smaller scrollable">
@@ -470,7 +397,7 @@ Figure&nbsp;7: Same animal, different background → different prediction. The <
 <div style="font-size: 50%;">
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-arpit_closer_2017" class="csl-entry" role="listitem">
-Arpit, Devansh, Stanisław Jastrzębski, Nicolas Ballas, et al. 2017. <span>“A <span>Closer</span> <span>Look</span> at <span>Memorization</span> in <span>Deep</span> <span>Networks</span>.”</span> <em>Proc. Of the 34th <span>International</span> <span>Conference</span> on <span>Machine</span> <span>Learning</span> (<span>ICML</span>)</em>. <a href="http://arxiv.org/abs/1706.05394">http://arxiv.org/abs/1706.05394</a>.
+Arpit, Devansh, Stanisław Jastrzębski, Nicolas Ballas, et al. 2017. <em>A <span>Closer</span> <span>Look</span> at <span>Memorization</span> in <span>Deep</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1706.05394">https://doi.org/10.48550/arXiv.1706.05394</a>.
 </div>
 <div id="ref-Beery2018" class="csl-entry" role="listitem">
 Beery, Sara, Grant Van Horn, and Pietro Perona. 2018. <span>“Recognition in <span>Terra</span> <span>Incognita</span>.”</span> <em>Lecture <span>Notes</span> in <span>Computer</span> <span>Science</span> (Including Subseries <span>Lecture</span> <span>Notes</span> in <span>Artificial</span> <span>Intelligence</span> and <span>Lecture</span> <span>Notes</span> in <span>Bioinformatics</span>)</em> 11220 LNCS (July): 472–89. <a href="https://doi.org/10.1007/978-3-030-01270-0_28">https://doi.org/10.1007/978-3-030-01270-0_28</a>.

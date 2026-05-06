@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <link href="../..//assets/cv_logo_small.png" rel="icon" type="image/png">
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.9.37">
 
   <meta name="author" content="Marco Willi">
-  <title>CAS Deep Learning - Computer Vision – Visual Representations</title>
+  <title>CAS Deep Learning - Computer Vision – Representation Learning</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -32,6 +32,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #767676;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #767676;  padding-left: 4px; }
+    div.sourceCode
+      { color: #545454; background-color: #fefefe; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #545454; } /* Normal */
+    code span.al { color: #7928a1; } /* Alert */
+    code span.an { color: #696969; } /* Annotation */
+    code span.at { color: #a55a00; } /* Attribute */
+    code span.bn { color: #7928a1; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #d91e18; } /* ControlFlow */
+    code span.ch { color: #008000; } /* Char */
+    code span.cn { color: #d91e18; } /* Constant */
+    code span.co { color: #696969; } /* Comment */
+    code span.cv { color: #696969; font-style: italic; } /* CommentVar */
+    code span.do { color: #696969; font-style: italic; } /* Documentation */
+    code span.dt { color: #7928a1; } /* DataType */
+    code span.dv { color: #7928a1; } /* DecVal */
+    code span.er { color: #7928a1; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #a55a00; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #696969; } /* Information */
+    code span.kw { color: #d91e18; } /* Keyword */
+    code span.op { color: #00769e; } /* Operator */
+    code span.ot { color: #d91e18; } /* Other */
+    code span.pp { color: #7928a1; } /* Preprocessor */
+    code span.sc { color: #00769e; } /* SpecialChar */
+    code span.ss { color: #008000; } /* SpecialString */
+    code span.st { color: #008000; } /* String */
+    code span.va { color: #a55a00; } /* Variable */
+    code span.vs { color: #008000; } /* VerbatimString */
+    code span.wa { color: #696969; font-style: italic; } /* Warning */
     /* CSS for citations */
     div.csl-bib-body { }
     div.csl-entry {
@@ -155,13 +221,16 @@
       margin-right: 0; 
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" data-background-image="../../assets/fhnw_bg.png" data-background-opacity="1.0" data-background-size="contain" class="quarto-title-block center">
-  <h1 class="title">Visual Representations</h1>
+  <h1 class="title">Representation Learning</h1>
   <p class="subtitle">CAS Deep Learning - Computer Vision (Part1)</p>
 
 <div class="quarto-title-authors">
@@ -176,26 +245,14 @@ Marco Willi
 </div>
 
 </section>
-<section id="learning-objectives" class="slide level2 center">
-<h2>Learning Objectives</h2>
-<ul>
-<li class="fragment">Define a representation; why compact embeddings beat raw pixels</li>
-<li class="fragment">Distinguish supervised, weakly supervised, self-supervised paradigms</li>
-<li class="fragment">Invariance vs.&nbsp;selectivity trade-off</li>
-<li class="fragment">Global vs.&nbsp;local representations</li>
-<li class="fragment">Adaptation strategies: k-NN, linear probe, LoRA, fine-tune</li>
-</ul>
-</section>
-<section id="overview" class="slide level2 center">
+<section id="overview" class="slide level2">
 <h2>Overview</h2>
 <ul>
-<li>Motivation</li>
-<li>What Is a Representation?</li>
-<li>Learning Paradigms</li>
-<li>Global vs.&nbsp;Local</li>
+<li>Motivation &amp; Introduction</li>
+<li>What is Representation Learning?</li>
+<li>Deep Image Representations</li>
 <li>Comparing Representations</li>
-<li>Adaptation</li>
-<li>Quiz</li>
+<li>Practical Applications</li>
 </ul>
 </section>
 <section>
@@ -203,87 +260,418 @@ Marco Willi
 <h1>Motivation</h1>
 
 </section>
-<section id="the-semantic-gap" class="slide level2">
-<h2>The Semantic Gap</h2>
+<section id="the-information-overkill" class="slide level2">
+<h2>The Information Overkill</h2>
 
-<img data-src="../../assets/images/representation_learning/elephant.jpg" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-raw-elephant"><p class="caption"><a href="https://unsplash.com/de/fotos/elefantenwanderung-tagsuber-QJbyG6O0ick">Source</a></p><div class="fragment">
-<p>A human can describe this image in a sentence — pixels alone are a poor representation of what it depicts.</p>
+<img data-src="../../assets/images/representation_learning/elephant.jpg" class="r-stretch quarto-figure-center"><p class="caption">Example Image <a href="https://unsplash.com/de/fotos/elefantenwanderung-tagsuber-QJbyG6O0ick">Source</a></p><div class="fragment">
+<p>How would you describe the photograph?</p>
 </div>
 </section>
-<section id="natural-language-as-compression" class="slide level2 center">
-<h2>Natural Language as Compression</h2>
-<div class="fragment">
-<p>“A photograph of an elephant facing the camera, large tusks and ears, standing in a flat savannah, bright daylight, cloudy sky.”</p>
+<section id="the-information-overkill-1" class="slide level2">
+<h2>The Information Overkill</h2>
+
+<img data-src="../../assets/images/representation_learning/elephant.jpg" class="r-stretch quarto-figure-center"><p class="caption">Example Image <a href="https://unsplash.com/de/fotos/elefantenwanderung-tagsuber-QJbyG6O0ick">Source</a></p><div class="fragment">
+<blockquote>
+<p>A photograph of an elephant facing the camera. The elephant has large tusks and ears and is standing in a flat savannah. Is is bright day light with a cloudy sky.</p>
+</blockquote>
 </div>
 <div class="fragment">
-<p><strong>Far fewer bits</strong> than the raw RGB image — yet preserves what matters.</p>
+<div id="78c80918" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="dataframe table table-sm table-striped align-middle caption-top">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th">Representation</th>
+<th data-quarto-table-cell-role="th">Size (bits)</th>
+<th data-quarto-table-cell-role="th">Size (KB)</th>
+<th data-quarto-table-cell-role="th">Compression Factor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw RGB Image</td>
+<td>5,529,600</td>
+<td>675.0</td>
+<td>1×</td>
+</tr>
+<tr class="even">
+<td>Natural Language (UTF-8)</td>
+<td>1,312</td>
+<td>0.16</td>
+<td>4215×</td>
+</tr>
+<tr class="odd">
+<td>Natural Language (ASCII)</td>
+<td>1,148</td>
+<td>0.14</td>
+<td>4817×</td>
+</tr>
+</tbody>
+</table>
 </div>
-</section>
-<section id="information-content" class="slide level2">
-<h2>Information Content</h2>
-<ul>
-<li class="fragment">Raw image: <span class="math inline">\(640 \times 360 \times 3 \times 8 = 5{,}529{,}600\)</span> bits</li>
-<li class="fragment">Description: ~<span class="math inline">\(170 \times 8 = 1{,}360\)</span> bits</li>
-<li class="fragment"><strong>Compression: ~4000×</strong></li>
-</ul>
+</div>
+</div>
 <div class="fragment">
-<p>This is the spirit of <strong>representation learning</strong> — compact embeddings that retain <em>task-relevant</em> information.</p>
+<p><strong>Key insight</strong>: Massive compression while preserving semantically relevant information!</p>
 </div>
 </section>
 <section id="the-vastness-of-image-space" class="slide level2">
 <h2>The Vastness of Image Space</h2>
 
-<img data-src="../../assets/images/representation_learning/set_of_images.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-rl-set-of-images"><p class="caption">
-Figure&nbsp;2: Possible images: <span class="math inline">\(255^{256 \times 256 \times 3}\)</span> — astronomical. Natural images occupy a tiny manifold.
-</p><div class="fragment">
-<p>A good embedding finds <strong>coordinates within the natural-image manifold</strong>.</p>
+<img data-src="../../assets/images/representation_learning/set_of_images.png" class="r-stretch quarto-figure-center"><p class="caption">Illustrated are the set of all possible images and the subset of natural images</p><div class="fragment">
+<p>Total possible <span class="math inline">\(256\times256\)</span> RGB images: <span class="math inline">\(255^{256 \times 256 \times 3}\)</span> ≈ <strong>infinite</strong></p>
+</div>
+<div class="fragment">
+<p>Natural images: (<em>relatively</em>) <strong>tiny subset</strong> of this space</p>
+</div>
+<div class="fragment">
+<p><strong>Implication</strong>: Pixel space is extremely inefficient for representing real images!</p>
 </div>
 </section></section>
 <section>
-<section id="what-is-a-representation" class="title-slide slide level1 center">
-<h1>What Is a Representation?</h1>
+<section id="what-is-representation-learning" class="title-slide slide level1 center">
+<h1>What is Representation Learning?</h1>
 
 </section>
-<section id="definition" class="slide level2 center">
+<section id="definition" class="slide level2">
 <h2>Definition</h2>
-<p><span class="math display">\[
-\mathbf{z} = f(\mathbf{x}) \in \mathbb{R}^d
-\]</span></p>
 <div class="fragment">
-<ul>
-<li><span class="math inline">\(f\)</span> — encoder</li>
-<li><span class="math inline">\(\mathbf{z}\)</span> — representation / embedding</li>
-<li>Goal: distances <span class="math inline">\(\|\mathbf{z}_i - \mathbf{z}_j\|_2\)</span> reflect <strong>semantic similarity</strong></li>
-</ul>
+<p>A <strong>representation</strong> is the output <span class="math inline">\(\mathbf{z} = f(\mathbf{x})\)</span> produced by an encoder <span class="math inline">\(f\)</span> applied to input <span class="math inline">\(\mathbf{x}\)</span></p>
+</div>
+<div class="fragment">
+<p><img data-src="../../assets/images/representation_learning/data_and_representation_space.png" style="width:80.0%"></p>
+<p><strong>Semantic Coordindate System</strong> where distances <span class="math inline">\(\|\mathbf{z}_i - \mathbf{z}_j\|_2\)</span> reflect meaningful relationships.</p>
+</div>
+<div class="fragment">
+<p>We focus on <strong>vector-valued</strong> (distributed) representations, not symbolic descriptions</p>
 </div>
 </section>
-<section id="example-images" class="slide level2">
-<h2>Example Images</h2>
-<div id="fig-rl-examples" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-rl-examples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<section id="intuition" class="slide level2">
+<h2>Intuition</h2>
+<div class="quarto-layout-panel" data-layout-nrow="2">
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_day_01.png" alt="Elephant in daylight savanna"></p>
+<figcaption>Elephant - Day 1</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/augmented/elephant_flip_horizontal.png" alt="Elephant in daylight savanna"></p>
+<figcaption>Elephant - Day 1</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/augmented/elephant_brightness_1.8x.png" alt="Elephant in daylight savanna"></p>
+<figcaption>Elephant - Day 1</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_day_02.png" alt="Elephant by watering hole in daylight"></p>
+<figcaption>Elephant - Day 2</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/giraffe_day_01.png" alt="Giraffe in daylight grassland"></p>
+<figcaption>Giraffe - Day</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/rhino_night_01.png" alt="Rhinoceros at nighttime"></p>
+<figcaption>Rhino - Night</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_night_01.png" alt="Elephant at night with moonlight"></p>
+<figcaption>Elephant - Night</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/car_day_01.png" alt="Modern car in bright daylight"></p>
+<figcaption>Car - Day</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2d-representation" class="slide level2">
+<h2>Exercise: 2D Representation</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/representation_space.png" style="width:40.0%"></p>
+<figcaption>Empty 2-dimensional representation space for mapping image similarity</figcaption>
+</figure>
+</div>
+<div class="fragment">
+<p><strong>Your task</strong>: How would you map these images to 2D space?</p>
+</div>
+<div class="fragment">
+<p><strong>Hint</strong>: Similar images should be close, dissimilar far apart</p>
+</div>
+<div class="fragment">
+<div class="quarto-layout-panel" data-layout-nrow="1">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_day_01.png" alt="Elephant in daylight savanna"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/augmented/elephant_flip_horizontal.png" alt="Elephant in daylight savanna"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/augmented/elephant_brightness_1.8x.png" alt="Elephant in daylight savanna"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_day_02.png" alt="Elephant by watering hole in daylight"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/examples/giraffe_day_01.png" alt="Giraffe in daylight grassland"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/examples/rhino_night_01.png" alt="Rhinoceros at nighttime"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_night_01.png" alt="Elephant at night with moonlight"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 12.5%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/examples/car_day_01.png" alt="Modern car in bright daylight"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-makes-good-representations" class="slide level2">
+<h2>What Makes Good Representations?</h2>
+<h3 id="invariance-selectivity-balance">Invariance &amp; Selectivity Balance</h3>
+<ul>
+<li class="fragment"><p><strong>Invariance:</strong> <span class="math inline">\(\|f(\mathbf{x}) - f(g(\mathbf{x}))\|_2 &lt; \epsilon\)</span> for nuisance transform <span class="math inline">\(g\)</span> (lighting, pose)</p></li>
+<li class="fragment"><p><strong>Selectivity:</strong> <span class="math inline">\(\|f(\mathbf{x}_i) - f(\mathbf{x}_j)\|_2 &gt; \delta\)</span> for semantically different <span class="math inline">\(\mathbf{x}_i, \mathbf{x}_j\)</span></p></li>
+<li class="fragment"><p><em>Trade-off:</em> Too much invariance → loss of discriminative details</p></li>
+<li class="fragment"><p><em>Sweet spot:</em> Preserve task-relevant variations, discard irrelevant ones</p></li>
+</ul>
+</section>
+<section id="what-makes-good-representations-1" class="slide level2">
+<h2>What Makes Good Representations?</h2>
+<h3 id="geometric-structure-preservation">Geometric Structure Preservation</h3>
+<ul>
+<li class="fragment"><strong>Smooth manifold:</strong> Similar semantic concepts cluster in representation space</li>
+<li class="fragment"><strong>Composability:</strong> <span class="math inline">\(f(\mathbf{x}_1) \oplus f(\mathbf{x}_2) \approx f(\text{combine}(\mathbf{x}_1, \mathbf{x}_2))\)</span> for vector operations</li>
+<li class="fragment"><strong>Interpolability:</strong> Linear interpolation <span class="math inline">\(\alpha f(\mathbf{x}_1) + (1-\alpha) f(\mathbf{x}_2)\)</span> yields meaningful intermediate concepts</li>
+</ul>
+</section>
+<section id="what-makes-good-representations-2" class="slide level2">
+<h2>What Makes Good Representations?</h2>
+<h3 id="transfer-efficiency">Transfer Efficiency</h3>
+<ul>
+<li class="fragment"><p><strong>Low sample complexity:</strong> Few examples needed for downstream adaptation</p></li>
+<li class="fragment"><p><strong>Broad applicability:</strong> Same <span class="math inline">\(f(\cdot)\)</span> works across multiple tasks/domains</p></li>
+<li class="fragment"><p><strong>Graceful degradation:</strong> Performance degrades slowly with domain shift</p></li>
+</ul>
+</section>
+<section id="what-makes-good-representations-3" class="slide level2">
+<h2>What Makes Good Representations?</h2>
+<h3 id="computational-practicality">Computational Practicality</h3>
+<ul>
+<li class="fragment"><p><strong>Compact dimensionality:</strong> <span class="math inline">\(\text{dim}(\mathbf{z}) \ll \text{dim}(\mathbf{x})\)</span> while preserving information</p></li>
+<li class="fragment"><p><strong>Fast computation:</strong> Forward pass <span class="math inline">\(f(\mathbf{x})\)</span> efficient for real-time applications</p></li>
+<li class="fragment"><p><strong>Stable training:</strong> Representation learning converges reliably</p></li>
+</ul>
+</section>
+<section id="the-invariance-selectivity-trade-off" class="slide level2">
+<h2>The Invariance-Selectivity Trade-off</h2>
+<ul>
+<li class="fragment"><p><strong>Invariance</strong>: <span class="math inline">\(\|f(\mathbf{x}) - f(g(\mathbf{x}))\|_2 &lt; \epsilon\)</span> (Similar output for nuisance transforms)</p></li>
+<li class="fragment"><p><strong>Selectivity</strong>: <span class="math inline">\(\|f(\mathbf{x}_i) - f(\mathbf{x}_j)\|_2 &gt; \delta\)</span> (Different outputs for semantic differences)</p></li>
+<li class="fragment"><p><strong>Challenge</strong>: Too much invariance → loss of discriminative details!</p></li>
+<li class="fragment"><p><strong>Sweet spot</strong>: Preserve task-relevant variations, discard nuisance factors</p></li>
+</ul>
+</section>
+<section id="the-invariance-selectivity-trade-off-1" class="slide level2 center">
+<h2>The Invariance-Selectivity Trade-off</h2>
+<div class="r-fit-text">
+<ul>
+<li><p>What function has maximal invariance?</p></li>
+<li><p>What function has maximal selectivity?</p></li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="deep-image-representations" class="title-slide slide level1 center">
+<h1>Deep Image Representations</h1>
+
+</section>
+<section id="three-learning-paradigms" class="slide level2">
+<h2>Three Learning Paradigms</h2>
+<ol type="1">
+<li class="fragment"><strong>Supervised Learning</strong>: Learn from human labels (ImageNet)</li>
+<li class="fragment"><strong>Weakly Supervised</strong>: Learn from noisy/partial labels (image-text pairs)</li>
+<li class="fragment"><strong>Self-Supervised</strong>: Learn from data structure (no labels needed)</li>
+</ol>
+</section>
+<section id="supervised-learning" class="slide level2">
+<h2>Supervised Learning</h2>
+
+<img data-src="../../assets/images/representation_learning/supervised_learning_representations.png" class="r-stretch"><div class="fragment">
+<ul>
+<li>Encoder + classifier trained with labeled data</li>
+<li>Train on labeled data (e.g., ImageNet 1000 classes)</li>
+<li>Cross-entropy loss on human-provided labels</li>
+<li>Penultimate layer embeddings = transferable features</li>
+</ul>
+</div>
+</section>
+<section id="weakly-supervised-clip" class="slide level2">
+<h2>Weakly Supervised: CLIP</h2>
+
+<img data-src="../../assets/images/representation_learning/clip_contrastive_pre_training.png" class="r-stretch quarto-figure-center"><p class="caption">From <span class="citation" data-cites="radford_learning_2021">Radford et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p><div class="fragment">
+<ul>
+<li>Dual encoders align images with text captions</li>
+<li>Uses image-text pairs (web-scale data)</li>
+<li>Contrastive loss: maximize diagonal, minimize off-diagonal</li>
+</ul>
+</div>
+<!-- ## CLIP: Key Properties
+
+::: {.fragment}
+**Zero-shot Classification**
+
+Text prompt: "a photo of a {class}" → class prototype
+:::
+
+::: {.fragment}
+**Scalability**
+
+Learns from billions of noisy web pairs
+:::
+
+::: {.fragment}
+**Vision-Language Alignment**
+
+Shared embedding space for images and text
+::: -->
+</section>
+<section id="self-supervised-learning-masked-autoencoding-mae" class="slide level2">
+<h2>Self-Supervised Learning: Masked Autoencoding (MAE)</h2>
+
+<img data-src="../../assets/images/representation_learning/masked_auto_encoder.png" class="r-stretch quarto-figure-center"><p class="caption">From <span class="citation" data-cites="he_masked_2021">He et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p><div class="fragment">
+<ul>
+<li>Mask 75% of image patches random</li>
+<li>Encode only visible patches (efficient!)</li>
+<li>Decode with mask tokens inserted and reconstruct original pixels</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Key insight</strong>: To fill in gaps, model must learn global structure</p>
+</div>
+</section>
+<section id="self-supervised-learning-contrastive-learning" class="slide level2">
+<h2>Self-Supervised Learning: Contrastive Learning</h2>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/self_supervised_contrastive1.png" style="width:60.0%"></p>
+<figcaption>From <span class="citation" data-cites="chen_simple_2020">Chen et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/self_supervised_contrastive2.png" style="width:60.0%"></p>
+<figcaption>From <span class="citation" data-cites="chen_simple_2020">Chen et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li>Pull positive pairs close together in embedding space</li>
+<li>Push negative pairs apart</li>
+<li>Form tight clusters of semantically similar samples</li>
+</ul>
+</div>
+</section>
+<section id="self-supervised-learning-self-distillation" class="slide level2 smaller">
+<h2>Self-Supervised Learning: Self-Distillation</h2>
+
+<img data-src="../../assets/images/representation_learning/dino_principle.png" class="r-stretch quarto-figure-center"><p class="caption">From @<span class="citation" data-cites="caron_emerging_2021">Caron et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p><div class="fragment">
+<ul>
+<li>No explicit negatives needed</li>
+<li>Works with smaller batches</li>
+<li>Emergent semantic clustering</li>
+<li>Produces high-quality local features (patch tokens)</li>
+</ul>
+</div>
+</section>
+<section id="self-supervised-learning-self-distillation-1" class="slide level2">
+<h2>Self-Supervised Learning: Self-Distillation</h2>
+<div class="r-fit-text">
+<div class="r-stack">
+<p>What are the consequences if model training uses random left-right flips?</p>
+</div>
+</div>
+</section>
+<section id="dinov3" class="slide level2">
+<h2>DINOv3</h2>
+<iframe data-external="1" src="https://www.youtube.com/embed/-eOYWK6m3i8" width="100%" height="85%" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+</section>
+<section id="global-vs-local-representations" class="slide level2">
+<h2>Global vs Local Representations</h2>
+<p><strong>Global</strong> representations summarize an image into a single embedding</p>
+<p><strong>Local</strong> representations preserve spatially discriminative aspects</p>
+<div class="fragment">
+<p><img data-src="../../assets/images/representation_learning/dinov3_local_cosine_similarity_example.png" style="height:60.0%"></p>
+</div>
+</section></section>
+<section>
+<section id="comparing-representations" class="title-slide slide level1 center">
+<h1>Comparing Representations</h1>
+
+</section>
+<section id="test-images-overview" class="slide level2">
+<h2>Test Images Overview</h2>
+<div class="quarto-layout-panel" data-layout-nrow="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/car_day_01.png"></p>
+<figcaption>car</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
 <p><img data-src="../../assets/images/representation_learning/examples/elephant_day_01.png"></p>
-<figcaption>Elephant — Day 1</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="../../assets/images/representation_learning/augmented/elephant_flip_horizontal.png"></p>
-<figcaption>Flipped</figcaption>
-</figure>
-</div>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="../../assets/images/representation_learning/augmented/elephant_brightness_1.8x.png"></p>
-<figcaption>Bright</figcaption>
+<figcaption>eleph_d1</figcaption>
 </figure>
 </div>
 </div>
@@ -291,7 +679,15 @@ Figure&nbsp;2: Possible images: <span class="math inline">\(255^{256 \times 256 
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="../../assets/images/representation_learning/examples/elephant_day_02.png"></p>
-<figcaption>Elephant — Day 2</figcaption>
+<figcaption>eleph_d2</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../../assets/images/representation_learning/examples/elephant_night_01.png"></p>
+<figcaption>eleph_n</figcaption>
 </figure>
 </div>
 </div>
@@ -301,7 +697,7 @@ Figure&nbsp;2: Possible images: <span class="math inline">\(255^{256 \times 256 
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="../../assets/images/representation_learning/examples/giraffe_day_01.png"></p>
-<figcaption>Giraffe — Day</figcaption>
+<figcaption>giraffe</figcaption>
 </figure>
 </div>
 </div>
@@ -309,462 +705,299 @@ Figure&nbsp;2: Possible images: <span class="math inline">\(255^{256 \times 256 
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="../../assets/images/representation_learning/examples/rhino_night_01.png"></p>
-<figcaption>Rhino — Night</figcaption>
+<figcaption>rhino</figcaption>
 </figure>
 </div>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/representation_learning/examples/elephant_night_01.png"></p>
-<figcaption>Elephant — Night</figcaption>
+<p><img data-src="../../assets/images/representation_learning/augmented/elephant_brightness_1.8x.png"></p>
+<figcaption>eleph_brt</figcaption>
 </figure>
 </div>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="../../assets/images/representation_learning/examples/car_day_01.png"></p>
-<figcaption>Car — Day</figcaption>
+<p><img data-src="../../assets/images/representation_learning/augmented/elephant_flip_horizontal.png"></p>
+<figcaption>eleph_flip</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-rl-examples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3
-</figcaption>
-</figure>
-</div>
 </section>
-<section id="quiz-how-would-you-embed-these-in-2-d" class="slide level2">
-<h2>Quiz: How would <em>you</em> embed these in 2-D?</h2>
-
-<img data-src="../../assets/images/representation_learning/representation_space.png" style="width:40.0%" class="r-stretch quarto-figure-center" id="fig-representation-space"><p class="caption">
-Figure&nbsp;4
-</p><div class="fragment">
-<ul>
-<li>Same class &amp; conditions → very close (intra-class variation)</li>
-<li>Same class, different lighting → moderate distance (illumination invariance)</li>
-<li>Different classes → far apart (inter-class)</li>
-<li>Animals vs.&nbsp;cars → very far (domain shift)</li>
-</ul>
-</div>
-</section>
-<section id="data-space-representation-space" class="slide level2">
-<h2>Data Space → Representation Space</h2>
-
-<img data-src="../../assets/images/representation_learning/data_and_representation_space.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-data-representation-spaces"><p class="caption">
-Figure&nbsp;5: The encoder <span class="math inline">\(f\)</span> maps <span class="math inline">\(\mathbf{x}_i\)</span> to <span class="math inline">\(\mathbf{z}_i\)</span>. Semantic relationships emerge as distances and clusters.
-</p></section>
-<section id="invariance-vs.-selectivity" class="slide level2">
-<h2>Invariance vs.&nbsp;Selectivity</h2>
-<div class="fragment">
-<p><strong>Invariance:</strong> <span class="math display">\[\|f(\mathbf{x}) - f(g(\mathbf{x}))\|_2 &lt; \epsilon\]</span> for nuisance <span class="math inline">\(g\)</span> (lighting, flips, crops).</p>
-</div>
-<div class="fragment">
-<p><strong>Selectivity:</strong> <span class="math display">\[\|f(\mathbf{x}_i) - f(\mathbf{x}_j)\|_2 &gt; \delta\]</span> for semantically distinct <span class="math inline">\(\mathbf{x}_i, \mathbf{x}_j\)</span>.</p>
-</div>
-</section>
-<section id="nuisance-is-task-dependent" class="slide level2 center">
-<h2>“Nuisance” Is Task-Dependent</h2>
-<ul>
-<li class="fragment"><strong>Product retrieval</strong> — color is discriminative; color-invariant ≠ helpful</li>
-<li class="fragment"><strong>Medical imaging</strong> — orientation is meaningful; rotation-invariant can destroy info</li>
-<li class="fragment"><strong>Size estimation</strong> — scale matters; scale-invariant kills the signal</li>
-</ul>
-<div class="fragment highlight-red">
-<p>Match invariances to your task. Discard only true nuisances.</p>
-</div>
-</section>
-<section id="representation-vs.-classification" class="slide level2 center">
-<h2>Representation vs.&nbsp;Classification</h2>
-<div class="fragment">
-<p>Classification: predict a fixed label.</p>
-</div>
-<div class="fragment">
-<p>Representation learning: build a <strong>reusable embedding</strong> that transfers across many tasks — <em>without retraining the encoder</em>.</p>
-</div>
-</section></section>
-<section>
-<section id="learning-paradigms" class="title-slide slide level1 center">
-<h1>Learning Paradigms</h1>
-
-</section>
-<section id="three-paradigms-same-architecture" class="slide level2 center">
-<h2>Three Paradigms, Same Architecture</h2>
-<ul>
-<li class="fragment"><strong>Supervised</strong> — labels (ResNet/ViT on ImageNet)</li>
-<li class="fragment"><strong>Weakly supervised</strong> — image–text pairs (CLIP)</li>
-<li class="fragment"><strong>Self-supervised</strong> — no labels (MAE, SimCLR, DINO)</li>
-</ul>
-</section>
-<section id="supervised-pretraining" class="slide level2">
-<h2>Supervised Pretraining</h2>
-
-<img data-src="../../assets/images/representation_learning/supervised_learning_representations.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-supervised-architecture"><p class="caption">
-Figure&nbsp;6: Encoder + classification head, cross-entropy loss. The penultimate-layer embedding transfers well.
-</p></section>
-<section id="clip-weak-supervision-at-scale" class="slide level2">
-<h2>CLIP — Weak Supervision at Scale</h2>
-
-<img data-src="../../assets/images/representation_learning/clip_contrastive_pre_training.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-clip-contrastive"><p class="caption">
-Figure&nbsp;7: Image and text encoders aligned via contrastive loss. Matching pairs pulled together; non-matching pushed apart.
-</p></section>
-<section id="clip-zero-shot-classification" class="slide level2">
-<h2>CLIP — Zero-Shot Classification</h2>
-<div class="fragment">
-<p>At inference, text prompts become classifiers:</p>
-</div>
-<div class="fragment">
-<p>“a photo of a {dog, cat, beach, …}” → text embeddings → pick the closest to the image embedding.</p>
-</div>
-<div class="fragment">
-<p><strong>No labeled images needed for the target task.</strong></p>
-</div>
-</section>
-<section id="clip-loss-optional" class="slide level2">
-<h2>CLIP Loss (optional)</h2>
-<p>Symmetric InfoNCE over image–text pairs:</p>
-<p><span class="math display">\[
-\mathcal{L}_{i \to t} = -\frac{1}{N}\sum_i \log \frac{\exp(s_{ii})}{\sum_j \exp(s_{ij})}
-\]</span></p>
-<div class="fragment">
-<p><span class="math inline">\(s_{ij} = \alpha \, \tilde{\mathbf{v}}_i^\top \tilde{\mathbf{t}}_j\)</span> — cosine similarity scaled by learned temperature <span class="math inline">\(\alpha\)</span>.</p>
-</div>
-<div class="fragment">
-<p><span class="math display">\[\mathcal{L}_{\text{CLIP}} = \tfrac{1}{2}(\mathcal{L}_{i \to t} + \mathcal{L}_{t \to i})\]</span></p>
-</div>
-</section>
-<section id="self-supervised-learning" class="slide level2 center">
-<h2>Self-Supervised Learning</h2>
-<div class="fragment">
-<p><strong>No human labels.</strong> Training signal comes from the data itself.</p>
-</div>
-<div class="fragment">
-<ul>
-<li>Reconstruct masked patches (MAE)</li>
-<li>Match augmented views (SimCLR)</li>
-<li>Match teacher’s distribution (DINO)</li>
-</ul>
-</div>
-</section>
-<section id="masked-autoencoding-mae" class="slide level2">
-<h2>Masked Autoencoding (MAE)</h2>
-
-<img data-src="../../assets/images/representation_learning/masked_auto_encoder.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-mae-architecture"><p class="caption">
-Figure&nbsp;8: Mask ~75% of patches → encoder sees only visible patches → decoder reconstructs the rest.
-</p><div class="fragment">
-<p>Post-training, <strong>discard the decoder</strong> and use the encoder for downstream tasks.</p>
-</div>
-</section>
-<section id="mae-loss-optional" class="slide level2">
-<h2>MAE Loss (optional)</h2>
-<p><span class="math display">\[
-\mathcal{L}_{\text{MAE}} = \frac{1}{|\mathcal{M}|} \sum_{p \in \mathcal{M}} \|\hat{X}_p - \tilde{X}_p\|_2^2
-\]</span></p>
-<div class="fragment">
-<p>Only the masked patches contribute. Targets are normalized pixels.</p>
-</div>
-<div class="fragment">
-<p>High mask ratio + asymmetric encoder/decoder → <strong>efficient pretraining, strong transfer</strong>.</p>
-</div>
-</section>
-<section id="contrastive-learning-simclr" class="slide level2">
-<h2>Contrastive Learning — SimCLR</h2>
-<div id="fig-ssl-contrastive" class="quarto-layout-panel">
+<section id="comparisons" class="slide level2">
+<h2>Comparisons</h2>
+<img data-src="../../assets/images/representation_learning/images_overview.png" class="r-stretch">
+<div id="fig-similarity-comparison-models" class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Pixel Space</a></li><li><a href="#tabset-1-2">ResNet-50</a></li><li><a href="#tabset-1-3">CLIP</a></li><li><a href="#tabset-1-4">DINOv2</a></li></ul>
+<div id="fig-similarity-comparison-models" class="tab-content">
+<div id="tabset-1-1">
+<div id="fig-rl-similarity-pixel-space" class="quarto-float quarto-figure quarto-figure-center" alt="Pixel-space similarity matrix">
 <figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-ssl-contrastive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img data-src="../../assets/images/representation_learning/self_supervised_contrastive1.png"></p>
+<div aria-describedby="fig-rl-similarity-pixel-space-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img data-src="../../assets/images/representation_learning/similarity_pixel_space.png" alt="Pixel-space similarity matrix" width="600">
 </div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<p><img data-src="../../assets/images/representation_learning/self_supervised_contrastive2.png"></p>
-</div>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ssl-contrastive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Pull augmented views of the same image together; push other images apart.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rl-similarity-pixel-space-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Raw pixel-level similarity fails to capture semantic relationships.
 </figcaption>
 </figure>
 </div>
-</section>
-<section id="infonce-loss-optional" class="slide level2">
-<h2>InfoNCE Loss (optional)</h2>
-<p><span class="math display">\[
-\mathcal{L}_{\text{InfoNCE}} = -\log \frac{\exp(\text{sim}(z_i, z_i^+)/\tau)}{\exp(\text{sim}(z_i, z_i^+)/\tau) + \sum_j \exp(\text{sim}(z_i, z_j^-)/\tau)}
-\]</span></p>
-<div class="fragment">
-<ul>
-<li><span class="math inline">\(z_i^+\)</span> — augmented view of same image</li>
-<li><span class="math inline">\(z_j^-\)</span> — other images in the batch</li>
-<li>Needs <strong>large batches</strong> (256–4096) for enough negatives</li>
-</ul>
 </div>
-</section>
-<section id="self-distillation-dino" class="slide level2">
-<h2>Self-Distillation — DINO</h2>
+<div id="tabset-1-2">
+<div id="fig-rl-similarity-resnet" class="quarto-float quarto-figure quarto-figure-center" alt="ResNet-50 supervised representation similarity">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-rl-similarity-resnet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img data-src="../../assets/images/representation_learning/similarity_resnet50.png" alt="ResNet-50 supervised representation similarity" width="600">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rl-similarity-resnet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Supervised CNN representations group semantically similar images.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-1-3">
+<div id="fig-rl-similarity-clip" class="quarto-float quarto-figure quarto-figure-center" alt="CLIP multimodal representation similarity">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-rl-similarity-clip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img data-src="../../assets/images/representation_learning/similarity_clip.png" alt="CLIP multimodal representation similarity" width="600">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rl-similarity-clip-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Language-aligned embeddings from CLIP show text-driven semantic structure.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-1-4">
+<div id="fig-rl-similarity-dinov2" class="quarto-float quarto-figure quarto-figure-center" alt="DINOv2 self-supervised representation similarity">
+<figure class="quarto-float quarto-float-fig">
+<div aria-describedby="fig-rl-similarity-dinov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img data-src="../../assets/images/representation_learning/similarity_dinov2.png" alt="DINOv2 self-supervised representation similarity" width="600">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rl-similarity-dinov2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Self-distilled DINOv2 features reveal fine-grained semantic clusters.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<!--
+## Pixel Space Similarity
 
-<img data-src="../../assets/images/representation_learning/dino_principle.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-dino-principle"><p class="caption">
-Figure&nbsp;10: Student matches the <strong>teacher</strong>’s output distribution. Teacher = EMA of student weights.
-</p><div class="fragment">
-<p><strong>No explicit negatives.</strong> Smaller batches work.</p>
-</div>
-</section>
-<section id="dino-series" class="slide level2 center">
-<h2>DINO Series</h2>
-<ul>
-<li class="fragment"><strong>DINO</strong> (<span class="citation" data-cites="caron_emerging_2021">Caron et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span>)</li>
-<li class="fragment"><strong>DINOv2</strong> (<span class="citation" data-cites="oquab_dinov2_2024">Oquab et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>)</li>
-<li class="fragment"><strong>DINOv3</strong> (<span class="citation" data-cites="simeoni_dinov3_2025">Siméoni et al. (<a href="#/references" role="doc-biblioref" onclick="">2025</a>)</span>)</li>
-</ul>
-<div class="fragment">
-<p>Bonus: produces strong <strong>global</strong> ([CLS]) <strong>and local</strong> (patch) features.</p>
-</div>
-</section>
-<section id="dinov3-composite-loss-optional" class="slide level2">
-<h2>DINOv3 Composite Loss (optional)</h2>
+![](/assets/images/representation_learning/similarity_pixel_space.png)
 
-<img data-src="../../assets/images/representation_learning/dinov3_losses_overview.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-rl-dinov3-losses"><p class="caption">
-Figure&nbsp;11: Global DINO · Local iBOT · KoLeo uniformity · Gram anchoring.
-</p></section>
-<section id="dinov3-components-optional" class="slide level2">
-<h2>DINOv3 Components (optional)</h2>
-<p><span class="math display">\[
-\mathcal{L} = \mathcal{L}_{\text{DINO}} + \lambda_{\text{iBOT}}\, \mathcal{L}_{\text{iBOT}} + \lambda_{\text{KoLeo}}\, \mathcal{L}_{\text{KoLeo}} + \lambda_{\text{Gram}}\, \mathcal{L}_{\text{Gram}}
-\]</span></p>
-<div class="fragment">
-<ul>
-<li><strong>DINO</strong> — student matches teacher distribution (global crops)</li>
-<li><strong>iBOT</strong> — masked patch prediction</li>
-<li><strong>KoLeo</strong> — push [CLS] embeddings apart (uniformity)</li>
-<li><strong>Gram</strong> — patch similarity consistency (refinement)</li>
-</ul>
-</div>
+::: {.fragment}
+Problem: Lighting variations dominate, semantic relationships hidden!
+:::
+
+## ResNet (Supervised) Similarity
+
+![](/assets/images/representation_learning/similarity_resnet50.png)
+
+::: {.fragment}
+Better semantic grouping, but still affected by brightness
+:::
+
+## CLIP Similarity
+
+![](/assets/images/representation_learning/similarity_clip.png)
+
+::: {.fragment}
+Strong vision-language alignment, robust to appearance changes
+:::
+
+## DINOv2 Similarity
+
+![](/assets/images/representation_learning/similarity_dinov2.png)
+
+::: {.fragment}
+Best semantic discrimination, excellent invariance to nuisance factors
+::: -->
 </section>
-<section id="dinov3-overview-video" class="slide level2">
-<h2>DINOv3 Overview Video</h2>
-<iframe data-external="1" src="https://www.youtube.com/embed/-eOYWK6m3i8" width="1200" height="600" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
-<p>Meta’s intro to DINOv3 — improvements over DINOv2 and the self-distillation approach.</p>
+<section id="comparison-summary" class="slide level2">
+<h2>Comparison Summary</h2>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Semantic</th>
+<th>Invariance</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Pixel</strong></td>
+<td>❌ Poor</td>
+<td>❌ None</td>
+<td>Baseline</td>
+</tr>
+<tr class="even">
+<td><strong>ResNet</strong></td>
+<td>⚠️ Moderate</td>
+<td>⚠️ Limited</td>
+<td>Fast inference</td>
+</tr>
+<tr class="odd">
+<td><strong>CLIP</strong></td>
+<td>✅ Good</td>
+<td>✅ Strong</td>
+<td>Zero-shot, V+L</td>
+</tr>
+<tr class="even">
+<td><strong>DINOv2</strong></td>
+<td>✅ Excellent</td>
+<td>✅ Excellent</td>
+<td>Few-shot, dense tasks</td>
+</tr>
+</tbody>
+</table>
+</div>
 </section></section>
 <section>
-<section id="global-vs.-local-representations" class="title-slide slide level1 center">
-<h1>Global vs.&nbsp;Local Representations</h1>
+<section id="practical-considerations" class="title-slide slide level1 center">
+<h1>Practical Considerations</h1>
 
 </section>
-<section id="global" class="slide level2">
-<h2>Global</h2>
-<div class="fragment">
-<p>A <strong>single embedding</strong> per image — [CLS] token or global average pooling.</p>
-</div>
-<div class="fragment">
-<p>Captures image-level semantics. Use for:</p>
+<section id="best-practices" class="slide level2">
+<h2>Best Practices</h2>
 <ul>
-<li>Image classification</li>
-<li>Image retrieval</li>
-<li>Zero-shot recognition (CLIP)</li>
+<li class="fragment">✅ Start with k-NN baseline (diagnostic value)</li>
+<li class="fragment">✅ Use linear probe before fine-tuning</li>
+<li class="fragment">✅ Match invariances to task requirements</li>
+<li class="fragment">✅ Choose global/local features based on task</li>
+<li class="fragment">✅ Full fine-tuning is often overkill</li>
+</ul>
+</section>
+<section id="model-selection-guide" class="slide level2">
+<h2>Model Selection Guide</h2>
+<ul>
+<li class="fragment"><strong>DINOv3</strong>: Best for discriminative vision tasks, few-shot learning</li>
+<li class="fragment"><strong>CLIP</strong>: Zero-shot classification, vision-language tasks</li>
+<li class="fragment"><strong>Supervised CNNs</strong>: When computational efficiency is critical (however, small DINOv3 variants exist..)</li>
+</ul>
+</section>
+<section id="global-vs-local-representations-1" class="slide level2">
+<h2>Global vs Local Representations</h2>
+<div class="fragment">
+<p><strong>Global Embeddings</strong> (e.g., [CLS] token)</p>
+<ul>
+<li>Single vector per image</li>
+<li>Use for: Classification, retrieval, zero-shot</li>
 </ul>
 </div>
-</section>
-<section id="local" class="slide level2">
-<h2>Local</h2>
 <div class="fragment">
-<p><strong>Spatially-resolved</strong> patch tokens. Each token describes a region.</p>
-</div>
-<div class="fragment">
-<p>Preserves position. Use for:</p>
+<p><strong>Local Embeddings</strong> (patch tokens)</p>
 <ul>
-<li>Semantic segmentation</li>
-<li>Object detection</li>
-<li>Dense prediction (depth, pose)</li>
+<li>Grid of spatially-resolved features</li>
+<li>Use for: Segmentation, detection, dense prediction</li>
 </ul>
 </div>
-</section>
-<section id="dinov3-local-features" class="slide level2">
-<h2>DINOv3 Local Features</h2>
-
-<img data-src="../../assets/images/representation_learning/dinov3_local_cosine_similarity_example.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-dinov3-local-features"><p class="caption">
-Figure&nbsp;12: Cosine similarity at query points (red crosses). Semantically similar regions cluster — even <strong>across images</strong>.
-</p></section>
-<section id="quiz-web-shop-product-retrieval" class="slide level2">
-<h2>Quiz: Web-Shop Product Retrieval</h2>
-<p>Find shoes that look similar to the one a customer is viewing.</p>
-<p><strong>Global or local embedding?</strong></p>
 <div class="fragment">
-<p><strong>Global</strong> — the query is image-level (“looks like <em>this</em> shoe overall”).</p>
-</div>
-<div class="fragment">
-<p>A single [CLS] token enables fast <strong>approximate nearest-neighbor</strong> search over millions of items.</p>
-</div>
-<div class="fragment">
-<p>For <em>defect detection on the product surface</em> → local patch tokens.</p>
-</div>
-</section></section>
-<section>
-<section id="comparing-representations" class="title-slide slide level1 center">
-<h1>Comparing Representations</h1>
-
-</section>
-<section id="the-test-images" class="slide level2">
-<h2>The Test Images</h2>
-
-<img data-src="../../assets/images/representation_learning/images_overview.png" style="width:80.0%" class="r-stretch quarto-figure-center" id="fig-images-overview"><p class="caption">
-Figure&nbsp;13: Example images used to compare representations.
-</p></section>
-<section id="cosine-similarity-euclidean" class="slide level2">
-<h2>Cosine Similarity &amp; Euclidean</h2>
-<p><span class="math display">\[
-\text{sim}_{\cos}(\mathbf{z}_i, \mathbf{z}_j) = \frac{\mathbf{z}_i^\top \mathbf{z}_j}{\|\mathbf{z}_i\|_2 \|\mathbf{z}_j\|_2} \in [-1, 1]
-\]</span></p>
-<div class="fragment">
-<p><span class="math display">\[
-d_{\text{L2}}(\mathbf{z}_i, \mathbf{z}_j) = \|\mathbf{z}_i - \mathbf{z}_j\|_2
-\]</span></p>
+<p><strong>Modern models provide both!</strong></p>
 </div>
 </section>
-<section id="pixel-space" class="slide level2">
-<h2>Pixel Space</h2>
-
-<img data-src="../../assets/images/representation_learning/similarity_pixel_space.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-rl-similarity-pixel-space"><p class="caption">
-Figure&nbsp;14: Raw pixels → low-level appearance, <strong>no semantic structure</strong>.
-</p></section>
-<section id="resnet-50-supervised" class="slide level2">
-<h2>ResNet-50 (Supervised)</h2>
-
-<img data-src="../../assets/images/representation_learning/similarity_resnet50.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-rl-similarity-resnet"><p class="caption">
-Figure&nbsp;15: Semantic grouping (elephants cluster), some sensitivity to lighting.
-</p></section>
-<section id="clip-multimodal" class="slide level2">
-<h2>CLIP (Multimodal)</h2>
-
-<img data-src="../../assets/images/representation_learning/similarity_clip.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-rl-similarity-clip"><p class="caption">
-Figure&nbsp;16: Language-aligned structure. Good across categories; less differentiation <strong>within</strong> a category.
-</p></section>
-<section id="dinov2-self-supervised" class="slide level2">
-<h2>DINOv2 (Self-Supervised)</h2>
-
-<img data-src="../../assets/images/representation_learning/similarity_dinov2.png" style="width:55.0%" class="r-stretch quarto-figure-center" id="fig-rl-similarity-dinov2"><p class="caption">
-Figure&nbsp;17: Sharp class boundaries, strong within-category structure. Pure vision objective preserves visual detail.
-</p></section>
-<section id="which-representation-wins" class="slide level2">
-<h2>Which Representation Wins?</h2>
+<section id="the-adaptation-hierarchy" class="slide level2">
+<h2>The Adaptation Hierarchy</h2>
+<div class="fragment">
+<p><strong>Always start simple, add complexity only when needed!</strong></p>
+</div>
 <ol type="1">
-<li class="fragment"><strong>DINOv2/v3</strong> — default for vision-centric tasks</li>
-<li class="fragment"><strong>CLIP</strong> — when zero-shot or text alignment is critical</li>
-<li class="fragment"><strong>Supervised CNN</strong> — when compute is limited and broad categories suffice</li>
-<li class="fragment"><strong>Pixel space</strong> — never (only exact-duplicate detection)</li>
+<li class="fragment"><strong>k-NN baseline</strong> (0 training) → Quick reality check</li>
+<li class="fragment"><strong>Linear probe</strong> (freeze encoder) → Test feature quality</li>
+<li class="fragment"><strong>LoRA/Adapters</strong> (efficient tuning) → Parameter-efficient</li>
+<li class="fragment"><strong>Partial fine-tune</strong> (top layers) → Balanced approach</li>
+<li class="fragment"><strong>Full fine-tune</strong> (all weights) → Last resort</li>
 </ol>
 </section>
-<section id="warning-task-relevant-invariance" class="slide level2 center">
-<h2>Warning: Task-Relevant Invariance</h2>
-<ul>
-<li class="fragment">Color-invariant for <strong>flower</strong> classification → red vs.&nbsp;yellow tulips collapse</li>
-<li class="fragment">Rotation-invariant for <strong>medical</strong> imaging → orientation matters</li>
-<li class="fragment">Scale-invariant for <strong>size</strong> estimation → kills the signal</li>
-</ul>
+<section id="strategy-1-k-nn-baseline" class="slide level2">
+<h2>Strategy 1: k-NN Baseline</h2>
+<div class="fragment">
+<p><strong>No training required!</strong></p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># Extract features with frozen pretrained model</span></span>
+<span id="cb1-2"><a></a>features_train <span class="op">=</span> model.encode(train_images)</span>
+<span id="cb1-3"><a></a>features_test <span class="op">=</span> model.encode(test_images)</span>
+<span id="cb1-4"><a></a></span>
+<span id="cb1-5"><a></a><span class="co"># Classify by nearest neighbors</span></span>
+<span id="cb1-6"><a></a>knn <span class="op">=</span> KNeighborsClassifier(n_neighbors<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb1-7"><a></a>knn.fit(features_train, train_labels)</span>
+<span id="cb1-8"><a></a>predictions <span class="op">=</span> knn.predict(features_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment">
+<p>✅ Instant results, reveals representation quality</p>
+</div>
+</section>
+<section id="strategy-2-linear-probe" class="slide level2">
+<h2>Strategy 2: Linear Probe</h2>
+<div class="fragment">
+<p><strong>Freeze encoder, train only classification head</strong></p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Freeze pretrained model</span></span>
+<span id="cb2-2"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.parameters():</span>
+<span id="cb2-3"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb2-4"><a></a></span>
+<span id="cb2-5"><a></a><span class="co"># Add trainable head</span></span>
+<span id="cb2-6"><a></a>head <span class="op">=</span> nn.Linear(embed_dim, num_classes)</span>
+<span id="cb2-7"><a></a></span>
+<span id="cb2-8"><a></a><span class="co"># Train only the head</span></span>
+<span id="cb2-9"><a></a>optimizer <span class="op">=</span> AdamW(head.parameters(), lr<span class="op">=</span><span class="fl">5e-4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment">
+<p>✅ Fast, stable, minimal overfitting risk</p>
+</div>
+</section>
+<section id="strategy-3-loraadapters" class="slide level2">
+<h2>Strategy 3: LoRA/Adapters</h2>
+<div class="fragment">
+<p><strong>Add small adapter modules, train only those</strong></p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> peft <span class="im">import</span> LoraConfig, get_peft_model</span>
+<span id="cb3-2"><a></a></span>
+<span id="cb3-3"><a></a>config <span class="op">=</span> LoraConfig(</span>
+<span id="cb3-4"><a></a>    r<span class="op">=</span><span class="dv">16</span>, lora_alpha<span class="op">=</span><span class="dv">32</span>,</span>
+<span id="cb3-5"><a></a>    target_modules<span class="op">=</span>[<span class="st">"query"</span>,<span class="st">"key"</span>,<span class="st">"value"</span>],</span>
+<span id="cb3-6"><a></a>)</span>
+<span id="cb3-7"><a></a>model <span class="op">=</span> get_peft_model(model, config)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment">
+<p>✅ Much cheaper than full fine-tuning, adapts to task</p>
+</div>
+</section>
+<section id="strategy-4-partial-fine-tune" class="slide level2">
+<h2>Strategy 4: Partial Fine-tune</h2>
+<div class="fragment">
+<p><strong>Unfreeze top layers, keep early layers frozen</strong></p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="co"># Freeze all parameters</span></span>
+<span id="cb4-2"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.parameters():</span>
+<span id="cb4-3"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb4-4"><a></a></span>
+<span id="cb4-5"><a></a><span class="co"># Unfreeze last 2 transformer blocks</span></span>
+<span id="cb4-6"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.blocks[<span class="op">-</span><span class="dv">2</span>:].parameters():</span>
+<span id="cb4-7"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb4-8"><a></a></span>
+<span id="cb4-9"><a></a><span class="co"># Replace classification head</span></span>
+<span id="cb4-10"><a></a>model.head <span class="op">=</span> nn.Linear(embed_dim, num_classes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="fragment">
+<p>✅ Adjusts high-level features while keeping general features</p>
+</div>
+</section>
+<section id="strategy-5-full-fine-tune" class="slide level2">
+<h2>Strategy 5: Full Fine-tune</h2>
+<div class="fragment">
+<p><strong>Train all model weights - use as last resort!</strong></p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Unfreeze everything</span></span>
+<span id="cb5-2"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.parameters():</span>
+<span id="cb5-3"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb5-4"><a></a></span>
+<span id="cb5-5"><a></a><span class="co"># Use small learning rate to avoid catastrophic forgetting</span></span>
+<span id="cb5-6"><a></a>optimizer <span class="op">=</span> AdamW(model.parameters(), lr<span class="op">=</span><span class="fl">5e-5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="fragment highlight-red">
-<p><strong>Preserve information</strong> — let the downstream model decide what to ignore.</p>
+<p>⚠️ Risk: Overfitting with limited data, expensive compute</p>
 </div>
-</section></section>
-<section>
-<section id="adapting-pretrained-models" class="title-slide slide level1 center">
-<h1>Adapting Pretrained Models</h1>
-
-</section>
-<section id="adaptation-hierarchy" class="slide level2">
-<h2>Adaptation Hierarchy</h2>
-<ol type="1">
-<li class="fragment"><strong>k-NN</strong> — no training, instant quality check</li>
-<li class="fragment"><strong>Linear probe</strong> — frozen encoder, train a linear head</li>
-<li class="fragment"><strong>LoRA / Adapters</strong> — parameter-efficient fine-tuning</li>
-<li class="fragment"><strong>Partial fine-tune</strong> — unfreeze top layers</li>
-<li class="fragment"><strong>Full fine-tune</strong> — last resort, large datasets</li>
-</ol>
-<div class="fragment">
-<p>Choose by <strong>dataset size</strong>, <strong>domain similarity</strong>, <strong>compute budget</strong>.</p>
-</div>
-<div class="fragment">
-<p>Next lecture: code, decision framework, examples.</p>
-</div>
-</section></section>
-<section>
-<section id="quiz" class="title-slide slide level1 center">
-<h1>Quiz</h1>
-
-</section>
-<section id="q1-why-pixel-similarity-fails" class="slide level2">
-<h2>Q1: Why Pixel Similarity Fails</h2>
-<p>Why don’t raw-pixel distances capture semantic relationships?</p>
-<div class="fragment">
-<p>Pixels measure <strong>low-level appearance</strong> (color, lighting, alignment) — not semantics.</p>
-</div>
-<div class="fragment">
-<p>Same elephant under different lighting → large pixel distance, despite identical semantics.</p>
-</div>
-<div class="fragment">
-<p>Good representations compress <span class="math inline">\(255^{H \times W \times C}\)</span> → semantic coordinate system.</p>
-</div>
-</section>
-<section id="q2-invariance-selectivity-trade-off" class="slide level2">
-<h2>Q2: Invariance ↔︎ Selectivity Trade-off</h2>
-<p>Give an example where <strong>too much invariance</strong> hurts.</p>
-<div class="fragment">
-<p><strong>Flower classification with color-invariant features</strong> — red rose vs.&nbsp;yellow rose collapse to the same embedding.</p>
-</div>
-<div class="fragment">
-<p>Other examples:</p>
-<ul>
-<li>Medical: rotation-invariance kills anatomical orientation</li>
-<li>Size estimation: scale-invariance removes the signal</li>
-<li>Materials: texture-invariance destroys wood vs.&nbsp;metal</li>
-</ul>
-</div>
-</section>
-<section id="q3-dino-vs.-simclr" class="slide level2">
-<h2>Q3: DINO vs.&nbsp;SimCLR</h2>
-<p>What is the key advantage of self-distillation (DINO) over contrastive (SimCLR)?</p>
-<div class="fragment">
-<p><strong>No explicit negatives needed</strong> — works with smaller batches.</p>
-</div>
-<div class="fragment">
-<ul>
-<li>SimCLR — needs 256–4096 batches for enough negatives</li>
-<li>DINO — student matches teacher (EMA), centering + sharpening yield emergent clustering</li>
-</ul>
-</div>
-<div class="fragment">
-<p>Bonus: DINO produces <strong>both global and local</strong> features.</p>
-</div>
-</section>
-<section id="q4-global-vs.-local" class="slide level2">
-<h2>Q4: Global vs.&nbsp;Local</h2>
-<p>When global, when local?</p>
-<div class="fragment">
-<p><strong>Global</strong> — image-level: classification, retrieval, zero-shot</p>
-</div>
-<div class="fragment">
-<p><strong>Local</strong> — pixel/region-level: segmentation, detection, depth</p>
-</div>
-<div class="fragment">
-<p>Modern ViTs (DINOv2/v3) provide <strong>both</strong> — [CLS] for global, patch tokens for dense.</p>
-</div>
-</section></section>
-<section>
-<section id="summary" class="title-slide slide level1 center">
-<h1>Summary</h1>
-
-</section>
-<section id="key-takeaways" class="slide level2">
-<h2>Key Takeaways</h2>
-<ul>
-<li class="fragment">Representation = compact embedding <span class="math inline">\(\mathbf{z} = f(\mathbf{x})\)</span> where distances reflect semantics</li>
-<li class="fragment"><strong>Invariance vs.&nbsp;selectivity</strong> — match to your task</li>
-<li class="fragment">Three paradigms: supervised · weakly supervised (CLIP) · self-supervised (MAE, SimCLR, DINO)</li>
-<li class="fragment"><strong>Global vs.&nbsp;local</strong> — image-level vs.&nbsp;region-level tasks</li>
-<li class="fragment">For vision-centric retrieval: <strong>DINOv2/v3 &gt; CLIP &gt; supervised &gt; pixels</strong></li>
-<li class="fragment">Adaptation: start simple (k-NN, linear probe) → fine-tune only when needed</li>
-</ul>
 </section></section>
 <section id="references" class="title-slide slide level1 smaller scrollable">
 <h1>References</h1>
@@ -773,11 +1006,14 @@ Figure&nbsp;17: Sharp class boundaries, strong within-category structure. Pure v
 <div id="ref-caron_emerging_2021" class="csl-entry" role="listitem">
 Caron, Mathilde, Hugo Touvron, Ishan Misra, et al. 2021. <em>Emerging <span>Properties</span> in <span>Self</span>-<span>Supervised</span> <span>Vision</span> <span>Transformers</span></em>. <a href="https://doi.org/10.48550/arXiv.2104.14294">https://doi.org/10.48550/arXiv.2104.14294</a>.
 </div>
-<div id="ref-oquab_dinov2_2024" class="csl-entry" role="listitem">
-Oquab, Maxime, Timothée Darcet, Théo Moutakanni, et al. 2024. <em><span>DINOv2</span>: <span>Learning</span> <span>Robust</span> <span>Visual</span> <span>Features</span> Without <span>Supervision</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2304.07193">https://doi.org/10.48550/arXiv.2304.07193</a>.
+<div id="ref-chen_simple_2020" class="csl-entry" role="listitem">
+Chen, Ting, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton. 2020. <em>A <span>Simple</span> <span>Framework</span> for <span>Contrastive</span> <span>Learning</span> of <span>Visual</span> <span>Representations</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2002.05709">https://doi.org/10.48550/arXiv.2002.05709</a>.
 </div>
-<div id="ref-simeoni_dinov3_2025" class="csl-entry" role="listitem">
-Siméoni, Oriane, Huy V. Vo, Maximilian Seitzer, et al. 2025. <em><span>DINOv3</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2508.10104">https://doi.org/10.48550/arXiv.2508.10104</a>.
+<div id="ref-he_masked_2021" class="csl-entry" role="listitem">
+He, Kaiming, Xinlei Chen, Saining Xie, Yanghao Li, Piotr Dollár, and Ross Girshick. 2021. <em>Masked <span>Autoencoders</span> <span>Are</span> <span>Scalable</span> <span>Vision</span> <span>Learners</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2111.06377">https://doi.org/10.48550/arXiv.2111.06377</a>.
+</div>
+<div id="ref-radford_learning_2021" class="csl-entry" role="listitem">
+Radford, Alec, Jong Wook Kim, Chris Hallacy, et al. 2021. <span>“Learning <span>Transferable</span> <span>Visual</span> <span>Models</span> <span>From</span> <span>Natural</span> <span>Language</span> <span>Supervision</span>.”</span> <em>arXiv:2103.00020 [Cs]</em>, February. <a href="http://arxiv.org/abs/2103.00020">http://arxiv.org/abs/2103.00020</a>.
 </div>
 </div>
 </div>
