@@ -173,14 +173,13 @@ The H × W × C abstraction generalizes, sequences/depth become extra axes.
 ::: {#fig-iad-class-distribution}
 ![]({{< meta params.images_path >}}cam_trap_dist2.jpg)
 
-Accuracy can be misleading when one class dominates.
+Class imbalances are common in real-world datsets.
 :::
 
-::: {.incremental}
-- Model favors the majority class — minimizes overall loss
-- Rare classes get few gradient updates
-- **Accuracy lies** — predicting always "deer" can hit 65%
+::: {.fragment}
+**Question**: What makes this dataset challenging for image classification?
 :::
+
 
 
 ## Label Noise
@@ -193,8 +192,8 @@ Wolf or large dog? Empty, or a tail at the edge of the frame?
 
 ::: {.incremental}
 - **Inter-annotator disagreement** on borderline cases
-- **Systematic errors** — annotators consistently confuse two classes
-- **Ambiguous category boundaries** — class definitions overlap
+- **Systematic errors**: annotators consistently confuse two classes
+- **Ambiguous category boundaries**: class definitions overlap
 :::
 
 ::: {.fragment}
@@ -206,18 +205,15 @@ Deep networks can eventually memorize noisy labels [@arpit_closer_2017], so vali
 ::: {#fig-iad-dataset-bias}
 ![]({{< meta params.images_path >}}dataset_bias.png){width=70%}
 
-Same animal, different background → different prediction. The **background**, not the cow, drives the prediction. Adapted from @Beery2018.
+Same animal, different background: different prediction. The **background**, not the cow, drives the prediction. Adapted from @Beery2018.
 :::
 
 ::: {.incremental}
-- **Geographic** — limited regional diversity (architecture, vegetation, clothing)
-- **Selection** — internet-sourced images overrepresent certain demographics/styles
-- **Watermark / source artifacts** — visual quirks correlate with labels
+- **Geographic**: limited regional diversity (architecture, vegetation, clothing)
+- **Selection**:internet-sourced images overrepresent certain demographics/styles
+- **Watermark / source artifacts**: visual quirks correlate with labels
 :::
 
-::: {.fragment}
-Hard to detect from aggregate metrics — surface only via failure analysis.
-:::
 
 
 ## Dataset Splits

@@ -111,15 +111,10 @@ Generic segmentation model identifies organs and anatomical structures at the pi
 [Google Magic Editor](https://www.google.com/intl/en/photos/editing/) — maybe even a bit too good?
 
 ::: {.fragment}
-** What CV tasks must this model perform?**
+**Quiz: What CV tasks must this model perform?**
 :::
 
-::: {.fragment}
-- Object detection & segmentation (what to remove/move)
-- Inpainting (filling removed areas)
-- Style transfer (lighting/texture matching)
-- Scene understanding (realistic perspective)
-:::
+
 
 
 ## On-Device AI Chips
@@ -185,11 +180,11 @@ Many applications are combinations or extensions of core tasks.
 
 ![]({{< meta params.images_path >}}keypoint_detection_exampe_maskrcnn.jpg){width=55%}
 
-Localize specific points (e.g. body joints),  used for action recognition and avatar control (@he_mask_2018).
+Localize specific points (e.g. body joints) (@he_mask_2018).
 :::
 
 ::: {.fragment}
-Quiz: What core task(s) does keypoint detection combine?
+**Quiz**: What core task(s) does keypoint detection combine?
 :::
 
 ## Example: Colorization
@@ -321,17 +316,6 @@ Match each application to a CV task:
 
 ::: {.fragment}
 **Tasks:** Classification · Detection · Segmentation · Retrieval/Embedding
-:::
-
-
-## Quiz: Answers
-
-::: {.incremental}
-1. **Camera traps**: Classification *or* Detection (depends on need: presence vs. count/localize)
-2. **Photo categorization**: Classification
-3. **Image search**: Retrieval via learned **embeddings** (not a "standard" task)
-4. **Tumors**: Segmentation (pixel-level boundaries)
-5. **Counting apples**: Object Detection
 :::
 
 

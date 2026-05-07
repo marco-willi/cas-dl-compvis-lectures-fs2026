@@ -141,31 +141,6 @@ The bounding boxes **move with** the cows.
 :::
 
 
-## The CNN Idea {.center}
-
-::: {.incremental}
-1. **Local connectivity**:  neuron sees a small spatial region
-2. **Parameter sharing**:  same filter at every position
-3. **Translation equivariance**:  input shifts → output shifts
-:::
-
-::: {.fragment}
-These encode our **prior knowledge** about images.
-:::
-
-
-## Inductive Bias
-
-::: {.incremental}
-- MLPs — minimal bias, very general, **data-hungry**
-- CNNs — assume **locality + translation equivariance**
-- Transformers — assume **long-range dependencies**
-- GNNs — assume **graph structure**
-:::
-
-::: {.fragment}
-Choosing an architecture = choosing which assumptions to bake in.
-:::
 
 
 # How CNNs Work
@@ -188,6 +163,19 @@ Choosing an architecture = choosing which assumptions to bake in.
 :::
 
 
+## The CNN Idea {.center}
+
+::: {.incremental}
+1. **Local connectivity**:  neuron sees a small spatial region
+2. **Parameter sharing**:  same filter at every position
+3. **Translation equivariance**:  input shifts → output shifts
+:::
+
+::: {.fragment}
+These encode our **prior knowledge** about images.
+:::
+
+
 
 
 ## Local Connectivity
@@ -203,16 +191,18 @@ Result: fewer parameters, preserved structure, position-agnostic detectors.
 :::
 
 
+## Inductive Bias
 
-
-
-## Convolutional Neural Networks
-
-::: {#fig-cnns-intro-example}
-
-![The activations of a ConvNet architecture. The input image is on the left, and the predictions are on the right. Source: @li_cs231n_2022]({{< meta params.images_path >}}convnet.jpeg)
-
+::: {.incremental}
+- MLPs:  minimal bias, very general, **data-hungry**
+- CNNs:  assume **locality + translation equivariance**
+- Transformers:  assume **long-range dependencies**
 :::
+
+::: {.fragment}
+Choosing an architecture = choosing which assumptions to bake in.
+:::
+
 
 
 ## Convolution on RGB Images
@@ -270,6 +260,15 @@ S(i, j) = (K * I)(i, j) = \sum_m \sum_n I(i + m, j + n) K(m, n) + b
 ![A 2D convolution applied to an image. Illustrated is the element-wise multiplication of the kernel weights $\Omega$ with the corresponding RGB input values at a specific position. Source:  @prince_understanding_2023]({{< meta params.images_path >}}convolution_prince_rgb.png)
 
 ::: -->
+
+
+## Convolutional Neural Networks
+
+::: {#fig-cnns-intro-example}
+
+![The activations of a ConvNet architecture. The input image is on the left, and the predictions are on the right. Source: @li_cs231n_2022]({{< meta params.images_path >}}convnet.jpeg)
+
+:::
 
 
 ## Convolution Hyperparameters
@@ -467,27 +466,11 @@ $(5 \times 5 \times 3 \times 10) + 10 = 750 + 10 = 760$ parameters
 
 # Properties
 
-## CNN Key Properties
-
-::: {.fragment}
-**1. Local (Sparse) Connectivity**
-
-Neurons only connect to small spatial regions
-:::
-
-::: {.fragment}
-**2. Parameter Sharing**
-
-Same weights applied across entire input (translation equivariance!)
-:::
-
 ## Think About It
 
 ::: {.incremental}
 - Can we recognize cats with a one-layer CNN?
 - Can we recognize cats **anywhere** in an image with a CNN?
-- Is parameter sharing **always** useful?
-- What about images with position-dependent features?
 :::
 
 
