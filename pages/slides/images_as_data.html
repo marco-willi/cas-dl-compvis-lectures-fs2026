@@ -293,12 +293,10 @@ Figure&nbsp;7: <a href="https://lila.science/datasets/snapshot-kgalagadi/">Sourc
 <h2>Class Imbalance</h2>
 
 <img data-src="../../assets/images/images_as_data/cam_trap_dist2.jpg" class="r-stretch quarto-figure-center" id="fig-iad-class-distribution"><p class="caption">
-Figure&nbsp;8: Accuracy can be misleading when one class dominates.
-</p><ul>
-<li class="fragment">Model favors the majority class — minimizes overall loss</li>
-<li class="fragment">Rare classes get few gradient updates</li>
-<li class="fragment"><strong>Accuracy lies</strong> — predicting always “deer” can hit 65%</li>
-</ul>
+Figure&nbsp;8: Class imbalances are common in real-world datsets.
+</p><div class="fragment">
+<p><strong>Question</strong>: What makes this dataset challenging for image classification?</p>
+</div>
 </section>
 <section id="label-noise" class="slide level2">
 <h2>Label Noise</h2>
@@ -307,8 +305,8 @@ Figure&nbsp;8: Accuracy can be misleading when one class dominates.
 Figure&nbsp;9: Wolf or large dog? Empty, or a tail at the edge of the frame?
 </p><ul>
 <li class="fragment"><strong>Inter-annotator disagreement</strong> on borderline cases</li>
-<li class="fragment"><strong>Systematic errors</strong> — annotators consistently confuse two classes</li>
-<li class="fragment"><strong>Ambiguous category boundaries</strong> — class definitions overlap</li>
+<li class="fragment"><strong>Systematic errors</strong>: annotators consistently confuse two classes</li>
+<li class="fragment"><strong>Ambiguous category boundaries</strong>: class definitions overlap</li>
 </ul>
 <div class="fragment">
 <p>Deep networks can eventually memorize noisy labels <span class="citation" data-cites="arpit_closer_2017">(<a href="#/references" role="doc-biblioref" onclick="">Arpit et al. 2017</a>)</span>, so validation monitoring and data inspection matter.</p>
@@ -318,15 +316,12 @@ Figure&nbsp;9: Wolf or large dog? Empty, or a tail at the edge of the frame?
 <h2>Hidden Bias</h2>
 
 <img data-src="../../assets/images/images_as_data/dataset_bias.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-iad-dataset-bias"><p class="caption">
-Figure&nbsp;10: Same animal, different background → different prediction. The <strong>background</strong>, not the cow, drives the prediction. Adapted from <span class="citation" data-cites="Beery2018">Beery et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>.
+Figure&nbsp;10: Same animal, different background: different prediction. The <strong>background</strong>, not the cow, drives the prediction. Adapted from <span class="citation" data-cites="Beery2018">Beery et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>.
 </p><ul>
-<li class="fragment"><strong>Geographic</strong> — limited regional diversity (architecture, vegetation, clothing)</li>
-<li class="fragment"><strong>Selection</strong> — internet-sourced images overrepresent certain demographics/styles</li>
-<li class="fragment"><strong>Watermark / source artifacts</strong> — visual quirks correlate with labels</li>
+<li class="fragment"><strong>Geographic</strong>: limited regional diversity (architecture, vegetation, clothing)</li>
+<li class="fragment"><strong>Selection</strong>:internet-sourced images overrepresent certain demographics/styles</li>
+<li class="fragment"><strong>Watermark / source artifacts</strong>: visual quirks correlate with labels</li>
 </ul>
-<div class="fragment">
-<p>Hard to detect from aggregate metrics — surface only via failure analysis.</p>
-</div>
 </section>
 <section id="dataset-splits" class="slide level2">
 <h2>Dataset Splits</h2>

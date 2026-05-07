@@ -346,29 +346,6 @@ Figure&nbsp;3: The bounding boxes <strong>move with</strong> the cows.
 </figcaption>
 </figure>
 </div>
-</section>
-<section id="the-cnn-idea" class="slide level2 center">
-<h2>The CNN Idea</h2>
-<ol type="1">
-<li class="fragment"><strong>Local connectivity</strong>: neuron sees a small spatial region</li>
-<li class="fragment"><strong>Parameter sharing</strong>: same filter at every position</li>
-<li class="fragment"><strong>Translation equivariance</strong>: input shifts → output shifts</li>
-</ol>
-<div class="fragment">
-<p>These encode our <strong>prior knowledge</strong> about images.</p>
-</div>
-</section>
-<section id="inductive-bias" class="slide level2">
-<h2>Inductive Bias</h2>
-<ul>
-<li class="fragment">MLPs — minimal bias, very general, <strong>data-hungry</strong></li>
-<li class="fragment">CNNs — assume <strong>locality + translation equivariance</strong></li>
-<li class="fragment">Transformers — assume <strong>long-range dependencies</strong></li>
-<li class="fragment">GNNs — assume <strong>graph structure</strong></li>
-</ul>
-<div class="fragment">
-<p>Choosing an architecture = choosing which assumptions to bake in.</p>
-</div>
 </section></section>
 <section>
 <section id="how-cnns-work" class="title-slide slide level1 center">
@@ -383,6 +360,17 @@ Figure&nbsp;3: The bounding boxes <strong>move with</strong> the cows.
 <h2>Visual Cortex</h2>
 
 <img data-src="../../assets/images/cnns/ventralvisualstream_v2.png" class="r-stretch quarto-figure-center" id="fig-cnns-visual-cortex"><p class="caption">Representation of transformations in the visual cortex. Source: <span class="citation" data-cites="kubilius_ventral_2017">Kubilius (<a href="#/references" role="doc-biblioref" onclick="">2017</a>)</span></p></section>
+<section id="the-cnn-idea" class="slide level2 center">
+<h2>The CNN Idea</h2>
+<ol type="1">
+<li class="fragment"><strong>Local connectivity</strong>: neuron sees a small spatial region</li>
+<li class="fragment"><strong>Parameter sharing</strong>: same filter at every position</li>
+<li class="fragment"><strong>Translation equivariance</strong>: input shifts → output shifts</li>
+</ol>
+<div class="fragment">
+<p>These encode our <strong>prior knowledge</strong> about images.</p>
+</div>
+</section>
 <section id="local-connectivity" class="slide level2">
 <h2>Local Connectivity</h2>
 
@@ -390,10 +378,17 @@ Figure&nbsp;3: The bounding boxes <strong>move with</strong> the cows.
 <p>Result: fewer parameters, preserved structure, position-agnostic detectors.</p>
 </div>
 </section>
-<section id="convolutional-neural-networks" class="slide level2">
-<h2>Convolutional Neural Networks</h2>
-
-<img data-src="../../assets/images/cnns/convnet.jpeg" class="r-stretch quarto-figure-center" id="fig-cnns-intro-example"><p class="caption">The activations of a ConvNet architecture. The input image is on the left, and the predictions are on the right. Source: <span class="citation" data-cites="li_cs231n_2022">Li (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></p></section>
+<section id="inductive-bias" class="slide level2">
+<h2>Inductive Bias</h2>
+<ul>
+<li class="fragment">MLPs: minimal bias, very general, <strong>data-hungry</strong></li>
+<li class="fragment">CNNs: assume <strong>locality + translation equivariance</strong></li>
+<li class="fragment">Transformers: assume <strong>long-range dependencies</strong></li>
+</ul>
+<div class="fragment">
+<p>Choosing an architecture = choosing which assumptions to bake in.</p>
+</div>
+</section>
 <section id="convolution-on-rgb-images" class="slide level2">
 <h2>Convolution on RGB Images</h2>
 
@@ -436,6 +431,10 @@ S(i, j) = (K * I)(i, j) = \sum_m \sum_n I(i + m, j + n) K(m, n) + b
 
 ::: -->
 <img data-src="../../assets/images/cnns/conv_activation_map4.jpg" class="r-stretch quarto-figure-center"><p class="caption">Source: <span class="citation" data-cites="johnson_eecs_2019">Johnson (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span></p></section>
+<section id="convolutional-neural-networks" class="slide level2">
+<h2>Convolutional Neural Networks</h2>
+
+<img data-src="../../assets/images/cnns/convnet.jpeg" class="r-stretch quarto-figure-center" id="fig-cnns-intro-example"><p class="caption">The activations of a ConvNet architecture. The input image is on the left, and the predictions are on the right. Source: <span class="citation" data-cites="li_cs231n_2022">Li (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></p></section>
 <section id="convolution-hyperparameters" class="slide level2">
 <h2>Convolution Hyperparameters</h2>
 <p>Key parameters to configure a convolutional layer:</p>
@@ -597,24 +596,11 @@ o = \left\lfloor \frac{i + 2p - d\cdot(k-1) - 1}{s} + 1 \right\rfloor
 <h1>Properties</h1>
 
 </section>
-<section id="cnn-key-properties" class="slide level2">
-<h2>CNN Key Properties</h2>
-<div class="fragment">
-<p><strong>1. Local (Sparse) Connectivity</strong></p>
-<p>Neurons only connect to small spatial regions</p>
-</div>
-<div class="fragment">
-<p><strong>2. Parameter Sharing</strong></p>
-<p>Same weights applied across entire input (translation equivariance!)</p>
-</div>
-</section>
 <section id="think-about-it" class="slide level2">
 <h2>Think About It</h2>
 <ul>
 <li class="fragment">Can we recognize cats with a one-layer CNN?</li>
 <li class="fragment">Can we recognize cats <strong>anywhere</strong> in an image with a CNN?</li>
-<li class="fragment">Is parameter sharing <strong>always</strong> useful?</li>
-<li class="fragment">What about images with position-dependent features?</li>
 </ul>
 </section>
 <section id="translation-invariance-equivariance" class="slide level2">
