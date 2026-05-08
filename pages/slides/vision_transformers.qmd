@@ -11,16 +11,6 @@ $$
 :::
 
 
-## Learning Objectives {.center}
-
-::: {.incremental}
-- Adapt the transformer to images via **patch embeddings**
-- Role of **positional embeddings** and the **[CLS] token**
-- CNNs vs. ViTs — inductive biases, receptive fields, data efficiency
-- Pick CNN, ViT, or hybrid based on data, compute, task
-- Hybrid architectures: combining the two
-:::
-
 
 ## Overview {.center}
 
@@ -49,7 +39,7 @@ Can the **same architecture** work for images?
 :::
 
 ::: {.fragment}
-**ViT (2020, @dosovitskiy_image_2020)** — yes, with enough pretraining data.
+**ViT (2020, @dosovitskiy_image_2020)**: yes, with enough pretraining data.
 :::
 
 
@@ -60,19 +50,6 @@ Can the **same architecture** work for images?
 
 ::: {.fragment}
 A 2-D image grid → a **sequence of patches**.
-:::
-
-
-## Patchifying
-
-::: {#fig-vit-patch-embedding}
-![]({{< meta params.images_path >}}patchify.png){width=60%}
-
-Split the image into fixed-size, non-overlapping patches.
-:::
-
-::: {.fragment}
-$224 \times 224$ image, $16 \times 16$ patches → **196 patches**.
 :::
 
 
@@ -100,6 +77,18 @@ Image → patches → linear projection → positional embeddings → transforme
 :::
 
 
+## Patchifying
+
+::: {#fig-vit-patch-embedding}
+![]({{< meta params.images_path >}}patchify.png){width=60%}
+
+Split the image into fixed-size, non-overlapping patches.
+:::
+
+::: {.fragment}
+$224 \times 224$ image, $16 \times 16$ patches → **196 patches**.
+:::
+
 ## Quiz: Patch Size 32 × 32
 
 What changes if patch size goes from 16 to 32?
@@ -112,21 +101,6 @@ What changes if patch size goes from 16 to 32?
 - **Faster** — self-attention is quadratic in sequence length
 - **Less detail** — each patch covers a larger area
 - **Trade-off** — same as resolution choice in CNNs
-:::
-
-
-## Why Positional Embeddings?
-
-::: {.fragment}
-Without them: a transformer treats patches as an **unordered set**.
-:::
-
-::: {.fragment}
-A 2-D image grid would be lost.
-:::
-
-::: {.fragment}
-**Learned positional embeddings** acquire 2-D structure during training: nearby patches end up with similar embeddings (@dosovitskiy_image_2020).
 :::
 
 
@@ -151,7 +125,7 @@ ViT receptive field is **global from the start**.
 ## Strength and Weakness
 
 ::: {.incremental}
-- ✅ **Long-range dependencies** for free (wheel ↔ road)
+- ✅ **Long-range dependencies** for free
 - ❌ **No locality prior** — must be learned from data
 - ❌ Needs **far more training examples**
 :::
@@ -168,7 +142,7 @@ A ViT with the same depth has a receptive field that covers...?
 3. The entire image
 
 ::: {.fragment}
-**3 — the entire image.**
+**The entire image.**
 :::
 
 ::: {.fragment}
@@ -178,83 +152,94 @@ After even **one** transformer layer, every output has aggregated information fr
 
 ## What Attention Learns
 
-::: {#fig-vit-attention-maps layout-nrow=2}
+::: {#fig-vit-attention-maps1}
 
 ![Attention weight matrices.]({{< meta params.images_path >}}attention_matrices.png)
 
-![Spatial attention maps overlaid on the image.]({{< meta params.images_path >}}attention_spatial.png)
+:::
 
-The model learns to focus on **semantically relevant regions** — even from early layers.
+
+
+## What Attention Learns
+
+::: {#fig-vit-attention-maps2}
+
+![Spatial attention maps overlaid on the image.]({{< meta params.images_path >}}attention_spatial.png)
 :::
 
 
 # CNNs vs. Vision Transformers
 
 
-## At a Glance
+## CNNs vs. ViTs at a Glance
 
 | Aspect | CNNs | ViTs |
 |--------|------|------|
-| **Inductive biases** | Strong (locality, equivariance) | Minimal |
-| **Receptive field** | Local → global | Global from layer 1 |
-| **Data efficiency** | Good with small/medium | Needs large pretraining (10M+) |
-| **Scalability** | Plateaus | Keeps improving with scale |
-| **Compute** | Linear in spatial size | Quadratic in patches |
+| **Input structure** | 2-D grid | patch sequence |
+| **Inductive bias** | strong locality + equivariance | weaker visual priors |
+| **Receptive field** | local → global | global token mixing |
+| **Data efficiency** | strong with limited data | benefits strongly from pretraining |
+| **Scaling** | strong, but more constrained | scales very well with data/compute |
+| **Compute** | roughly linear in pixels | attention quadratic in tokens |
 
+: {tbl-colwidths="[24,38,38]"}
 
 ## Inductive Biases — Help or Hindrance?
 
 ::: {.fragment}
-CNNs assume **locality** + **translation equivariance** — generally true for natural images.
+CNNs build in **locality** and **translation equivariance**.
 :::
 
 ::: {.fragment}
-ViTs assume nothing — must learn structure from data.
+These assumptions are often useful for natural images, especially with limited data.
 :::
 
 ::: {.fragment}
-- **Small data** → CNNs win (priors are useful)
-- **Massive data** → ViTs catch up and surpass
-:::
-
-
-## Quiz: When Locality Hurts
-
-Where might CNN locality be a *disadvantage*?
-
-::: {.fragment}
-- **Scene classification** — "kitchen" vs. "office" needs global arrangement
+ViTs have weaker image-specific priors and rely more on data and pretraining.
 :::
 
 ::: {.fragment}
-- **Long-range relations** — person *holding* a leash *attached to* a dog
+- **Small data:** strong priors can help
+- **Massive pretraining:** weaker priors can become an advantage
+:::
+
+## Quiz: When Can Locality Hurt?
+
+Where might a strong local bias become limiting?
+
+::: {.fragment}
+- **Global layout**:  distinguishing scenes may require the arrangement of many regions, not just local patches
 :::
 
 ::: {.fragment}
-- **Non-local textures** — patterns defined by distant regions
+- **Long-range relations**:  e.g. person, leash, and dog may be far apart in the image
 :::
 
 ::: {.fragment}
-ViT's global attention from layer 1 can shine here.
+- **Repeated / non-local patterns**:  the relevant structure may be defined by relationships between distant regions
+:::
+
+::: {.fragment}
+CNNs can capture these with enough depth and pooling, but global interactions are indirect.
+:::
+
+::: {.fragment}
+ViTs model long-range interactions more directly through self-attention.
 :::
 
 
 # Practical Architecture Selection
 
 
-## Decision Guide {.center}
+## Decision Guide
 
 ::: {.incremental}
-- **Limited data + compute** → pretrained **CNN** (ResNet, EfficientNet)
-- **Large data + compute** → **ViT** or hybrid
-- **Global context early** → ViT
-- **Edge deployment / fast inference** → CNN or efficient hybrid
+- **Limited data / limited compute:** start with a pretrained CNN or compact hybrid
+- **Large-scale pretraining available:** ViT-style models are strong defaults
+- **Need early global context:** ViT or hybrid architecture
+- **Edge deployment / fast inference:** efficient CNN or efficient hybrid
+- **In practice:** pretraining data, training recipe, and adaptation strategy often matter as much as the backbone
 :::
-
-::: {.fragment}
-With *massive* pretraining, both perform similarly (@smith_convnets_2023).
-:::
-
 
 ## Hybrid Architectures {.center}
 
@@ -271,37 +256,6 @@ Conversely: **ConvNeXt** modernizes ResNet with ViT-style training and design.
 :::
 
 
-## Loading Pretrained Models
-
-```{python}
-#| eval: false
-#| echo: true
-
-import timm
-
-# Pretrained CNN
-cnn_model = timm.create_model("resnet50", pretrained=True)
-
-# Pretrained ViT
-vit_model = timm.create_model("vit_base_patch16_224", pretrained=True)
-```
-
-::: {.fragment}
-[timm](https://github.com/huggingface/pytorch-image-models) — hundreds of pretrained models, both architectures.
-:::
-
-
-## What Actually Matters
-
-::: {.incremental}
-- No conclusive winner with massive pretraining (@smith_convnets_2023)
-- **Pretraining data + adaptation strategy** often matter more than the backbone
-- Hybrids increasingly common
-:::
-
-::: {.fragment}
-The question of which architecture prevails — **still open**.
-:::
 
 
 ## Beyond Classification — Multimodal ViTs

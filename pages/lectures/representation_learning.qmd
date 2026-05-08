@@ -17,7 +17,7 @@ After this lecture you should be able to:
 - Distinguish between supervised, weakly supervised, and self-supervised learning paradigms and describe the kind of representation each produces.
 - Explain the invariance–selectivity trade-off and select appropriate invariances for a given task.
 - Distinguish between global and local representations and identify when each is appropriate.
-- Select and apply the right adaptation strategy — k-NN, linear probe, LoRA, partial fine-tuning, or full fine-tuning — for a given dataset size and task.
+- Explain how global image embeddings can be used for image retrieval and image search.
 :::
 
 ::: {.callout-tip title="TLDR Recap" collapse="true"}
@@ -32,15 +32,16 @@ After this lecture you should be able to:
 
 **Global vs local:** The [CLS] token captures image-level semantics; patch tokens preserve spatial structure. Use global embeddings for retrieval and classification, local tokens for segmentation and detection.
 
-**Adaptation hierarchy (simplest first):**
+**How representations are used:**
 
-1. k-NN — no training, instant quality check
-2. Linear probe — frozen encoder, train a linear head
-3. LoRA / Adapters — parameter-efficient fine-tuning
-4. Partial fine-tune — unfreeze top layers
-5. Full fine-tune — last resort for large datasets
+Once an image is mapped to an embedding $\vect{z} = f(\vect{x})$, we can use the embedding directly:
 
-**For product image retrieval**, DINOv2/v3 embeddings typically outperform supervised ResNet features and CLIP embeddings — the pure vision objective preserves fine-grained visual distinctions without the coarsening effect of language alignment.
+- **Image search / retrieval:** find nearest neighbours in embedding space
+- **Classification:** train a small classifier on top of frozen embeddings
+- **Clustering:** discover visual groups without labels
+- **Dense prediction:** use local patch tokens for segmentation, detection, or correspondence
+
+**For product image retrieval**, global DINOv2/v3 embeddings are often a strong default because they preserve fine-grained visual similarity. CLIP is preferable when text-image alignment or zero-shot search is required.
 :::
 
 
@@ -64,7 +65,7 @@ It is easy for humans to describe the image. For example:
 """
 A photograph of an elephant facing the camera.
 The elephant has large tusks and ears and is standing in a flat savannah.
-Is is bright day light with a cloudy sky.
+It is bright daylight with a cloudy sky.
 """
 ```
 
@@ -91,7 +92,7 @@ from IPython.display import HTML
 description = """
 A photograph of an elephant facing the camera.
 The elephant has large tusks and ears and is standing in a flat savannah.
-Is is bright day light with a cloudy sky.
+It is bright daylight with a cloudy sky.
 """
 
 # Calculate bits for natural language
@@ -272,7 +273,13 @@ Here is an overview of desirable properties:
 
 ## Learning Paradigms
 
-The same neural architecture can produce very different representations depending on what it is trained to do. Three paradigms dominate modern visual representation learning.
+The same neural architecture can produce very different representations depending on what it is trained to do. Three paradigms dominate modern visual representation learning:
+
+1. **Supervised learning** — train on human-provided labels (e.g., ImageNet classes).
+2. **Weakly supervised learning** — train on noisy or partial labels at scale (e.g., image–text pairs scraped from the web).
+3. **Self-supervised learning** — derive the training signal from the data itself; no labels required.
+
+Each paradigm uses essentially the same encoder architectures (ResNets, ViTs); the embeddings differ because the *objective* differs.
 
 ### Supervised Learning
 
@@ -560,6 +567,18 @@ Self-distilled DINOv2 features reveal fine-grained semantic clusters. Note: DINO
 
 :::
 
+At a glance, the four representations differ in what they are good for:
+
+| Model | Strength | Good For |
+|-------|----------|----------|
+| **Pixel** | Poor semantic similarity | Exact duplicates |
+| **ResNet** | Efficient supervised features | Fast baselines |
+| **CLIP** | Language-aligned semantics | Text-image search, zero-shot |
+| **DINOv2/v3** | Fine-grained visual similarity | Visual search, dense tasks |
+
+: Summary of representation paradigms and their typical use cases. {tbl-colwidths="[18,32,50]"}
+
+
 ::: {.callout-note title="Question: Which Representations Do You Favour? And Why?" collapse="false"}
 
 Looking at the similarity matrices, which representation do you prefer and why?
@@ -618,9 +637,58 @@ Looking at the similarity matrices, which representation do you prefer and why?
 :::
 
 
-## Adapting Pretrained Models
+## Using Representations
 
-Pretrained embeddings are most useful when they can be adapted to a specific downstream task without training from scratch. The right strategy depends on dataset size, domain similarity, and compute budget — ranging from a simple k-NN lookup (no training) through linear probing and parameter-efficient fine-tuning to full fine-tuning as a last resort. The next lecture covers each strategy in detail with code examples and a decision framework for choosing between them.
+Once images are mapped to embeddings, many computer vision problems become geometric problems in representation space. Instead of comparing raw pixels, we compare vectors. A handful of recurring use cases cover most of what an image encoder is good for:
+
+- **Image search / retrieval:** find visually similar images by nearest-neighbour search.
+- **Classification on frozen embeddings:** train a small linear or shallow classifier on top of $f(\vect{x})$ without fine-tuning the encoder.
+- **Clustering:** group images by similarity to discover visual structure when no labels are available.
+- **Outlier and duplicate detection:** flag images that are far from any cluster, or pairs that are unusually close.
+- **Dense prediction:** use *local* patch tokens for segmentation, detection, or finding correspondences across images.
+
+The first four use a single global embedding per image; the last requires the spatially-resolved patch tokens discussed in the previous section.
+
+### Image search
+
+Image search is the canonical example. Each image in a catalogue is encoded once:
+
+\begin{equation}
+\vect{z}_i = f(\vect{x}_i)
+\end{equation}
+
+A query image is encoded in the same way:
+
+\begin{equation}
+\vect{z}_q = f(\vect{x}_q)
+\end{equation}
+
+The most similar images are then retrieved by nearest-neighbour search, commonly using cosine similarity:
+
+\begin{equation}
+\text{sim}_{\cos}(\vect{z}_q, \vect{z}_i)
+=
+\frac{\vect{z}_q^\top \vect{z}_i}
+{\|\vect{z}_q\|_2 \|\vect{z}_i\|_2}
+\end{equation}
+
+This requires no labels and no classifier. The quality of the search results depends directly on the quality of the representation. If the embedding preserves product shape, style, colour, and texture, nearest neighbours in embedding space correspond to visually similar products.
+
+### Classification on frozen embeddings
+
+If labels *are* available — even just a few hundred per class — a small classifier on top of frozen embeddings is often a strong baseline. Concretely, encode every training image once, then fit a linear model (or a shallow MLP) on the resulting feature vectors. Because the encoder is frozen, training the head is fast and requires far fewer labels than training a full network from scratch. This is the standard *linear probe* protocol used to evaluate representation quality.
+
+### Clustering and outlier detection
+
+Without labels, clustering algorithms (k-means, agglomerative clustering, HDBSCAN) operating on embeddings can recover meaningful visual groups: animal species in camera-trap data, product types in a catalogue, or scene types in a photo library. The same geometric view supports outlier detection: images whose nearest neighbour is far away — or whose embedding lies in a sparse region — are candidates for inspection (rare classes, mis-labelled samples, near-duplicates).
+
+### Dense tasks via local tokens
+
+For segmentation, detection, and correspondence, the global embedding is too coarse. Local patch tokens — one vector per spatial location — are the right primitive. A lightweight head on top of frozen patch tokens can produce per-pixel predictions, and matching patch tokens across images yields dense correspondences without any task-specific training.
+
+The common thread across all of these: once images become vectors, downstream problems reduce to geometry — distances, neighbourhoods, and linear separations in a well-shaped embedding space.
+
+
 
 ## Quiz
 

@@ -10,114 +10,13 @@ $$
 $$
 :::
 
-## Overview {.center}
-
-- You have a pretrained encoder
-- You have limited labeled data
-- Which adaptation strategy should you try first?
-
-
-
-# Adapting Pretrained Models
-
-## The Question {.center}
-
-::: {.fragment}
-You have a pretrained model trained on a large source dataset.
-:::
-
-::: {.fragment}
-You now have a smaller target dataset.
-:::
-
-::: {.fragment .highlight-red}
-
-::: {.highlight-red}
-How much of the model should you train?
-:::
-
-:::
-
-## Adaptation Hierarchy
-
-::: {#fig-da-hierarchy}
-![]({{< meta params.images_path >}}adaptation_hierarchy.png){width=95%}
-
-🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
-:::
-
-::: {.fragment .highlight-red}
-Start simple. Descend only when performance demands it.
-:::
-
-
-## How to Choose {.center}
-
-::: {.incremental}
-- **Very little data** → k-NN or linear probe
-- **Good embeddings, small dataset** → linear probe
-- **Moderate data or domain shift** → LoRA / adapters
-- **Large dataset or strong domain shift** → partial fine-tuning
-- **Very large dataset** → full fine-tuning
-:::
-
-::: {.fragment}
-The main trade-off: **adaptability vs. overfitting risk**.
-:::
-
-
-## Quiz: Small Similar Dataset
-
-You have **300 labeled product images**.
-
-The images are similar to ImageNet: shoes, bags, jackets, furniture.
-
-What should you try first?
-
-::: {.fragment}
-**k-NN or linear probe.**
-:::
-
-::: {.fragment}
-The pretrained representation is likely already useful.
-Full fine-tuning would probably overfit.
-:::
-
-## Quiz: Medical Domain Shift
-
-You have **1,000 labeled chest X-rays** and a pretrained DINOv2 backbone.
-
-What should you try first?
-
-::: {.fragment}
-Start with **k-NN / linear probe** as a diagnostic.
-:::
-
-::: {.fragment}
-If performance is poor, try **LoRA** or **partial fine-tuning**.
-:::
-
-::: {.fragment}
-Full fine-tuning with 1,000 images is risky unless strongly regularized.
-:::
-
-## Key Takeaways
-
-::: {.incremental}
-- Adaptation is a hierarchy: **k-NN → linear probe → LoRA → partial FT → full FT**
-- With little data, keep most of the encoder frozen
-- Larger domain shift requires more adaptation
-- k-NN and linear probes are useful diagnostics
-- Full fine-tuning is powerful, but data-hungry and easier to overfit
-:::
-
-
 
 ## Overview {.center}
 
 - Motivation
-- The Adaptation Hierarchy
-- Choosing a Strategy
+- The adaptation hierarchy
+- Choosing a strategy
+- Worked scenarios
 
 
 # Motivation
@@ -134,20 +33,22 @@ You have a task with **limited labeled data**.
 :::
 
 ::: {.fragment}
-**How should you adapt the model?**
+**How much of the model should you train?**
 :::
+
+
 
 
 ## Three Tensions {.center}
 
 ::: {.incremental}
-- **Labeled data** — how much do you have?
-- **Domain similarity** — pretraining vs. target?
-- **Compute budget** — train + inference cost
+- **Labeled data**: how much supervision do you have?
+- **Domain similarity**: how close is the target task to pretraining?
+- **Compute budget**: how much training and tuning can you afford?
 :::
 
 ::: {.fragment}
-These three factors determine the right strategy — without trying all five.
+These factors determine whether you should freeze, adapt, or fine-tune.
 :::
 
 
@@ -159,324 +60,215 @@ These three factors determine the right strategy — without trying all five.
 ::: {#fig-da-hierarchy}
 ![]({{< meta params.images_path >}}adaptation_hierarchy.png){width=80%}
 
-🟦 frozen · 🟧 trainable · 🟩 head · 🔴 LoRA adapter
+Adaptation strategies.
 :::
 
 ::: {.fragment .highlight-red}
-**Start at the top. Descend only when performance demands it.**
+**Start simple. Descend only when performance demands it.**
 :::
 
 
 ## At a Glance
 
-| Strategy | Trainable params | When to use |
-|---|---|---|
-| k-NN | 0 | Quick quality check |
+| Strategy | Trainable Parameters | When to Use |
+|---|---:|---|
+| k-NN | 0 | Quick representation-quality check |
 | Linear probe | Head only | Good embeddings, small dataset |
-| LoRA / Adapters | ~1–5% | Moderate data; preserve pretraining |
-| Partial fine-tune | Top layers + head | Larger data, task-specific tuning |
-| Full fine-tune | All params | Large data, big domain shift |
+| LoRA / adapters | Few parameters | Moderate data or mild domain shift |
+| Partial fine-tune | Top layers + head | Larger data or stronger domain shift |
+| Full fine-tune | All weights | Large data and strong task mismatch |
+
+: {tbl-colwidths="[22,23,55]"}
+
+
+# The Strategies
 
 
 ## k-NN — No Training
 
 ::: {.incremental}
-- Embed labeled images with frozen encoder
-- For a new image: $k$ nearest neighbors by cosine distance → majority vote
-- **Direct measure of representation quality**
+- Embed labeled images with a **frozen encoder**
+- Store embeddings and labels
+- For a new image, retrieve nearest neighbours in embedding space
+- Predict by majority vote or similarity-weighted vote
 :::
 
 ::: {.fragment}
-If k-NN already hits target accuracy → **stop here.**
+**What it tells you:** whether the pretrained representation already separates your target data.
+:::
+
+::: {.fragment}
+If k-NN works well, further adaptation may be unnecessary.
 :::
 
 
-## k-NN — Code
-
-```{python}
-#| eval: false
-#| echo: true
-
-import torch, sklearn.neighbors as sk
-from transformers import AutoModel, AutoImageProcessor
-
-enc  = AutoModel.from_pretrained("google/vit-base-patch16-224").eval()
-proc = AutoImageProcessor.from_pretrained("google/vit-base-patch16-224")
-
-def feats(imgs):
-    px = proc(imgs, return_tensors="pt")["pixel_values"]
-    with torch.no_grad():
-        z = enc(pixel_values=px).last_hidden_state[:, 0]   # [CLS]
-    return z.cpu().numpy()
-
-knn = sk.KNeighborsClassifier(n_neighbors=5).fit(feats(train_imgs), train_y)
-pred = knn.predict(feats(test_imgs))
-```
-
-
-## Linear Probe — Freeze + Train Head
+## Linear Probe — Freeze Encoder, Train Head
 
 ::: {.incremental}
-- Encoder **frozen**
-- Train a single $\text{Linear}(d, K)$ on top
-- Cheap, stable, low overfit risk
+- Keep the pretrained encoder frozen
+- Extract one embedding per image
+- Train only a small classification head
+- Usually a single linear layer: $\text{Linear}(d, K)$
 :::
 
 ::: {.fragment}
-If a *linear* boundary works → embeddings already separate the classes.
+If a linear boundary works, the embedding already contains task-relevant structure.
 :::
 
+::: {.fragment}
+Cheap, stable, and a strong baseline for limited labeled data.
+:::
 
-## Linear Probe — Code
-
-```{python}
-#| eval: false
-#| echo: true
-
-import torch
-from torch import nn, optim
-import timm
-
-backbone = timm.create_model("vit_base_patch16_224", pretrained=True)
-for p in backbone.parameters():
-    p.requires_grad = False
-
-head = nn.Linear(backbone.num_features, num_classes)
-
-def forward(images):
-    with torch.no_grad():
-        z = backbone.forward_features(images)[:, 0]   # [CLS]
-    return head(z)
-
-opt = optim.AdamW(head.parameters(), lr=5e-4)
-```
-
-
-## LoRA / Adapters — PEFT
+## LoRA / Adapters — Parameter-Efficient Adaptation
 
 ::: {.incremental}
-- Insert **small adapter modules** (or low-rank updates)
-- Train only those — typically ~1–5% of parameters
-- Original weights largely preserved
+- Insert small trainable modules into the pretrained model
+- Keep most original weights frozen
+- Train only adapters and the task head
+- Useful when a linear probe is not flexible enough
 :::
 
 ::: {.fragment}
-Faster, less prone to overfit than full fine-tuning (@hu_lora_2021).
+Good default for moderate data or mild domain shift.
 :::
-
-
-## LoRA — Code
-
-```{python}
-#| eval: false
-#| echo: true
-
-from transformers import AutoModel
-from peft import LoraConfig, get_peft_model
-import torch
-
-model = AutoModel.from_pretrained("google/vit-base-patch16-224")
-
-config = LoraConfig(
-    r=16, lora_alpha=32, lora_dropout=0.05,
-    target_modules=["query", "key", "value", "fc"],
-    bias="none", task_type="FEATURE_EXTRACTION",
-)
-model = get_peft_model(model, config)
-
-head = torch.nn.Linear(model.config.hidden_size, num_classes)
-# Optimize: LoRA params + head only
-```
-
 
 ## Partial Fine-Tuning
 
 ::: {.incremental}
-- Unfreeze the **last few transformer blocks** + head
-- Lower layers (edges, textures) stay frozen
-- Middle ground: more flexible than linear probe, cheaper than full FT
+- Freeze lower layers
+- Unfreeze the last few encoder blocks and the task head
+- Lower layers retain generic features
+- Higher layers adapt to the target task
 :::
 
-
-## Partial FT — Code
-
-```{python}
-#| eval: false
-#| echo: true
-
-import timm, torch
-from torch import nn
-
-model = timm.create_model("vit_base_patch16_224", pretrained=True)
-
-for p in model.parameters():
-    p.requires_grad = False
-for p in model.blocks[-2:].parameters():       # last 2 blocks
-    p.requires_grad = True
-
-model.head = nn.Linear(model.num_features, num_classes)
-
-trainable = [p for p in model.parameters() if p.requires_grad]
-opt = torch.optim.AdamW(trainable, lr=1e-4)
-```
-
+::: {.fragment}
+Useful when the target task needs more task-specific high-level features.
+:::
 
 ## Full Fine-Tuning — Last Resort
 
 ::: {.incremental}
-- Unfreeze **everything**, train all weights
-- Best task alignment **if** you have data
-- Computationally expensive, overfits with small datasets
+- Train all model weights
+- Most flexible strategy
+- Highest compute cost
+- Highest overfitting risk with small datasets
 :::
 
-::: {.fragment .highlight-red}
-Use only when simpler approaches plateau **and** data + compute allow.
+::: {.fragment}
+Use only when simpler approaches plateau and data + compute justify it.
 :::
-
-
-## Full FT — Code
-
-```{python}
-#| eval: false
-#| echo: true
-
-import torch
-from transformers import AutoModelForImageClassification
-
-model = AutoModelForImageClassification.from_pretrained(
-    "google/vit-base-patch16-224",
-    num_labels=num_classes,
-    ignore_mismatched_sizes=True,
-)
-for p in model.parameters():
-    p.requires_grad = True
-
-opt = torch.optim.AdamW(model.parameters(), lr=5e-5)
-```
-
 
 # Choosing a Strategy
 
 
-## What Determines the Choice {.center}
-
-::: {.incremental}
-1. Dataset size
-2. Domain similarity to pretraining data
-3. Compute budget
-:::
-
-
 ## Dataset Size × Domain
 
-| Dataset size | Similar to ImageNet | Different (medical, satellite, …) |
+| Dataset Size | Similar to Pretraining Data | Different Domain |
 |---|---|---|
-| < 500 | k-NN / linear probe | k-NN; LoRA if probe fails |
-| 500 – 5K | Linear probe / LoRA | LoRA / partial FT |
-| 5K – 50K | Partial FT | Partial / full FT |
-| > 50K | Full FT | Full FT |
+| < 500 | k-NN / linear probe | k-NN, then LoRA if needed |
+| 500–5K | Linear probe / LoRA | LoRA / partial FT |
+| 5K–50K | Partial FT | Partial / full FT |
+| > 50K | Full FT possible | Full FT possible |
 
-
-## The Intuition
-
-::: {.fragment}
-**Limited data** → pretrained features are strong; aggressive FT *destroys* them.
-:::
+: {tbl-colwidths="[20,40,40]"}
 
 ::: {.fragment}
-**Large data + dissimilar domain** → pretrained features may not capture what matters; the model needs freedom to learn.
+The stronger the domain shift, the more adaptation you usually need.
 :::
 
-
-## Quiz: Chest X-rays
-
-A team has **800** labeled chest X-rays for pneumonia classification, using a **DINOv2** backbone (pretrained on natural images).
-
-What should they try first?
-
-::: {.fragment}
-**Linear probe or LoRA** — diagnose first whether DINOv2 features transfer at all.
-:::
-
-::: {.fragment}
-- Linear probe near-random → significant **domain shift**
-- Then try LoRA or partial FT — adapt high-level features while preserving low-level edges/textures
-- **Full FT with 800 images is risky** — strong regularization required
-:::
-
-::: {.fragment}
-Practical first step: plot k-NN accuracy vs. $k$.
-:::
-
-
-## Large Domain Shift
-
-Common cases:
+## Practical Rule of Thumb
 
 ::: {.incremental}
-- **Medical** — X-rays, histology, ultrasound
-- **Remote sensing** — aerial / satellite imagery
-- **Industrial** — close-up surface inspection
+1. Start with **k-NN** to test representation quality
+2. Try a **linear probe** as the first trained baseline
+3. Use **LoRA / adapters** when the head is not flexible enough
+4. Use **partial fine-tuning** for stronger domain shift
+5. Use **full fine-tuning** only when data and compute justify it
 :::
 
 ::: {.fragment}
-**Lower layers transfer** (edges, textures); **higher layers may not**.
+Each step should improve enough to justify the added complexity.
+:::
+
+
+# Worked Scenarios
+
+
+## Scenario 1: Small Similar Dataset
+
+**Scenario**
+
+- 300 labeled product images
+- Classes: shoes, bags, jackets, furniture
+- Similar to common web images
+
+::: {.fragment}
+Recommended start: **k-NN or linear probe**
 :::
 
 ::: {.fragment}
-Strategies: fine-tune the **top half** of the encoder, or LoRA with **higher rank**.
+Why: small dataset, similar domain, pretrained visual features are likely useful.
 :::
 
 ::: {.fragment}
-If even partial FT fails — swap the backbone (e.g. BioViL, CheXzero for medical).
+Avoid full fine-tuning unless simple baselines clearly fail.
 :::
 
 
-## Compute Considerations
+## Scenario 2: Medical Domain Shift
 
-::: {.incremental}
-- **k-NN, linear probe** — negligible inference overhead
-- **LoRA** — can be **merged** into base weights (zero overhead) or kept separate
-- **Partial / full FT** — same backbone size, no extra inference cost
-- **Edge deployment** — swap the backbone (MobileNet, EfficientNet-Lite)
-:::
+**Scenario**
 
-
-## Quiz: 1,000 Medical Images
-
-Recommended progression?
+- 800 labeled chest X-rays
+- Task: pneumonia classification
+- Backbone: DINOv2 pretrained on natural images
 
 ::: {.fragment}
-1. **k-NN** — 0 training, instant signal on representation quality
-2. **Linear probe** — fast, stable; if it works, embeddings are good
-3. **LoRA** — task-specific adaptation, ~100K–1M params
-4. **Partial FT** — last 2–3 blocks + head; careful LR tuning
-5. **Full FT** — only if everything else plateaus *and* you have data
+Recommended start: **linear probe**, then **LoRA** if needed.
+:::
+
+::: {.fragment}
+Why: small dataset, but strong domain shift.
+:::
+
+::: {.fragment}
+Full fine-tuning is risky with 800 images unless strongly regularized.
 :::
 
 
-## Why Start Simple
+## Scenario 3: Larger Domain-Specific Dataset
 
-::: {.incremental}
-- **Diagnostic** — k-NN reveals representation quality
-- **Resource efficiency** — don't waste compute when simple suffices
-- **Overfitting** — simpler models generalize better with limited data
-- **Baselines** — each step is a ceiling for the next
+**Scenario**
+
+- 30,000 labeled satellite images
+- Strong domain shift from natural images
+
+::: {.fragment}
+Recommended start: **LoRA or partial fine-tuning**
+:::
+
+::: {.fragment}
+Why: enough data to adapt more parameters, but full fine-tuning should still be justified by validation.
 :::
 
 
-# Summary {.center}
+# Summary
 
 
 ## Key Takeaways
 
 ::: {.incremental}
-- Five strategies — **k-NN → linear probe → LoRA → partial FT → full FT**
-- Pick based on **data size**, **domain similarity**, **compute**
-- Always **start at the top**, descend only when performance demands it
-- Big domain shift: freeze low layers, adapt high layers; consider domain-specific backbone
-- LoRA can be **merged at inference** — best parameter-efficient default
+- Adaptation is a hierarchy: **k-NN → linear probe → LoRA → partial FT → full FT**
+- Start with the simplest method that answers the question
+- With little data, keep most of the encoder frozen
+- Larger domain shift usually requires more adaptation
+- Full fine-tuning is powerful, but data-hungry and easier to overfit
 :::
+
+::: {.fragment}
+**Final rule:** start frozen, train more only when the data demands it.
+:::
+
 
 
 # References

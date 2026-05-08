@@ -192,7 +192,6 @@ With an understanding of both architectures, we can now compare them systematica
 | **Data efficiency** | Effective with small-to-medium datasets | Requires large-scale pretraining (10M+ images) |
 | **Scalability** | Performance plateaus with more data | Continues to improve with more data and compute |
 | **Compute cost** | Efficient (linear in spatial size) | Expensive (quadratic in number of patches) |
-| **Robustness** | Mixed evidence | Mixed evidence |
 
 : Comparison of CNNs and Vision Transformers. {tbl-colwidths="[20,40,40]"}
 

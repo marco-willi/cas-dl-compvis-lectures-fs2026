@@ -10,7 +10,7 @@ params:
 - What is Representation Learning?
 - Deep Image Representations
 - Comparing Representations
-- Practical Applications
+- Using Visual Representations
 
 
 ::: {.content-hidden}
@@ -38,7 +38,7 @@ How would you describe the photograph?
 ::: {.fragment}
 > A photograph of an elephant facing the camera.
 The elephant has large tusks and ears and is standing in a flat savannah.
-Is is bright day light with a cloudy sky.
+It is bright daylight with a cloudy sky.
 :::
 
 ::: {.fragment}
@@ -52,7 +52,7 @@ from IPython.display import HTML
 description = """
 A photograph of an elephant facing the camera.
 The elephant has large tusks and ears and is standing in a flat savannah.
-Is is bright day light with a cloudy sky.
+It is bright daylight with a cloudy sky.
 """
 
 # Calculate bits for natural language
@@ -134,7 +134,7 @@ A **representation** is the output $\vect{z} = f(\vect{x})$ produced by an encod
 ![]({{< meta params.images_path >}}data_and_representation_space.png){width=80%}
 
 
-**Semantic Coordindate System** where distances $\|\vect{z}_i - \vect{z}_j\|_2$ reflect meaningful relationships.
+**Semantic Coordinate System** where distances $\|\vect{z}_i - \vect{z}_j\|_2$ reflect meaningful relationships.
 :::
 
 ::: {.fragment}
@@ -201,12 +201,13 @@ We focus on **vector-valued** (distributed) representations, not symbolic descri
 
 :::
 
-
 ## What Makes Good Representations?
+
 
 ### Invariance & Selectivity Balance
 
 ::: {.incremental}
+
 - **Invariance:** $\|f(\vect{x}) - f(g(\vect{x}))\|_2 < \epsilon$ for nuisance transform $g$ (lighting, pose)
 
 - **Selectivity:** $\|f(\vect{x}_i) - f(\vect{x}_j)\|_2 > \delta$ for semantically different $\vect{x}_i, \vect{x}_j$
@@ -217,72 +218,15 @@ We focus on **vector-valued** (distributed) representations, not symbolic descri
 :::
 
 
-
-## What Makes Good Representations?
-
-### Geometric Structure Preservation
+### Properties of Good Representations
 
 ::: {.incremental}
-- **Smooth manifold:** Similar semantic concepts cluster in representation space
-- **Composability:** $f(\vect{x}_1) \oplus f(\vect{x}_2) \approx f(\text{combine}(\vect{x}_1, \vect{x}_2))$ for vector operations
-- **Interpolability:** Linear interpolation $\alpha f(\vect{x}_1) + (1-\alpha) f(\vect{x}_2)$ yields meaningful intermediate concepts
+- Similar images should be close
+- Different images should be separated
+- Task-relevant details should be preserved
+- Nuisance variation should be ignored
+- Embeddings should be compact and reusable
 :::
-
-
-## What Makes Good Representations?
-
-### Transfer Efficiency
-
-::: {.incremental}
-
-- **Low sample complexity:** Few examples needed for downstream adaptation
-
-- **Broad applicability:** Same $f(\cdot)$ works across multiple tasks/domains
-
-- **Graceful degradation:** Performance degrades slowly with domain shift
-:::
-
-
-## What Makes Good Representations?
-
-### Computational Practicality
-
-::: {.incremental}
-
-- **Compact dimensionality:** $\text{dim}(\vect{z}) \ll \text{dim}(\vect{x})$ while preserving information
-
-- **Fast computation:** Forward pass $f(\vect{x})$ efficient for real-time applications
-
-- **Stable training:** Representation learning converges reliably
-:::
-
-
-## The Invariance-Selectivity Trade-off
-
-::: {.incremental}
-- **Invariance**: $\|f(\vect{x}) - f(g(\vect{x}))\|_2 < \epsilon$ (Similar output for nuisance transforms)
-
-- **Selectivity**: $\|f(\vect{x}_i) - f(\vect{x}_j)\|_2 > \delta$ (Different outputs for semantic differences)
-
-- **Challenge**: Too much invariance → loss of discriminative details!
-
-- **Sweet spot**: Preserve task-relevant variations, discard nuisance factors
-:::
-
-
-## The Invariance-Selectivity Trade-off {.center}
-
-
-::: {.r-fit-text}
-
-
-- What function has maximal invariance?
-
-- What function has maximal selectivity?
-
-
-:::
-
 
 
 
@@ -370,7 +314,7 @@ Shared embedding space for images and text
 
 ##  Self-Supervised Learning: Self-Distillation {.smaller}
 
-![From @@caron_emerging_2021]({{< meta params.images_path >}}dino_principle.png)
+![From @caron_emerging_2021]({{< meta params.images_path >}}dino_principle.png)
 
 ::: {.fragment}
 - No explicit negatives needed
@@ -398,14 +342,36 @@ What are the consequences if model training uses random left-right flips?
 {{< video https://www.youtube.com/watch?v=-eOYWK6m3i8 width="100%" height="85%" >}}
 
 
+
+
 ## Global vs Local Representations
 
-**Global** representations summarize an image into a single embedding
-
-**Local** representations preserve spatially discriminative aspects
+::: {layout-ncol=2}
 
 ::: {.fragment}
-![]({{< meta params.images_path >}}dinov3_local_cosine_similarity_example.png){height="60%"}
+### Global embeddings
+
+**One vector per image**
+
+- image search
+- classification
+- duplicate detection
+
+### Local patch embeddings
+
+**One vector per image region**
+
+- segmentation
+- detection
+- correspondence
+- localization
+
+:::
+
+::: {.fragment}
+![]({{< meta params.images_path >}}dinov3_local_cosine_similarity_example.png){width="100%"}
+:::
+
 :::
 
 
@@ -514,175 +480,75 @@ Best semantic discrimination, excellent invariance to nuisance factors
 ## Comparison Summary
 
 ::: {.fragment}
-| Model | Semantic | Invariance | Use Case |
-|-------|----------|------------|----------|
-| **Pixel** | ❌ Poor | ❌ None | Baseline |
-| **ResNet** | ⚠️ Moderate | ⚠️ Limited | Fast inference |
-| **CLIP** | ✅ Good | ✅ Strong | Zero-shot, V+L |
-| **DINOv2** | ✅ Excellent | ✅ Excellent | Few-shot, dense tasks |
+
+| Model | Strength | Good For |
+|-------|----------|----------|
+| **Pixel** | ❌ Poor semantic similarity | Exact duplicates |
+| **ResNet** | ⚠️ Efficient supervised features | Fast baselines |
+| **CLIP** | ✅ Language-aligned semantics | Text-image search, zero-shot |
+| **DINOv2/v3** | ✅ Fine-grained visual similarity | Visual search, dense tasks |
+
+: {tbl-colwidths="[18,32,50]"}
+
 :::
 
+# Using Visual Representations
 
-# Practical Considerations
-
-## Best Practices
+## What Can We Do With Embeddings?
 
 ::: {.incremental}
-- ✅ Start with k-NN baseline (diagnostic value)
-- ✅ Use linear probe before fine-tuning
-- ✅ Match invariances to task requirements
-- ✅ Choose global/local features based on task
-- ✅ Full fine-tuning is often overkill
+- **Image search:** find visually similar images
+- **Classification:** train a small classifier on frozen embeddings
+- **Clustering:** group images without labels
+- **Outlier detection:** find unusual or duplicate images
+- **Dense tasks:** use patch tokens for segmentation, detection, correspondence
+:::
+
+::: {.fragment}
+Core idea: once images become vectors, many problems become geometry problems.
+:::
+
+## Image Search with Embeddings
+
+::: {.fragment}
+1. Encode every database image:
+$$
+\vect{z}_i = f(\vect{x}_i)
+$$
+:::
+
+::: {.fragment}
+2. Encode the query image:
+$$
+\vect{z}_q = f(\vect{x}_q)
+$$
+:::
+
+::: {.fragment}
+3. Retrieve nearest neighbours:
+$$
+\operatorname{topk}_i \; \text{sim}_{\cos}(\vect{z}_q, \vect{z}_i)
+$$
+:::
+
+::: {.fragment}
+No classifier. No labels. No fine-tuning.
 :::
 
 
-## Model Selection Guide
+## Next Exercise: Visual Image Search
 
 ::: {.incremental}
-- **DINOv3**: Best for discriminative vision tasks, few-shot learning
-- **CLIP**: Zero-shot classification, vision-language tasks
-- **Supervised CNNs**: When computational efficiency is critical (however, small DINOv3 variants exist..)
-:::
-
-
-## Global vs Local Representations
-
-::: {.fragment}
-**Global Embeddings** (e.g., [CLS] token)
-
-- Single vector per image
-- Use for: Classification, retrieval, zero-shot
+- Load a pretrained image encoder
+- Extract one embedding per image
+- Normalize embeddings
+- Compute cosine similarities
+- Retrieve the top-k nearest images
+- Compare results across representations
 :::
 
 ::: {.fragment}
-**Local Embeddings** (patch tokens)
-
-- Grid of spatially-resolved features
-- Use for: Segmentation, detection, dense prediction
-:::
-
-::: {.fragment}
-**Modern models provide both!**
-:::
-
-
-## The Adaptation Hierarchy
-
-::: {.fragment}
-**Always start simple, add complexity only when needed!**
-:::
-
-::: {.incremental}
-1. **k-NN baseline** (0 training) → Quick reality check
-2. **Linear probe** (freeze encoder) → Test feature quality
-3. **LoRA/Adapters** (efficient tuning) → Parameter-efficient
-4. **Partial fine-tune** (top layers) → Balanced approach
-5. **Full fine-tune** (all weights) → Last resort
-:::
-
-## Strategy 1: k-NN Baseline
-
-::: {.fragment}
-**No training required!**
-:::
-
-```python
-# Extract features with frozen pretrained model
-features_train = model.encode(train_images)
-features_test = model.encode(test_images)
-
-# Classify by nearest neighbors
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(features_train, train_labels)
-predictions = knn.predict(features_test)
-```
-
-::: {.fragment}
-✅ Instant results, reveals representation quality
-:::
-
-## Strategy 2: Linear Probe
-
-::: {.fragment}
-**Freeze encoder, train only classification head**
-:::
-
-```python
-# Freeze pretrained model
-for param in model.parameters():
-    param.requires_grad = False
-
-# Add trainable head
-head = nn.Linear(embed_dim, num_classes)
-
-# Train only the head
-optimizer = AdamW(head.parameters(), lr=5e-4)
-```
-
-::: {.fragment}
-✅ Fast, stable, minimal overfitting risk
-:::
-
-## Strategy 3: LoRA/Adapters
-
-::: {.fragment}
-**Add small adapter modules, train only those**
-:::
-
-```python
-from peft import LoraConfig, get_peft_model
-
-config = LoraConfig(
-    r=16, lora_alpha=32,
-    target_modules=["query","key","value"],
-)
-model = get_peft_model(model, config)
-```
-
-::: {.fragment}
-✅ Much cheaper than full fine-tuning, adapts to task
-:::
-
-## Strategy 4: Partial Fine-tune
-
-::: {.fragment}
-**Unfreeze top layers, keep early layers frozen**
-:::
-
-```python
-# Freeze all parameters
-for param in model.parameters():
-    param.requires_grad = False
-
-# Unfreeze last 2 transformer blocks
-for param in model.blocks[-2:].parameters():
-    param.requires_grad = True
-
-# Replace classification head
-model.head = nn.Linear(embed_dim, num_classes)
-```
-
-::: {.fragment}
-✅ Adjusts high-level features while keeping general features
-:::
-
-## Strategy 5: Full Fine-tune
-
-::: {.fragment}
-**Train all model weights - use as last resort!**
-:::
-
-```python
-# Unfreeze everything
-for param in model.parameters():
-    param.requires_grad = True
-
-# Use small learning rate to avoid catastrophic forgetting
-optimizer = AdamW(model.parameters(), lr=5e-5)
-```
-
-::: {.fragment .highlight-red}
-⚠️ Risk: Overfitting with limited data, expensive compute
+Question: which representation gives the most useful visual search results?
 :::
 
 
