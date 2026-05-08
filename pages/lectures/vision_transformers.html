@@ -759,11 +759,6 @@ Figure&nbsp;3: Attention visualizations from a trained ViT. Left: attention weig
 <td>Efficient (linear in spatial size)</td>
 <td>Expensive (quadratic in number of patches)</td>
 </tr>
-<tr class="even">
-<td><strong>Robustness</strong></td>
-<td>Mixed evidence</td>
-<td>Mixed evidence</td>
-</tr>
 </tbody>
 </table>
 <section id="inductive-biases-help-or-hindrance" class="level3" data-number="4.1">
@@ -813,7 +808,7 @@ Key considerations
 <section id="in-practice" class="level3" data-number="5.2">
 <h3 data-number="5.2" class="anchored" data-anchor-id="in-practice"><span class="header-section-number">5.2</span> In Practice</h3>
 <p>Both architectures are readily available through libraries such as <a href="https://github.com/huggingface/pytorch-image-models">timm</a>, which provides hundreds of pretrained models.</p>
-<div id="158e2daf" class="cell" data-execution_count="1">
+<div id="26960f72" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> timm</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a pretrained CNN</span></span>
@@ -1527,85 +1522,84 @@ Werff, Tobias van der. 2024. <em><span>CNN</span> Vs. <span>Vision</span> <span>
 <span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Data efficiency** <span class="pp">|</span> Effective with small-to-medium datasets <span class="pp">|</span> Requires large-scale pretraining (10M+ images) <span class="pp">|</span></span>
 <span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Scalability** <span class="pp">|</span> Performance plateaus with more data <span class="pp">|</span> Continues to improve with more data and compute <span class="pp">|</span></span>
 <span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Compute cost** <span class="pp">|</span> Efficient (linear in spatial size) <span class="pp">|</span> Expensive (quadratic in number of patches) <span class="pp">|</span></span>
-<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Robustness** <span class="pp">|</span> Mixed evidence <span class="pp">|</span> Mixed evidence <span class="pp">|</span></span>
-<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a>: Comparison of CNNs and Vision Transformers. {tbl-colwidths="<span class="co">[</span><span class="ot">20,40,40</span><span class="co">]</span>"}</span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a>: Comparison of CNNs and Vision Transformers. {tbl-colwidths="<span class="co">[</span><span class="ot">20,40,40</span><span class="co">]</span>"}</span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a><span class="fu">### Inductive Biases: Help or Hindrance?</span></span>
-<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>As discussed in the <span class="co">[</span><span class="ot">CNNs lecture</span><span class="co">](cnns.qmd)</span>, inductive biases are assumptions baked into the architecture. CNNs assume that nearby pixels are related (locality) and that the same pattern can appear anywhere in the image (translation equivariance). These assumptions are generally correct for natural images and make CNNs efficient learners.</span>
-<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>ViTs make almost no such assumptions. The self-attention mechanism treats all patches equally — their relationships must be learned entirely from data. This means that ViTs are more flexible but need substantially more data to reach the same performance level.</span>
-<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>With small datasets, CNNs outperform ViTs because their inductive biases provide useful structural priors. With very large datasets, ViTs catch up and eventually surpass CNNs, as the learned representations are not constrained by the architectural biases @dosovitskiy_image_2020.</span>
-<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a>::: {.callout-note appearance="simple"}</span>
-<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>**🤔 Think About It**</span>
-<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>Generally: inductive biases are beneficial because they do not need to be learned from data. However, inductive biases also restrict a model's flexibility since such biases might not always be perfectly aligned with the true data distribution. Can you think of a scenario where the locality assumption of CNNs might be a disadvantage?</span>
-<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
-<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Key considerations<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
-<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>**Scenarios where locality is limiting:**</span>
-<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Global context tasks**: Classifying a scene (e.g., "kitchen" vs "office") requires understanding the spatial arrangement of objects across the entire image, not just local patterns.</span>
-<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Long-range dependencies**: Detecting that a person is holding a leash connected to a dog requires relating distant image regions.</span>
-<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Non-local textures**: Some textures and patterns are defined by relationships between non-adjacent regions.</span>
-<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>In these cases, a ViT's ability to attend globally from the first layer can be an advantage — though the same effect can be achieved in CNNs by stacking many layers to grow the receptive field.</span>
-<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
-<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a><span class="fu">### Inductive Biases: Help or Hindrance?</span></span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a>As discussed in the <span class="co">[</span><span class="ot">CNNs lecture</span><span class="co">](cnns.qmd)</span>, inductive biases are assumptions baked into the architecture. CNNs assume that nearby pixels are related (locality) and that the same pattern can appear anywhere in the image (translation equivariance). These assumptions are generally correct for natural images and make CNNs efficient learners.</span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>ViTs make almost no such assumptions. The self-attention mechanism treats all patches equally — their relationships must be learned entirely from data. This means that ViTs are more flexible but need substantially more data to reach the same performance level.</span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>With small datasets, CNNs outperform ViTs because their inductive biases provide useful structural priors. With very large datasets, ViTs catch up and eventually surpass CNNs, as the learned representations are not constrained by the architectural biases @dosovitskiy_image_2020.</span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>::: {.callout-note appearance="simple"}</span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>**🤔 Think About It**</span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>Generally: inductive biases are beneficial because they do not need to be learned from data. However, inductive biases also restrict a model's flexibility since such biases might not always be perfectly aligned with the true data distribution. Can you think of a scenario where the locality assumption of CNNs might be a disadvantage?</span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Key considerations<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>**Scenarios where locality is limiting:**</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Global context tasks**: Classifying a scene (e.g., "kitchen" vs "office") requires understanding the spatial arrangement of objects across the entire image, not just local patterns.</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Long-range dependencies**: Detecting that a person is holding a leash connected to a dog requires relating distant image regions.</span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Non-local textures**: Some textures and patterns are defined by relationships between non-adjacent regions.</span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>In these cases, a ViT's ability to attend globally from the first layer can be an advantage — though the same effect can be achieved in CNNs by stacking many layers to grow the receptive field.</span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practical Architecture Selection</span></span>
-<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a>For practitioners, the choice between CNNs and ViTs is often more pragmatic than theoretical. The following guidelines summarize the current consensus:</span>
-<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Limited data, limited compute**: Use a pretrained CNN (ResNet, EfficientNet). The inductive biases help generalize with fewer examples, and inference is fast.</span>
-<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Large data, large compute**: ViTs or hybrid architectures can provide marginal gains, especially with self-supervised pretraining.</span>
-<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Global context needed early**: Tasks that require reasoning about the entire image (scene understanding, long-range spatial relationships) may benefit from a ViT.</span>
-<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Edge deployment, inference speed**: CNNs are generally more efficient and easier to deploy on mobile or embedded devices.</span>
-<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-240"><a href="#cb2-240" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hybrid Architectures</span></span>
-<span id="cb2-241"><a href="#cb2-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-242"><a href="#cb2-242" aria-hidden="true" tabindex="-1"></a>The boundary between CNNs and ViTs has been blurring. Hybrid architectures combine convolutional layers — typically in the early stages for local feature extraction — with transformer layers in the deeper stages for global reasoning. Examples include FastViT @vasu_fastvit_2023 and EfficientViT.</span>
-<span id="cb2-243"><a href="#cb2-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-244"><a href="#cb2-244" aria-hidden="true" tabindex="-1"></a>Conversely, modern CNN designs have borrowed ideas from transformers. ConvNeXt, for example, modernizes the standard ResNet design with larger kernels, fewer normalization layers, and training techniques inspired by ViTs — achieving competitive performance while retaining the efficiency of convolutions.</span>
-<span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-246"><a href="#cb2-246" aria-hidden="true" tabindex="-1"></a><span class="fu">### In Practice</span></span>
-<span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a>Both architectures are readily available through libraries such as <span class="co">[</span><span class="ot">timm</span><span class="co">](https://github.com/huggingface/pytorch-image-models)</span>, which provides hundreds of pretrained models.</span>
-<span id="cb2-249"><a href="#cb2-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-254"><a href="#cb2-254" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb2-255"><a href="#cb2-255" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> timm</span>
-<span id="cb2-256"><a href="#cb2-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-257"><a href="#cb2-257" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a pretrained CNN</span></span>
-<span id="cb2-258"><a href="#cb2-258" aria-hidden="true" tabindex="-1"></a>cnn_model <span class="op">=</span> timm.create_model(<span class="st">'resnet50'</span>, pretrained<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-259"><a href="#cb2-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-260"><a href="#cb2-260" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a pretrained ViT</span></span>
-<span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a>vit_model <span class="op">=</span> timm.create_model(<span class="st">'vit_base_patch16_224'</span>, pretrained<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a>Research comparing the two architecture families has found no conclusive winner when both are pretrained on massive datasets @smith_convnets_2023. The choice of pretraining data and adaptation strategy often matters more than the backbone architecture itself — an interesting discussion of practical considerations can be found in @van_der_werff_cnn_2024. Hybrid architectures increasingly combine the strengths of both: convolutional layers for efficient local feature extraction and transformer layers for global reasoning. The question of which architecture family will prevail remains open; it remains to be seen where this research leads.</span>
-<span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Beyond Classification: Multimodal ViTs" collapse="true"}</span>
-<span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a>The same ViT backbone that powers image classification underpins modern multimodal models. **BLIP-2** (@li_blip-2_2023) connects a frozen ViT image encoder to a large language model via a lightweight Q-Former, enabling visual question answering (VQA) — answering natural language questions about images. **Flamingo** (@alayrac_flamingo_2022) extends this pattern to few-shot multimodal learning across interleaved image-text sequences. These models illustrate that the patch-embedding approach generalises far beyond classification, becoming a universal interface between visual and language representations.</span>
-<span id="cb2-268"><a href="#cb2-268" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practical Architecture Selection</span></span>
+<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a>For practitioners, the choice between CNNs and ViTs is often more pragmatic than theoretical. The following guidelines summarize the current consensus:</span>
+<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Limited data, limited compute**: Use a pretrained CNN (ResNet, EfficientNet). The inductive biases help generalize with fewer examples, and inference is fast.</span>
+<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Large data, large compute**: ViTs or hybrid architectures can provide marginal gains, especially with self-supervised pretraining.</span>
+<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Global context needed early**: Tasks that require reasoning about the entire image (scene understanding, long-range spatial relationships) may benefit from a ViT.</span>
+<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Edge deployment, inference speed**: CNNs are generally more efficient and easier to deploy on mobile or embedded devices.</span>
+<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hybrid Architectures</span></span>
+<span id="cb2-240"><a href="#cb2-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-241"><a href="#cb2-241" aria-hidden="true" tabindex="-1"></a>The boundary between CNNs and ViTs has been blurring. Hybrid architectures combine convolutional layers — typically in the early stages for local feature extraction — with transformer layers in the deeper stages for global reasoning. Examples include FastViT @vasu_fastvit_2023 and EfficientViT.</span>
+<span id="cb2-242"><a href="#cb2-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-243"><a href="#cb2-243" aria-hidden="true" tabindex="-1"></a>Conversely, modern CNN designs have borrowed ideas from transformers. ConvNeXt, for example, modernizes the standard ResNet design with larger kernels, fewer normalization layers, and training techniques inspired by ViTs — achieving competitive performance while retaining the efficiency of convolutions.</span>
+<span id="cb2-244"><a href="#cb2-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a><span class="fu">### In Practice</span></span>
+<span id="cb2-246"><a href="#cb2-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a>Both architectures are readily available through libraries such as <span class="co">[</span><span class="ot">timm</span><span class="co">](https://github.com/huggingface/pytorch-image-models)</span>, which provides hundreds of pretrained models.</span>
+<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-251"><a href="#cb2-251" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb2-254"><a href="#cb2-254" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> timm</span>
+<span id="cb2-255"><a href="#cb2-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-256"><a href="#cb2-256" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a pretrained CNN</span></span>
+<span id="cb2-257"><a href="#cb2-257" aria-hidden="true" tabindex="-1"></a>cnn_model <span class="op">=</span> timm.create_model(<span class="st">'resnet50'</span>, pretrained<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-258"><a href="#cb2-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-259"><a href="#cb2-259" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a pretrained ViT</span></span>
+<span id="cb2-260"><a href="#cb2-260" aria-hidden="true" tabindex="-1"></a>vit_model <span class="op">=</span> timm.create_model(<span class="st">'vit_base_patch16_224'</span>, pretrained<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a>Research comparing the two architecture families has found no conclusive winner when both are pretrained on massive datasets @smith_convnets_2023. The choice of pretraining data and adaptation strategy often matters more than the backbone architecture itself — an interesting discussion of practical considerations can be found in @van_der_werff_cnn_2024. Hybrid architectures increasingly combine the strengths of both: convolutional layers for efficient local feature extraction and transformer layers for global reasoning. The question of which architecture family will prevail remains open; it remains to be seen where this research leads.</span>
+<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Beyond Classification: Multimodal ViTs" collapse="true"}</span>
+<span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>The same ViT backbone that powers image classification underpins modern multimodal models. **BLIP-2** (@li_blip-2_2023) connects a frozen ViT image encoder to a large language model via a lightweight Q-Former, enabling visual question answering (VQA) — answering natural language questions about images. **Flamingo** (@alayrac_flamingo_2022) extends this pattern to few-shot multimodal learning across interleaved image-text sequences. These models illustrate that the patch-embedding approach generalises far beyond classification, becoming a universal interface between visual and language representations.</span>
+<span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-268"><a href="#cb2-268" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-269"><a href="#cb2-269" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-270"><a href="#cb2-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-271"><a href="#cb2-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-272"><a href="#cb2-272" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
-<span id="cb2-273"><a href="#cb2-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb2-275"><a href="#cb2-275" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-271"><a href="#cb2-271" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb2-272"><a href="#cb2-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-273"><a href="#cb2-273" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

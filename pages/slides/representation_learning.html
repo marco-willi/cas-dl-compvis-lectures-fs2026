@@ -32,72 +32,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #767676;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #767676;  padding-left: 4px; }
-    div.sourceCode
-      { color: #545454; background-color: #fefefe; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #545454; } /* Normal */
-    code span.al { color: #7928a1; } /* Alert */
-    code span.an { color: #696969; } /* Annotation */
-    code span.at { color: #a55a00; } /* Attribute */
-    code span.bn { color: #7928a1; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #d91e18; } /* ControlFlow */
-    code span.ch { color: #008000; } /* Char */
-    code span.cn { color: #d91e18; } /* Constant */
-    code span.co { color: #696969; } /* Comment */
-    code span.cv { color: #696969; font-style: italic; } /* CommentVar */
-    code span.do { color: #696969; font-style: italic; } /* Documentation */
-    code span.dt { color: #7928a1; } /* DataType */
-    code span.dv { color: #7928a1; } /* DecVal */
-    code span.er { color: #7928a1; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #a55a00; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { } /* Import */
-    code span.in { color: #696969; } /* Information */
-    code span.kw { color: #d91e18; } /* Keyword */
-    code span.op { color: #00769e; } /* Operator */
-    code span.ot { color: #d91e18; } /* Other */
-    code span.pp { color: #7928a1; } /* Preprocessor */
-    code span.sc { color: #00769e; } /* SpecialChar */
-    code span.ss { color: #008000; } /* SpecialString */
-    code span.st { color: #008000; } /* String */
-    code span.va { color: #a55a00; } /* Variable */
-    code span.vs { color: #008000; } /* VerbatimString */
-    code span.wa { color: #696969; font-style: italic; } /* Warning */
     /* CSS for citations */
     div.csl-bib-body { }
     div.csl-entry {
@@ -252,7 +186,7 @@ Marco Willi
 <li>What is Representation Learning?</li>
 <li>Deep Image Representations</li>
 <li>Comparing Representations</li>
-<li>Practical Applications</li>
+<li>Using Visual Representations</li>
 </ul>
 </section>
 <section>
@@ -272,11 +206,11 @@ Marco Willi
 
 <img data-src="../../assets/images/representation_learning/elephant.jpg" class="r-stretch quarto-figure-center"><p class="caption">Example Image <a href="https://unsplash.com/de/fotos/elefantenwanderung-tagsuber-QJbyG6O0ick">Source</a></p><div class="fragment">
 <blockquote>
-<p>A photograph of an elephant facing the camera. The elephant has large tusks and ears and is standing in a flat savannah. Is is bright day light with a cloudy sky.</p>
+<p>A photograph of an elephant facing the camera. The elephant has large tusks and ears and is standing in a flat savannah. It is bright daylight with a cloudy sky.</p>
 </blockquote>
 </div>
 <div class="fragment">
-<div id="574501ba" class="cell" data-execution_count="1">
+<div id="8bd2cbb3" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <table class="dataframe table table-sm table-striped align-middle caption-top">
 <thead>
@@ -296,15 +230,15 @@ Marco Willi
 </tr>
 <tr class="even">
 <td>Natural Language (UTF-8)</td>
-<td>1,312</td>
+<td>1,304</td>
 <td>0.16</td>
-<td>4215×</td>
+<td>4240×</td>
 </tr>
 <tr class="odd">
 <td>Natural Language (ASCII)</td>
-<td>1,148</td>
+<td>1,141</td>
 <td>0.14</td>
-<td>4817×</td>
+<td>4846×</td>
 </tr>
 </tbody>
 </table>
@@ -340,7 +274,7 @@ Marco Willi
 </div>
 <div class="fragment">
 <p><img data-src="../../assets/images/representation_learning/data_and_representation_space.png" style="width:80.0%"></p>
-<p><strong>Semantic Coordindate System</strong> where distances <span class="math inline">\(\|\mathbf{z}_i - \mathbf{z}_j\|_2\)</span> reflect meaningful relationships.</p>
+<p><strong>Semantic Coordinate System</strong> where distances <span class="math inline">\(\|\mathbf{z}_i - \mathbf{z}_j\|_2\)</span> reflect meaningful relationships.</p>
 </div>
 <div class="fragment">
 <p>We focus on <strong>vector-valued</strong> (distributed) representations, not symbolic descriptions</p>
@@ -473,51 +407,14 @@ Marco Willi
 <li class="fragment"><p><em>Trade-off:</em> Too much invariance → loss of discriminative details</p></li>
 <li class="fragment"><p><em>Sweet spot:</em> Preserve task-relevant variations, discard irrelevant ones</p></li>
 </ul>
-</section>
-<section id="what-makes-good-representations-1" class="slide level2">
-<h2>What Makes Good Representations?</h2>
-<h3 id="geometric-structure-preservation">Geometric Structure Preservation</h3>
+<h3 id="properties-of-good-representations">Properties of Good Representations</h3>
 <ul>
-<li class="fragment"><strong>Smooth manifold:</strong> Similar semantic concepts cluster in representation space</li>
-<li class="fragment"><strong>Composability:</strong> <span class="math inline">\(f(\mathbf{x}_1) \oplus f(\mathbf{x}_2) \approx f(\text{combine}(\mathbf{x}_1, \mathbf{x}_2))\)</span> for vector operations</li>
-<li class="fragment"><strong>Interpolability:</strong> Linear interpolation <span class="math inline">\(\alpha f(\mathbf{x}_1) + (1-\alpha) f(\mathbf{x}_2)\)</span> yields meaningful intermediate concepts</li>
+<li class="fragment">Similar images should be close</li>
+<li class="fragment">Different images should be separated</li>
+<li class="fragment">Task-relevant details should be preserved</li>
+<li class="fragment">Nuisance variation should be ignored</li>
+<li class="fragment">Embeddings should be compact and reusable</li>
 </ul>
-</section>
-<section id="what-makes-good-representations-2" class="slide level2">
-<h2>What Makes Good Representations?</h2>
-<h3 id="transfer-efficiency">Transfer Efficiency</h3>
-<ul>
-<li class="fragment"><p><strong>Low sample complexity:</strong> Few examples needed for downstream adaptation</p></li>
-<li class="fragment"><p><strong>Broad applicability:</strong> Same <span class="math inline">\(f(\cdot)\)</span> works across multiple tasks/domains</p></li>
-<li class="fragment"><p><strong>Graceful degradation:</strong> Performance degrades slowly with domain shift</p></li>
-</ul>
-</section>
-<section id="what-makes-good-representations-3" class="slide level2">
-<h2>What Makes Good Representations?</h2>
-<h3 id="computational-practicality">Computational Practicality</h3>
-<ul>
-<li class="fragment"><p><strong>Compact dimensionality:</strong> <span class="math inline">\(\text{dim}(\mathbf{z}) \ll \text{dim}(\mathbf{x})\)</span> while preserving information</p></li>
-<li class="fragment"><p><strong>Fast computation:</strong> Forward pass <span class="math inline">\(f(\mathbf{x})\)</span> efficient for real-time applications</p></li>
-<li class="fragment"><p><strong>Stable training:</strong> Representation learning converges reliably</p></li>
-</ul>
-</section>
-<section id="the-invariance-selectivity-trade-off" class="slide level2">
-<h2>The Invariance-Selectivity Trade-off</h2>
-<ul>
-<li class="fragment"><p><strong>Invariance</strong>: <span class="math inline">\(\|f(\mathbf{x}) - f(g(\mathbf{x}))\|_2 &lt; \epsilon\)</span> (Similar output for nuisance transforms)</p></li>
-<li class="fragment"><p><strong>Selectivity</strong>: <span class="math inline">\(\|f(\mathbf{x}_i) - f(\mathbf{x}_j)\|_2 &gt; \delta\)</span> (Different outputs for semantic differences)</p></li>
-<li class="fragment"><p><strong>Challenge</strong>: Too much invariance → loss of discriminative details!</p></li>
-<li class="fragment"><p><strong>Sweet spot</strong>: Preserve task-relevant variations, discard nuisance factors</p></li>
-</ul>
-</section>
-<section id="the-invariance-selectivity-trade-off-1" class="slide level2 center">
-<h2>The Invariance-Selectivity Trade-off</h2>
-<div class="r-fit-text">
-<ul>
-<li><p>What function has maximal invariance?</p></li>
-<li><p>What function has maximal selectivity?</p></li>
-</ul>
-</div>
 </section></section>
 <section>
 <section id="deep-image-representations" class="title-slide slide level1 center">
@@ -621,7 +518,7 @@ Shared embedding space for images and text
 <section id="self-supervised-learning-self-distillation" class="slide level2 smaller">
 <h2>Self-Supervised Learning: Self-Distillation</h2>
 
-<img data-src="../../assets/images/representation_learning/dino_principle.png" class="r-stretch quarto-figure-center"><p class="caption">From @<span class="citation" data-cites="caron_emerging_2021">Caron et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p><div class="fragment">
+<img data-src="../../assets/images/representation_learning/dino_principle.png" class="r-stretch quarto-figure-center"><p class="caption">From <span class="citation" data-cites="caron_emerging_2021">Caron et al. (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p><div class="fragment">
 <ul>
 <li>No explicit negatives needed</li>
 <li>Works with smaller batches</li>
@@ -644,10 +541,29 @@ Shared embedding space for images and text
 </section>
 <section id="global-vs-local-representations" class="slide level2">
 <h2>Global vs Local Representations</h2>
-<p><strong>Global</strong> representations summarize an image into a single embedding</p>
-<p><strong>Local</strong> representations preserve spatially discriminative aspects</p>
-<div class="fragment">
-<p><img data-src="../../assets/images/representation_learning/dinov3_local_cosine_similarity_example.png" style="height:60.0%"></p>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="fragment quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<h3 id="global-embeddings">Global embeddings</h3>
+<p><strong>One vector per image</strong></p>
+<ul>
+<li>image search</li>
+<li>classification</li>
+<li>duplicate detection</li>
+</ul>
+<h3 id="local-patch-embeddings">Local patch embeddings</h3>
+<p><strong>One vector per image region</strong></p>
+<ul>
+<li>segmentation</li>
+<li>detection</li>
+<li>correspondence</li>
+<li>localization</li>
+</ul>
+</div>
+<div class="fragment quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="../../assets/images/representation_learning/dinov3_local_cosine_similarity_example.png"></p>
+</div>
+</div>
 </div>
 </section></section>
 <section>
@@ -821,182 +737,100 @@ Best semantic discrimination, excellent invariance to nuisance factors
 <h2>Comparison Summary</h2>
 <div class="fragment">
 <table class="caption-top">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 32%">
+<col style="width: 50%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Model</th>
-<th>Semantic</th>
-<th>Invariance</th>
-<th>Use Case</th>
+<th>Strength</th>
+<th>Good For</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Pixel</strong></td>
-<td>❌ Poor</td>
-<td>❌ None</td>
-<td>Baseline</td>
+<td>❌ Poor semantic similarity</td>
+<td>Exact duplicates</td>
 </tr>
 <tr class="even">
 <td><strong>ResNet</strong></td>
-<td>⚠️ Moderate</td>
-<td>⚠️ Limited</td>
-<td>Fast inference</td>
+<td>⚠️ Efficient supervised features</td>
+<td>Fast baselines</td>
 </tr>
 <tr class="odd">
 <td><strong>CLIP</strong></td>
-<td>✅ Good</td>
-<td>✅ Strong</td>
-<td>Zero-shot, V+L</td>
+<td>✅ Language-aligned semantics</td>
+<td>Text-image search, zero-shot</td>
 </tr>
 <tr class="even">
-<td><strong>DINOv2</strong></td>
-<td>✅ Excellent</td>
-<td>✅ Excellent</td>
-<td>Few-shot, dense tasks</td>
+<td><strong>DINOv2/v3</strong></td>
+<td>✅ Fine-grained visual similarity</td>
+<td>Visual search, dense tasks</td>
 </tr>
 </tbody>
 </table>
 </div>
 </section></section>
 <section>
-<section id="practical-considerations" class="title-slide slide level1 center">
-<h1>Practical Considerations</h1>
+<section id="using-visual-representations" class="title-slide slide level1 center">
+<h1>Using Visual Representations</h1>
 
 </section>
-<section id="best-practices" class="slide level2">
-<h2>Best Practices</h2>
+<section id="what-can-we-do-with-embeddings" class="slide level2">
+<h2>What Can We Do With Embeddings?</h2>
 <ul>
-<li class="fragment">✅ Start with k-NN baseline (diagnostic value)</li>
-<li class="fragment">✅ Use linear probe before fine-tuning</li>
-<li class="fragment">✅ Match invariances to task requirements</li>
-<li class="fragment">✅ Choose global/local features based on task</li>
-<li class="fragment">✅ Full fine-tuning is often overkill</li>
+<li class="fragment"><strong>Image search:</strong> find visually similar images</li>
+<li class="fragment"><strong>Classification:</strong> train a small classifier on frozen embeddings</li>
+<li class="fragment"><strong>Clustering:</strong> group images without labels</li>
+<li class="fragment"><strong>Outlier detection:</strong> find unusual or duplicate images</li>
+<li class="fragment"><strong>Dense tasks:</strong> use patch tokens for segmentation, detection, correspondence</li>
 </ul>
-</section>
-<section id="model-selection-guide" class="slide level2">
-<h2>Model Selection Guide</h2>
-<ul>
-<li class="fragment"><strong>DINOv3</strong>: Best for discriminative vision tasks, few-shot learning</li>
-<li class="fragment"><strong>CLIP</strong>: Zero-shot classification, vision-language tasks</li>
-<li class="fragment"><strong>Supervised CNNs</strong>: When computational efficiency is critical (however, small DINOv3 variants exist..)</li>
-</ul>
-</section>
-<section id="global-vs-local-representations-1" class="slide level2">
-<h2>Global vs Local Representations</h2>
 <div class="fragment">
-<p><strong>Global Embeddings</strong> (e.g., [CLS] token)</p>
-<ul>
-<li>Single vector per image</li>
-<li>Use for: Classification, retrieval, zero-shot</li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Local Embeddings</strong> (patch tokens)</p>
-<ul>
-<li>Grid of spatially-resolved features</li>
-<li>Use for: Segmentation, detection, dense prediction</li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Modern models provide both!</strong></p>
+<p>Core idea: once images become vectors, many problems become geometry problems.</p>
 </div>
 </section>
-<section id="the-adaptation-hierarchy" class="slide level2">
-<h2>The Adaptation Hierarchy</h2>
+<section id="image-search-with-embeddings" class="slide level2">
+<h2>Image Search with Embeddings</h2>
 <div class="fragment">
-<p><strong>Always start simple, add complexity only when needed!</strong></p>
-</div>
 <ol type="1">
-<li class="fragment"><strong>k-NN baseline</strong> (0 training) → Quick reality check</li>
-<li class="fragment"><strong>Linear probe</strong> (freeze encoder) → Test feature quality</li>
-<li class="fragment"><strong>LoRA/Adapters</strong> (efficient tuning) → Parameter-efficient</li>
-<li class="fragment"><strong>Partial fine-tune</strong> (top layers) → Balanced approach</li>
-<li class="fragment"><strong>Full fine-tune</strong> (all weights) → Last resort</li>
+<li>Encode every database image: <span class="math display">\[
+\mathbf{z}_i = f(\mathbf{x}_i)
+\]</span></li>
 </ol>
-</section>
-<section id="strategy-1-k-nn-baseline" class="slide level2">
-<h2>Strategy 1: k-NN Baseline</h2>
-<div class="fragment">
-<p><strong>No training required!</strong></p>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co"># Extract features with frozen pretrained model</span></span>
-<span id="cb1-2"><a></a>features_train <span class="op">=</span> model.encode(train_images)</span>
-<span id="cb1-3"><a></a>features_test <span class="op">=</span> model.encode(test_images)</span>
-<span id="cb1-4"><a></a></span>
-<span id="cb1-5"><a></a><span class="co"># Classify by nearest neighbors</span></span>
-<span id="cb1-6"><a></a>knn <span class="op">=</span> KNeighborsClassifier(n_neighbors<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb1-7"><a></a>knn.fit(features_train, train_labels)</span>
-<span id="cb1-8"><a></a>predictions <span class="op">=</span> knn.predict(features_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="fragment">
-<p>✅ Instant results, reveals representation quality</p>
+<ol start="2" type="1">
+<li>Encode the query image: <span class="math display">\[
+\mathbf{z}_q = f(\mathbf{x}_q)
+\]</span></li>
+</ol>
 </div>
-</section>
-<section id="strategy-2-linear-probe" class="slide level2">
-<h2>Strategy 2: Linear Probe</h2>
 <div class="fragment">
-<p><strong>Freeze encoder, train only classification head</strong></p>
+<ol start="3" type="1">
+<li>Retrieve nearest neighbours: <span class="math display">\[
+\operatorname{topk}_i \; \text{sim}_{\cos}(\mathbf{z}_q, \mathbf{z}_i)
+\]</span></li>
+</ol>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Freeze pretrained model</span></span>
-<span id="cb2-2"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.parameters():</span>
-<span id="cb2-3"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb2-4"><a></a></span>
-<span id="cb2-5"><a></a><span class="co"># Add trainable head</span></span>
-<span id="cb2-6"><a></a>head <span class="op">=</span> nn.Linear(embed_dim, num_classes)</span>
-<span id="cb2-7"><a></a></span>
-<span id="cb2-8"><a></a><span class="co"># Train only the head</span></span>
-<span id="cb2-9"><a></a>optimizer <span class="op">=</span> AdamW(head.parameters(), lr<span class="op">=</span><span class="fl">5e-4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="fragment">
-<p>✅ Fast, stable, minimal overfitting risk</p>
+<p>No classifier. No labels. No fine-tuning.</p>
 </div>
 </section>
-<section id="strategy-3-loraadapters" class="slide level2">
-<h2>Strategy 3: LoRA/Adapters</h2>
+<section id="next-exercise-visual-image-search" class="slide level2">
+<h2>Next Exercise: Visual Image Search</h2>
+<ul>
+<li class="fragment">Load a pretrained image encoder</li>
+<li class="fragment">Extract one embedding per image</li>
+<li class="fragment">Normalize embeddings</li>
+<li class="fragment">Compute cosine similarities</li>
+<li class="fragment">Retrieve the top-k nearest images</li>
+<li class="fragment">Compare results across representations</li>
+</ul>
 <div class="fragment">
-<p><strong>Add small adapter modules, train only those</strong></p>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> peft <span class="im">import</span> LoraConfig, get_peft_model</span>
-<span id="cb3-2"><a></a></span>
-<span id="cb3-3"><a></a>config <span class="op">=</span> LoraConfig(</span>
-<span id="cb3-4"><a></a>    r<span class="op">=</span><span class="dv">16</span>, lora_alpha<span class="op">=</span><span class="dv">32</span>,</span>
-<span id="cb3-5"><a></a>    target_modules<span class="op">=</span>[<span class="st">"query"</span>,<span class="st">"key"</span>,<span class="st">"value"</span>],</span>
-<span id="cb3-6"><a></a>)</span>
-<span id="cb3-7"><a></a>model <span class="op">=</span> get_peft_model(model, config)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="fragment">
-<p>✅ Much cheaper than full fine-tuning, adapts to task</p>
-</div>
-</section>
-<section id="strategy-4-partial-fine-tune" class="slide level2">
-<h2>Strategy 4: Partial Fine-tune</h2>
-<div class="fragment">
-<p><strong>Unfreeze top layers, keep early layers frozen</strong></p>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="co"># Freeze all parameters</span></span>
-<span id="cb4-2"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.parameters():</span>
-<span id="cb4-3"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb4-4"><a></a></span>
-<span id="cb4-5"><a></a><span class="co"># Unfreeze last 2 transformer blocks</span></span>
-<span id="cb4-6"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.blocks[<span class="op">-</span><span class="dv">2</span>:].parameters():</span>
-<span id="cb4-7"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb4-8"><a></a></span>
-<span id="cb4-9"><a></a><span class="co"># Replace classification head</span></span>
-<span id="cb4-10"><a></a>model.head <span class="op">=</span> nn.Linear(embed_dim, num_classes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="fragment">
-<p>✅ Adjusts high-level features while keeping general features</p>
-</div>
-</section>
-<section id="strategy-5-full-fine-tune" class="slide level2">
-<h2>Strategy 5: Full Fine-tune</h2>
-<div class="fragment">
-<p><strong>Train all model weights - use as last resort!</strong></p>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Unfreeze everything</span></span>
-<span id="cb5-2"><a></a><span class="cf">for</span> param <span class="kw">in</span> model.parameters():</span>
-<span id="cb5-3"><a></a>    param.requires_grad <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb5-4"><a></a></span>
-<span id="cb5-5"><a></a><span class="co"># Use small learning rate to avoid catastrophic forgetting</span></span>
-<span id="cb5-6"><a></a>optimizer <span class="op">=</span> AdamW(model.parameters(), lr<span class="op">=</span><span class="fl">5e-5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="fragment highlight-red">
-<p>⚠️ Risk: Overfitting with limited data, expensive compute</p>
+<p>Question: which representation gives the most useful visual search results?</p>
 </div>
 </section></section>
 <section id="references" class="title-slide slide level1 smaller scrollable">

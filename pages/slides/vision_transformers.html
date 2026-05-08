@@ -32,72 +32,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #767676;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #767676;  padding-left: 4px; }
-    div.sourceCode
-      { color: #545454; background-color: #fefefe; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #545454; } /* Normal */
-    code span.al { color: #7928a1; } /* Alert */
-    code span.an { color: #696969; } /* Annotation */
-    code span.at { color: #a55a00; } /* Attribute */
-    code span.bn { color: #7928a1; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #d91e18; } /* ControlFlow */
-    code span.ch { color: #008000; } /* Char */
-    code span.cn { color: #d91e18; } /* Constant */
-    code span.co { color: #696969; } /* Comment */
-    code span.cv { color: #696969; font-style: italic; } /* CommentVar */
-    code span.do { color: #696969; font-style: italic; } /* Documentation */
-    code span.dt { color: #7928a1; } /* DataType */
-    code span.dv { color: #7928a1; } /* DecVal */
-    code span.er { color: #7928a1; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #a55a00; } /* Float */
-    code span.fu { color: #06287e; } /* Function */
-    code span.im { } /* Import */
-    code span.in { color: #696969; } /* Information */
-    code span.kw { color: #d91e18; } /* Keyword */
-    code span.op { color: #00769e; } /* Operator */
-    code span.ot { color: #d91e18; } /* Other */
-    code span.pp { color: #7928a1; } /* Preprocessor */
-    code span.sc { color: #00769e; } /* SpecialChar */
-    code span.ss { color: #008000; } /* SpecialString */
-    code span.st { color: #008000; } /* String */
-    code span.va { color: #a55a00; } /* Variable */
-    code span.vs { color: #008000; } /* VerbatimString */
-    code span.wa { color: #696969; font-style: italic; } /* Warning */
     /* CSS for citations */
     div.csl-bib-body { }
     div.csl-entry {
@@ -242,16 +176,6 @@ Marco Willi
 </div>
 
 </section>
-<section id="learning-objectives" class="slide level2 center">
-<h2>Learning Objectives</h2>
-<ul>
-<li class="fragment">Adapt the transformer to images via <strong>patch embeddings</strong></li>
-<li class="fragment">Role of <strong>positional embeddings</strong> and the <strong>[CLS] token</strong></li>
-<li class="fragment">CNNs vs.&nbsp;ViTs — inductive biases, receptive fields, data efficiency</li>
-<li class="fragment">Pick CNN, ViT, or hybrid based on data, compute, task</li>
-<li class="fragment">Hybrid architectures: combining the two</li>
-</ul>
-</section>
 <section id="overview" class="slide level2 center">
 <h2>Overview</h2>
 <ul>
@@ -281,7 +205,7 @@ Marco Willi
 </ul>
 </div>
 <div class="fragment">
-<p><strong>ViT (2020, <span class="citation" data-cites="dosovitskiy_image_2020">Dosovitskiy et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>)</strong> — yes, with enough pretraining data.</p>
+<p><strong>ViT (2020, <span class="citation" data-cites="dosovitskiy_image_2020">Dosovitskiy et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>)</strong>: yes, with enough pretraining data.</p>
 </div>
 </section></section>
 <section>
@@ -293,15 +217,6 @@ Marco Willi
 <h2>The Trick: Treat Images as Patches</h2>
 <div class="fragment">
 <p>A 2-D image grid → a <strong>sequence of patches</strong>.</p>
-</div>
-</section>
-<section id="patchifying" class="slide level2">
-<h2>Patchifying</h2>
-
-<img data-src="../../assets/images/vision_transformers/patchify.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-vit-patch-embedding"><p class="caption">
-Figure&nbsp;1: Split the image into fixed-size, non-overlapping patches.
-</p><div class="fragment">
-<p><span class="math inline">\(224 \times 224\)</span> image, <span class="math inline">\(16 \times 16\)</span> patches → <strong>196 patches</strong>.</p>
 </div>
 </section>
 <section id="the-patch-embedding-pipeline" class="slide level2">
@@ -321,6 +236,15 @@ Figure&nbsp;1: Split the image into fixed-size, non-overlapping patches.
 <h2>ViT Architecture</h2>
 
 <img data-src="../../assets/images/vision_transformers/vit.png" style="width:70.0%" class="r-stretch quarto-figure-center" id="fig-vit-paper"><p class="caption">Source: <span class="citation" data-cites="dosovitskiy_image_2020">Dosovitskiy et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span></p></section>
+<section id="patchifying" class="slide level2">
+<h2>Patchifying</h2>
+
+<img data-src="../../assets/images/vision_transformers/patchify.png" style="width:60.0%" class="r-stretch quarto-figure-center" id="fig-vit-patch-embedding"><p class="caption">
+Figure&nbsp;2: Split the image into fixed-size, non-overlapping patches.
+</p><div class="fragment">
+<p><span class="math inline">\(224 \times 224\)</span> image, <span class="math inline">\(16 \times 16\)</span> patches → <strong>196 patches</strong>.</p>
+</div>
+</section>
 <section id="quiz-patch-size-32-32" class="slide level2">
 <h2>Quiz: Patch Size 32 × 32</h2>
 <p>What changes if patch size goes from 16 to 32?</p>
@@ -335,18 +259,6 @@ Figure&nbsp;1: Split the image into fixed-size, non-overlapping patches.
 <li><strong>Less detail</strong> — each patch covers a larger area</li>
 <li><strong>Trade-off</strong> — same as resolution choice in CNNs</li>
 </ul>
-</div>
-</section>
-<section id="why-positional-embeddings" class="slide level2">
-<h2>Why Positional Embeddings?</h2>
-<div class="fragment">
-<p>Without them: a transformer treats patches as an <strong>unordered set</strong>.</p>
-</div>
-<div class="fragment">
-<p>A 2-D image grid would be lost.</p>
-</div>
-<div class="fragment">
-<p><strong>Learned positional embeddings</strong> acquire 2-D structure during training: nearby patches end up with similar embeddings (<span class="citation" data-cites="dosovitskiy_image_2020">Dosovitskiy et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>).</p>
 </div>
 </section></section>
 <section>
@@ -369,7 +281,7 @@ Figure&nbsp;1: Split the image into fixed-size, non-overlapping patches.
 <section id="strength-and-weakness" class="slide level2">
 <h2>Strength and Weakness</h2>
 <ul>
-<li class="fragment">✅ <strong>Long-range dependencies</strong> for free (wheel ↔︎ road)</li>
+<li class="fragment">✅ <strong>Long-range dependencies</strong> for free</li>
 <li class="fragment">❌ <strong>No locality prior</strong> — must be learned from data</li>
 <li class="fragment">❌ Needs <strong>far more training examples</strong></li>
 </ul>
@@ -384,7 +296,7 @@ Figure&nbsp;1: Split the image into fixed-size, non-overlapping patches.
 <li>The entire image</li>
 </ol>
 <div class="fragment">
-<p><strong>3 — the entire image.</strong></p>
+<p><strong>The entire image.</strong></p>
 </div>
 <div class="fragment">
 <p>After even <strong>one</strong> transformer layer, every output has aggregated information from all patches.</p>
@@ -392,48 +304,24 @@ Figure&nbsp;1: Split the image into fixed-size, non-overlapping patches.
 </section>
 <section id="what-attention-learns" class="slide level2">
 <h2>What Attention Learns</h2>
-<div id="fig-vit-attention-maps" class="quarto-layout-panel">
-<figure class="quarto-float quarto-float-fig">
-<div aria-describedby="fig-vit-attention-maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="../../assets/images/vision_transformers/attention_matrices.png"></p>
-<figcaption>Attention weight matrices.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="../../assets/images/vision_transformers/attention_spatial.png"></p>
-<figcaption>Spatial attention maps overlaid on the image.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vit-attention-maps-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: The model learns to focus on <strong>semantically relevant regions</strong> — even from early layers.
-</figcaption>
-</figure>
-</div>
-</section></section>
+
+<img data-src="../../assets/images/vision_transformers/attention_matrices.png" class="r-stretch quarto-figure-center" id="fig-vit-attention-maps1"><p class="caption">Attention weight matrices.</p></section>
+<section id="what-attention-learns-1" class="slide level2">
+<h2>What Attention Learns</h2>
+
+<img data-src="../../assets/images/vision_transformers/attention_spatial.png" class="r-stretch quarto-figure-center" id="fig-vit-attention-maps2"><p class="caption">Spatial attention maps overlaid on the image.</p></section></section>
 <section>
 <section id="cnns-vs.-vision-transformers" class="title-slide slide level1 center">
 <h1>CNNs vs.&nbsp;Vision Transformers</h1>
 
 </section>
-<section id="at-a-glance" class="slide level2">
-<h2>At a Glance</h2>
+<section id="cnns-vs.-vits-at-a-glance" class="slide level2">
+<h2>CNNs vs.&nbsp;ViTs at a Glance</h2>
 <table class="caption-top">
 <colgroup>
-<col style="width: 40%">
-<col style="width: 30%">
-<col style="width: 30%">
+<col style="width: 24%">
+<col style="width: 38%">
+<col style="width: 38%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -444,29 +332,34 @@ Figure&nbsp;3: The model learns to focus on <strong>semantically relevant region
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Inductive biases</strong></td>
-<td>Strong (locality, equivariance)</td>
-<td>Minimal</td>
+<td><strong>Input structure</strong></td>
+<td>2-D grid</td>
+<td>patch sequence</td>
 </tr>
 <tr class="even">
+<td><strong>Inductive bias</strong></td>
+<td>strong locality + equivariance</td>
+<td>weaker visual priors</td>
+</tr>
+<tr class="odd">
 <td><strong>Receptive field</strong></td>
-<td>Local → global</td>
-<td>Global from layer 1</td>
-</tr>
-<tr class="odd">
-<td><strong>Data efficiency</strong></td>
-<td>Good with small/medium</td>
-<td>Needs large pretraining (10M+)</td>
+<td>local → global</td>
+<td>global token mixing</td>
 </tr>
 <tr class="even">
-<td><strong>Scalability</strong></td>
-<td>Plateaus</td>
-<td>Keeps improving with scale</td>
+<td><strong>Data efficiency</strong></td>
+<td>strong with limited data</td>
+<td>benefits strongly from pretraining</td>
 </tr>
 <tr class="odd">
+<td><strong>Scaling</strong></td>
+<td>strong, but more constrained</td>
+<td>scales very well with data/compute</td>
+</tr>
+<tr class="even">
 <td><strong>Compute</strong></td>
-<td>Linear in spatial size</td>
-<td>Quadratic in patches</td>
+<td>roughly linear in pixels</td>
+<td>attention quadratic in tokens</td>
 </tr>
 </tbody>
 </table>
@@ -474,38 +367,44 @@ Figure&nbsp;3: The model learns to focus on <strong>semantically relevant region
 <section id="inductive-biases-help-or-hindrance" class="slide level2">
 <h2>Inductive Biases — Help or Hindrance?</h2>
 <div class="fragment">
-<p>CNNs assume <strong>locality</strong> + <strong>translation equivariance</strong> — generally true for natural images.</p>
+<p>CNNs build in <strong>locality</strong> and <strong>translation equivariance</strong>.</p>
 </div>
 <div class="fragment">
-<p>ViTs assume nothing — must learn structure from data.</p>
+<p>These assumptions are often useful for natural images, especially with limited data.</p>
+</div>
+<div class="fragment">
+<p>ViTs have weaker image-specific priors and rely more on data and pretraining.</p>
 </div>
 <div class="fragment">
 <ul>
-<li><strong>Small data</strong> → CNNs win (priors are useful)</li>
-<li><strong>Massive data</strong> → ViTs catch up and surpass</li>
+<li><strong>Small data:</strong> strong priors can help</li>
+<li><strong>Massive pretraining:</strong> weaker priors can become an advantage</li>
 </ul>
 </div>
 </section>
-<section id="quiz-when-locality-hurts" class="slide level2">
-<h2>Quiz: When Locality Hurts</h2>
-<p>Where might CNN locality be a <em>disadvantage</em>?</p>
+<section id="quiz-when-can-locality-hurt" class="slide level2">
+<h2>Quiz: When Can Locality Hurt?</h2>
+<p>Where might a strong local bias become limiting?</p>
 <div class="fragment">
 <ul>
-<li><strong>Scene classification</strong> — “kitchen” vs.&nbsp;“office” needs global arrangement</li>
+<li><strong>Global layout</strong>: distinguishing scenes may require the arrangement of many regions, not just local patches</li>
 </ul>
 </div>
 <div class="fragment">
 <ul>
-<li><strong>Long-range relations</strong> — person <em>holding</em> a leash <em>attached to</em> a dog</li>
+<li><strong>Long-range relations</strong>: e.g.&nbsp;person, leash, and dog may be far apart in the image</li>
 </ul>
 </div>
 <div class="fragment">
 <ul>
-<li><strong>Non-local textures</strong> — patterns defined by distant regions</li>
+<li><strong>Repeated / non-local patterns</strong>: the relevant structure may be defined by relationships between distant regions</li>
 </ul>
 </div>
 <div class="fragment">
-<p>ViT’s global attention from layer 1 can shine here.</p>
+<p>CNNs can capture these with enough depth and pooling, but global interactions are indirect.</p>
+</div>
+<div class="fragment">
+<p>ViTs model long-range interactions more directly through self-attention.</p>
 </div>
 </section></section>
 <section>
@@ -513,17 +412,15 @@ Figure&nbsp;3: The model learns to focus on <strong>semantically relevant region
 <h1>Practical Architecture Selection</h1>
 
 </section>
-<section id="decision-guide" class="slide level2 center">
+<section id="decision-guide" class="slide level2">
 <h2>Decision Guide</h2>
 <ul>
-<li class="fragment"><strong>Limited data + compute</strong> → pretrained <strong>CNN</strong> (ResNet, EfficientNet)</li>
-<li class="fragment"><strong>Large data + compute</strong> → <strong>ViT</strong> or hybrid</li>
-<li class="fragment"><strong>Global context early</strong> → ViT</li>
-<li class="fragment"><strong>Edge deployment / fast inference</strong> → CNN or efficient hybrid</li>
+<li class="fragment"><strong>Limited data / limited compute:</strong> start with a pretrained CNN or compact hybrid</li>
+<li class="fragment"><strong>Large-scale pretraining available:</strong> ViT-style models are strong defaults</li>
+<li class="fragment"><strong>Need early global context:</strong> ViT or hybrid architecture</li>
+<li class="fragment"><strong>Edge deployment / fast inference:</strong> efficient CNN or efficient hybrid</li>
+<li class="fragment"><strong>In practice:</strong> pretraining data, training recipe, and adaptation strategy often matter as much as the backbone</li>
 </ul>
-<div class="fragment">
-<p>With <em>massive</em> pretraining, both perform similarly (<span class="citation" data-cites="smith_convnets_2023">Smith et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
-</div>
 </section>
 <section id="hybrid-architectures" class="slide level2 center">
 <h2>Hybrid Architectures</h2>
@@ -535,32 +432,6 @@ Figure&nbsp;3: The model learns to focus on <strong>semantically relevant region
 </div>
 <div class="fragment">
 <p>Conversely: <strong>ConvNeXt</strong> modernizes ResNet with ViT-style training and design.</p>
-</div>
-</section>
-<section id="loading-pretrained-models" class="slide level2">
-<h2>Loading Pretrained Models</h2>
-<div id="034a9b86" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> timm</span>
-<span id="cb1-2"><a></a></span>
-<span id="cb1-3"><a></a><span class="co"># Pretrained CNN</span></span>
-<span id="cb1-4"><a></a>cnn_model <span class="op">=</span> timm.create_model(<span class="st">"resnet50"</span>, pretrained<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-5"><a></a></span>
-<span id="cb1-6"><a></a><span class="co"># Pretrained ViT</span></span>
-<span id="cb1-7"><a></a>vit_model <span class="op">=</span> timm.create_model(<span class="st">"vit_base_patch16_224"</span>, pretrained<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<p><a href="https://github.com/huggingface/pytorch-image-models">timm</a> — hundreds of pretrained models, both architectures.</p>
-</div>
-</section>
-<section id="what-actually-matters" class="slide level2">
-<h2>What Actually Matters</h2>
-<ul>
-<li class="fragment">No conclusive winner with massive pretraining (<span class="citation" data-cites="smith_convnets_2023">Smith et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>)</li>
-<li class="fragment"><strong>Pretraining data + adaptation strategy</strong> often matter more than the backbone</li>
-<li class="fragment">Hybrids increasingly common</li>
-</ul>
-<div class="fragment">
-<p>The question of which architecture prevails — <strong>still open</strong>.</p>
 </div>
 </section>
 <section id="beyond-classification-multimodal-vits" class="slide level2">
@@ -600,9 +471,6 @@ Dosovitskiy, Alexey, Lucas Beyer, Alexander Kolesnikov, et al. 2020. <span>“An
 </div>
 <div id="ref-li_blip-2_2023" class="csl-entry" role="listitem">
 Li, Junnan, Dongxu Li, Silvio Savarese, and Steven Hoi. 2023. <em><span>BLIP</span>-2: <span>Bootstrapping</span> <span>Language</span>-<span>Image</span> <span>Pre</span>-Training with <span>Frozen</span> <span>Image</span> <span>Encoders</span> and <span>Large</span> <span>Language</span> <span>Models</span></em>. arXiv. <a href="http://arxiv.org/abs/2301.12597">http://arxiv.org/abs/2301.12597</a>.
-</div>
-<div id="ref-smith_convnets_2023" class="csl-entry" role="listitem">
-Smith, Samuel L., Andrew Brock, Leonard Berrada, and Soham De. 2023. <em><span>ConvNets</span> <span>Match</span> <span>Vision</span> <span>Transformers</span> at <span>Scale</span></em>. arXiv. <a href="http://arxiv.org/abs/2310.16764">http://arxiv.org/abs/2310.16764</a>.
 </div>
 <div id="ref-vasu_fastvit_2023" class="csl-entry" role="listitem">
 Vasu, Pavan Kumar Anasosalu, James Gabriel, Jeff Zhu, Oncel Tuzel, and Anurag Ranjan. 2023. <em><span>FastViT</span>: <span>A</span> <span>Fast</span> <span>Hybrid</span> <span>Vision</span> <span>Transformer</span> Using <span>Structural</span> <span>Reparameterization</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2303.14189">https://doi.org/10.48550/arXiv.2303.14189</a>.
