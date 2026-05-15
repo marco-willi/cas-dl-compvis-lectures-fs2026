@@ -1,0 +1,423 @@
+---
+title: "8 - Intro to Generative AI"
+params:
+   images_path: "/assets/images/genai/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+::: {.callout-tip title="Learning Objectives"  collapse="true"}
+
+After this lecture you should be able to:
+
+- Explain how generative modeling differs from classification (one-to-many vs. many-to-one mapping)
+- Understand the role of latent variables in enabling diverse outputs
+- Describe the mathematical objective of generative models: maximizing likelihood of training data
+- Compare key properties and tradeoffs of different generative modeling approaches (GANs, VAEs, diffusion models, autoregressive models)
+
+:::
+
+
+::: {.callout-tip title="TLDR Recap" collapse="true"}
+
+**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many, requiring **latent variables** $\vect{z}$ for diversity. The goal: maximize $p_{\theta}(\vect{x})$ for training data. Different approaches make tradeoffs: **GANs** (fast, high quality, no likelihood), **VAEs** (approximate likelihood, good coverage), **diffusion models** (state-of-the-art quality, slow sampling), **autoregressive** (exact likelihood, sequential generation).
+
+:::
+
+## Motivation
+
+Generative AI has a profound effect on our society and on businesses. The most prominent models generate natural language, which can be used in many applications, such as chat bots. Increasingly, the quality of image generative models and their adoption into multi-modal generative models, has increased dramatically. Nowadays, synthetic images can hardly be distinguished from real photographs (see @fig-genai-intro-receipt) and can be used in many domains. Generating impressive images from scratch, however, is by far not the only task for generative models, as we will see.
+
+::: {#fig-genai-intro-receipt}
+
+![]({{< meta params.images_path >}}intro_receipt.jpg){height=300}
+
+[Source](https://x.com/deedydas/status/1905909215308447874)
+:::
+
+Creating highly creative and diverse images has been enabled by recent advances of models trained on internet-scale datasets. Different companies, such as Midjourney have built businesses around this capabilitie to make it easy for users to generate images (see @fig-genai-intro-midjourney).
+
+::: {#fig-genai-intro-midjourney}
+
+![]({{< meta params.images_path >}}intro_midjourney_images.png){width=600}
+
+[Source](https://www.midjourney.com)
+:::
+
+With recent advances in video generative modes (e.g. OpenAIs Sora2 and others), Midjourney also released a model capable of creating short videos (see @fig-genai-intro-midjourney-video).
+
+<!-- ::: {#fig-genai-intro-midjourney-video}
+
+{{< video {{< meta params.images_path >}}intro_midjourney_videos.mp4 >}}
+
+[Source](https://www.midjourney.com)
+::: -->
+
+
+::: {#fig-genai-intro-midjourney-video}
+
+{{< video https://youtu.be/lEKeShkzKnE?si=kZLA1mWsJpVxeuhA&t=31 >}}
+
+[Source](https://www.midjourney.com)
+:::
+
+Integrating image understanding and generation into large language models requires high consistency across generations, as show impressively by OpenAI's most recent model (see @fig-genai-intro-openai).
+
+::: {#fig-genai-intro-openai layout-ncol=2}
+
+![]({{< meta params.images_path >}}intro_openai_1.webp)
+
+![]({{< meta params.images_path >}}intro_openai_2.webp)
+
+Examples from OpenAI image generation. The two images were generated in turn, following user instructions about how to change the first image. [Source](https://openai.com/index/introducing-4o-image-generation/)
+:::
+
+
+Generative models have changed what it means to view a photography: is this really how it happened? See an example from Google's Magic Editor in @fig-genai-intro-magic.
+
+::: {#fig-genai-intro-magic}
+
+{{< video https://storage.googleapis.com/gweb-mobius-cdn/photos/uploads/6e54ed750f84538fd052b31818127f1e4df5711c.compressed.mp4 width=800 >}}
+
+[Example from Google Magic Editor](https://www.google.com/intl/en/photos/editing/)
+
+:::
+
+Not all generative models create images from scratch. Image super resolution is a task where generative models up-sample images spatially and enrich detail (see @fig-genai-intro-superres).
+
+::: {#fig-genai-intro-superres}
+
+![]({{< meta params.images_path >}}intro_superres_images.png)
+
+Super-resolution example
+:::
+
+The sampe principle is used in the gaming industry. Interestingly, up-scaling images using neural networks is cheaper than computing images natively in such high resolutions (see @fig-genai-intro-nvidia-dlss).
+
+::: {#fig-genai-intro-nvidia-dlss}
+
+{{< video https://youtu.be/K8DddlREHEE?si=TvQIpHQUaLBf_M7Z&t=4 >}}
+
+NVIDIA generative AI models for gaming ([Link](https://www.nvidia.com/en-us/geforce/technologies/dlss/)).
+:::
+
+
+
+Other examples involve the computation of ray tracing, an expensive operation (see @fig-genai-intro-nvidia-rt).
+
+::: {#fig-genai-intro-nvidia-rt}
+
+{{< video https://youtu.be/bTJYvtPRRcM?si=Cc_9T87nnNeOO3pH >}}
+
+NVIDIA DLSS Ray Reconstruction for improved graphics  ([Link](https://www.nvidia.com/en-us/geforce/technologies/dlss/)).
+:::
+
+Generative AI is used in many domains nowadays. @fig-genai-intro-mri-to-ct shows an application where MRI images are converted to synthetic CT scans. CT scans expose the body to radiation and should thus avoided if possible. However, CT scans show bone structure much better than MRIs. This application helps get the best of both worlds.
+
+::: {#fig-genai-intro-mri-to-ct}
+
+![]({{< meta params.images_path >}}mri_to_ct.png)
+
+MRI to CT conversion example, from @scharer_improved_2023
+:::
+
+
+Generative models are also used to create synthetic training data for predictive models, such as for solar flare prediction (see @fig-genai-intro-solar-flares).
+
+::: {#fig-genai-intro-solar-flares}
+
+![]({{< meta params.images_path >}}solar_flares.png)
+
+Synthetic images of solar flares (from @ramunno_solar_2024).
+:::
+
+
+Commercial applications of generative AI include the virtual staging of rooms with objects (furniture). This helps realtors present their properties in a more appealing and "real" way (see @fig-genai-intro-virtual-staging).
+
+::: {#fig-genai-intro-virtual-staging layout-ncol=2}
+
+![]({{< meta params.images_path >}}virtual_staging1.jpg)
+
+![]({{< meta params.images_path >}}virtual_staging3.png)
+
+Virtual staging examples from [Link](https://www.spacely.ai/tools/ai-virtual-staging)
+:::
+
+
+
+Generative AI has come a long way. Almost nothing illustrates that better than the quality of generated images of human faces (see @fig-genai-intro-evolution).
+
+::: {#fig-genai-intro-evolution}
+
+![]({{< meta params.images_path >}}genai_evolution.png)
+
+Evolution of generative AI. From left to righ, top to bottom: @goodfellow_generative_2014, @liu_coupled_2016,@radford_unsupervised_2016, @karras_progressive_2018, @karras_style-based_2019, @karras_analyzing_2020, @ho_denoising_2020, @rombach_high-resolution_2022, @saharia_photorealistic_2022, @betker_improving_2023
+:::
+
+
+@tbl-genai-providers shows a few commercial providers of image generative models.
+
+
+::: {#tbl-genai-providers}
+
+| Provider | Product | Key Features |
+|----------|---------|--------------|
+| [OpenAI](https://platform.openai.com/docs/guides/images) | DALL·E 3 / Image API | API/ChatGPT integration, editing |
+| [Midjourney](https://www.midjourney.com) | Midjourney | High-quality, style-driven, Discord/app |
+| [Adobe](https://www.adobe.com/products/firefly.html) | Firefly | Creative Cloud integration, commercial-safe |
+| [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) | Imagen 3 | Enterprise API, safety controls |
+| [Stability AI](https://stability.ai) | Stable Diffusion SDXL | Open-source models, SDKs |
+| [AWS](https://aws.amazon.com/bedrock/titan/) | Titan Image | Managed service, editing, inpainting |
+| [Microsoft](https://azure.microsoft.com/products/ai-services/openai-service/) | Azure OpenAI | Enterprise governance, Designer |
+| [Leonardo AI](https://leonardo.ai) | Leonardo Platform | Web + API, styles, upscaling |
+| [Recraft](https://www.recraft.ai) | Recraft V3 | Raster & vector (SVG), brand styles |
+| [Canva](https://www.canva.com/ai-image-generator/) | Magic Media | Built-in design workflows |
+| [Getty Images](https://www.gettyimages.com/generativeai) | Generative AI | Stock-safe, clear licensing |
+| [Shutterstock](https://www.shutterstock.com/ai/image-generator) | AI Generator | Tied to licensing ecosystem |
+
+Major image generation providers and their offerings.
+
+:::
+
+
+## What is Generative Modelling?
+
+Let's contrast generative modelling with a classification task (see @fig-genai-intro-basics-classifier). Let's denote $f(\vect{x}) = \vect{y}$ for a classifier, and $g(\vect{y}) = \vect{x}$ for a generative model.
+
+In classification the model has as input an image $\vect{x}^{(i)}$ and models a probability distribution over all classes $\vect{\hat{y}}^{(i)}$ which ideally matches the true label $\vect{y}^{(i)}$.
+
+
+::: {#fig-genai-intro-basics-classifier}
+
+![]({{< meta params.images_path >}}basics_classifier.png)
+
+Classification.
+:::
+
+In generative modelling the process is essentially reversed: The input (can) be a label $\vect{y}$, such as a class label, and the output is an image $\vect{x}^{(i)}$, see @fig-genai-intro-basics-elephant.
+
+::: {#fig-genai-intro-basics-elephant}
+
+![]({{< meta params.images_path >}}basics_elephant.png)
+
+Generative modelling.
+:::
+
+
+::: {.callout-note title="What is the problem?" collapse="false"}
+Looking at the input and the output of @fig-genai-intro-basics-elephant. What could be a problem?
+
+<details>
+<summary>Click for result</summary>
+
+If the input (in this case) to the generative model is a label, such as elephant, how can the model generate not just that one elephant?
+
+</details>
+
+:::
+
+An important distinction between a classifier and a generative model is:
+
+- $f(\vect{x})$ is a many-to-one mapping. Many inputs (e.g. images of elephants) should be associated with the same label (e.g the elephant label).
+- $g(\vect{y})$ is a one-to-many mapping. One label (e.g. elephant) should be associated with many output (e.g. images of elephants).
+
+Since neural networks consist of deterministic operations (such as matrix multiplications and additions) we need a way to transform $g()$ to a **stochastic** function. Only then is it possibe to generate different elephants and not always the same image (see @fig-genai-intro-basics-elephant-prob).
+
+::: {#fig-genai-intro-basics-elephant-prob}
+
+![]({{< meta params.images_path >}}basics_elephants_probabilistic.png)
+
+Generative modelling with a diverse set of outputs.
+:::
+
+One way to achieve this is to condition the generative model on a stochastic input $\vect{z} \sim p(z)$ and generate samples using $g(\vect{y}, \vect{z})$. Often we use a simple Gaussian distribution: $\vect{z} \sim \cal{N}(\mathbf{0}, \mathbfit{I})$.
+
+One way to think about $\vect{z}$ is that of a **latent variable**. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector $\vect{y}$ specifies that the image should show an elephant, while $\vect{z}$ might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).
+
+
+::: {.callout-note title="Conditional vs. Unconditional Generation"}
+In general we distinguish between **conditional** and **unconditional** generation. If we condition the input on a piece of data, such as a label vector, we refer to **conditional generation** $g(\vect{c})$. If we just generate images we refer to **unconditional generation** $g()$. In the following we often use $g()$ to simplify notation.
+:::
+
+::: {.callout-note title="Latent Variables Intuition" collapse="false"}
+Consider the dataset shown in @fig-genai-basics-latent-intuition: What could be latent variables for this dataset?
+
+<details>
+<summary>Click for result</summary>
+
+Each output is defined by it's width and height. Therefore, we have two (unobserved) latent variables.
+
+</details>
+
+:::
+
+
+::: {#fig-genai-basics-latent-intuition}
+
+![]({{< meta params.images_path >}}latent_variables_intuition1.png)
+
+Intuition about latent variables in generative models. From @foster_generative_2023.
+:::
+
+@fig-genai-basics-latent-intuition2 shows a plausible latent space and the corresponding mapping / samples from that space.
+
+
+::: {#fig-genai-basics-latent-intuition2}
+
+![]({{< meta params.images_path >}}latent_variables_intuition2.png)
+
+Intuition about latent variables in generative models. From @foster_generative_2023.
+:::
+
+## Learning Generative Models
+
+The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data $\hat{\vect{x}}$ should have a high probability under the probability density function of the real data $p_{\text{data}}(\hat{\vect{x}})$. @fig-genai-intro-synthetic-quality illustrates the principle: Models should aim to synthesize data points (x axis) which are probably under the true distribution.
+
+::: {#fig-genai-intro-synthetic-quality}
+
+![]({{< meta params.images_path >}}synthetic_quality/synthetic_quality_evaluation.png)
+
+Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.
+:::
+
+
+In general there are two approaches to generative modelling:
+
+The **direct** (or implicit) approach learns a function that directly generates samples: $g(\vect{z}) = \vect{x}$.
+
+**Indirect models** learn scoring functions and generate samples by finding high-scoring values. There are different types of such models, such as density models.
+
+Density models learn a probability density function $p_{\theta}: \vect{x} \to [0, \infty)$ with the normalization constraint:
+
+$$\int_{\mathbf{x}} p_{\theta}(\mathbf{x}) d\mathbf{x} = 1$$
+
+The goal is to approximate the true probability density function $p_{\theta} \sim p_{\text{data}}$.
+
+This can be achieved by minimizing the difference between $p_{\theta}$ and $p_{\text{data}}$. However, since $p_{\text{data}}$ is unkown, we can simply maximize the likelihood of the training data under $p_{\theta}$.
+
+\begin{equation}
+\underset{\theta}{\arg\max} \frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\vect{x}^{(i)})
+\end{equation}
+
+@fig-genai-intro-density-model illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.
+
+::: {#fig-genai-intro-density-model layout-ncol=2}
+
+![]({{< meta params.images_path >}}density_model_1d/initial_distribution.png)
+
+![]({{< meta params.images_path >}}density_model_1d/improved_distribution.png)
+
+Example of learning a density model in 1D.
+:::
+
+**Examples:** Variational Autoencoders (VAEs), normalizing flows, autoregressive models
+
+
+**Note:** Once $p_{\theta}$ is modelled, a generative model needs a mechanism to sample from it. Otherwise we can only evaluate the likelihood of a data point. For example, to detect outliers.
+
+
+## Desirable Properties of Generative Models
+
+When evaluating generative models, we consider several important properties. Unfortunately, **no single approach achieves all these properties simultaneously**.
+
+### Efficient Sampling
+
+The ability to generate new samples quickly. This is crucial for practical applications.
+
+- **Why it matters:** Applications like real-time image generation, interactive tools, and large-scale dataset creation require fast sampling
+- **Which models excel:** GANs and normalizing flows typically have efficient sampling (single forward pass)
+- **Which models struggle:** Autoregressive models and some diffusion models require many sequential steps
+
+### High-Quality Sampling
+
+Generated samples should be realistic, detailed, and indistinguishable from real data.
+
+- **Why it matters:** Low-quality samples limit practical utility and can be easily detected as synthetic
+- **Which models excel:** Modern GANs, diffusion models, and large-scale autoregressive models
+- **Trade-off:** Often achieved at the cost of computational expense or training complexity
+
+### Coverage (Diversity)
+
+The model should be able to generate the full diversity present in the training data, not just a subset of common examples.
+
+- **Why it matters:** A model that only generates a few "safe" outputs is not truly learning the data distribution
+- **Common failure:** Mode collapse in GANs, where the generator produces limited variety
+- **Which models excel:** VAEs tend to have good coverage but sometimes at the cost of sample quality
+
+###  Well-Behaved Latent Space
+
+The latent space $\mathbf{Z}$ should have smooth, meaningful structure where similar $\mathbf{z}$ values produce similar outputs.
+
+- **Why it matters:** Enables interpolation, controlled generation, and semantic editing
+- **Example:** Linearly interpolating between two latent codes should produce a smooth transition between outputs
+- **Which models excel:** VAEs explicitly encourage this through their training objective
+
+### Disentangled Latent Space
+
+Different dimensions of $\mathbf{z}$ should control independent factors of variation in the output.
+
+- **Why it matters:** Enables fine-grained control over specific attributes (e.g., separate controls for pose, lighting, color)
+- **Example:** One dimension controls "smiling" in face generation, another controls "age", independently
+- **Challenge:** Difficult to achieve without explicit architectural design or training objectives
+- **Applications:** Critical for controllable generation and interpretable models
+
+### Efficient Likelihood Computation
+
+The ability to evaluate $p_{\theta}(\mathbf{x})$ for any given sample $\mathbf{x}$.
+
+- **Why it matters:**
+  - Enables direct optimization via maximum likelihood
+  - Allows outlier/anomaly detection
+  - Useful for model comparison and debugging
+- **Which models excel:** Autoregressive models, normalizing flows, VAEs (approximate)
+- **Which models lack this:** GANs, many diffusion models (cannot evaluate likelihood directly)
+
+
+
+## Comparing Generative Modeling Approaches
+
+Different generative modeling approaches make different tradeoffs. Here's a comparison of major families:
+
+| Method | Latent Variables | Density | Fast Sampling |
+|--------|-----------------|----------------|---------------|
+| **Autoregressive** | ❌ | ✅ | ❌ (sequential) |
+| **Diffusion** | ✅ | ⚠️ | ❌ (iterative) |
+| **GANs** | ✅ | ❌ | ✅ |
+| **VAEs** | ✅ | ⚠️ (approx.) | ✅ |
+
+**Key observations:**
+
+1. **No method achieves all properties:** There is no generative model that simultaneously has latent variables, exact density computation, fast sampling, perfect quality, and perfect coverage
+2. **GANs trade likelihood for quality:** Excellent sample quality and fast generation, but no likelihood evaluation and potential coverage issues
+3. **VAEs balance tradeoffs:** Good coverage and approximate likelihood, but sometimes lower sample quality
+4. **Diffusion models:** Current state-of-the-art for quality and coverage, but slow sampling
+5. **Autoregressive models:** Exact likelihood and good quality, but very slow sequential generation
+
+
+
+## Evaluating Generative Models
+
+Evaluating generative models and comparing different models with respect to sample quality and diversity is not a trivial task.
+
+One approach is to calculate the likelihood of a test-set under the generative model $p_{\theta}(\vect{x})$. However, this is not possible for models which do not model a probability distribution.
+
+A cumbersome approach is to use human studies by simply asking humans to compare samples from different models. This approach, however, is not always feasible when developing models. Other approaches
+
+Different scores have been proposed. A popular one is the Inception Score (IS), see @salimans_improved_2016. This score is calculated using a classification model and thus only feasible for datasets with known classes. In this particular case, it is often used to compare generative models on the ImageNet dataset. This dataset has 1'000 classes with roughly equal distribution. The assumption is that a good generative model yields images which a classifier predicts accurately and with high confidence. In that case the marginal (averaged) distribution is close to unifrom, as illustrated in @fig-genai-basics-evaluating.
+
+::: {#fig-genai-basics-evaluating}
+
+![]({{< meta params.images_path >}}evaluating_genai.png)
+
+Evaluating generative AI models.
+:::
+
+## References
+
+::: {#refs}
+:::

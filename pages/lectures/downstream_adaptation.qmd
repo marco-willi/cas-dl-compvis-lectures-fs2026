@@ -1,5 +1,5 @@
 ---
-title: "7 - Adapting Models"
+title: "6 - Adapting Models"
 params:
    images_path: "/assets/images/downstream_adaptation/"
 ---

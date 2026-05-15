@@ -6,12 +6,6 @@ project:
   render:
     #- "*.qmd"
     - pages/lectures/*.qmd
-    - pages/lectures_hs2025/intro.qmd
-    - pages/lectures_hs2025/cnns.qmd
-    - pages/lectures_hs2025/classification.qmd
-    - pages/lectures_hs2025/practical.qmd
-    - pages/lectures_hs2025/representation_learning.qmd
-    - pages/lectures_hs2025/vision_transformers.qmd
     - pages/background/*.qmd
     - pages/misc/*.qmd
     - pages/misc/augmentation_invariance.qmd
@@ -77,20 +71,8 @@ website:
           - pages/lectures/representation_learning.qmd
           - pages/lectures/downstream_adaptation.qmd
           - pages/lectures/vision_transformers.qmd
-          # - pages/lectures/recent_advances.qmd
-          # - pages/lectures/intro_genai.qmd
-          # - pages/lectures/generative_models.qmd
-      # - section: Lectures - Legacy
-      #   contents:
-      #     - pages/lectures_hs2025/intro.qmd
-      #     - pages/lectures_hs2025/cnns.qmd
-      #     - pages/lectures_hs2025/classification.qmd
-      #     - pages/lectures_hs2025/practical.qmd
-      #     - pages/lectures_hs2025/representation_learning.qmd
-      #     - pages/lectures_hs2025/vision_transformers.qmd
-      # - pages/lectures/recent_advances.qmd
-      # - pages/lectures/intro_genai.qmd
-      # - pages/lectures/generative_models.qmd
+          - pages/lectures/intro_genai.qmd
+          - pages/lectures/generative_models.qmd
       # ------ SLIDES ---------------------------- #
       - section: Slides
         contents:
