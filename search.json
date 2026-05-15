@@ -1090,20 +1090,28 @@
     "href": "pages/misc/student_projects.html",
     "title": "Project Ideas",
     "section": "",
-    "text": "You can choose your own topic!\nAlternatively, feel free to pick one of the following topics.\n\n\nGoal: Develop a model to classify satellite images. You should consider RGB images and images with 13 spectral bands (see wiki) in modeling. There are 10 classes and 27,000 images.\nApproach: Investigate various model architectures and decide what works best. Compare pre-trained models with those you train from scratch. Use appropriate data augmentation techniques. Since the dataset is relatively small, you should be careful of overfitting and robustly compare different models. Use RGB-only models for simplicity.\nFocus: Compare different pre-trained models (foundation models) and a model trained from scratch.\nDataset: The two datasets can be found here: https://github.com/phelber/eurosat. There is a dataset in RGB format and a dataset with 13 spectral bands.\n\n\n\n\n\n\nFigure 1: Source: Link\n\n\n\nDifficulty/Effort: Medium\n\n\n\nGoal: Develop a model to classify images of food. Pick 10 food classes (≈10k imgs)\nApproach: Use pre-trained (foundation) models.\nFocus: Compare different models, including CLIP zero-shot learning, and a DINO variant. Investigate how DINO improves with more labels.\nDataset: The dataset can be found here: https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/, see Bossard et al. (2014). It is 5 GB.\n\n\n\n\n\n\nFigure 2: Source: Link\n\n\n\nDifficulty/Effort: Medium\n\n\n\nGoal: Predict apparent age from images of faces.\nApproach: Train a CNN as a 101-class classifier (ages 0 to 100) and convert class probabilities to a numeric prediction via the softmax expected value (see paper, Rothe et al. (2015)). Compare against direct regression (single output).\nFocus: Compare at least two variants: a CNN defined and trained from scratch and a pre-trained model with fine-tuning / as feature-extractor. Analyse the errors.\nDataset: The dataset can be found here Link. Use a small dataset with cropped faces, e.g. Link.\n\n\n\n\n\n\nFigure 3: Source: Link\n\n\n\nDifficulty/Effort: Medium - High",
+    "text": "The following project ideas provide potential starting points for projects. Feel free to propose your own topic.",
     "crumbs": [
-      "Resources",
       "Project Ideas"
     ]
   },
   {
-    "objectID": "pages/misc/student_projects.html#topic-list",
-    "href": "pages/misc/student_projects.html#topic-list",
+    "objectID": "pages/misc/student_projects.html#available-datasets",
+    "href": "pages/misc/student_projects.html#available-datasets",
     "title": "Project Ideas",
-    "section": "",
-    "text": "You can choose your own topic!\nAlternatively, feel free to pick one of the following topics.\n\n\nGoal: Develop a model to classify satellite images. You should consider RGB images and images with 13 spectral bands (see wiki) in modeling. There are 10 classes and 27,000 images.\nApproach: Investigate various model architectures and decide what works best. Compare pre-trained models with those you train from scratch. Use appropriate data augmentation techniques. Since the dataset is relatively small, you should be careful of overfitting and robustly compare different models. Use RGB-only models for simplicity.\nFocus: Compare different pre-trained models (foundation models) and a model trained from scratch.\nDataset: The two datasets can be found here: https://github.com/phelber/eurosat. There is a dataset in RGB format and a dataset with 13 spectral bands.\n\n\n\n\n\n\nFigure 1: Source: Link\n\n\n\nDifficulty/Effort: Medium\n\n\n\nGoal: Develop a model to classify images of food. Pick 10 food classes (≈10k imgs)\nApproach: Use pre-trained (foundation) models.\nFocus: Compare different models, including CLIP zero-shot learning, and a DINO variant. Investigate how DINO improves with more labels.\nDataset: The dataset can be found here: https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/, see Bossard et al. (2014). It is 5 GB.\n\n\n\n\n\n\nFigure 2: Source: Link\n\n\n\nDifficulty/Effort: Medium\n\n\n\nGoal: Predict apparent age from images of faces.\nApproach: Train a CNN as a 101-class classifier (ages 0 to 100) and convert class probabilities to a numeric prediction via the softmax expected value (see paper, Rothe et al. (2015)). Compare against direct regression (single output).\nFocus: Compare at least two variants: a CNN defined and trained from scratch and a pre-trained model with fine-tuning / as feature-extractor. Analyse the errors.\nDataset: The dataset can be found here Link. Use a small dataset with cropped faces, e.g. Link.\n\n\n\n\n\n\nFigure 3: Source: Link\n\n\n\nDifficulty/Effort: Medium - High",
+    "section": "1 Available Datasets",
+    "text": "1 Available Datasets\nThe following datasets are well-suited for project work. Size and task type vary considerably — choose a dataset that matches your available compute and the scope of your project.\n\n\n\n\n\n\n\n\n\nDataset\nTask Type\nSize\nNotes\n\n\n\n\nEuroSAT RGB\nClassification\n~27k images, 10 classes\n64×64 px, domain shift from ImageNet\n\n\nMicrosoft Cats vs Dogs\nBinary Classification\n~25k images\nLarge, clean, balanced\n\n\nConcrete Cracks\nBinary Classification\n~40k images\nIndustrial defect detection\n\n\nFood-101 (subset)\nClassification\n~10k (10 classes)\nNoisy labels, large full dataset\n\n\nCCT20\nClassification\n1,600 images, 8 classes\nSmall course subset; larger full dataset available\n\n\nSnapshot Serengeti\nClassification\n~2.6M images, 48 classes\nLarge-scale; use a curated subset\n\n\nAmazon Berkeley Objects (ABO)\nImage Retrieval\n~25k images, 6 categories\nMulti-view per item\n\n\nDeepFashion (In-Shop)\nImage Retrieval\n~3,300 images, 5 classes\nItem-level train/test splits\n\n\nAMI-Br\nBinary Classification\nSmall (histopathology patches)\nDomain shift; suited for LoRA/PEFT\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nSnapshot Serengeti is large, work with a curated subset and account for class imbalance in your evaluation (F1, weighted metrics, confusion matrices). AMI-Br is intentionally small and best suited for parameter-efficient fine-tuning experiments. MNIST is available but too simple to constitute a meaningful project. Additional camera trap datasets can be found at LILA BC.",
     "crumbs": [
-      "Resources",
+      "Project Ideas"
+    ]
+  },
+  {
+    "objectID": "pages/misc/student_projects.html#classification-projects",
+    "href": "pages/misc/student_projects.html#classification-projects",
+    "title": "Project Ideas",
+    "section": "2 Classification Projects",
+    "text": "2 Classification Projects\n\n2.1 Image Classification: EuroSAT Land Use and Land Cover Classification\nGoal: Develop a model to classify satellite images. You should consider RGB images and images with 13 spectral bands (see wiki) in modeling. There are 10 classes and 27,000 images.\nApproach: Investigate various model architectures and decide what works best. Compare pre-trained models with those you train from scratch. Use appropriate data augmentation techniques. Since the dataset is relatively small, you should be careful of overfitting and robustly compare different models. Use RGB-only models for simplicity.\nFocus: Compare different pre-trained models (foundation models) and a model trained from scratch.\nDataset: The two datasets can be found here: https://github.com/phelber/eurosat. There is a dataset in RGB format and a dataset with 13 spectral bands.\n\n\n\n\n\n\nFigure 1: Source: Link\n\n\n\nDifficulty/Effort: Medium\n\n\n2.2 Image Classification: Food Images\nGoal: Develop a model to classify images of food. Pick 10 food classes (≈10k imgs)\nApproach: Use pre-trained (foundation) models.\nFocus: Compare different models, including CLIP zero-shot learning, and a DINO variant. Investigate how DINO improves with more labels.\nDataset: The dataset can be found here: https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/, see Bossard et al. (2014). It is 5 GB.\n\n\n\n\n\n\nFigure 2: Source: Link\n\n\n\nDifficulty/Effort: Medium\n\n\n2.3 Age Estimation from Faces\nGoal: Predict apparent age from images of faces.\nApproach: Train a CNN as a 101-class classifier (ages 0 to 100) and convert class probabilities to a numeric prediction via the softmax expected value (see paper, Rothe et al. (2015)). Compare against direct regression (single output).\nFocus: Compare at least two variants: a CNN defined and trained from scratch and a pre-trained model with fine-tuning / as feature-extractor. Analyse the errors.\nDataset: The dataset can be found here Link. Use a small dataset with cropped faces, e.g. Link.\n\n\n\n\n\n\nFigure 3: Source: Link\n\n\n\nDifficulty/Effort: Medium - High\n\n\n2.4 Wildlife Camera Trap Classification\nGoal: Build a classifier for camera-trap images of wildlife. Choose either CCT20 (8 classes, 1,600 images in the course subset) or Snapshot Serengeti (48 species, ~2.6M images — use a curated subset).\nApproach: Start with a pretrained backbone as a feature extractor. Address class imbalance using weighted loss or oversampling strategies. Compare at least two pretrained model families and evaluate the effect of fine-tuning vs. feature extraction.\nFocus: Effect of class imbalance on standard metrics — accuracy can be misleading when one class dominates. Report F1 per class and analyse the confusion matrix: which species are most often confused, and why?\nDataset: CCT20 course subset (8 classes, 1,600 images); the full Caltech Camera Traps dataset is available at LILA BC. Snapshot Serengeti (48 classes, ~2.6M images) is available at LILA BC — the full dataset is large; selecting a balanced subset of 10–15 species is recommended. Additional camera trap datasets can be found at LILA BC.\n\n\n\n\n\n\nFigure 4: Bobcat from the Caltech Camera Traps dataset. Source: LILA BC\n\n\n\nDifficulty/Effort: Medium\n\n\n2.5 Industrial Surface Defect Detection\nGoal: Train a binary classifier to distinguish intact from cracked concrete surfaces, and reason carefully about the precision–recall trade-off in a safety-critical setting.\nApproach: Use the Concrete Cracks dataset (~40k images). Fine-tune a pretrained model and evaluate performance across different decision thresholds. In safety-critical applications, false negatives (missed cracks) carry higher cost than false positives — make this trade-off explicit in your analysis.\nFocus: Threshold selection and the precision–recall curve. Qualitative failure analysis: what does the model get wrong, and does it fail systematically?\nDataset: Concrete Cracks dataset (Mendeley Data, CC BY 4.0), see Özgenel (2019).\n\n\n\n\n\n\nFigure 5: Source: Mendeley / Özgenel et al.\n\n\n\nDifficulty/Effort: Medium\n\n\n2.6 Product Image Retrieval\nGoal: Build an image retrieval system that, given a query product image, returns the top-k most visually similar items from a gallery using learned embeddings.\nApproach: Extract embeddings from a pretrained CNN or ViT backbone. Build a nearest-neighbour index with cosine similarity. Evaluate with precision@k and recall@k. Compare at least two backbone architectures to assess how embedding quality affects retrieval.\nFocus: How does the choice of backbone — and whether it is fine-tuned or used frozen — affect retrieval quality? Qualitative inspection of failure cases is particularly informative here.\nDataset: Amazon Berkeley Objects (ABO) Furniture (~25k images, 6 categories) or DeepFashion In-Shop Retrieval (~3,300 images, 5 classes). The multi-view structure of ABO makes retrieval evaluation especially natural; DeepFashion provides item-level train/test splits.\n\n\n\n\n\n\nFigure 6: Source: Amazon Berkeley Objects\n\n\n\nDifficulty/Effort: Medium\n\n\n2.7 Histopathology Fine-Tuning with LoRA\nGoal: Apply parameter-efficient fine-tuning to adapt a pretrained Vision Transformer to a medical imaging task — specifically, classifying normal vs. atypical mitotic figures in histopathology patches.\nApproach: Use a HuggingFace ViT backbone and apply LoRA adapters (rank 4–16). Compare three settings: frozen backbone (feature extractor), LoRA fine-tuning, and full fine-tuning. Discuss the domain shift from natural images (ImageNet pretraining) to H&E-stained histopathology patches.\nFocus: Parameter count vs. performance trade-off; convergence speed across settings; domain shift as a factor in choosing fine-tuning strategy. Because the dataset is small, report results across multiple random seeds.\nDataset: AMI-Br (128×128 histopathology patches, binary labels). The dataset is intentionally small — robustness to seed variation is part of the analysis.\n\n\n\n\n\n\nFigure 7: Source: AMI-Br / TUPAC16 + MIDOG21\n\n\n\nDifficulty/Effort: High",
+    "crumbs": [
       "Project Ideas"
     ]
   },
@@ -1256,78 +1264,78 @@
   {
     "objectID": "pages/background/machine_learning.html",
     "href": "pages/background/machine_learning.html",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "",
     "text": "TipLearning Objectives\n\n\n\n\n\nAfter reviewing this material you should be able to:\n\nDescribe the data-driven approach to machine learning and its core workflow (collect, train, evaluate).\nDefine what a model is mathematically and distinguish between parameters and hyperparameters.\nExplain the role of optimization in fitting models and identify common cost/loss functions.\nJustify why train/validation/test splits are necessary for unbiased model evaluation.\nInterpret the machine learning pipeline from data acquisition through deployment.\nApply model selection principles to choose between competing models.",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
     "objectID": "pages/background/machine_learning.html#the-data-driven-approach",
     "href": "pages/background/machine_learning.html#the-data-driven-approach",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "1 The Data-Driven Approach",
     "text": "1 The Data-Driven Approach\nWe follow a data-driven approach in machine learning to solve various tasks. Typically, the process involves:\n\nCollecting a dataset of observations (e.g. images) and their labels.\nUsing a machine learning algorithm to train a model that learns to associate observations with labels.\nEvaluating/applying the model on new data.\n\n\ndef train(observations, labels):\n    \"\"\"Train a Model\"\"\"\n    # Fit Model here\n    return model\n\n\ndef predict(test_observations, model):\n    \"\"\"Predict\"\"\"\n    predictions = model(test_observations)\n    return predictions\n\nNow let’s see this data-driven approach applied to a concrete computer vision task: image super-resolution. This example demonstrates how the same train() and predict() framework works for complex image processing problems.\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1: Image super-resolution demonstration: Converting a low-resolution (100×100 pixels) image to high-resolution (400×400 pixels). The middle panel shows why naive upscaling fails—it remains pixelated. Machine learning models learn to add realistic high-frequency details.\n\n\n\n🤔 Think About It\nHow would you train a model for image super-resolution? The task is to upscale low-resolution images to high-resolution with the best possible quality.\n\n\nKey considerations\n\n\nTraining data: Pairs of low-res and high-res images (can be created by downsampling high-res images)\nLoss function: Measure difference between predicted high-res and actual high-res\nArchitecture: CNN that learns to add high-frequency details\nEvaluation: Visual quality metrics (PSNR, SSIM) and perceptual similarity",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
     "objectID": "pages/background/machine_learning.html#machine-learning-process",
     "href": "pages/background/machine_learning.html#machine-learning-process",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "2 Machine Learning Process",
     "text": "2 Machine Learning Process\nWhen modeling data, one often follows certain process steps: acquiring data, preparing it, training multiple models, selecting the most suitable model, estimating its future performance, and finally deploying it in production. Figure 2 illustrates this process graphically.\n\n\n\n\n\n\nFigure 2: Machine Learning Pipeline (Source: Raschka and Mirjalili (2020))\n\n\n\nAt the core of a machine learning application is typically a mathematical model, which is fitted to a dataset so that it can then be used for prediction (in supervised learning). We often refer to ‘models’, meaning the mathematical description of the dataset.",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
     "objectID": "pages/background/machine_learning.html#models",
     "href": "pages/background/machine_learning.html#models",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "3 Models",
     "text": "3 Models\nA model is typically described as a function of a data point, generating an output \\(\\hat{y}\\):\n\\[\\begin{align*}\nf(\\mathbf{x}^{(i)}) = \\hat{y}^{(i)}\n\\end{align*}\\]\nMost models have parameters or coefficients that describe the model. The entirety of all parameters is denoted by \\(\\theta\\).\n\\[\\begin{align*}\nf_{\\theta}(\\mathbf{x}^{(i)}) \\text{ or } f(\\theta, \\mathbf{x}^{(i)})\n\\end{align*}\\]\nFor simplicity, we often omit \\(\\theta\\): \\(f(\\mathbf{x}^{(i)})\\)\n\n\n\n\n\n\nNoteLinear Regression Example\n\n\n\n\n\nTo make this concrete, consider linear regression, one of the simplest models. It learns a straight line through data:\n\\[f_\\theta(x) = \\theta_0 + \\theta_1 x\\]\nWhere the parameters are:\n\n\\(\\theta_0\\) (intercept): Where the line crosses the y-axis\n\\(\\theta_1\\) (slope): How steep the line is\n\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom sklearn.linear_model import LinearRegression\nfrom typing import Callable\n\n\ndef create_linear_model_string(lr, feature_names=None):\n    \"\"\"Create string representation of linear model\"\"\"\n    intercept = lr.intercept_.flatten()\n    coefficients = lr.coef_.flatten()\n    params = np.concatenate([intercept, coefficients])\n\n    if not feature_names:\n        feature_names = [f\"x_{i + 1}^{{(i)}}\" for i in range(0, len(coefficients))]\n    param_strings = [\n        f\"{value:.4f} * {name}\"\n        for name, value in zip([\"1\"] + list(feature_names), params)\n    ]\n    formula = \" + \".join(param_strings)\n    return f\"$y^{{(i)}} = {formula} + \\\\epsilon^{{(i)}}$\"\n\n\ndef calculate_grid_1d(X: np.ndarray, model, step_size: float = 0.02):\n    \"\"\"Calculates Model Predictions on a Grid over the Space of X\"\"\"\n    assert X.ndim == 1\n    x_grid = np.arange(X.min(), X.max(), step_size)\n    p = model.predict(x_grid.reshape(-1, 1))\n    return x_grid, p.ravel()\n\n\ndef add_noise(x: np.ndarray, scale: float = 0.5, seed: int = 123):\n    \"\"\"Add random noise to inputs\"\"\"\n    rng = np.random.default_rng(seed)\n    return x + rng.normal(loc=0.0, scale=scale, size=x.shape)\n\n\ndef create_dataset(\n    fun: Callable = lambda x: x,\n    n_samples: int = 20,\n    x_min: int = 0,\n    x_max: int = 10,\n    noise_scale: float = 0.3,\n    seed: int = 0,\n):\n    \"\"\"Sample Data from True Function.\"\"\"\n    x = np.linspace(0, x_max, n_samples).reshape(-1, 1)\n    y = fun(x)\n    # prevent negative values\n    y_noise = np.clip(add_noise(y, scale=noise_scale, seed=seed), 0, np.inf)\n    return x, y, y_noise\n\n\n# Create synthetic dataset (from lecture 2)\nX, y, y_noise = create_dataset(n_samples=40, noise_scale=1.0)\n\n# Fit linear regression model\nlr = LinearRegression()\nlr = lr.fit(X, y_noise)\ny_pred = lr.predict(X)\nx_grid, y_grid = calculate_grid_1d(X.ravel(), lr)\n\n# Create visualization\nfig, ax = plt.subplots(figsize=(8, 5))\nform = create_linear_model_string(lr)\ntitle = \"Linear Model 1-D\\n\" + form\n_ = sns.scatterplot(x=X.ravel(), y=y_noise.ravel(), ax=ax).set(\n    title=title, xlabel=\"x\", ylabel=\"y\"\n)\n_ = sns.lineplot(x=x_grid, y=y_grid, color=\"red\")\n_ = ax.vlines(\n    X.ravel(), y_pred, y_noise, color=\"black\", linestyles=\"dashed\", linewidths=0.5\n)\nplt.show()\n\nprint(f\"θ₀ (intercept): {lr.intercept_[0]:.3f}\")\nprint(f\"θ₁ (slope): {lr.coef_[0][0]:.3f}\")\n\n\n\n\n\nLinear regression fitted to synthetic 1D dataset. The red line shows the learned model, and dashed lines show residuals (errors) for each data point.\n\n\n\n\nθ₀ (intercept): -0.215\nθ₁ (slope): 1.031\n\n\nKey insight: The model \\(f_\\theta(x)\\) transforms any input \\(x\\) into a prediction \\(\\hat{y}\\) using the learned parameters \\(\\theta_0, \\theta_1\\).",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
     "objectID": "pages/background/machine_learning.html#optimization",
     "href": "pages/background/machine_learning.html#optimization",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "4 Optimization",
     "text": "4 Optimization\nThe coefficients are fitted to a training dataset through an optimization procedure.\nThe optimization procedure can often be influenced by additional factors, called hyperparameters (\\(\\alpha, \\lambda, \\dots\\)). These cannot be directly optimized.\nThe function/quantity to be optimized is usually called the cost function, i.e., cost function (other terms include objective function, loss function, etc.). We use \\(J(\\cdot)\\) to denote the cost function. Often, the cost function is also referred to as the loss function \\(L(\\cdot)\\). We use \\(l(\\cdot)\\) for the per-sample loss, i.e., the computation of the cost function on a single sample.\nOur goal is to find a model (and its parameters) that minimizes the cost function:\n\\[\\begin{equation*}\n\\mathsf{argmin}_{\\theta, \\lambda} J\\Big(f_{\\theta, \\lambda}(\\mathbf{X}), \\mathbf{y}\\Big)\n\\end{equation*}\\]\n\n\n\n\n\n\nNoteLinear Regression Loss Function\n\n\n\n\n\nFor linear regression, we measure prediction errors using Mean Squared Error (MSE) or the Least Squares approach:\n\\[J(\\theta) = \\frac{1}{n}\\sum_{i=1}^n (y^{(i)} - f_\\theta(x^{(i)}))^2\\]\nOften a factor \\(\\frac{1}{2n}\\) is used to make the derivative computation more elegant:\n\\[J(\\theta) = \\frac{1}{2n}\\sum_{i=1}^n (y^{(i)} - f_\\theta(x^{(i)}))^2\\]\nIntuition:\n\n\\((y^{(i)} - f_\\theta(x^{(i)}))\\) is the residual (error) for data point \\(i\\)\nSquaring penalizes large errors more than small ones\nWe average over all \\(n\\) training points\n\nOptimization goal: Find parameters \\(\\theta^* = [\\theta_0^*, \\theta_1^*]\\) that minimize MSE:\n\\[\\theta^* = \\mathsf{argmin}_{\\theta} J(\\theta)\\]\n\n\nCode\nfrom scipy.stats import norm\n\n\ndef calculate_x_y_coordinates_of_normal(x, y, std):\n    \"\"\"Calculate the x and y coordinates of a vertically drawn normal distr\n    at location x and y\n    \"\"\"\n    width_of_distr = 2.0\n    rv_norm = norm(loc=0, scale=std)\n    y_values_norm = np.arange(0 + 2 * std, 0 - 2 * std, -0.1)\n    x_values_norm = rv_norm.pdf(y_values_norm)\n    x_values_norm = (\n        np.abs(x_values_norm * width_of_distr)\n        - np.min(np.abs(x_values_norm) * width_of_distr)\n        + x\n    )\n    y_values_norm += y\n    return x_values_norm, y_values_norm\n\n\n# Use the same dataset from Models section\nstd = np.std(y_noise - y_pred)\n\nfig, ax = plt.subplots(figsize=(8, 5))\nform = \"$p(y|x) = \\\\mathcal{N}(wx, \\\\sigma^2) = \\\\mathcal{N}(\\\\hat{y}, \\\\sigma^2)$\"\ntitle = \"Lineare Regression 1-D\\n\" + form\n_ = sns.scatterplot(x=X.ravel(), y=y_noise.ravel(), ax=ax).set(\n    title=title, xlabel=\"x\", ylabel=\"y\"\n)\n_ = sns.lineplot(x=x_grid, y=y_grid, color=\"red\")\n\nfor x_loc in np.arange(1, 9, 2.0):\n    y_loc = lr.predict(np.array([x_loc]).reshape(-1, 1))\n    x_values_norm, y_values_norm = calculate_x_y_coordinates_of_normal(\n        x=x_loc, y=y_loc.ravel(), std=std\n    )\n    _ = ax.plot(x_values_norm, y_values_norm, color=\"green\", linewidth=1.5)\n    _ = ax.vlines(\n        x=x_loc,\n        ymin=np.min(y_values_norm),\n        ymax=np.max(y_values_norm),\n        colors=\"green\",\n        ls=\"--\",\n        lw=1.5,\n    )\nplt.show()\n\n# Compute and display the MSE\nfrom sklearn.metrics import mean_squared_error\n\nmse = mean_squared_error(y_noise, y_pred)\nprint(f\"Training MSE: {mse:.3f}\")\nprint(f\"Standard deviation of residuals: {std:.3f}\")\nprint(f\"The optimization found: θ₀*={lr.intercept_[0]:.3f}, θ₁*={lr.coef_[0][0]:.3f}\")\n\n\n\n\n\nProbabilistic view of linear regression. The red line shows the expected value E[y|x], and green curves show the modeled normal distributions p(y|x) at different x locations.\n\n\n\n\nTraining MSE: 0.611\nStandard deviation of residuals: 0.782\nThe optimization found: θ₀*=-0.215, θ₁*=1.031\n\n\nGeometric interpretation: Among all possible lines, we found the one with the smallest average squared distance to the data points.\n\n\n\nUsually, preprocessing of variables precedes the learning of the coefficients. Forms of preprocessing include standardizing, normalizing, feature encoding, dimensionality reduction, and more. This preprocessing also affects the optimization procedure and can be considered hyperparameters.",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
     "objectID": "pages/background/machine_learning.html#model-selection",
     "href": "pages/background/machine_learning.html#model-selection",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "5 Model Selection",
     "text": "5 Model Selection\nModel selection is one of the most important and complex components of the machine learning process. This step involves comparing multiple models and selecting the “best” model for the task to be modeled. Which model is the “best” must be defined based on a metric that measures the model’s performance.\nEvaluation Metrics are crucial for quantifying model performance and vary depending on the problem type. For regression tasks, common metrics include:\n\nMean Squared Error (MSE): \\(\\text{MSE} = \\frac{1}{n}\\sum_{i=1}^n (y_i - \\hat{y}_i)^2\\), which penalizes large errors heavily\nMean Absolute Error (MAE): \\(\\text{MAE} = \\frac{1}{n}\\sum_{i=1}^n |y_i - \\hat{y}_i|\\), which treats all errors equally\n\nFor classification tasks, key metrics include:\n\nAccuracy: How often is the model correct (fraction of correct predictions).\nPrecision: If it predicts a specific class, how often is it correct (true positives / predicted positives).\nRecall: How many of the target class does the model identify correctly (true positives / actual positives).\nF1-Score: Precision can be traded against Recall, to balance both we can report F1 (harmonic mean of precision and recall).\n\nThe choice of metric depends on the specific application—for example, in medical diagnosis, recall might be more important than precision to avoid missing positive cases. Different ML-frameworks will implement these and many other evaluation metrics.\nIf we calculate the value of the metric on the training dataset, our model is usually too optimistic about its general performance. This is because the data points in the training dataset were directly used to optimize the cost function, and the model coefficients are thus optimally adjusted to them. New data points, for which predictions are to be made, could not have been used for optimization. Therefore, a dataset is usually divided into a training set and a test set. The model is trained with the training set and its performance is measured on the test set. When comparing many models, it is advisable to compare them on a separate validation set (see Figure 3) and evaluate only the best model on the test set. This makes the estimate on the test set more accurate.\n\n\n\n\n\n\nFigure 3: Train-Test Split to select and evaluate models.",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
     "objectID": "pages/background/machine_learning.html#references",
     "href": "pages/background/machine_learning.html#references",
-    "title": "1 - Machine Learning Basics",
+    "title": "1 - Machine Learning",
     "section": "6 References",
     "text": "6 References\n\n\nRaschka, Sebastian, and Vahid Mirjalili. 2020. Python Machine Learning: Machine Learning and Deep Learning with Python, Scikit-Learn, and TensorFlow. Second edition, fourth release,[fully revised and updated]. Expert Insight. Packt Publishing.",
     "crumbs": [
       "Background & Preparation",
-      "1 - Machine Learning Basics"
+      "1 - Machine Learning"
     ]
   },
   {
@@ -2028,221 +2036,221 @@
   {
     "objectID": "pages/background/frameworks.html",
     "href": "pages/background/frameworks.html",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "",
     "text": "TipLearning Objectives\n\n\n\n\n\nAfter this lecture you should be able to:\n\nExplain the role of computational graphs and automatic differentiation in deep learning frameworks.\nConstruct and inspect tensors, modules, and optimization loops in PyTorch.\nDistinguish autograd vs manual gradient computation and identify common pitfalls (forgetting zero_grad, device mismatches).\nDescribe core hardware considerations (GPU parallelism, data loading bottlenecks, CUDA/cuDNN impact).\nLoad and adapt pre-trained models responsibly for downstream tasks.",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#computational-graph-autograd",
     "href": "pages/background/frameworks.html#computational-graph-autograd",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "1.1 Computational Graph & Autograd",
     "text": "1.1 Computational Graph & Autograd\nAt the core of neural networks is the Computational Graph. It automatically embeds dependent operations in a directed acyclic graph (DAG). Gradients are tracked as needed, allowing variables to be efficiently updated/trained.\nFigure 2 displays a graph, representing Equation 1. An example with numpy is shown in Listing 1, using random data to evaluate the function including the derivatives.\n\\[\n    f(\\mathbf{A}, \\mathbf{B}, \\mathbf{C}) =  \\sum_{ij} \\big((\\mathbf{A} \\odot \\mathbf{B}) + \\mathbf{C}\\big)_{ij}\n\\tag{1}\\]\n\n\n\n\n\n\nFigure 2: Computational Graph.\n\n\n\n\n\n\n\nListing 1: Manual differentiation with numpy\n\n\nimport numpy as np\n\nnp.random.seed(123)\n\nH, W = 2, 3\n\na = np.random.random(size=(H, W))\nb = np.random.random(size=(H, W))\nc = np.random.random(size=(H, W))\n\nd = a * b\ne = d + c\nf = e.sum()\n\ndf_de = 1.0               # d f / d e\nde_dd = 1.0               # d e / d d   (since e = d + c)\nde_dc = np.ones_like(c)   # d e / d c   (derivative of addition w.r.t. c)\ndd_da = b                 # d (a*b) / d a\ndd_db = a                 # d (a*b) / d b\n\ndf_da = df_de * de_dd * dd_da          # chain rule\ndf_db = df_de * de_dd * dd_db\ndf_dc = df_de * de_dc                  # equals ones\n\nprint(\"df/da=\\n\", df_da)\nprint(\"df/db=\\n\", df_db)\nprint(\"df/dc=\\n\", df_dc)\n\n\n\n\ndf/da=\n [[0.9807642  0.68482974 0.4809319 ]\n [0.39211752 0.34317802 0.72904971]]\ndf/db=\n [[0.69646919 0.28613933 0.22685145]\n [0.55131477 0.71946897 0.42310646]]\ndf/dc=\n [[1. 1. 1.]\n [1. 1. 1.]]\n\n\nListing 2 shows the same example in PyTorch. Using x.backward(), gradients with respect to x are computed for variables connected to x.\n\n\n\n\nListing 2: Automatic differentiation with pytorch\n\n\nimport torch\n\nnp.random.seed(123)\n\nH, W = 2, 3\n\na = torch.tensor(a, requires_grad=True)\nb = torch.tensor(b, requires_grad=True)\nc = torch.tensor(c, requires_grad=True)\n\nd = a * b\ne = d + c\nf = e.sum()\n\nf.backward()\nprint(a.grad)\n\n\n\n\ntensor([[0.9808, 0.6848, 0.4809],\n        [0.3921, 0.3432, 0.7290]], dtype=torch.float64)\n\n\nFigure 3 shows the nodes of the computational graph.\n\nfrom torchviz import make_dot\nmake_dot(f, params={'a': a, 'b': b, 'c': c, 'f':f , 'd': d, 'e':e })\n\n\n\n\n\n\n\nFigure 3: computational graph\n\n\n\n\n\nTo perform the computation on a GPU, a simple instruction (see Listing 3).\n\n\n\n\nListing 3: Move computations to GPU\n\n\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\nprint(f\"Using {device} device\")\n\na = a.to(device=device)\nb = b.to(device=device)\nc = c.to(device=device)\n\n\n\n\nUsing cpu device",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#fundamental-concepts",
     "href": "pages/background/frameworks.html#fundamental-concepts",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.1 Fundamental Concepts",
     "text": "2.1 Fundamental Concepts\nPyTorch is built around three core concepts:\n\nTensor: N-dimensional array, similar to numpy.array but with GPU acceleration\nAutograd: Automatic differentiation to create computational graphs and compute gradients\nModule: Base class (nn.Module) to define components of neural networks with learnable parameters",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#tensors",
     "href": "pages/background/frameworks.html#tensors",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.2 Tensors",
-    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.8590, 0.3048],\n        [0.2920, 0.9848]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.4965, 0.3556, 0.4044],\n        [0.5647, 0.7194, 0.2283]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
+    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.0744, 0.6382],\n        [0.0218, 0.1690]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.4473, 0.4491, 0.1963],\n        [0.7583, 0.2497, 0.3255]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#autograd",
     "href": "pages/background/frameworks.html#autograd",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.3 Autograd",
-    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.0082, 0.0281, 0.2070],\n        [0.0082, 0.0281, 0.2070],\n        [0.0082, 0.0281, 0.2070],\n        [0.0082, 0.0281, 0.2070],\n        [0.0082, 0.0281, 0.2070]])\ntensor([0.0082, 0.0281, 0.2070])",
+    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.0947, 0.0721, 0.1279],\n        [0.0947, 0.0721, 0.1279],\n        [0.0947, 0.0721, 0.1279],\n        [0.0947, 0.0721, 0.1279],\n        [0.0947, 0.0721, 0.1279]])\ntensor([0.0947, 0.0721, 0.1279])",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#torch.nn",
     "href": "pages/background/frameworks.html#torch.nn",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.4 torch.nn",
-    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([9])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
+    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([6])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#torch.optim",
     "href": "pages/background/frameworks.html#torch.optim",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.5 torch.optim",
     "text": "2.5 torch.optim\nTo optimize the parameters of a model, you need an optimization algorithm. torch.optim implements various algorithms, such as Stochastic Gradient Descent or the often used Adam Optimizer.\n\n\n\n\n\n\n\nTipCommon Optimizers\n\n\n\n\nSGD: Basic stochastic gradient descent (with optional momentum)\nAdam: Adaptive learning rates, good default choice\nAdamW: Adam with weight decay, often better for transformers (see Loshchilov and Hutter (2019))\nRMSprop: Adaptive learning rates, good for RNNs\nLearning rate schedulers: Adjust learning rate during training (e.g., torch.optim.lr_scheduler)\n\nRule of thumb: Start with Adam, then try SGD with momentum if you need better generalization.\n\n\n\nfrom torch import optim\noptimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)\n\nYou can then use the optimizer to adjust the parameters by minimizing a loss function. See Listing 7 for an example.\n\n\n\n\nListing 7: Dummy iterations to minimize a loss function using an optimizer.\n\n\nloss_fn = torch.nn.CrossEntropyLoss()\nfor i in range(0, 3):\n    input, target = torch.rand(1, 28, 28), torch.randint(low=0, high=10, size=(1, ))\n    optimizer.zero_grad()\n    output = model(input)\n    loss = loss_fn(output, target)\n    loss.backward()\n    optimizer.step()\n\n\n\n\n\n\n\n\n\n\nTipCommon Pitfalls & Solutions\n\n\n\nPitfall 1: Forgetting zero_grad()\n# ❌ Wrong - gradients accumulate\nfor batch in dataloader:\n    loss = compute_loss(batch)\n    loss.backward()\n    optimizer.step()\n\n# ✅ Correct\nfor batch in dataloader:\n    optimizer.zero_grad()  # Clear previous gradients\n    loss = compute_loss(batch)\n    loss.backward()\n    optimizer.step()\nPitfall 2: Device mismatch\n# ❌ Wrong - model on GPU, data on CPU\nmodel = model.cuda()\nfor batch_x, batch_y in dataloader:\n    pred = model(batch_x)  # Error!\n\n# ✅ Correct\nmodel = model.cuda()\nfor batch_x, batch_y in dataloader:\n    batch_x = batch_x.cuda()\n    batch_y = batch_y.cuda()\n    pred = model(batch_x)\nPitfall 3: Not using eval() mode for inference\n# ❌ Wrong - dropout and batchnorm active during inference\npredictions = model(test_data)\n\n# ✅ Correct\nmodel.eval()\nwith torch.no_grad():\n    predictions = model(test_data)\nmodel.train()  # Switch back to training mode",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#training-loops",
     "href": "pages/background/frameworks.html#training-loops",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.6 Training Loops",
     "text": "2.6 Training Loops\nTypically, you put together a training loop to train a model. A training loop iterates over batches of data and optimizes the model parameters with each iteration.\n\n\n\n\nListing 8: Training and test loop.\n\n\ndef train_loop(dataloader, model, loss_fn, optimizer):\n    size = len(dataloader.dataset)\n    model.train()  # &lt;-- important!\n    for batch, (X, y) in enumerate(dataloader):\n        # Compute prediction and loss\n        pred = model(X)\n        loss = loss_fn(pred, y)\n\n        # Backpropagation\n        optimizer.zero_grad()\n        loss.backward()\n        optimizer.step()\n\n        if batch % 100 == 0:\n            loss, current = loss.item(), batch * len(X)\n            print(f\"loss: {loss:&gt;7f}  [{current:&gt;5d}/{size:&gt;5d}]\")\n\n\ndef test_loop(dataloader, model, loss_fn):\n    model.eval()  # &lt;-- important!\n\n    size = len(dataloader.dataset)\n    num_batches = len(dataloader)\n    test_loss, correct = 0, 0\n\n    with torch.no_grad():  # disables gradient tracking for efficiency\n        for X, y in dataloader:\n            pred = model(X)\n            test_loss += loss_fn(pred, y).item()\n            correct += (pred.argmax(1) == y).type(torch.float).sum().item()\n\n    test_loss /= num_batches\n    correct /= size\n    print(\n        f\"Test Error:\\n Accuracy: {(100 * correct):&gt;0.1f}%, Avg loss: {test_loss:&gt;8f}\\n\"\n    )\n\n\n\n\n\nloss_fn = nn.CrossEntropyLoss()\noptimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)\n\nepochs = 10\nfor t in range(epochs):\n    print(f\"Epoch {t+1}\\n-------------------------------\")\n    train_loop(train_dataloader, model, loss_fn, optimizer)\n    test_loop(test_dataloader, model, loss_fn)\nprint(\"Done!\")\n\n\n\n\n\n\n\nNote\n\n\n\nHigh-level APIs such as Lightning and Keras provide many functionalities to simplify managing training loops. It is highly recommended to use such libraries to reduce boiler-plate code. However, it depends on the individual complexity of a project to what degree such libraries are useful.",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#pre-trained-models",
     "href": "pages/background/frameworks.html#pre-trained-models",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "2.7 Pre-trained models",
     "text": "2.7 Pre-trained models\nSince training models can be time-consuming and expensive, pre-trained models are often used. They allow models to be adapted to a specific task more quickly and cost-effectively. In many areas, particularly NLP and computer vision, using pre-trained models is standard. PyTorch provides torchvision for computer vision applications. torchvision provides functionalities useful for modeling image data. Pre-trained models can also be easily integrated, as shown in Listing 9.\n\n\n\n\nListing 9: Example of importing ResNet-50 model with pre-trained weights from ImageNet.\n\n\nfrom torchvision.models import resnet50, ResNet50_Weights\n\nweights = ResNet50_Weights.IMAGENET1K_V2\nmodel = resnet50(weights=weights)",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#tensorflow",
     "href": "pages/background/frameworks.html#tensorflow",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "3.1 TensorFlow",
     "text": "3.1 TensorFlow\nFor a long time, PyTorch and TensorFlow have been the two dominant deep learning frameworks. TensorFlow, developed by Google, is known for its production-readiness, ecosystem integration (e.g., TensorFlow Extended (TFX) for MLOps pipelines, LiteRT for mobile, and TensorFlow.js for web), and its scalability across distributed hardware.\nIn recent years, however, TensorFlow’s low-level API has become less popular in research compared to PyTorch, which offers more flexibility and Pythonic design. Today, most TensorFlow users rely almost exclusively on Keras, its high-level API, to define and train models, while the TensorFlow backend provides performance, device management, and deployment capabilities.",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#keras",
     "href": "pages/background/frameworks.html#keras",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "3.2 Keras",
     "text": "3.2 Keras\nKeras started as an independent high-level deep learning API designed to simplify model creation with a clean and intuitive syntax. Since 2017, it has been tightly integrated into TensorFlow as its official front-end (tf.keras), and in 2023, Keras Core was introduced, a framework-agnostic version that can run on multiple backends such as TensorFlow, JAX, and PyTorch.\nKeras focuses on ease of use, modularity, and rapid prototyping, making it an excellent choice for teaching, applied machine learning, and fast experimentation, while still being production-ready through TensorFlow’s ecosystem. See Listing 10 for example code using Keras.\n\n\n\n\nListing 10: Example with TensorFlow.\n\n\nimport tensorflow as tf\n\nclass NeuralNetwork(tf.keras.Model):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = tf.keras.layers.Flatten()\n        self.linear_relu_stack = tf.keras.Sequential([\n            tf.keras.layers.Dense(512, activation='relu'),\n            tf.keras.layers.Dense(512, activation='relu'),\n            tf.keras.layers.Dense(10)  # No activation for logits\n        ])\n\n    def call(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#jax",
     "href": "pages/background/frameworks.html#jax",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "3.3 Jax",
     "text": "3.3 Jax\nJax has gained significant popularity in recent years. Developed by researchers at Google, it is primarily used in research and foundation-model development. Jax provides a NumPy-like API with automatic differentiation (autodiff) and function transformations such as jit (for compilation) and vmap (for vectorization). It enables high-performance, composable numerical computing, and serves as the foundation for frameworks such as Flax (Neural Networks) and Haiku (ML Research). See Listing 11 for an example using Flax.\n\n\n\n\nListing 11: Example with JAX and flax.\n\n\nfrom flax import linen as nn\nimport jax.numpy as jnp\n\nclass NeuralNetwork(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        x = x.reshape((x.shape[0], -1))  # Flatten the input\n        x = nn.Dense(512)(x)\n        x = nn.relu(x)\n        x = nn.Dense(512)(x)\n        x = nn.relu(x)\n        logits = nn.Dense(10)(x)\n        return logits",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#scikit-learn",
     "href": "pages/background/frameworks.html#scikit-learn",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "3.4 Scikit-Learn",
     "text": "3.4 Scikit-Learn\nScikit-Learn is THE machine learning framework in Python. However, Scikit-Learn never covered the area of neural networks and lacks auto-diff functionality. Therefore, Scikit-Learn is irrelevant when training neural networks. However, Scikit-Learn functionalities are often used to carry out the machine learning process, such as splitting datasets into train, validation, and test sets. Also, visualizations, such as the confusion matrix or calculating metrics, can be done via Scikit-Learn.",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#onnx",
     "href": "pages/background/frameworks.html#onnx",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "3.5 ONNX",
     "text": "3.5 ONNX\ny§ ONNX (Open Neural Network Exchange) is an open format to represent machine learning models. It allows models trained in one framework to be transferred to another. Trained models can also be deployed on various platforms.",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#monitoring",
     "href": "pages/background/frameworks.html#monitoring",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "3.6 Monitoring",
     "text": "3.6 Monitoring\nWhen training models, monitoring the training process, debugging, and logging hyperparameters, metrics, etc., is very important. Various tools enable these functionalities. Well-known examples are TensorBoard and Weights & Biases.",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#tensor-operations",
     "href": "pages/background/frameworks.html#tensor-operations",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "4.1 Tensor Operations",
     "text": "4.1 Tensor Operations\nIn neural networks, there are many tensor operations. Tensors are essentially multi-dimensional arrays, such as a scalar \\(x\\), a vector \\(\\mathbf{x}\\), or a matrix \\(\\mathbf{X}\\).\nFigure 5 illustrates a matrix multiplication, a typical representative of a tensor operation. As you can see, the calculations (entries of the matrix \\(\\mathbf{A}\\mathbf{C}\\)) are independent of each other and can be fully parallelized.\n\n\n\n\n\n\nFigure 5: Matrix Multiplication (from Li (2022)).",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#graphics-processing-units-gpus",
     "href": "pages/background/frameworks.html#graphics-processing-units-gpus",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "4.2 Graphics Processing Units (GPUs)",
     "text": "4.2 Graphics Processing Units (GPUs)\nGPUs have made deep learning possible in the first place. With their parallel structure, they can efficiently compute parallelizable tasks such as tensor operations.\nCPUs have far fewer cores than GPUs, but they are faster and can handle more complex tasks. CPUs are therefore ideal for sequential tasks. GPUs have many more cores, which are less complex and slower. Therefore, GPUs are excellent for parallel tasks. Figure 6 illustrates the differences.\n\n\n\n\n\n\nFigure 6: CPU vs GPU example (from Li (2022)).",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#cuda-cudnn",
     "href": "pages/background/frameworks.html#cuda-cudnn",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "4.3 CUDA & cuDNN",
     "text": "4.3 CUDA & cuDNN\nCUDA is an API by Nvidia to perform computations on the GPU. It allows parallelizable tasks to be implemented efficiently. cuDNN is a library that efficiently executes certain operations, such as convolutions, in neural networks on the GPU. cuDNN is based on CUDA and significantly accelerates the training of neural networks. Figure 7 illustrates speed differences when training various neural networks with CPU, GPU, and optimized cuDNN.\n\n\n\n\n\n\nFigure 7: Speed comparison (from Li (2022), data from Link)",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#data-loading",
     "href": "pages/background/frameworks.html#data-loading",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "4.4 Data Loading",
     "text": "4.4 Data Loading\nA crucial bottleneck in practice is the transfer of data (such as images) from the disk to the GPU. If this transfer is not fast enough, it is referred to as GPU starvation. There are several approaches to solve this problem:\n\nRead the data into RAM (not feasible for larger datasets)\nUse fast disks, such as SSDs\nUtilize multiple CPU threads to read data in parallel and keep it in RAM (pre-fetching)\n\nFigure 8 shows the various components.\n\n\n\n\n\n\nFigure 8: Source: Li (2022)\n\n\n\nDeep learning frameworks like PyTorch implement special classes that allow data to be prepared in multiple threads. Sometimes a certain number of CPU cores is needed to supply a GPU with enough data. Figure 9 shows a starved GPU: You can clearly see that the utilization repeatedly drops to 0 because the GPU has to wait for data.\n\n\n\n\n\n\nFigure 9: The Y-axis shows the GPU utilization in percentage, while the X-axis represents time. Source",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {
     "objectID": "pages/background/frameworks.html#gpu-parallelism",
     "href": "pages/background/frameworks.html#gpu-parallelism",
-    "title": "3 - Software & Hardware for Deep Learning",
+    "title": "3 - Software & Hardware",
     "section": "4.5 GPU Parallelism",
     "text": "4.5 GPU Parallelism\nModels can also be trained on multiple GPUs. There are two main paradigms: data parallelism and model parallelism (see Figure 10 ). With data parallelism, each GPU has a copy of the model, and each GPU is trained on different data batches. With model parallelism, the model is split across multiple GPUs. Models can be trained on a server with multiple GPUs or even over the network (distributed). ML frameworks provide functionalities to handle these.\n\n\n\n\n\n\nFigure 10: Data and Model Parallelism (from Li (2022)).",
     "crumbs": [
       "Background & Preparation",
-      "3 - Software & Hardware for Deep Learning"
+      "3 - Software & Hardware"
     ]
   },
   {

@@ -87,7 +87,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../pages/misc/quiz.html" rel="next">
+<link href="../../pages/misc/student_projects.html" rel="next">
 <link href="../../pages/misc/exercises.html" rel="prev">
 <link href="../..//assets/cv_logo_small.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
@@ -227,7 +227,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/background/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">1 - Machine Learning Basics</span></a>
+ <span class="menu-text">1 - Machine Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -239,7 +239,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/background/frameworks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3 - Software &amp; Hardware for Deep Learning</span></a>
+ <span class="menu-text">3 - Software &amp; Hardware</span></a>
   </div>
 </li>
       </ul>
@@ -376,6 +376,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/student_projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Ideas</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../pages/misc/quiz.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quiz &amp; Exam Prep</span></a>
   </div>
@@ -405,12 +411,6 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../../pages/misc/notation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Mathematical Notation</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/misc/student_projects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Project Ideas</span></a>
   </div>
 </li>
       </ul>
@@ -539,7 +539,7 @@ window.Quarto = {
 <section id="a-recipe-for-training-neural-networks" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="a-recipe-for-training-neural-networks"><span class="header-section-number">1</span> A Recipe for Training Neural Networks</h2>
 <p>How does one successfully train a deep learning model? Modern ML frameworks make training appear straightforward, but Karpathy observed that these abstractions are <strong>leaky</strong>: without a solid understanding of what happens inside, backpropagation, gradient descent, loss dynamics, mistakes creep in undetected. A model with a learning rate that is too high may converge to a poor solution without raising any error. A data preprocessing bug may silently corrupt every batch. <strong>Training neural networks fails silently.</strong></p>
-<div id="380185a3" class="cell" data-execution_count="1">
+<div id="c3d54afb" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>your_data <span class="op">=</span> <span class="co"># plug your awesome dataset here</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SuperCrossValidator(SuperDuper.fit, your_data, ResNet50, SGDOptimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1337,8 +1337,8 @@ Raschka, Sebastian, and Vahid Mirjalili. 2020. <em>Python Machine Learning: Mach
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../pages/misc/quiz.html" class="pagination-link" aria-label="Quiz &amp; Exam Prep">
-        <span class="nav-page-text">Quiz &amp; Exam Prep</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../pages/misc/student_projects.html" class="pagination-link" aria-label="Project Ideas">
+        <span class="nav-page-text">Project Ideas</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
