@@ -1,5 +1,5 @@
 ---
-title: "1 - Machine Learning Basics"
+title: "1 - Machine Learning"
 params:
   images_path: "/assets/images/machine_learning/"
 ---

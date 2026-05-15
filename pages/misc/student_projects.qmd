@@ -10,13 +10,30 @@ $$
 $$
 :::
 
+The following project ideas provide potential starting points for projects. Feel free to propose your own topic.
 
-## Topic List
+## Available Datasets
 
-You can choose your own topic!
+The following datasets are well-suited for project work. Size and task type vary considerably — choose a dataset that matches your available compute and the scope of your project.
 
-Alternatively, feel free to pick one of the following topics.
+| Dataset | Task Type | Size | Notes |
+|---|---|---|---|
+| EuroSAT RGB | Classification | ~27k images, 10 classes | 64×64 px, domain shift from ImageNet |
+| Microsoft Cats vs Dogs | Binary Classification | ~25k images | Large, clean, balanced |
+| Concrete Cracks | Binary Classification | ~40k images | Industrial defect detection |
+| Food-101 (subset) | Classification | ~10k (10 classes) | Noisy labels, large full dataset |
+| CCT20 | Classification | 1,600 images, 8 classes | Small course subset; larger full dataset available |
+| Snapshot Serengeti | Classification | ~2.6M images, 48 classes | Large-scale; use a curated subset |
+| Amazon Berkeley Objects (ABO) | Image Retrieval | ~25k images, 6 categories | Multi-view per item |
+| DeepFashion (In-Shop) | Image Retrieval | ~3,300 images, 5 classes | Item-level train/test splits |
+| AMI-Br | Binary Classification | Small (histopathology patches) | Domain shift; suited for LoRA/PEFT |
 
+::: {.callout-note}
+Snapshot Serengeti is large, work with a curated subset and account for class imbalance in your evaluation (F1, weighted metrics, confusion matrices). AMI-Br is intentionally small and best suited for parameter-efficient fine-tuning experiments. MNIST is available but too simple to constitute a meaningful project. Additional camera trap datasets can be found at [LILA BC](https://lila.science/datasets#project-descriptions).
+:::
+
+
+## Classification Projects
 
 ### Image Classification: EuroSAT Land Use and Land Cover Classification
 
@@ -74,6 +91,82 @@ Source: [Link](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
 :::
 
 **Difficulty/Effort**: Medium - High
+
+
+### Wildlife Camera Trap Classification
+
+**Goal**: Build a classifier for camera-trap images of wildlife. Choose either CCT20 (8 classes, 1,600 images in the course subset) or Snapshot Serengeti (48 species, ~2.6M images — use a curated subset).
+
+**Approach**: Start with a pretrained backbone as a feature extractor. Address class imbalance using weighted loss or oversampling strategies. Compare at least two pretrained model families and evaluate the effect of fine-tuning vs. feature extraction.
+
+**Focus**: Effect of class imbalance on standard metrics — accuracy can be misleading when one class dominates. Report F1 per class and analyse the confusion matrix: which species are most often confused, and why?
+
+**Dataset**: CCT20 course subset (8 classes, 1,600 images); the full Caltech Camera Traps dataset is available at [LILA BC](https://lila.science/datasets/caltech-camera-traps). Snapshot Serengeti (48 classes, ~2.6M images) is available at [LILA BC](https://lila.science/datasets/snapshot-serengeti) — the full dataset is large; selecting a balanced subset of 10–15 species is recommended. Additional camera trap datasets can be found at [LILA BC](https://lila.science/datasets#project-descriptions).
+
+:::{#fig-sp-cct20}
+![]({{< meta params.images_path >}}cct20_bobcat.jpg){width=600}
+
+Bobcat from the Caltech Camera Traps dataset. Source: [LILA BC](https://lila.science/datasets/caltech-camera-traps)
+:::
+
+**Difficulty/Effort**: Medium
+
+
+### Industrial Surface Defect Detection
+
+**Goal**: Train a binary classifier to distinguish intact from cracked concrete surfaces, and reason carefully about the precision–recall trade-off in a safety-critical setting.
+
+**Approach**: Use the Concrete Cracks dataset (~40k images). Fine-tune a pretrained model and evaluate performance across different decision thresholds. In safety-critical applications, false negatives (missed cracks) carry higher cost than false positives — make this trade-off explicit in your analysis.
+
+**Focus**: Threshold selection and the precision–recall curve. Qualitative failure analysis: what does the model get wrong, and does it fail systematically?
+
+**Dataset**: Concrete Cracks dataset (Mendeley Data, CC BY 4.0), see @ozgenel_concrete_2019.
+
+:::{#fig-sp-cracks}
+![]({{< meta params.images_path >}}crack_example.jpg){width=600}
+
+Source: Mendeley / Özgenel et al.
+:::
+
+**Difficulty/Effort**: Medium
+
+
+### Product Image Retrieval
+
+**Goal**: Build an image retrieval system that, given a query product image, returns the top-k most visually similar items from a gallery using learned embeddings.
+
+**Approach**: Extract embeddings from a pretrained CNN or ViT backbone. Build a nearest-neighbour index with cosine similarity. Evaluate with precision@k and recall@k. Compare at least two backbone architectures to assess how embedding quality affects retrieval.
+
+**Focus**: How does the choice of backbone — and whether it is fine-tuned or used frozen — affect retrieval quality? Qualitative inspection of failure cases is particularly informative here.
+
+**Dataset**: Amazon Berkeley Objects (ABO) Furniture (~25k images, 6 categories) or DeepFashion In-Shop Retrieval (~3,300 images, 5 classes). The multi-view structure of ABO makes retrieval evaluation especially natural; DeepFashion provides item-level train/test splits.
+
+:::{#fig-sp-abo}
+![]({{< meta params.images_path >}}abo_bed.jpg){width=600}
+
+Source: Amazon Berkeley Objects
+:::
+
+**Difficulty/Effort**: Medium
+
+
+### Histopathology Fine-Tuning with LoRA
+
+**Goal**: Apply parameter-efficient fine-tuning to adapt a pretrained Vision Transformer to a medical imaging task — specifically, classifying normal vs. atypical mitotic figures in histopathology patches.
+
+**Approach**: Use a HuggingFace ViT backbone and apply LoRA adapters (rank 4–16). Compare three settings: frozen backbone (feature extractor), LoRA fine-tuning, and full fine-tuning. Discuss the domain shift from natural images (ImageNet pretraining) to H&E-stained histopathology patches.
+
+**Focus**: Parameter count vs. performance trade-off; convergence speed across settings; domain shift as a factor in choosing fine-tuning strategy. Because the dataset is small, report results across multiple random seeds.
+
+**Dataset**: AMI-Br (128×128 histopathology patches, binary labels). The dataset is intentionally small — robustness to seed variation is part of the analysis.
+
+:::{#fig-sp-ami}
+![]({{< meta params.images_path >}}ami_br_normal.png){width=600}
+
+Source: AMI-Br / TUPAC16 + MIDOG21
+:::
+
+**Difficulty/Effort**: High
 
 
 <!--
@@ -166,7 +259,7 @@ Sentinel-2 patch (RGB) → preprocess → {ResNet18 scratch | ResNet18 pretraine
 **Task.** Choose one MVTec AD class (e.g., *bottle*). Train a simple autoencoder or kNN-embedding baseline on **only normal** images; detect defects on the test set.
 **Dataset.** MVTec AD — <https://www.mvtec.com/company/research/datasets/mvtec-ad>
 **Visual (pipeline).**
-(normal train set) → {autoencoder | CNN embeddings + kNN} → fit “normality”
+(normal train set) → {autoencoder | CNN embeddings + kNN} → fit "normality"
 (test image) → reconstruct/embed → anomaly score → threshold → pass/fail
 
 
