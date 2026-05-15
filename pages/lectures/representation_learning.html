@@ -8,7 +8,7 @@
 
 <meta name="author" content="Marco Willi">
 
-<title>6 - Visual Representations – CAS Deep Learning - Computer Vision</title>
+<title>5 - Visual Representations – CAS Deep Learning - Computer Vision</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -99,7 +99,7 @@ div.csl-indent {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-1fbc7d59b2885987df00f4a448c407a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f4818a9131c57a956df3f0f0ea9ba09d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -182,7 +182,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/representation_learning.html">6 - Visual Representations</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/representation_learning.html">5 - Visual Representations</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -283,19 +283,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/lectures/representation_learning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">6 - Visual Representations</span></a>
+ <span class="menu-text">5 - Visual Representations</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/lectures/downstream_adaptation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">7 - Adapting Models</span></a>
+ <span class="menu-text">6 - Adapting Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/lectures/vision_transformers.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">8 - Modern Vision Backbones</span></a>
+ <span class="menu-text">7 - Modern Vision Backbones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/intro_genai.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8 - Intro to Generative AI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/generative_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9 - Generative Models</span></a>
   </div>
 </li>
       </ul>
@@ -444,9 +456,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/representation_learning.html">6 - Visual Representations</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/representation_learning.html">5 - Visual Representations</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">6 - Visual Representations</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">5 - Visual Representations</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -549,7 +561,7 @@ Figure&nbsp;1: Example image. <a href="https://unsplash.com/de/fotos/elefantenwa
 </figure>
 </div>
 <p>It is easy for humans to describe the image. For example:</p>
-<div id="fc4025bc" class="cell" data-execution_count="1">
+<div id="0057b14c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">A photograph of an elephant facing the camera.</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">The elephant has large tusks and ears and is standing in a flat savannah.</span></span>
@@ -576,7 +588,7 @@ Figure&nbsp;1: Example image. <a href="https://unsplash.com/de/fotos/elefantenwa
 <li>Channels: 3 (RGB)</li>
 <li>Bits per pixel: 8 bits per channel</li>
 </ul>
-<div id="10f1775f" class="cell" data-execution_count="2">
+<div id="bdc541da" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <table class="dataframe table table-sm table-striped align-middle caption-top small">
 <thead>
@@ -1972,13 +1984,13 @@ Siméoni, Oriane, Huy V. Vo, Maximilian Seitzer, et al. 2025. <em><span>DINOv3</
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../pages/lectures/downstream_adaptation.html" class="pagination-link" aria-label="7 - Adapting Models">
-        <span class="nav-page-text">7 - Adapting Models</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../pages/lectures/downstream_adaptation.html" class="pagination-link" aria-label="6 - Adapting Models">
+        <span class="nav-page-text">6 - Adapting Models</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "6 - Visual Representations"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "5 - Visual Representations"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">   images_path: "/assets/images/representation_learning/"</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>

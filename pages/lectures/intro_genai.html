@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Marco Willi">
+
+<title>8 - Intro to Generative AI – CAS Deep Learning - Computer Vision</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../pages/lectures/generative_models.html" rel="next">
+<link href="../../pages/lectures/vision_transformers.html" rel="prev">
+<link href="../..//assets/cv_logo_small.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-f4818a9131c57a956df3f0f0ea9ba09d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HZKTBW9290"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HZKTBW9290', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/intro_genai.html">8 - Intro to Generative AI</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../assets/cv_logo_small.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../../assets/cv_logo_small.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+      <div class="sidebar-tools-main">
+    <a href="https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026" title="GitHub organization" class="quarto-navigation-tool px-1" aria-label="GitHub organization"><i class="bi bi-github"></i></a>
+    <a href="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-code-square"></i></a>
+</div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Background &amp; Preparation</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/background/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 - Machine Learning Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/background/neural_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2 - Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/background/frameworks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3 - Software &amp; Hardware for Deep Learning</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Lectures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 - Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/images_as_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2 - Images as Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/cnns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3 - CNNs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4 - Image Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/representation_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5 - Visual Representations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/downstream_adaptation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6 - Adapting Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/vision_transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7 - Modern Vision Backbones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/intro_genai.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">8 - Intro to Generative AI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/generative_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9 - Generative Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Slides</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/images_as_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Images as Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/cnns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Convolutional Neural Networks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Image Classification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/representation_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Representation Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/downstream_adaptation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Adapting Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/vision_transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modern Vision Backbones</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/exercises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercises</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/lectures/practical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Training Guide</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/quiz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quiz &amp; Exam Prep</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/literature.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/links.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Helpful Links &amp; Resources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mathematical Notation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/misc/student_projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Ideas</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">1</span> Motivation</a></li>
+  <li><a href="#what-is-generative-modelling" id="toc-what-is-generative-modelling" class="nav-link" data-scroll-target="#what-is-generative-modelling"><span class="header-section-number">2</span> What is Generative Modelling?</a></li>
+  <li><a href="#learning-generative-models" id="toc-learning-generative-models" class="nav-link" data-scroll-target="#learning-generative-models"><span class="header-section-number">3</span> Learning Generative Models</a></li>
+  <li><a href="#desirable-properties-of-generative-models" id="toc-desirable-properties-of-generative-models" class="nav-link" data-scroll-target="#desirable-properties-of-generative-models"><span class="header-section-number">4</span> Desirable Properties of Generative Models</a>
+  <ul class="collapse">
+  <li><a href="#efficient-sampling" id="toc-efficient-sampling" class="nav-link" data-scroll-target="#efficient-sampling"><span class="header-section-number">4.1</span> Efficient Sampling</a></li>
+  <li><a href="#high-quality-sampling" id="toc-high-quality-sampling" class="nav-link" data-scroll-target="#high-quality-sampling"><span class="header-section-number">4.2</span> High-Quality Sampling</a></li>
+  <li><a href="#coverage-diversity" id="toc-coverage-diversity" class="nav-link" data-scroll-target="#coverage-diversity"><span class="header-section-number">4.3</span> Coverage (Diversity)</a></li>
+  <li><a href="#well-behaved-latent-space" id="toc-well-behaved-latent-space" class="nav-link" data-scroll-target="#well-behaved-latent-space"><span class="header-section-number">4.4</span> Well-Behaved Latent Space</a></li>
+  <li><a href="#disentangled-latent-space" id="toc-disentangled-latent-space" class="nav-link" data-scroll-target="#disentangled-latent-space"><span class="header-section-number">4.5</span> Disentangled Latent Space</a></li>
+  <li><a href="#efficient-likelihood-computation" id="toc-efficient-likelihood-computation" class="nav-link" data-scroll-target="#efficient-likelihood-computation"><span class="header-section-number">4.6</span> Efficient Likelihood Computation</a></li>
+  </ul></li>
+  <li><a href="#comparing-generative-modeling-approaches" id="toc-comparing-generative-modeling-approaches" class="nav-link" data-scroll-target="#comparing-generative-modeling-approaches"><span class="header-section-number">5</span> Comparing Generative Modeling Approaches</a></li>
+  <li><a href="#evaluating-generative-models" id="toc-evaluating-generative-models" class="nav-link" data-scroll-target="#evaluating-generative-models"><span class="header-section-number">6</span> Evaluating Generative Models</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">7</span> References</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/intro_genai.html">8 - Intro to Generative AI</a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">8 - Intro to Generative AI</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Marco Willi </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Institute for Data Science I4DS, FHNW
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-tip callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Learning Objectives
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>After this lecture you should be able to:</p>
+<ul>
+<li>Explain how generative modeling differs from classification (one-to-many vs.&nbsp;many-to-one mapping)</li>
+<li>Understand the role of latent variables in enabling diverse outputs</li>
+<li>Describe the mathematical objective of generative models: maximizing likelihood of training data</li>
+<li>Compare key properties and tradeoffs of different generative modeling approaches (GANs, VAEs, diffusion models, autoregressive models)</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="TLDR Recap">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>TLDR Recap
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Generative models</strong> create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many, requiring <strong>latent variables</strong> <span class="math inline">\(\mathbf{z}\)</span> for diversity. The goal: maximize <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> for training data. Different approaches make tradeoffs: <strong>GANs</strong> (fast, high quality, no likelihood), <strong>VAEs</strong> (approximate likelihood, good coverage), <strong>diffusion models</strong> (state-of-the-art quality, slow sampling), <strong>autoregressive</strong> (exact likelihood, sequential generation).</p>
+</div>
+</div>
+</div>
+<section id="motivation" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">1</span> Motivation</h2>
+<p>Generative AI has a profound effect on our society and on businesses. The most prominent models generate natural language, which can be used in many applications, such as chat bots. Increasingly, the quality of image generative models and their adoption into multi-modal generative models, has increased dramatically. Nowadays, synthetic images can hardly be distinguished from real photographs (see <a href="#fig-genai-intro-receipt" class="quarto-xref">Figure&nbsp;1</a>) and can be used in many domains. Generating impressive images from scratch, however, is by far not the only task for generative models, as we will see.</p>
+<div id="fig-genai-intro-receipt" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-receipt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/intro_receipt.jpg" height="300" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-receipt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: <a href="https://x.com/deedydas/status/1905909215308447874">Source</a>
+</figcaption>
+</figure>
+</div>
+<p>Creating highly creative and diverse images has been enabled by recent advances of models trained on internet-scale datasets. Different companies, such as Midjourney have built businesses around this capabilitie to make it easy for users to generate images (see <a href="#fig-genai-intro-midjourney" class="quarto-xref">Figure&nbsp;2</a>).</p>
+<div id="fig-genai-intro-midjourney" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-midjourney-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/intro_midjourney_images.png" class="img-fluid figure-img" width="600">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-midjourney-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: <a href="https://www.midjourney.com">Source</a>
+</figcaption>
+</figure>
+</div>
+<p>With recent advances in video generative modes (e.g.&nbsp;OpenAIs Sora2 and others), Midjourney also released a model capable of creating short videos (see <a href="#fig-genai-intro-midjourney-video" class="quarto-xref">Figure&nbsp;3</a>).</p>
+<!-- ::: {#fig-genai-intro-midjourney-video}
+
+
+
+[Source](https://www.midjourney.com)
+::: -->
+<div id="fig-genai-intro-midjourney-video" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-midjourney-video-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/lEKeShkzKnE?si=kZLA1mWsJpVxeuhA&amp;t=31" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-midjourney-video-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: <a href="https://www.midjourney.com">Source</a>
+</figcaption>
+</figure>
+</div>
+<p>Integrating image understanding and generation into large language models requires high consistency across generations, as show impressively by OpenAI’s most recent model (see <a href="#fig-genai-intro-openai" class="quarto-xref">Figure&nbsp;4</a>).</p>
+<div id="fig-genai-intro-openai" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-openai-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../../assets/images/genai/intro_openai_1.webp" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../../assets/images/genai/intro_openai_2.webp" class="img-fluid figure-img"></p>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-openai-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Examples from OpenAI image generation. The two images were generated in turn, following user instructions about how to change the first image. <a href="https://openai.com/index/introducing-4o-image-generation/">Source</a>
+</figcaption>
+</figure>
+</div>
+<p>Generative models have changed what it means to view a photography: is this really how it happened? See an example from Google’s Magic Editor in <a href="#fig-genai-intro-magic" class="quarto-xref">Figure&nbsp;5</a>.</p>
+<div id="fig-genai-intro-magic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-magic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-video"><video id="video_shortcode_videojs_video2" width="800" class="video-js vjs-default-skin vjs-big-play-centered " controls="" preload="auto" data-setup="{}" title=""><source src="https://storage.googleapis.com/gweb-mobius-cdn/photos/uploads/6e54ed750f84538fd052b31818127f1e4df5711c.compressed.mp4"></video></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-magic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: <a href="https://www.google.com/intl/en/photos/editing/">Example from Google Magic Editor</a>
+</figcaption>
+</figure>
+</div>
+<p>Not all generative models create images from scratch. Image super resolution is a task where generative models up-sample images spatially and enrich detail (see <a href="#fig-genai-intro-superres" class="quarto-xref">Figure&nbsp;6</a>).</p>
+<div id="fig-genai-intro-superres" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-superres-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/intro_superres_images.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-superres-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Super-resolution example
+</figcaption>
+</figure>
+</div>
+<p>The sampe principle is used in the gaming industry. Interestingly, up-scaling images using neural networks is cheaper than computing images natively in such high resolutions (see <a href="#fig-genai-intro-nvidia-dlss" class="quarto-xref">Figure&nbsp;7</a>).</p>
+<div id="fig-genai-intro-nvidia-dlss" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-nvidia-dlss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/K8DddlREHEE?si=TvQIpHQUaLBf_M7Z&amp;t=4" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-nvidia-dlss-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: NVIDIA generative AI models for gaming (<a href="https://www.nvidia.com/en-us/geforce/technologies/dlss/">Link</a>).
+</figcaption>
+</figure>
+</div>
+<p>Other examples involve the computation of ray tracing, an expensive operation (see <a href="#fig-genai-intro-nvidia-rt" class="quarto-xref">Figure&nbsp;8</a>).</p>
+<div id="fig-genai-intro-nvidia-rt" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-nvidia-rt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/bTJYvtPRRcM?si=Cc_9T87nnNeOO3pH" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-nvidia-rt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: NVIDIA DLSS Ray Reconstruction for improved graphics (<a href="https://www.nvidia.com/en-us/geforce/technologies/dlss/">Link</a>).
+</figcaption>
+</figure>
+</div>
+<p>Generative AI is used in many domains nowadays. <a href="#fig-genai-intro-mri-to-ct" class="quarto-xref">Figure&nbsp;9</a> shows an application where MRI images are converted to synthetic CT scans. CT scans expose the body to radiation and should thus avoided if possible. However, CT scans show bone structure much better than MRIs. This application helps get the best of both worlds.</p>
+<div id="fig-genai-intro-mri-to-ct" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-mri-to-ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/mri_to_ct.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-mri-to-ct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: MRI to CT conversion example, from <span class="citation" data-cites="scharer_improved_2023">Schärer (<a href="#ref-scharer_improved_2023" role="doc-biblioref">2023</a>)</span>
+</figcaption>
+</figure>
+</div>
+<p>Generative models are also used to create synthetic training data for predictive models, such as for solar flare prediction (see <a href="#fig-genai-intro-solar-flares" class="quarto-xref">Figure&nbsp;10</a>).</p>
+<div id="fig-genai-intro-solar-flares" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-solar-flares-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/solar_flares.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-solar-flares-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Synthetic images of solar flares (from <span class="citation" data-cites="ramunno_solar_2024">Ramunno et al. (<a href="#ref-ramunno_solar_2024" role="doc-biblioref">2024</a>)</span>).
+</figcaption>
+</figure>
+</div>
+<p>Commercial applications of generative AI include the virtual staging of rooms with objects (furniture). This helps realtors present their properties in a more appealing and “real” way (see <a href="#fig-genai-intro-virtual-staging" class="quarto-xref">Figure&nbsp;11</a>).</p>
+<div id="fig-genai-intro-virtual-staging" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-virtual-staging-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../../assets/images/genai/virtual_staging1.jpg" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../../assets/images/genai/virtual_staging3.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-virtual-staging-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Virtual staging examples from <a href="https://www.spacely.ai/tools/ai-virtual-staging">Link</a>
+</figcaption>
+</figure>
+</div>
+<p>Generative AI has come a long way. Almost nothing illustrates that better than the quality of generated images of human faces (see <a href="#fig-genai-intro-evolution" class="quarto-xref">Figure&nbsp;12</a>).</p>
+<div id="fig-genai-intro-evolution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-evolution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/genai_evolution.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-evolution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Evolution of generative AI. From left to righ, top to bottom: <span class="citation" data-cites="goodfellow_generative_2014">Goodfellow et al. (<a href="#ref-goodfellow_generative_2014" role="doc-biblioref">2014</a>)</span>, <span class="citation" data-cites="liu_coupled_2016">Liu and Tuzel (<a href="#ref-liu_coupled_2016" role="doc-biblioref">2016</a>)</span>,<span class="citation" data-cites="radford_unsupervised_2016">Radford et al. (<a href="#ref-radford_unsupervised_2016" role="doc-biblioref">2016</a>)</span>, <span class="citation" data-cites="karras_progressive_2018">Karras et al. (<a href="#ref-karras_progressive_2018" role="doc-biblioref">2018</a>)</span>, <span class="citation" data-cites="karras_style-based_2019">Karras et al. (<a href="#ref-karras_style-based_2019" role="doc-biblioref">2019</a>)</span>, <span class="citation" data-cites="karras_analyzing_2020">Karras et al. (<a href="#ref-karras_analyzing_2020" role="doc-biblioref">2020</a>)</span>, <span class="citation" data-cites="ho_denoising_2020">Ho et al. (<a href="#ref-ho_denoising_2020" role="doc-biblioref">2020</a>)</span>, <span class="citation" data-cites="rombach_high-resolution_2022">Rombach et al. (<a href="#ref-rombach_high-resolution_2022" role="doc-biblioref">2022</a>)</span>, <span class="citation" data-cites="saharia_photorealistic_2022">Saharia et al. (<a href="#ref-saharia_photorealistic_2022" role="doc-biblioref">2022</a>)</span>, <span class="citation" data-cites="betker_improving_2023"><span class="nocase">Betker et al.</span> (<a href="#ref-betker_improving_2023" role="doc-biblioref">2023</a>)</span>
+</figcaption>
+</figure>
+</div>
+<p><a href="#tbl-genai-providers" class="quarto-xref">Table&nbsp;1</a> shows a few commercial providers of image generative models.</p>
+<div id="tbl-genai-providers" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-genai-providers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Major image generation providers and their offerings.
+</figcaption>
+<div aria-describedby="tbl-genai-providers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Provider</th>
+<th>Product</th>
+<th>Key Features</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://platform.openai.com/docs/guides/images">OpenAI</a></td>
+<td>DALL·E 3 / Image API</td>
+<td>API/ChatGPT integration, editing</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.midjourney.com">Midjourney</a></td>
+<td>Midjourney</td>
+<td>High-quality, style-driven, Discord/app</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.adobe.com/products/firefly.html">Adobe</a></td>
+<td>Firefly</td>
+<td>Creative Cloud integration, commercial-safe</td>
+</tr>
+<tr class="even">
+<td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview">Google Cloud</a></td>
+<td>Imagen 3</td>
+<td>Enterprise API, safety controls</td>
+</tr>
+<tr class="odd">
+<td><a href="https://stability.ai">Stability AI</a></td>
+<td>Stable Diffusion SDXL</td>
+<td>Open-source models, SDKs</td>
+</tr>
+<tr class="even">
+<td><a href="https://aws.amazon.com/bedrock/titan/">AWS</a></td>
+<td>Titan Image</td>
+<td>Managed service, editing, inpainting</td>
+</tr>
+<tr class="odd">
+<td><a href="https://azure.microsoft.com/products/ai-services/openai-service/">Microsoft</a></td>
+<td>Azure OpenAI</td>
+<td>Enterprise governance, Designer</td>
+</tr>
+<tr class="even">
+<td><a href="https://leonardo.ai">Leonardo AI</a></td>
+<td>Leonardo Platform</td>
+<td>Web + API, styles, upscaling</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.recraft.ai">Recraft</a></td>
+<td>Recraft V3</td>
+<td>Raster &amp; vector (SVG), brand styles</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.canva.com/ai-image-generator/">Canva</a></td>
+<td>Magic Media</td>
+<td>Built-in design workflows</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.gettyimages.com/generativeai">Getty Images</a></td>
+<td>Generative AI</td>
+<td>Stock-safe, clear licensing</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.shutterstock.com/ai/image-generator">Shutterstock</a></td>
+<td>AI Generator</td>
+<td>Tied to licensing ecosystem</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="what-is-generative-modelling" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="what-is-generative-modelling"><span class="header-section-number">2</span> What is Generative Modelling?</h2>
+<p>Let’s contrast generative modelling with a classification task (see <a href="#fig-genai-intro-basics-classifier" class="quarto-xref">Figure&nbsp;13</a>). Let’s denote <span class="math inline">\(f(\mathbf{x}) = \mathbf{y}\)</span> for a classifier, and <span class="math inline">\(g(\mathbf{y}) = \mathbf{x}\)</span> for a generative model.</p>
+<p>In classification the model has as input an image <span class="math inline">\(\mathbf{x}^{(i)}\)</span> and models a probability distribution over all classes <span class="math inline">\(\mathbf{\hat{y}}^{(i)}\)</span> which ideally matches the true label <span class="math inline">\(\mathbf{y}^{(i)}\)</span>.</p>
+<div id="fig-genai-intro-basics-classifier" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-basics-classifier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/basics_classifier.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-basics-classifier-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Classification.
+</figcaption>
+</figure>
+</div>
+<p>In generative modelling the process is essentially reversed: The input (can) be a label <span class="math inline">\(\mathbf{y}\)</span>, such as a class label, and the output is an image <span class="math inline">\(\mathbf{x}^{(i)}\)</span>, see <a href="#fig-genai-intro-basics-elephant" class="quarto-xref">Figure&nbsp;14</a>.</p>
+<div id="fig-genai-intro-basics-elephant" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-basics-elephant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/basics_elephant.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-basics-elephant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Generative modelling.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="What is the problem?">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>What is the problem?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Looking at the input and the output of <a href="#fig-genai-intro-basics-elephant" class="quarto-xref">Figure&nbsp;14</a>. What could be a problem?</p>
+<details>
+<summary>
+Click for result
+</summary>
+<p>If the input (in this case) to the generative model is a label, such as elephant, how can the model generate not just that one elephant?</p>
+</details>
+</div>
+</div>
+</div>
+<p>An important distinction between a classifier and a generative model is:</p>
+<ul>
+<li><span class="math inline">\(f(\mathbf{x})\)</span> is a many-to-one mapping. Many inputs (e.g.&nbsp;images of elephants) should be associated with the same label (e.g the elephant label).</li>
+<li><span class="math inline">\(g(\mathbf{y})\)</span> is a one-to-many mapping. One label (e.g.&nbsp;elephant) should be associated with many output (e.g.&nbsp;images of elephants).</li>
+</ul>
+<p>Since neural networks consist of deterministic operations (such as matrix multiplications and additions) we need a way to transform <span class="math inline">\(g()\)</span> to a <strong>stochastic</strong> function. Only then is it possibe to generate different elephants and not always the same image (see <a href="#fig-genai-intro-basics-elephant-prob" class="quarto-xref">Figure&nbsp;15</a>).</p>
+<div id="fig-genai-intro-basics-elephant-prob" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-basics-elephant-prob-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/basics_elephants_probabilistic.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-basics-elephant-prob-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Generative modelling with a diverse set of outputs.
+</figcaption>
+</figure>
+</div>
+<p>One way to achieve this is to condition the generative model on a stochastic input <span class="math inline">\(\mathbf{z} \sim p(z)\)</span> and generate samples using <span class="math inline">\(g(\mathbf{y}, \mathbf{z})\)</span>. Often we use a simple Gaussian distribution: <span class="math inline">\(\mathbf{z} \sim \cal{N}(\mathbf{0}, \mathbfit{I})\)</span>.</p>
+<p>One way to think about <span class="math inline">\(\mathbf{z}\)</span> is that of a <strong>latent variable</strong>. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector <span class="math inline">\(\mathbf{y}\)</span> specifies that the image should show an elephant, while <span class="math inline">\(\mathbf{z}\)</span> might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Conditional vs. Unconditional Generation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Conditional vs.&nbsp;Unconditional Generation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In general we distinguish between <strong>conditional</strong> and <strong>unconditional</strong> generation. If we condition the input on a piece of data, such as a label vector, we refer to <strong>conditional generation</strong> <span class="math inline">\(g(\mathbf{c})\)</span>. If we just generate images we refer to <strong>unconditional generation</strong> <span class="math inline">\(g()\)</span>. In the following we often use <span class="math inline">\(g()\)</span> to simplify notation.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Latent Variables Intuition">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Latent Variables Intuition
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Consider the dataset shown in <a href="#fig-genai-basics-latent-intuition" class="quarto-xref">Figure&nbsp;16</a>: What could be latent variables for this dataset?</p>
+<details>
+<summary>
+Click for result
+</summary>
+<p>Each output is defined by it’s width and height. Therefore, we have two (unobserved) latent variables.</p>
+</details>
+</div>
+</div>
+</div>
+<div id="fig-genai-basics-latent-intuition" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-basics-latent-intuition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/latent_variables_intuition1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-basics-latent-intuition-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Intuition about latent variables in generative models. From <span class="citation" data-cites="foster_generative_2023">Foster (<a href="#ref-foster_generative_2023" role="doc-biblioref">2023</a>)</span>.
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-genai-basics-latent-intuition2" class="quarto-xref">Figure&nbsp;17</a> shows a plausible latent space and the corresponding mapping / samples from that space.</p>
+<div id="fig-genai-basics-latent-intuition2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-basics-latent-intuition2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/latent_variables_intuition2.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-basics-latent-intuition2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: Intuition about latent variables in generative models. From <span class="citation" data-cites="foster_generative_2023">Foster (<a href="#ref-foster_generative_2023" role="doc-biblioref">2023</a>)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="learning-generative-models" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="learning-generative-models"><span class="header-section-number">3</span> Learning Generative Models</h2>
+<p>The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data <span class="math inline">\(\hat{\mathbf{x}}\)</span> should have a high probability under the probability density function of the real data <span class="math inline">\(p_{\text{data}}(\hat{\mathbf{x}})\)</span>. <a href="#fig-genai-intro-synthetic-quality" class="quarto-xref">Figure&nbsp;18</a> illustrates the principle: Models should aim to synthesize data points (x axis) which are probably under the true distribution.</p>
+<div id="fig-genai-intro-synthetic-quality" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-synthetic-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/synthetic_quality/synthetic_quality_evaluation.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-synthetic-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.
+</figcaption>
+</figure>
+</div>
+<p>In general there are two approaches to generative modelling:</p>
+<p>The <strong>direct</strong> (or implicit) approach learns a function that directly generates samples: <span class="math inline">\(g(\mathbf{z}) = \mathbf{x}\)</span>.</p>
+<p><strong>Indirect models</strong> learn scoring functions and generate samples by finding high-scoring values. There are different types of such models, such as density models.</p>
+<p>Density models learn a probability density function <span class="math inline">\(p_{\theta}: \mathbf{x} \to [0, \infty)\)</span> with the normalization constraint:</p>
+<p><span class="math display">\[\int_{\mathbf{x}} p_{\theta}(\mathbf{x}) d\mathbf{x} = 1\]</span></p>
+<p>The goal is to approximate the true probability density function <span class="math inline">\(p_{\theta} \sim p_{\text{data}}\)</span>.</p>
+<p>This can be achieved by minimizing the difference between <span class="math inline">\(p_{\theta}\)</span> and <span class="math inline">\(p_{\text{data}}\)</span>. However, since <span class="math inline">\(p_{\text{data}}\)</span> is unkown, we can simply maximize the likelihood of the training data under <span class="math inline">\(p_{\theta}\)</span>.</p>
+<p><span class="math display">\[\begin{equation}
+\underset{\theta}{\arg\max} \frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\mathbf{x}^{(i)})
+\end{equation}\]</span></p>
+<p><a href="#fig-genai-intro-density-model" class="quarto-xref">Figure&nbsp;19</a> illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.</p>
+<div id="fig-genai-intro-density-model" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-intro-density-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../../assets/images/genai/density_model_1d/initial_distribution.png" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="../../assets/images/genai/density_model_1d/improved_distribution.png" class="img-fluid figure-img"></p>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-density-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Example of learning a density model in 1D.
+</figcaption>
+</figure>
+</div>
+<p><strong>Examples:</strong> Variational Autoencoders (VAEs), normalizing flows, autoregressive models</p>
+<p><strong>Note:</strong> Once <span class="math inline">\(p_{\theta}\)</span> is modelled, a generative model needs a mechanism to sample from it. Otherwise we can only evaluate the likelihood of a data point. For example, to detect outliers.</p>
+</section>
+<section id="desirable-properties-of-generative-models" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="desirable-properties-of-generative-models"><span class="header-section-number">4</span> Desirable Properties of Generative Models</h2>
+<p>When evaluating generative models, we consider several important properties. Unfortunately, <strong>no single approach achieves all these properties simultaneously</strong>.</p>
+<section id="efficient-sampling" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="efficient-sampling"><span class="header-section-number">4.1</span> Efficient Sampling</h3>
+<p>The ability to generate new samples quickly. This is crucial for practical applications.</p>
+<ul>
+<li><strong>Why it matters:</strong> Applications like real-time image generation, interactive tools, and large-scale dataset creation require fast sampling</li>
+<li><strong>Which models excel:</strong> GANs and normalizing flows typically have efficient sampling (single forward pass)</li>
+<li><strong>Which models struggle:</strong> Autoregressive models and some diffusion models require many sequential steps</li>
+</ul>
+</section>
+<section id="high-quality-sampling" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="high-quality-sampling"><span class="header-section-number">4.2</span> High-Quality Sampling</h3>
+<p>Generated samples should be realistic, detailed, and indistinguishable from real data.</p>
+<ul>
+<li><strong>Why it matters:</strong> Low-quality samples limit practical utility and can be easily detected as synthetic</li>
+<li><strong>Which models excel:</strong> Modern GANs, diffusion models, and large-scale autoregressive models</li>
+<li><strong>Trade-off:</strong> Often achieved at the cost of computational expense or training complexity</li>
+</ul>
+</section>
+<section id="coverage-diversity" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="coverage-diversity"><span class="header-section-number">4.3</span> Coverage (Diversity)</h3>
+<p>The model should be able to generate the full diversity present in the training data, not just a subset of common examples.</p>
+<ul>
+<li><strong>Why it matters:</strong> A model that only generates a few “safe” outputs is not truly learning the data distribution</li>
+<li><strong>Common failure:</strong> Mode collapse in GANs, where the generator produces limited variety</li>
+<li><strong>Which models excel:</strong> VAEs tend to have good coverage but sometimes at the cost of sample quality</li>
+</ul>
+</section>
+<section id="well-behaved-latent-space" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="well-behaved-latent-space"><span class="header-section-number">4.4</span> Well-Behaved Latent Space</h3>
+<p>The latent space <span class="math inline">\(\mathbf{Z}\)</span> should have smooth, meaningful structure where similar <span class="math inline">\(\mathbf{z}\)</span> values produce similar outputs.</p>
+<ul>
+<li><strong>Why it matters:</strong> Enables interpolation, controlled generation, and semantic editing</li>
+<li><strong>Example:</strong> Linearly interpolating between two latent codes should produce a smooth transition between outputs</li>
+<li><strong>Which models excel:</strong> VAEs explicitly encourage this through their training objective</li>
+</ul>
+</section>
+<section id="disentangled-latent-space" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="disentangled-latent-space"><span class="header-section-number">4.5</span> Disentangled Latent Space</h3>
+<p>Different dimensions of <span class="math inline">\(\mathbf{z}\)</span> should control independent factors of variation in the output.</p>
+<ul>
+<li><strong>Why it matters:</strong> Enables fine-grained control over specific attributes (e.g., separate controls for pose, lighting, color)</li>
+<li><strong>Example:</strong> One dimension controls “smiling” in face generation, another controls “age”, independently</li>
+<li><strong>Challenge:</strong> Difficult to achieve without explicit architectural design or training objectives</li>
+<li><strong>Applications:</strong> Critical for controllable generation and interpretable models</li>
+</ul>
+</section>
+<section id="efficient-likelihood-computation" class="level3" data-number="4.6">
+<h3 data-number="4.6" class="anchored" data-anchor-id="efficient-likelihood-computation"><span class="header-section-number">4.6</span> Efficient Likelihood Computation</h3>
+<p>The ability to evaluate <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> for any given sample <span class="math inline">\(\mathbf{x}\)</span>.</p>
+<ul>
+<li><strong>Why it matters:</strong>
+<ul>
+<li>Enables direct optimization via maximum likelihood</li>
+<li>Allows outlier/anomaly detection</li>
+<li>Useful for model comparison and debugging</li>
+</ul></li>
+<li><strong>Which models excel:</strong> Autoregressive models, normalizing flows, VAEs (approximate)</li>
+<li><strong>Which models lack this:</strong> GANs, many diffusion models (cannot evaluate likelihood directly)</li>
+</ul>
+</section>
+</section>
+<section id="comparing-generative-modeling-approaches" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="comparing-generative-modeling-approaches"><span class="header-section-number">5</span> Comparing Generative Modeling Approaches</h2>
+<p>Different generative modeling approaches make different tradeoffs. Here’s a comparison of major families:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Latent Variables</th>
+<th>Density</th>
+<th>Fast Sampling</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Autoregressive</strong></td>
+<td>❌</td>
+<td>✅</td>
+<td>❌ (sequential)</td>
+</tr>
+<tr class="even">
+<td><strong>Diffusion</strong></td>
+<td>✅</td>
+<td>⚠️</td>
+<td>❌ (iterative)</td>
+</tr>
+<tr class="odd">
+<td><strong>GANs</strong></td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><strong>VAEs</strong></td>
+<td>✅</td>
+<td>⚠️ (approx.)</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key observations:</strong></p>
+<ol type="1">
+<li><strong>No method achieves all properties:</strong> There is no generative model that simultaneously has latent variables, exact density computation, fast sampling, perfect quality, and perfect coverage</li>
+<li><strong>GANs trade likelihood for quality:</strong> Excellent sample quality and fast generation, but no likelihood evaluation and potential coverage issues</li>
+<li><strong>VAEs balance tradeoffs:</strong> Good coverage and approximate likelihood, but sometimes lower sample quality</li>
+<li><strong>Diffusion models:</strong> Current state-of-the-art for quality and coverage, but slow sampling</li>
+<li><strong>Autoregressive models:</strong> Exact likelihood and good quality, but very slow sequential generation</li>
+</ol>
+</section>
+<section id="evaluating-generative-models" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="evaluating-generative-models"><span class="header-section-number">6</span> Evaluating Generative Models</h2>
+<p>Evaluating generative models and comparing different models with respect to sample quality and diversity is not a trivial task.</p>
+<p>One approach is to calculate the likelihood of a test-set under the generative model <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span>. However, this is not possible for models which do not model a probability distribution.</p>
+<p>A cumbersome approach is to use human studies by simply asking humans to compare samples from different models. This approach, however, is not always feasible when developing models. Other approaches</p>
+<p>Different scores have been proposed. A popular one is the Inception Score (IS), see <span class="citation" data-cites="salimans_improved_2016">Salimans et al. (<a href="#ref-salimans_improved_2016" role="doc-biblioref">2016</a>)</span>. This score is calculated using a classification model and thus only feasible for datasets with known classes. In this particular case, it is often used to compare generative models on the ImageNet dataset. This dataset has 1’000 classes with roughly equal distribution. The assumption is that a good generative model yields images which a classifier predicts accurately and with high confidence. In that case the marginal (averaged) distribution is close to unifrom, as illustrated in <a href="#fig-genai-basics-evaluating" class="quarto-xref">Figure&nbsp;20</a>.</p>
+<div id="fig-genai-basics-evaluating" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-basics-evaluating-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/evaluating_genai.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-basics-evaluating-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: Evaluating generative AI models.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="references" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="references"><span class="header-section-number">7</span> References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-betker_improving_2023" class="csl-entry" role="listitem">
+<span class="nocase">Betker, James, Gabriel Goh, Li Jing, et al.</span> 2023. <span>“Improving Image Generation with Better Captions.”</span> <em>Computer Science. Https://Cdn. Openai. Com/Papers/Dall-e-3. Pdf</em> 2 (3): 8.
+</div>
+<div id="ref-foster_generative_2023" class="csl-entry" role="listitem">
+Foster, David. 2023. <em>Generative <span>Deep</span> <span>Learning</span></em>. 2nd ed. O’Reilly Media, Inc.
+</div>
+<div id="ref-goodfellow_generative_2014" class="csl-entry" role="listitem">
+Goodfellow, Ian J., Jean Pouget-Abadie, Mehdi Mirza, et al. 2014. <em>Generative <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1406.2661">https://doi.org/10.48550/arXiv.1406.2661</a>.
+</div>
+<div id="ref-ho_denoising_2020" class="csl-entry" role="listitem">
+Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <em>Denoising <span>Diffusion</span> <span>Probabilistic</span> <span>Models</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2006.11239">https://doi.org/10.48550/arXiv.2006.11239</a>.
+</div>
+<div id="ref-karras_progressive_2018" class="csl-entry" role="listitem">
+Karras, Tero, Timo Aila, Samuli Laine, and Jaakko Lehtinen. 2018. <em>Progressive <span>Growing</span> of <span>GANs</span> for <span>Improved</span> <span>Quality</span>, <span>Stability</span>, and <span>Variation</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1710.10196">https://doi.org/10.48550/arXiv.1710.10196</a>.
+</div>
+<div id="ref-karras_style-based_2019" class="csl-entry" role="listitem">
+Karras, Tero, Samuli Laine, and Timo Aila. 2019. <em>A <span>Style</span>-<span>Based</span> <span>Generator</span> <span>Architecture</span> for <span>Generative</span> <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1812.04948">https://doi.org/10.48550/arXiv.1812.04948</a>.
+</div>
+<div id="ref-karras_analyzing_2020" class="csl-entry" role="listitem">
+Karras, Tero, Samuli Laine, Miika Aittala, Janne Hellsten, Jaakko Lehtinen, and Timo Aila. 2020. <em>Analyzing and <span>Improving</span> the <span>Image</span> <span>Quality</span> of <span>StyleGAN</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1912.04958">https://doi.org/10.48550/arXiv.1912.04958</a>.
+</div>
+<div id="ref-liu_coupled_2016" class="csl-entry" role="listitem">
+Liu, Ming-Yu, and Oncel Tuzel. 2016. <em>Coupled <span>Generative</span> <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1606.07536">https://doi.org/10.48550/arXiv.1606.07536</a>.
+</div>
+<div id="ref-radford_unsupervised_2016" class="csl-entry" role="listitem">
+Radford, Alec, Luke Metz, and Soumith Chintala. 2016. <em>Unsupervised <span>Representation</span> <span>Learning</span> with <span>Deep</span> <span>Convolutional</span> <span>Generative</span> <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1511.06434">https://doi.org/10.48550/arXiv.1511.06434</a>.
+</div>
+<div id="ref-ramunno_solar_2024" class="csl-entry" role="listitem">
+Ramunno, Francesco P., S. Hackstein, V. Kinakh, et al. 2024. <em>Solar Synthetic Imaging: <span>Introducing</span> Denoising Diffusion Probabilistic Models on <span>SDO</span>/<span>AIA</span> Data</em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2404.02552">https://doi.org/10.48550/arXiv.2404.02552</a>.
+</div>
+<div id="ref-rombach_high-resolution_2022" class="csl-entry" role="listitem">
+Rombach, Robin, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. <em>High-<span>Resolution</span> <span>Image</span> <span>Synthesis</span> with <span>Latent</span> <span>Diffusion</span> <span>Models</span></em>. arXiv. <a href="http://arxiv.org/abs/2112.10752">http://arxiv.org/abs/2112.10752</a>.
+</div>
+<div id="ref-saharia_photorealistic_2022" class="csl-entry" role="listitem">
+Saharia, Chitwan, William Chan, Saurabh Saxena, et al. 2022. <em>Photorealistic <span>Text</span>-to-<span>Image</span> <span>Diffusion</span> <span>Models</span> with <span>Deep</span> <span>Language</span> <span>Understanding</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2205.11487">https://doi.org/10.48550/arXiv.2205.11487</a>.
+</div>
+<div id="ref-salimans_improved_2016" class="csl-entry" role="listitem">
+Salimans, Tim, Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and Xi Chen. 2016. <em>Improved <span>Techniques</span> for <span>Training</span> <span>GANs</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1606.03498">https://doi.org/10.48550/arXiv.1606.03498</a>.
+</div>
+<div id="ref-scharer_improved_2023" class="csl-entry" role="listitem">
+Schärer, Florian. 2023. <span>“Improved <span>Evaluation</span> and <span>Assessment</span> of <span>Performance</span> for <span>MR</span> <span>Based</span> <span>CT</span> <span>Synthesis</span> <span>Models</span>.”</span> {MSc} in {Engineering} {P8} {Report}, FHNW.
+</div>
+</div>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/marco-willi\.github\.io\/cas-dl-compvis-lectures-fs2026\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../pages/lectures/vision_transformers.html" class="pagination-link" aria-label="7 - Modern Vision Backbones">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">7 - Modern Vision Backbones</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../pages/lectures/generative_models.html" class="pagination-link" aria-label="9 - Generative Models">
+        <span class="nav-page-text">9 - Generative Models</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "8 - Intro to Generative AI"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">   images_path: "/assets/images/genai/"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>::: {.content-hidden}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>{{&lt; include /assets/_macros.tex &gt;}}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="Learning Objectives"  collapse="true"}</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>After this lecture you should be able to:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Explain how generative modeling differs from classification (one-to-many vs. many-to-one mapping)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Understand the role of latent variables in enabling diverse outputs</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Describe the mathematical objective of generative models: maximizing likelihood of training data</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Compare key properties and tradeoffs of different generative modeling approaches (GANs, VAEs, diffusion models, autoregressive models)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="TLDR Recap" collapse="true"}</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many, requiring **latent variables** $\vect{z}$ for diversity. The goal: maximize $p_{\theta}(\vect{x})$ for training data. Different approaches make tradeoffs: **GANs** (fast, high quality, no likelihood), **VAEs** (approximate likelihood, good coverage), **diffusion models** (state-of-the-art quality, slow sampling), **autoregressive** (exact likelihood, sequential generation).</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Motivation</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>Generative AI has a profound effect on our society and on businesses. The most prominent models generate natural language, which can be used in many applications, such as chat bots. Increasingly, the quality of image generative models and their adoption into multi-modal generative models, has increased dramatically. Nowadays, synthetic images can hardly be distinguished from real photographs (see @fig-genai-intro-receipt) and can be used in many domains. Generating impressive images from scratch, however, is by far not the only task for generative models, as we will see.</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-receipt}</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}intro_receipt.jpg)</span>{height=300}</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Source</span><span class="co">](https://x.com/deedydas/status/1905909215308447874)</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>Creating highly creative and diverse images has been enabled by recent advances of models trained on internet-scale datasets. Different companies, such as Midjourney have built businesses around this capabilitie to make it easy for users to generate images (see @fig-genai-intro-midjourney).</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-midjourney}</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}intro_midjourney_images.png)</span>{width=600}</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Source</span><span class="co">](https://www.midjourney.com)</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>With recent advances in video generative modes (e.g. OpenAIs Sora2 and others), Midjourney also released a model capable of creating short videos (see @fig-genai-intro-midjourney-video).</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ::: {#fig-genai-intro-midjourney-video}</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co">{{&lt; video b58fc729-690b-4000-b19f-365a4093b2ff;7B7B3C206D65746120706172616D732E696D616765735F70617468203E7D7D;intro_midjourney_videos.mp4 &gt;}}</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co">[Source](https://www.midjourney.com)</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co">::: --&gt;</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-midjourney-video}</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://youtu.be/lEKeShkzKnE?si=kZLA1mWsJpVxeuhA&amp;t=31 &gt;}}</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Source</span><span class="co">](https://www.midjourney.com)</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>Integrating image understanding and generation into large language models requires high consistency across generations, as show impressively by OpenAI's most recent model (see @fig-genai-intro-openai).</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-openai layout-ncol=2}</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}intro_openai_1.webp)</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}intro_openai_2.webp)</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>Examples from OpenAI image generation. The two images were generated in turn, following user instructions about how to change the first image. <span class="co">[</span><span class="ot">Source</span><span class="co">](https://openai.com/index/introducing-4o-image-generation/)</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>Generative models have changed what it means to view a photography: is this really how it happened? See an example from Google's Magic Editor in @fig-genai-intro-magic.</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-magic}</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://storage.googleapis.com/gweb-mobius-cdn/photos/uploads/6e54ed750f84538fd052b31818127f1e4df5711c.compressed.mp4 width=800 &gt;}}</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Example from Google Magic Editor</span><span class="co">](https://www.google.com/intl/en/photos/editing/)</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>Not all generative models create images from scratch. Image super resolution is a task where generative models up-sample images spatially and enrich detail (see @fig-genai-intro-superres).</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-superres}</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}intro_superres_images.png)</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>Super-resolution example</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>The sampe principle is used in the gaming industry. Interestingly, up-scaling images using neural networks is cheaper than computing images natively in such high resolutions (see @fig-genai-intro-nvidia-dlss).</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-nvidia-dlss}</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://youtu.be/K8DddlREHEE?si=TvQIpHQUaLBf_M7Z&amp;t=4 &gt;}}</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>NVIDIA generative AI models for gaming (<span class="co">[</span><span class="ot">Link</span><span class="co">](https://www.nvidia.com/en-us/geforce/technologies/dlss/)</span>).</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>Other examples involve the computation of ray tracing, an expensive operation (see @fig-genai-intro-nvidia-rt).</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-nvidia-rt}</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://youtu.be/bTJYvtPRRcM?si=Cc_9T87nnNeOO3pH &gt;}}</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>NVIDIA DLSS Ray Reconstruction for improved graphics  (<span class="co">[</span><span class="ot">Link</span><span class="co">](https://www.nvidia.com/en-us/geforce/technologies/dlss/)</span>).</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>Generative AI is used in many domains nowadays. @fig-genai-intro-mri-to-ct shows an application where MRI images are converted to synthetic CT scans. CT scans expose the body to radiation and should thus avoided if possible. However, CT scans show bone structure much better than MRIs. This application helps get the best of both worlds.</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-mri-to-ct}</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}mri_to_ct.png)</span></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>MRI to CT conversion example, from @scharer_improved_2023</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>Generative models are also used to create synthetic training data for predictive models, such as for solar flare prediction (see @fig-genai-intro-solar-flares).</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-solar-flares}</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}solar_flares.png)</span></span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>Synthetic images of solar flares (from @ramunno_solar_2024).</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>Commercial applications of generative AI include the virtual staging of rooms with objects (furniture). This helps realtors present their properties in a more appealing and "real" way (see @fig-genai-intro-virtual-staging).</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-virtual-staging layout-ncol=2}</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}virtual_staging1.jpg)</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}virtual_staging3.png)</span></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>Virtual staging examples from <span class="co">[</span><span class="ot">Link</span><span class="co">](https://www.spacely.ai/tools/ai-virtual-staging)</span></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>Generative AI has come a long way. Almost nothing illustrates that better than the quality of generated images of human faces (see @fig-genai-intro-evolution).</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-evolution}</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}genai_evolution.png)</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>Evolution of generative AI. From left to righ, top to bottom: @goodfellow_generative_2014, @liu_coupled_2016,@radford_unsupervised_2016, @karras_progressive_2018, @karras_style-based_2019, @karras_analyzing_2020, @ho_denoising_2020, @rombach_high-resolution_2022, @saharia_photorealistic_2022, @betker_improving_2023</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>@tbl-genai-providers shows a few commercial providers of image generative models.</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>::: {#tbl-genai-providers}</span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Provider <span class="pp">|</span> Product <span class="pp">|</span> Key Features <span class="pp">|</span></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a><span class="pp">|----------|---------|--------------|</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">OpenAI</span><span class="co">](https://platform.openai.com/docs/guides/images)</span> <span class="pp">|</span> DALL·E 3 / Image API <span class="pp">|</span> API/ChatGPT integration, editing <span class="pp">|</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Midjourney</span><span class="co">](https://www.midjourney.com)</span> <span class="pp">|</span> Midjourney <span class="pp">|</span> High-quality, style-driven, Discord/app <span class="pp">|</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Adobe</span><span class="co">](https://www.adobe.com/products/firefly.html)</span> <span class="pp">|</span> Firefly <span class="pp">|</span> Creative Cloud integration, commercial-safe <span class="pp">|</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Google Cloud</span><span class="co">](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview)</span> <span class="pp">|</span> Imagen 3 <span class="pp">|</span> Enterprise API, safety controls <span class="pp">|</span></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Stability AI</span><span class="co">](https://stability.ai)</span> <span class="pp">|</span> Stable Diffusion SDXL <span class="pp">|</span> Open-source models, SDKs <span class="pp">|</span></span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">AWS</span><span class="co">](https://aws.amazon.com/bedrock/titan/)</span> <span class="pp">|</span> Titan Image <span class="pp">|</span> Managed service, editing, inpainting <span class="pp">|</span></span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Microsoft</span><span class="co">](https://azure.microsoft.com/products/ai-services/openai-service/)</span> <span class="pp">|</span> Azure OpenAI <span class="pp">|</span> Enterprise governance, Designer <span class="pp">|</span></span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Leonardo AI</span><span class="co">](https://leonardo.ai)</span> <span class="pp">|</span> Leonardo Platform <span class="pp">|</span> Web + API, styles, upscaling <span class="pp">|</span></span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Recraft</span><span class="co">](https://www.recraft.ai)</span> <span class="pp">|</span> Recraft V3 <span class="pp">|</span> Raster &amp; vector (SVG), brand styles <span class="pp">|</span></span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Canva</span><span class="co">](https://www.canva.com/ai-image-generator/)</span> <span class="pp">|</span> Magic Media <span class="pp">|</span> Built-in design workflows <span class="pp">|</span></span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Getty Images</span><span class="co">](https://www.gettyimages.com/generativeai)</span> <span class="pp">|</span> Generative AI <span class="pp">|</span> Stock-safe, clear licensing <span class="pp">|</span></span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="co">[</span><span class="ot">Shutterstock</span><span class="co">](https://www.shutterstock.com/ai/image-generator)</span> <span class="pp">|</span> AI Generator <span class="pp">|</span> Tied to licensing ecosystem <span class="pp">|</span></span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>Major image generation providers and their offerings.</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## What is Generative Modelling?</span></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>Let's contrast generative modelling with a classification task (see @fig-genai-intro-basics-classifier). Let's denote $f(\vect{x}) = \vect{y}$ for a classifier, and $g(\vect{y}) = \vect{x}$ for a generative model.</span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>In classification the model has as input an image $\vect{x}^{(i)}$ and models a probability distribution over all classes $\vect{\hat{y}}^{(i)}$ which ideally matches the true label $\vect{y}^{(i)}$.</span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-classifier}</span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_classifier.png)</span></span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>Classification.</span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>In generative modelling the process is essentially reversed: The input (can) be a label $\vect{y}$, such as a class label, and the output is an image $\vect{x}^{(i)}$, see @fig-genai-intro-basics-elephant.</span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-elephant}</span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_elephant.png)</span></span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>Generative modelling.</span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="What is the problem?" collapse="false"}</span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>Looking at the input and the output of @fig-genai-intro-basics-elephant. What could be a problem?</span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Click for result<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>If the input (in this case) to the generative model is a label, such as elephant, how can the model generate not just that one elephant?</span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a>An important distinction between a classifier and a generative model is:</span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$f(\vect{x})$ is a many-to-one mapping. Many inputs (e.g. images of elephants) should be associated with the same label (e.g the elephant label).</span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$g(\vect{y})$ is a one-to-many mapping. One label (e.g. elephant) should be associated with many output (e.g. images of elephants).</span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>Since neural networks consist of deterministic operations (such as matrix multiplications and additions) we need a way to transform $g()$ to a **stochastic** function. Only then is it possibe to generate different elephants and not always the same image (see @fig-genai-intro-basics-elephant-prob).</span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-elephant-prob}</span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_elephants_probabilistic.png)</span></span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>Generative modelling with a diverse set of outputs.</span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>One way to achieve this is to condition the generative model on a stochastic input $\vect{z} \sim p(z)$ and generate samples using $g(\vect{y}, \vect{z})$. Often we use a simple Gaussian distribution: $\vect{z} \sim \cal{N}(\mathbf{0}, \mathbfit{I})$.</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>One way to think about $\vect{z}$ is that of a **latent variable**. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector $\vect{y}$ specifies that the image should show an elephant, while $\vect{z}$ might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).</span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Conditional vs. Unconditional Generation"}</span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a>In general we distinguish between **conditional** and **unconditional** generation. If we condition the input on a piece of data, such as a label vector, we refer to **conditional generation** $g(\vect{c})$. If we just generate images we refer to **unconditional generation** $g()$. In the following we often use $g()$ to simplify notation.</span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Latent Variables Intuition" collapse="false"}</span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>Consider the dataset shown in @fig-genai-basics-latent-intuition: What could be latent variables for this dataset?</span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Click for result<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>Each output is defined by it's width and height. Therefore, we have two (unobserved) latent variables.</span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-latent-intuition}</span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}latent_variables_intuition1.png)</span></span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a>Intuition about latent variables in generative models. From @foster_generative_2023.</span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a>@fig-genai-basics-latent-intuition2 shows a plausible latent space and the corresponding mapping / samples from that space.</span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-latent-intuition2}</span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}latent_variables_intuition2.png)</span></span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>Intuition about latent variables in generative models. From @foster_generative_2023.</span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a><span class="fu">## Learning Generative Models</span></span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data $\hat{\vect{x}}$ should have a high probability under the probability density function of the real data $p_{\text{data}}(\hat{\vect{x}})$. @fig-genai-intro-synthetic-quality illustrates the principle: Models should aim to synthesize data points (x axis) which are probably under the true distribution.</span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-synthetic-quality}</span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}synthetic_quality/synthetic_quality_evaluation.png)</span></span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.</span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>In general there are two approaches to generative modelling:</span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>The **direct** (or implicit) approach learns a function that directly generates samples: $g(\vect{z}) = \vect{x}$.</span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>**Indirect models** learn scoring functions and generate samples by finding high-scoring values. There are different types of such models, such as density models.</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>Density models learn a probability density function $p_{\theta}: \vect{x} \to [0, \infty)$ with the normalization constraint:</span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>$$\int_{\mathbf{x}} p_{\theta}(\mathbf{x}) d\mathbf{x} = 1$$</span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>The goal is to approximate the true probability density function $p_{\theta} \sim p_{\text{data}}$.</span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>This can be achieved by minimizing the difference between $p_{\theta}$ and $p_{\text{data}}$. However, since $p_{\text{data}}$ is unkown, we can simply maximize the likelihood of the training data under $p_{\theta}$.</span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>\underset{\theta}{\arg\max} \frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\vect{x}^{(i)})</span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>@fig-genai-intro-density-model illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.</span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-density-model layout-ncol=2}</span>
+<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}density_model_1d/initial_distribution.png)</span></span>
+<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}density_model_1d/improved_distribution.png)</span></span>
+<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>Example of learning a density model in 1D.</span>
+<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a>**Examples:** Variational Autoencoders (VAEs), normalizing flows, autoregressive models</span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>**Note:** Once $p_{\theta}$ is modelled, a generative model needs a mechanism to sample from it. Otherwise we can only evaluate the likelihood of a data point. For example, to detect outliers.</span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a><span class="fu">## Desirable Properties of Generative Models</span></span>
+<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a>When evaluating generative models, we consider several important properties. Unfortunately, **no single approach achieves all these properties simultaneously**.</span>
+<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a><span class="fu">### Efficient Sampling</span></span>
+<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a>The ability to generate new samples quickly. This is crucial for practical applications.</span>
+<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Applications like real-time image generation, interactive tools, and large-scale dataset creation require fast sampling</span>
+<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** GANs and normalizing flows typically have efficient sampling (single forward pass)</span>
+<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models struggle:** Autoregressive models and some diffusion models require many sequential steps</span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a><span class="fu">### High-Quality Sampling</span></span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a>Generated samples should be realistic, detailed, and indistinguishable from real data.</span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Low-quality samples limit practical utility and can be easily detected as synthetic</span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** Modern GANs, diffusion models, and large-scale autoregressive models</span>
+<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Trade-off:** Often achieved at the cost of computational expense or training complexity</span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coverage (Diversity)</span></span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>The model should be able to generate the full diversity present in the training data, not just a subset of common examples.</span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** A model that only generates a few "safe" outputs is not truly learning the data distribution</span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Common failure:** Mode collapse in GANs, where the generator produces limited variety</span>
+<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** VAEs tend to have good coverage but sometimes at the cost of sample quality</span>
+<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a><span class="fu">###  Well-Behaved Latent Space</span></span>
+<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>The latent space $\mathbf{Z}$ should have smooth, meaningful structure where similar $\mathbf{z}$ values produce similar outputs.</span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Enables interpolation, controlled generation, and semantic editing</span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Example:** Linearly interpolating between two latent codes should produce a smooth transition between outputs</span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** VAEs explicitly encourage this through their training objective</span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a><span class="fu">### Disentangled Latent Space</span></span>
+<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>Different dimensions of $\mathbf{z}$ should control independent factors of variation in the output.</span>
+<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Enables fine-grained control over specific attributes (e.g., separate controls for pose, lighting, color)</span>
+<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Example:** One dimension controls "smiling" in face generation, another controls "age", independently</span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Challenge:** Difficult to achieve without explicit architectural design or training objectives</span>
+<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Applications:** Critical for controllable generation and interpretable models</span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a><span class="fu">### Efficient Likelihood Computation</span></span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a>The ability to evaluate $p_{\theta}(\mathbf{x})$ for any given sample $\mathbf{x}$.</span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:**</span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Enables direct optimization via maximum likelihood</span>
+<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Allows outlier/anomaly detection</span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Useful for model comparison and debugging</span>
+<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** Autoregressive models, normalizing flows, VAEs (approximate)</span>
+<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models lack this:** GANs, many diffusion models (cannot evaluate likelihood directly)</span>
+<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparing Generative Modeling Approaches</span></span>
+<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a>Different generative modeling approaches make different tradeoffs. Here's a comparison of major families:</span>
+<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Method <span class="pp">|</span> Latent Variables <span class="pp">|</span> Density <span class="pp">|</span> Fast Sampling <span class="pp">|</span></span>
+<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a><span class="pp">|--------|-----------------|----------------|---------------|</span></span>
+<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Autoregressive** <span class="pp">|</span> ❌ <span class="pp">|</span> ✅ <span class="pp">|</span> ❌ (sequential) <span class="pp">|</span></span>
+<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Diffusion** <span class="pp">|</span> ✅ <span class="pp">|</span> ⚠️ <span class="pp">|</span> ❌ (iterative) <span class="pp">|</span></span>
+<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **GANs** <span class="pp">|</span> ✅ <span class="pp">|</span> ❌ <span class="pp">|</span> ✅ <span class="pp">|</span></span>
+<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **VAEs** <span class="pp">|</span> ✅ <span class="pp">|</span> ⚠️ (approx.) <span class="pp">|</span> ✅ <span class="pp">|</span></span>
+<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a>**Key observations:**</span>
+<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**No method achieves all properties:** There is no generative model that simultaneously has latent variables, exact density computation, fast sampling, perfect quality, and perfect coverage</span>
+<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**GANs trade likelihood for quality:** Excellent sample quality and fast generation, but no likelihood evaluation and potential coverage issues</span>
+<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**VAEs balance tradeoffs:** Good coverage and approximate likelihood, but sometimes lower sample quality</span>
+<span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Diffusion models:** Current state-of-the-art for quality and coverage, but slow sampling</span>
+<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Autoregressive models:** Exact likelihood and good quality, but very slow sequential generation</span>
+<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a><span class="fu">## Evaluating Generative Models</span></span>
+<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a>Evaluating generative models and comparing different models with respect to sample quality and diversity is not a trivial task.</span>
+<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a>One approach is to calculate the likelihood of a test-set under the generative model $p_{\theta}(\vect{x})$. However, this is not possible for models which do not model a probability distribution.</span>
+<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a>A cumbersome approach is to use human studies by simply asking humans to compare samples from different models. This approach, however, is not always feasible when developing models. Other approaches</span>
+<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a>Different scores have been proposed. A popular one is the Inception Score (IS), see @salimans_improved_2016. This score is calculated using a classification model and thus only feasible for datasets with known classes. In this particular case, it is often used to compare generative models on the ImageNet dataset. This dataset has 1'000 classes with roughly equal distribution. The assumption is that a good generative model yields images which a classifier predicts accurately and with high confidence. In that case the marginal (averaged) distribution is close to unifrom, as illustrated in @fig-genai-basics-evaluating.</span>
+<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-evaluating}</span>
+<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}evaluating_genai.png)</span></span>
+<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a>Evaluating generative AI models.</span>
+<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Copyright 2026, Marco Willi</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This page is built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+<script>videojs(video_shortcode_videojs_video1);</script>
+<script>videojs(video_shortcode_videojs_video2);</script>
+
+
+
+
+</body></html>
