@@ -32,6 +32,20 @@ The following datasets are well-suited for project work. Size and task type vary
 Snapshot Serengeti is large, work with a curated subset and account for class imbalance in your evaluation (F1, weighted metrics, confusion matrices). AMI-Br is intentionally small and best suited for parameter-efficient fine-tuning experiments. MNIST is available but too simple to constitute a meaningful project. Additional camera trap datasets can be found at [LILA BC](https://lila.science/datasets#project-descriptions).
 :::
 
+::: {.callout-tip title="Downloading Snapshot Serengeti"}
+Use the provided helper script to download a curated subset. It handles metadata parsing, MegaDetector filtering, resumable downloads, and includes `make_splits()` and `compute_class_weights()` utilities for your training pipeline.
+
+```bash
+curl -O https://marco-willi.github.io/cas-dl-compvis-lectures-fs2026/assets/datasets/download_ser.py
+pip install pandas requests Pillow
+python download_ser.py
+```
+
+Edit the configuration block at the top of the script to select species and image counts. The first run builds a local catalogue (~1 min); subsequent runs load the cache and go straight to downloading.
+
+**Important**: the `empty` class has ~644k frames. If you include it, set `CLASS_COUNTS` explicitly — proportional sampling will otherwise produce a dataset that is ~80% empty.
+:::
+
 
 ## Classification Projects
 
