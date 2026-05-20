@@ -1,5 +1,5 @@
 ---
-title: "8 - Intro to Generative AI"
+title: "8 - GenAI Intro"
 params:
    images_path: "/assets/images/genai/"
 ---
@@ -31,7 +31,7 @@ After this lecture you should be able to:
 
 ## Motivation
 
-Generative AI has a profound effect on our society and on businesses. The most prominent models generate natural language, which can be used in many applications, such as chat bots. Increasingly, the quality of image generative models and their adoption into multi-modal generative models, has increased dramatically. Nowadays, synthetic images can hardly be distinguished from real photographs (see @fig-genai-intro-receipt) and can be used in many domains. Generating impressive images from scratch, however, is by far not the only task for generative models, as we will see.
+Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT @openai_introducing_2022 kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see @fig-genai-intro-receipt).
 
 ::: {#fig-genai-intro-receipt}
 
@@ -40,7 +40,19 @@ Generative AI has a profound effect on our society and on businesses. The most p
 [Source](https://x.com/deedydas/status/1905909215308447874)
 :::
 
-Creating highly creative and diverse images has been enabled by recent advances of models trained on internet-scale datasets. Different companies, such as Midjourney have built businesses around this capabilitie to make it easy for users to generate images (see @fig-genai-intro-midjourney).
+Arguably, the most impressive generative models are multimodal and can generate images, videos, audio and text and understand user intent for precise control of the generation process (see @fig-genai-intro-openai).
+
+::: {#fig-genai-intro-openai layout-ncol=2}
+
+![]({{< meta params.images_path >}}intro_openai_1.webp)
+
+![]({{< meta params.images_path >}}intro_openai_2.webp)
+
+Examples from OpenAI image generation. The two images were generated in turn, following user instructions about how to change the first image. [Source](https://openai.com/index/introducing-4o-image-generation/)
+:::
+
+
+Creating highly creative and diverse images has been enabled by recent advances of models trained on internet-scale datasets. Different companies, such as Midjourney have built businesses around this capability to make it easy for users to generate images (see @fig-genai-intro-midjourney).
 
 ::: {#fig-genai-intro-midjourney}
 
@@ -48,6 +60,36 @@ Creating highly creative and diverse images has been enabled by recent advances 
 
 [Source](https://www.midjourney.com)
 :::
+
+Companies such as Canva have integrated generative models into their design tools, making it easy for users to generate images and use them in their designs (see @fig-genai-intro-canva).
+
+
+::: {#fig-genai-intro-canva}
+
+![]({{< meta params.images_path >}}canva_example.jpg){width=600}
+
+[Source](https://www.canva.com/)
+:::
+
+AI-generated content in advertisements seems particularly prevalent. Suspected content is shown in @fig-genai-intro-advertisement.
+
+::: {#fig-genai-intro-advertisement layout-nrow=2}
+
+![]({{< meta params.images_path >}}das_original_intro.jpg){width=600}
+
+![]({{< meta params.images_path >}}boku_intro.jpg){width=600}
+
+AI generated? Top: [Source](https://die-marke-machts.at/), Bottom: [Source](https://offroadcommunications.com/pf/boku-university/)
+
+:::
+
+::: {.callout-note appearance="simple"}
+
+**🤔 What do you think? Are these ads AI-generated?**
+
+:::
+
+
 
 With recent advances in video generative modes (e.g. OpenAIs Sora2 and others), Midjourney also released a model capable of creating short videos (see @fig-genai-intro-midjourney-video).
 
@@ -66,27 +108,8 @@ With recent advances in video generative modes (e.g. OpenAIs Sora2 and others), 
 [Source](https://www.midjourney.com)
 :::
 
-Integrating image understanding and generation into large language models requires high consistency across generations, as show impressively by OpenAI's most recent model (see @fig-genai-intro-openai).
-
-::: {#fig-genai-intro-openai layout-ncol=2}
-
-![]({{< meta params.images_path >}}intro_openai_1.webp)
-
-![]({{< meta params.images_path >}}intro_openai_2.webp)
-
-Examples from OpenAI image generation. The two images were generated in turn, following user instructions about how to change the first image. [Source](https://openai.com/index/introducing-4o-image-generation/)
-:::
 
 
-Generative models have changed what it means to view a photography: is this really how it happened? See an example from Google's Magic Editor in @fig-genai-intro-magic.
-
-::: {#fig-genai-intro-magic}
-
-{{< video https://storage.googleapis.com/gweb-mobius-cdn/photos/uploads/6e54ed750f84538fd052b31818127f1e4df5711c.compressed.mp4 width=800 >}}
-
-[Example from Google Magic Editor](https://www.google.com/intl/en/photos/editing/)
-
-:::
 
 Not all generative models create images from scratch. Image super resolution is a task where generative models up-sample images spatially and enrich detail (see @fig-genai-intro-superres).
 
@@ -165,24 +188,31 @@ Evolution of generative AI. From left to righ, top to bottom: @goodfellow_genera
 
 ::: {#tbl-genai-providers}
 
-| Provider | Product | Key Features |
-|----------|---------|--------------|
-| [OpenAI](https://platform.openai.com/docs/guides/images) | DALL·E 3 / Image API | API/ChatGPT integration, editing |
-| [Midjourney](https://www.midjourney.com) | Midjourney | High-quality, style-driven, Discord/app |
-| [Adobe](https://www.adobe.com/products/firefly.html) | Firefly | Creative Cloud integration, commercial-safe |
-| [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) | Imagen 3 | Enterprise API, safety controls |
-| [Stability AI](https://stability.ai) | Stable Diffusion SDXL | Open-source models, SDKs |
-| [AWS](https://aws.amazon.com/bedrock/titan/) | Titan Image | Managed service, editing, inpainting |
-| [Microsoft](https://azure.microsoft.com/products/ai-services/openai-service/) | Azure OpenAI | Enterprise governance, Designer |
-| [Leonardo AI](https://leonardo.ai) | Leonardo Platform | Web + API, styles, upscaling |
-| [Recraft](https://www.recraft.ai) | Recraft V3 | Raster & vector (SVG), brand styles |
-| [Canva](https://www.canva.com/ai-image-generator/) | Magic Media | Built-in design workflows |
-| [Getty Images](https://www.gettyimages.com/generativeai) | Generative AI | Stock-safe, clear licensing |
-| [Shutterstock](https://www.shutterstock.com/ai/image-generator) | AI Generator | Tied to licensing ecosystem |
+| Provider | Product / Model Family | Key Features |
+|----------|------------------------|--------------|
+| [OpenAI](https://platform.openai.com/docs/guides/image-generation) | GPT Image / Image API | High-quality text-to-image and image editing, ChatGPT/API integration, strong prompt following and text rendering |
+| [Google](https://ai.google.dev/gemini-api/docs/image-generation) | Gemini Image / Nano Banana | Native image generation and editing, conversational edits, multi-image fusion, fast API access |
+| [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) | Imagen 4 / Gemini on Vertex AI | Enterprise API, Vertex AI integration, safety controls, Imagen for high-quality text-to-image |
+| [Midjourney](https://www.midjourney.com) | Midjourney V7 | High-quality, style-driven image generation, strong aesthetic control, web/Discord workflows |
+| [Adobe](https://www.adobe.com/products/firefly.html) | Firefly Image Model | Creative Cloud integration, commercially oriented workflows, image generation/editing, design tools |
+| [Black Forest Labs](https://bfl.ai) | FLUX | Strong open/proprietary model family, image generation and editing, high-quality photorealism, controllable generation |
+| [Stability AI](https://stability.ai) | Stable Diffusion / SD3.5 | Open-weight ecosystem, local/self-hosted workflows, ControlNet/LoRA/community tooling |
+| [AWS](https://docs.aws.amazon.com/nova/latest/nova2-userguide/what-is-nova-2.html) | Amazon Nova Canvas / Titan Image | Managed Bedrock service, image generation/editing, enterprise deployment and governance |
+| [Microsoft](https://m365.cloud.microsoft/ai-image-generator) | Copilot / Designer / Bing Image Creator | Consumer and productivity workflows, Microsoft 365 integration, design generation from prompts |
+| [Ideogram](https://ideogram.ai) | Ideogram | Strong typography and text-in-image generation, marketing/design-oriented image creation |
+| [Runway](https://runwayml.com) | Gen-4 Image / Video | Reference-based image generation, image-to-video workflows, creative production tooling |
+| [Leonardo AI](https://leonardo.ai) | Leonardo Platform | Web + API workflows, custom models, styles, upscaling, game/asset-oriented generation |
+| [Recraft](https://www.recraft.ai) | Recraft | Raster and vector generation, SVG/logos/icons, brand-style workflows |
+| [Canva](https://www.canva.com/ai-image-generator/) | Magic Media | Built-in design workflows, templates, social/media asset creation |
+| [Getty Images](https://www.gettyimages.com/ai) | Generative AI by Getty Images | Stock-safe/commercially oriented generation, licensed training corpus, legal protection emphasis |
+| [Shutterstock](https://www.shutterstock.com/business/generative-ai) | Shutterstock AI Image Generator | Stock-library-integrated generation, licensing ecosystem, ideation and mood-board workflows |
+| [fal.ai](https://fal.ai) / [Replicate](https://replicate.com) | Model API Platforms | Hosted access to many image/video models, useful for prototyping and demos, not primarily model owners |
 
-Major image generation providers and their offerings.
+Major image generation providers, model families, and platforms.
 
 :::
+
+
 
 
 ## What is Generative Modelling?
@@ -276,7 +306,7 @@ Intuition about latent variables in generative models. From @foster_generative_2
 
 ## Learning Generative Models
 
-The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data $\hat{\vect{x}}$ should have a high probability under the probability density function of the real data $p_{\text{data}}(\hat{\vect{x}})$. @fig-genai-intro-synthetic-quality illustrates the principle: Models should aim to synthesize data points (x axis) which are probably under the true distribution.
+The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data $\hat{\vect{x}}$ should have a high probability under the probability density function of the real data $p_{\text{data}}(\hat{\vect{x}})$. @fig-genai-intro-synthetic-quality illustrates the principle: Models should aim to synthesize data points (x axis) which are probable under the true distribution.
 
 ::: {#fig-genai-intro-synthetic-quality}
 

@@ -72,8 +72,11 @@ website:
           - pages/lectures/representation_learning.qmd
           - pages/lectures/downstream_adaptation.qmd
           - pages/lectures/vision_transformers.qmd
-          - pages/lectures/intro_genai.qmd
+          - pages/lectures/genai_intro.qmd
+          - pages/lectures/genai_models.qmd
+          - pages/lectures/genai_practical.qmd
           - pages/lectures/generative_models.qmd
+          - pages/lectures/generative_models2.qmd
       # ------ SLIDES ---------------------------- #
       - section: Slides
         contents:

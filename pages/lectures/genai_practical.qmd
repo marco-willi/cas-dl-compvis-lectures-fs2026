@@ -1,0 +1,296 @@
+---
+title: "10 - GenAI Practical"
+params:
+   images_path: "/assets/images/genai/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+::: {.callout-tip title="Learning Objectives"  collapse="true"}
+
+After this lecture you should be able to:
+
+- Explain the core mechanisms of major generative model families: autoregressive, diffusion, GANs, and VAEs
+- Compare tradeoffs between these approaches (sampling speed, quality, coverage, likelihood computation)
+- Understand how conditional generation extends models to accept additional inputs (text, images, class labels)
+- Utilize pre-trained models (Stable Diffusion) and efficient fine-tuning techniques (LoRA) for practical applications
+
+:::
+
+
+::: {.callout-tip title="TLDR Recap" collapse="true"}
+
+Four major generative model families make different tradeoffs: **Autoregressive** (exact likelihood, slow sequential sampling), **Diffusion** (SOTA quality, iterative denoising), **GANs** (fast generation, adversarial training, mode collapse risk), **VAEs** (structured latent space, approximate likelihood). **Conditional generation** extends models to accept text, images, or labels as input. **Stable Diffusion** runs diffusion in VAE latent space for efficiency, enabling practical high-resolution generation. **LoRA** fine-tuning adapts pre-trained models with minimal compute. Societal considerations include synthetic data pollution, authenticity challenges, and embedded biases.
+
+:::
+
+
+## Pre-Trained Models
+
+Training generative models from scratch requires massive datasets (millions of images), significant compute resources (weeks on multiple GPUs), and careful hyperparameter tuning. For most practical applications, **pre-trained models** provide a much more accessible starting point.
+
+The landscape has been transformed by models like **Stable Diffusion**, which bring state-of-the-art generation capabilities to consumer hardware. These models are trained on billions of image-text pairs and can generate high-quality, diverse images from text prompts—with minimal customization required for many use cases.
+
+::: {.callout-note title="Pros and Cons of Pre-Trained Models"}
+
+**Pros**
+
+- High-quality image generation out-of-the-box
+- Generate images via natural language prompts
+- Easy to customize or fine-tune with minimal investment (LoRA, DreamBooth)
+- Active community sharing models, techniques, and improvements
+
+**Cons**
+
+- Not suitable if your data is from a highly specific domain (e.g., medical imaging, satellite imagery)
+- May not work well for very specific output constraints (e.g., exact branding requirements)
+- Biases from training data may propagate to outputs
+- Licensing considerations for commercial use
+
+:::
+
+### Stable Diffusion: Practical State-of-the-Art
+
+**Stable Diffusion** [@rombach_high-resolution_2022] is an open-source text-to-image model that has become the de facto standard for accessible, high-quality image generation. See @fig-genai-stable-diffusion-xl-examples for some examples.
+
+::: {#fig-genai-stable-diffusion-xl-examples}
+
+![]({{< meta params.images_path >}}pract_stable_diffusion_xl_examples.png)
+
+Stable Diffusion XL: Example generations showing diverse styles and subjects from text prompts. [Source](https://huggingface.co/stabilityai/stable-diffusion-3.5-large).
+:::
+
+Unlike pure pixel-space diffusion (which is computationally expensive), Stable Diffusion uses **latent diffusion**—running the diffusion process in a compressed latent space.
+
+::: {#fig-genai-diffusion-sd-architecture}
+
+![]({{< meta params.images_path >}}diffusion_sd_architecture_genbook.png)
+
+Stable Diffusion pipeline: Text is encoded via CLIP, diffusion runs in VAE latent space (much smaller than pixel space), and the VAE decoder produces the final image. Adapted from GenBook.
+:::
+
+### Why Latent Diffusion?
+
+Running diffusion directly on high-resolution images (e.g., 512×512×3) is computationally expensive—the U-Net must process millions of values at each denoising step. **Latent Diffusion** solves this by:
+
+1. **Pre-training a VAE** to compress images into a lower-dimensional latent space (e.g., 64×64×4)
+2. **Running diffusion in the latent space** (much faster!)
+3. **Decoding** the final latent representation back to pixel space
+
+This provides an **8× reduction** in memory and computation, making high-resolution generation practical on consumer GPUs.
+
+### Conditioning on Text (and More)
+
+Stable Diffusion supports **text-conditional generation** via cross-attention to CLIP text embeddings. The U-Net attends to text features at multiple scales, enabling precise control over generated content. Beyond text, the framework supports conditioning on:
+
+- **Images**: For inpainting, outpainting, and image-to-image translation
+- **Depth maps**: For 3D-aware generation
+- **Segmentation masks**: For spatial control
+- **Style embeddings**: For artistic control
+
+::: {#fig-genai-diffusion-latent-diff-architecture}
+
+![]({{< meta params.images_path >}}diffusion_latent_diff_architecture.png)
+
+Latent Diffusion architecture: The denoising U-Net operates in VAE latent space and uses cross-attention to condition on text (or other modalities). From @rombach_high-resolution_2022.
+:::
+
+
+### Fine-Tuning with LoRA
+
+While pre-trained models are powerful, you often want to adapt them to specific styles, subjects, or domains. Traditional fine-tuning updates all model parameters (billions of weights!), requiring massive memory and compute. **LoRA (Low-Rank Adaptation)**, see @fig-genai-lora-architecture, offers a far more efficient alternative.
+
+**Key idea**: Instead of updating the full weight matrix $W$, LoRA learns a low-rank update $\Delta W = BA$ where:
+
+- $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$
+- $r \ll \min(d, k)$ (typically $r = 4$ to $16$)
+- Only $A$ and $B$ are trained; original weights $W$ remain frozen
+
+This reduces trainable parameters by **1000×** or more, enabling fine-tuning on a single consumer GPU in hours rather than days. LoRA adapters can be easily shared, combined, and switched, creating a thriving ecosystem of specialized models.
+
+**Popular use cases**:
+
+- **Style transfer**: Train on artworks to mimic specific artistic styles
+- **Subject learning**: DreamBooth + LoRA to generate images of specific people/objects
+- **Domain adaptation**: Adapt to specialized domains (anime, architecture, product photography)
+
+
+::: {#fig-genai-lora-architecture}
+
+![]({{< meta params.images_path >}}lora.png){width=600}
+
+LoRA (Low-Rank Adaptation): Instead of fine-tuning all weights $W$, LoRA trains low-rank matrices $A$ and $B$ where $\Delta W = BA$. This drastically reduces trainable parameters. From @hu_lora_2021.
+:::
+
+
+### Hardware Requirements
+
+The computational demands vary significantly between inference and training:
+
+#### Inference (Image Generation)
+
+- **Minimum**: 4-6 GB VRAM (GPU)
+  - Stable Diffusion 1.5 at 512×512 resolution
+  - Longer generation times, limited batch sizes
+- **Recommended**: 8-12 GB VRAM
+  - Stable Diffusion XL at 1024×1024
+  - Comfortable batch sizes, faster generation
+- **High-end**: 16+ GB VRAM
+  - Multiple models loaded simultaneously
+  - Video generation, 3D-aware models
+
+**CPU-only** inference is possible but **extremely slow** (minutes per image vs. seconds). Many optimization techniques exist: quantization, attention slicing, model offloading.
+
+#### Fine-Tuning (LoRA)
+
+- **Minimum**: 12-16 GB VRAM
+  - LoRA fine-tuning with small batch sizes
+  - Gradient checkpointing, mixed precision required
+- **Recommended**: 24 GB VRAM
+  - Comfortable batch sizes for faster convergence
+  - Multiple LoRA ranks simultaneously
+
+#### Full Training (From Scratch)
+
+- **Minimum**: Multiple A100 GPUs (40-80 GB each)
+- **Typical**: Clusters with 100+ GPUs
+- **Duration**: Days to weeks
+- **Cost**: $10,000s to $100,000s
+
+For most researchers and practitioners, pre-trained models + LoRA fine-tuning offer the best trade-off.
+
+### Open-Source Ecosystem
+
+The open-source community has created a rich ecosystem of tools, models, and resources:
+
+#### HuggingFace
+
+[HuggingFace](https://huggingface.co/) is the central hub for open-source generative models:
+
+- **Diffusers library**: Unified Python API for diffusion models with extensive documentation
+  ```python
+  from diffusers import StableDiffusionPipeline
+  pipe = StableDiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-1")
+  image = pipe("A photo of a cat wearing sunglasses").images[0]
+  ```
+- **Model Hub**: 100,000+ models including base models, fine-tunes, and LoRA adapters
+- **Spaces**: Interactive demos for trying models before downloading
+- **Documentation**: Comprehensive guides for inference, fine-tuning, and training
+
+**Best for**: Programmatic access, research, production deployments, custom workflows
+
+#### CivitAI
+
+[CivitAI](https://civitai.com/) is a community-driven platform specializing in Stable Diffusion models:
+
+- **Extensive model library**: Thousands of community-created models, LoRAs, and embeddings
+- **Style-focused**: Strong emphasis on artistic styles, anime, photorealism
+- **Preview images**: See example outputs before downloading
+- **Version control**: Track model updates and improvements
+
+**Best for**: Exploring diverse styles, finding specialized models, community engagement
+
+#### Automatic1111 WebUI
+
+[Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui) provides a feature-rich web interface for local generation:
+
+- **Local execution**: Run models on your own hardware with full control
+- **Advanced features**: Inpainting, img2img, ControlNet, depth guidance
+- **Extensions ecosystem**: Hundreds of community plugins
+- **Batch processing**: Generate and iterate efficiently
+
+**Best for**: Interactive experimentation, full control over generation, no API costs
+
+### Closed-Source Platforms
+
+Commercial platforms offer convenient APIs and frontier models:
+
+#### OpenAI
+
+- **Latest model**: 4o Image with enhanced prompt following and coherence
+- **API access**: Programmatic generation, inpainting, variations
+- **Pricing**: Pay per image generated
+- **Strengths**: Strong text understanding, safe outputs, reliable API
+
+#### Google Gemini (Imagen)
+
+- **High photorealism**: Particularly strong at realistic images
+- **Multimodal**: Integration with Gemini's broader capabilities
+- **Controlled access**: Available through Google Cloud
+- **Strengths**: Photo-quality outputs, factual accuracy
+
+#### Replicate
+
+- **Hybrid platform**: Both open- and closed-source models via unified API
+- **Pay-per-use**: No infrastructure management, pay only for inference
+- **Host custom models**: Deploy your own fine-tuned models
+- **Wide selection**: SDXL, Midjourney alternatives, domain-specific models
+
+#### Midjourney
+
+- **Artistic focus**: Highly curated, aesthetic, and stylized outputs
+- **Discord interface**: Community-driven prompt engineering
+- **No API**: Interface only, no programmatic access
+- **Strengths**: Artistic coherence, aesthetic quality, strong defaults
+
+**Choosing a platform**:
+
+- **For prototyping**: HuggingFace Spaces or Replicate (fast, no setup)
+- **For production**: HuggingFace Diffusers or OpenAI API (reliable, scalable)
+- **For experimentation**: Automatic1111 (full control, no API costs)
+- **For art/design**: Midjourney or CivitAI models (aesthetic quality)
+
+## Conclusions & Discussions
+
+
+An interesting thought: What happens if models are trained (inadvertedly) on synhetic data? @alemohammad_self-consuming_2023 studies this and found remarkable degradation, see @fig-genai-deterioration-on-pollution.
+
+::: {#fig-genai-deterioration-on-pollution}
+
+![]({{< meta params.images_path >}}deterioration_on_pollution.png)
+
+Example: Deterioration of generated image quality under pollution or domain shift. From @alemohammad_self-consuming_2023.
+:::
+
+Furthermore, synthetic imagery has obvious consequences on all of us. The lines between real and synthetic are starting to blur and it becomes increasingly difficult to distinguish both. See the following quote with respect to @fig-genai-real-or-not-musk.
+
+
+> Zunächst hatte die Polizei … die Aktion habe nicht stattgefunden, das Bild davon sei ein »Fake«. ... Auf Anfrage des SPIEGEL sagte ein Sprecher der Brandenburger Polizei: »Ob die Projektion tatsächlich so ablief, ist Teil dieser Ermittlungen. Derzeit können wir es jedenfalls nicht ausschließen.«
+
+
+::: {#fig-genai-real-or-not-musk}
+
+![]({{< meta params.images_path >}}real_or_not_musk.png)
+
+"Real or Not?" [Link](https://www.spiegel.de/panorama/elon-musk-staatsschutz-ermittelt-nach-projektion-tesla-werk-in-gruenheide-a-8268048f-050b-4ae7-adf8-bb9cf572cf25?sara_ref=re-so-app-sh)
+:::
+
+Furthermore, biases from the internet-scale data the models have been trained on seep into the models. An interesting article by the Washington post [Link](https://www.washingtonpost.com/technology/interactive/2024/ai-bias-beautiful-women-ugly-images/) investigated this @fig-genai-ai-bias-wp-front.
+
+::: {#fig-genai-ai-bias-wp-front}
+
+![]({{< meta params.images_path >}}ai_bias_wp_front.png)
+
+AI bias: Example from a whitepaper front page. [Link](https://www.washingtonpost.com/technology/interactive/2024/ai-bias-beautiful-women-ugly-images/)
+:::
+
+They found strong biases, for example, with respect to the depiction of _beautiful women_, see @fig-genai-ai-bias-wp-examples.
+
+::: {#fig-genai-ai-bias-wp-examples}
+
+![]({{< meta params.images_path >}}ai_bias_wp_examples.png)
+
+AI bias: Additional examples. [Link](https://www.washingtonpost.com/technology/interactive/2024/ai-bias-beautiful-women-ugly-images/)
+:::
+
+
+
+## References
+
+::: {#refs}
+:::

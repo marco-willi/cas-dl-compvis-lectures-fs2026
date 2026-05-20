@@ -133,4 +133,4 @@ exam/*
 .quarto/
 
 /.quarto/
-TODO.md
+TODO*.md
