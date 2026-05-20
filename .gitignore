@@ -82,7 +82,7 @@ demos/*
 ########## Assets (selective exclusions) ##########
 # Ignore certain large, topic-specific image folders not used in current build.
 assets/images/*/archive/*
-assets/images/genai/*
+assets/images/genai/*/archive/*
 
 ########## Model Weights / Checkpoints ##########
 *.pt
