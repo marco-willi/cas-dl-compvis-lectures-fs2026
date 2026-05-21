@@ -1,7 +1,7 @@
 ---
-title: "9 - GenAI Models "
+title: "9 - GenAI Model Families"
 params:
-   images_path: "/assets/images/genai/"
+   images_path: "/assets/images/genai_models/"
 ---
 
 ::: {.content-hidden}
@@ -30,37 +30,85 @@ Four major generative model families make different tradeoffs: **Autoregressive*
 :::
 
 
-## Modelling Approaches
+## Generative Model Families
 
-Over the past decade, several families of generative models have emerged, each with distinct philosophies and trade-offs. We introduce a few of the most important ones in the following sections, however, note that this list is not exhaustive.
+Over the past decade, several families of generative models have emerged. They differ in how they model the data distribution, how they generate samples, and which tradeoffs they make. We introduce a few of the most important ones in the following sections. Note that this list is not exhaustive.
 
 ## Autoregressive Models
 
-Autoregressive models generate data sequentially, predicting one element at a time conditioned on all previous elements. This sequential factorization turns the complex problem of modeling high-dimensional distributions into a series of simpler conditional distributions.
+Autoregressive models generate data sequentially, predicting one element at a time conditioned on all previous elements.
 
-::: {#fig-genai-autoregressive-overview}
 
-![]({{< meta params.images_path >}}autoregressive_overview.png)
-
-Autoregressive generation: Models predict each element sequentially, conditioning on all previously generated elements. Figure from @torralba_foundations_2024.
-:::
-
-For an image with pixels $x_1, x_2, \ldots, x_n$, the joint distribution factors as:
+For an image represented as a sequence of pixels, patches, or discrete image tokens $x_1, x_2, \ldots, x_n$, the joint distribution can be factorized as a product of conditionals:
 
 $$
 p(x_1, x_2, \ldots, x_n) = p(x_1) \cdot p(x_2|x_1) \cdot p(x_3|x_1,x_2) \cdots p(x_n|x_1,\ldots,x_{n-1})
 $$
 
-Each conditional $p(x_i|x_1,\ldots,x_{i-1})$ is modeled by a neural network (typically a masked CNN or Transformer). During generation, we sample from these conditionals sequentially:
+During generation, the model samples step by step:
 
 1. Sample $x_1 \sim p(x_1)$
 2. Sample $x_2 \sim p(x_2|x_1)$
 3. Sample $x_3 \sim p(x_3|x_1,x_2)$
 4. Continue until all pixels generated
 
-**Key advantage**: Exact likelihood computation—we can evaluate $p(x)$ for any sample.
+::: {.callout-note title="Key Idea"}
+Autoregressive models turn image generation into a sequence prediction problem.
+:::
 
-**Key limitation**: Sequential generation is slow—cannot parallelize pixel prediction.
+Each conditional $p(x_i|x_1,\ldots,x_{i-1})$ is modeled by a neural network (typically a masked CNN or Transformer). This sequential factorization turns the complex problem of modeling high-dimensional distributions into a series of simpler conditional distributions.
+
+
+Figure @fig-genai-autoregressive-overview illustrates the autoregressive generation process. The model generates pixels one by one, conditioning on all previously generated pixels. This allows for exact likelihood computation, but the sequential nature makes sampling slow and limits parallelization.
+
+::: {#fig-genai-autoregressive-overview}
+
+![]({{< meta params.images_path >}}autoregressive_overview.png)
+
+Autoregressive generation. Models predict each element sequentially, conditioning on all previously generated elements. Figure from @torralba_foundations_2024.
+:::
+
+
+**Key advantage**: Exact likelihood computation. We can evaluate $p(x)$ for any sample.
+
+**Key limitation**: Sequential generation is slow. We cannot parallelize pixel prediction.
+
+
+A prominent example of autoregressive models is PixelCNN [@oord_conditional_2016], which uses masked convolutions to ensure the autoregressive property. More recently, transformer-based autoregressive models (e.g., Parti @yu_scaling_2022) have shown strong performance by modeling images as sequences of discrete tokens. Also, OpenAI's GPT Image / 4o image generation is described by OpenAI as an autoregressive, natively multimodal image generation model, in contrast to DALL·E-style diffusion models. The exact image tokenization and decoder architecture are not publicly specified.
+
+
+## Generative Adversarial Networks
+
+
+GANs, see @goodfellow_generative_2014, frame generative modeling as an **adversarial game** between two neural networks: a **generator** $g(\vect{z})$ that creates fake samples, and a **discriminator** $d(\vect{x})$ that tries to distinguish real data from generated fakes (see @fig-genai-gan-idea). This adversarial setup drives both networks to improve: the generator learns to create increasingly realistic samples, while the discriminator becomes better at spotting fakes.
+
+::: {#fig-genai-gan-idea}
+
+![]({{< meta params.images_path >}}gan-architecture.jpg)
+
+GAN idea: The generator creates fake samples from random noise $z \sim \mathcal{N}(0, I)$, while the discriminator judges whether samples are real or fake. From [Link](https://microsoft.github.io/GenStudio/)
+:::
+
+The GAN training objective can be expressed as a minimax game:
+
+$$
+\min_{g} \max_{d} \mathbb{E}_{\vect{x} \sim p_{data}}[\log d(\vect{x})] + \mathbb{E}_{\vect{z} \sim p_z}[\log(1 - d(g(\vect{z})))]
+$$
+
+The discriminator $d$ maximizes its ability to correctly classify real ($d(\vect{x}) \approx 1$) vs. fake ($d(g(\vect{z})) \approx 0$) samples. The generator $G$ minimizes the discriminator's success, trying to produce samples where $d(g(\vect{z})) \approx 1$ (fooling the discriminator). See @fig-genai-gan-learning for an illustration.
+
+In practice, training alternates between:
+1. **Discriminator step**: Update $d$ to better distinguish real from fake
+2. **Generator step**: Update $g$ to better fool the current discriminator
+
+
+::: {#fig-genai-gan-learning}
+
+![]({{< meta params.images_path >}}gan_learning.png)
+
+GAN learning process: As training progresses, the generator's distribution (green) moves closer to the real data distribution (black dots). The discriminator's decision boundary (blue) adapts accordingly. From @foster_generative_2023
+:::
+
 
 ## Diffusion Models
 
@@ -157,37 +205,7 @@ This generalization reveals that diffusion's success stems from the gradual, mul
 
 :::
 
-## Generative Adversarial Networks
 
-
-GANs, see @goodfellow_generative_2014, frame generative modeling as an **adversarial game** between two neural networks: a **generator** $g(\vect{z})$ that creates fake samples, and a **discriminator** $d(\vect{x})$ that tries to distinguish real data from generated fakes (see @fig-genai-gan-idea). This adversarial setup drives both networks to improve: the generator learns to create increasingly realistic samples, while the discriminator becomes better at spotting fakes.
-
-::: {#fig-genai-gan-idea}
-
-![]({{< meta params.images_path >}}gan-architecture.jpg)
-
-GAN idea: The generator creates fake samples from random noise $z \sim \mathcal{N}(0, I)$, while the discriminator judges whether samples are real or fake. From [Link](https://microsoft.github.io/GenStudio/)
-:::
-
-The GAN training objective can be expressed as a minimax game:
-
-$$
-\min_{g} \max_{d} \mathbb{E}_{\vect{x} \sim p_{data}}[\log d(\vect{x})] + \mathbb{E}_{\vect{z} \sim p_z}[\log(1 - d(g(\vect{z})))]
-$$
-
-The discriminator $d$ maximizes its ability to correctly classify real ($d(\vect{x}) \approx 1$) vs. fake ($d(g(\vect{z})) \approx 0$) samples. The generator $G$ minimizes the discriminator's success, trying to produce samples where $d(g(\vect{z})) \approx 1$ (fooling the discriminator). See @fig-genai-gan-learning for an illustration.
-
-In practice, training alternates between:
-1. **Discriminator step**: Update $d$ to better distinguish real from fake
-2. **Generator step**: Update $g$ to better fool the current discriminator
-
-
-::: {#fig-genai-gan-learning}
-
-![]({{< meta params.images_path >}}gan_learning.png)
-
-GAN learning process: As training progresses, the generator's distribution (green) moves closer to the real data distribution (black dots). The discriminator's decision boundary (blue) adapts accordingly. From @foster_generative_2023
-:::
 
 
 ## Variational Autoencoders

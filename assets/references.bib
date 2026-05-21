@@ -2142,3 +2142,33 @@
 	month = nov,
 	year = {2022},
 }
+
+@misc{yu_scaling_2022,
+	title = {Scaling {Autoregressive} {Models} for {Content}-{Rich} {Text}-to-{Image} {Generation}},
+	url = {http://arxiv.org/abs/2206.10789},
+	doi = {10.48550/arXiv.2206.10789},
+	abstract = {We present the Pathways Autoregressive Text-to-Image (Parti) model, which generates high-fidelity photorealistic images and supports content-rich synthesis involving complex compositions and world knowledge. Parti treats text-to-image generation as a sequence-to-sequence modeling problem, akin to machine translation, with sequences of image tokens as the target outputs rather than text tokens in another language. This strategy can naturally tap into the rich body of prior work on large language models, which have seen continued advances in capabilities and performance through scaling data and model sizes. Our approach is simple: First, Parti uses a Transformer-based image tokenizer, ViT-VQGAN, to encode images as sequences of discrete tokens. Second, we achieve consistent quality improvements by scaling the encoder-decoder Transformer model up to 20B parameters, with a new state-of-the-art zero-shot FID score of 7.23 and finetuned FID score of 3.22 on MS-COCO. Our detailed analysis on Localized Narratives as well as PartiPrompts (P2), a new holistic benchmark of over 1600 English prompts, demonstrate the effectiveness of Parti across a wide variety of categories and difficulty aspects. We also explore and highlight limitations of our models in order to define and exemplify key areas of focus for further improvements. See https://parti.research.google/ for high-resolution images.},
+	urldate = {2026-05-21},
+	publisher = {arXiv},
+	author = {Yu, Jiahui and Xu, Yuanzhong and Koh, Jing Yu and Luong, Thang and Baid, Gunjan and Wang, Zirui and Vasudevan, Vijay and Ku, Alexander and Yang, Yinfei and Ayan, Burcu Karagol and Hutchinson, Ben and Han, Wei and Parekh, Zarana and Li, Xin and Zhang, Han and Baldridge, Jason and Wu, Yonghui},
+	month = jun,
+	year = {2022},
+	note = {arXiv:2206.10789 [cs.CV]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Machine Learning},
+	file = {Preprint PDF:D\:\\Literatur\\Zotero\\storage\\8XWYQHTY\\Yu et al. - 2022 - Scaling Autoregressive Models for Content-Rich Text-to-Image Generation.pdf:application/pdf;Snapshot:D\:\\Literatur\\Zotero\\storage\\SR9CP2EM\\2206.html:text/html},
+}
+
+@misc{oord_conditional_2016,
+	title = {Conditional {Image} {Generation} with {PixelCNN} {Decoders}},
+	url = {http://arxiv.org/abs/1606.05328},
+	doi = {10.48550/arXiv.1606.05328},
+	abstract = {This work explores conditional image generation with a new image density model based on the PixelCNN architecture. The model can be conditioned on any vector, including descriptive labels or tags, or latent embeddings created by other networks. When conditioned on class labels from the ImageNet database, the model is able to generate diverse, realistic scenes representing distinct animals, objects, landscapes and structures. When conditioned on an embedding produced by a convolutional network given a single image of an unseen face, it generates a variety of new portraits of the same person with different facial expressions, poses and lighting conditions. We also show that conditional PixelCNN can serve as a powerful decoder in an image autoencoder. Additionally, the gated convolutional layers in the proposed model improve the log-likelihood of PixelCNN to match the state-of-the-art performance of PixelRNN on ImageNet, with greatly reduced computational cost.},
+	urldate = {2026-05-21},
+	publisher = {arXiv},
+	author = {Oord, Aaron van den and Kalchbrenner, Nal and Vinyals, Oriol and Espeholt, Lasse and Graves, Alex and Kavukcuoglu, Koray},
+	month = jun,
+	year = {2016},
+	note = {arXiv:1606.05328 [cs.CV]},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Machine Learning},
+	file = {Preprint PDF:D\:\\Literatur\\Zotero\\storage\\BK6NRNR6\\Oord et al. - 2016 - Conditional Image Generation with PixelCNN Decoders.pdf:application/pdf;Snapshot:D\:\\Literatur\\Zotero\\storage\\27ZBITPB\\1606.html:text/html},
+}
