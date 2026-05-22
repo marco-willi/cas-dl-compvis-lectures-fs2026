@@ -8,7 +8,7 @@
 
 <meta name="author" content="Marco Willi">
 
-<title>8 - GenAI Intro – CAS Deep Learning - Computer Vision</title>
+<title>8 - Generative AI for Computer Vision – CAS Deep Learning - Computer Vision</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -181,7 +181,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/genai_intro.html">8 - GenAI Intro</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/genai_intro.html">8 - Generative AI for Computer Vision</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -300,7 +300,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/lectures/genai_intro.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">8 - GenAI Intro</span></a>
+ <span class="menu-text">8 - Generative AI for Computer Vision</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -446,29 +446,39 @@ window.Quarto = {
    
   <ul>
   <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">1</span> Motivation</a></li>
-  <li><a href="#what-is-generative-modelling" id="toc-what-is-generative-modelling" class="nav-link" data-scroll-target="#what-is-generative-modelling"><span class="header-section-number">2</span> What is Generative Modelling?</a></li>
-  <li><a href="#learning-generative-models" id="toc-learning-generative-models" class="nav-link" data-scroll-target="#learning-generative-models"><span class="header-section-number">3</span> Learning Generative Models</a></li>
-  <li><a href="#desirable-properties-of-generative-models" id="toc-desirable-properties-of-generative-models" class="nav-link" data-scroll-target="#desirable-properties-of-generative-models"><span class="header-section-number">4</span> Desirable Properties of Generative Models</a>
+  <li><a href="#what-can-be-generated" id="toc-what-can-be-generated" class="nav-link" data-scroll-target="#what-can-be-generated"><span class="header-section-number">2</span> What can be generated?</a></li>
+  <li><a href="#what-is-generative-modelling" id="toc-what-is-generative-modelling" class="nav-link" data-scroll-target="#what-is-generative-modelling"><span class="header-section-number">3</span> What is Generative Modelling?</a></li>
+  <li><a href="#unconditional-vs.-conditional-generation" id="toc-unconditional-vs.-conditional-generation" class="nav-link" data-scroll-target="#unconditional-vs.-conditional-generation"><span class="header-section-number">4</span> Unconditional vs.&nbsp;Conditional Generation</a></li>
+  <li><a href="#learning-generative-models" id="toc-learning-generative-models" class="nav-link" data-scroll-target="#learning-generative-models"><span class="header-section-number">5</span> Learning Generative Models</a></li>
+  <li><a href="#desirable-properties-of-generative-models" id="toc-desirable-properties-of-generative-models" class="nav-link" data-scroll-target="#desirable-properties-of-generative-models"><span class="header-section-number">6</span> Desirable Properties of Generative Models</a>
   <ul class="collapse">
-  <li><a href="#efficient-sampling" id="toc-efficient-sampling" class="nav-link" data-scroll-target="#efficient-sampling"><span class="header-section-number">4.1</span> Efficient Sampling</a></li>
-  <li><a href="#high-quality-sampling" id="toc-high-quality-sampling" class="nav-link" data-scroll-target="#high-quality-sampling"><span class="header-section-number">4.2</span> High-Quality Sampling</a></li>
-  <li><a href="#coverage-diversity" id="toc-coverage-diversity" class="nav-link" data-scroll-target="#coverage-diversity"><span class="header-section-number">4.3</span> Coverage (Diversity)</a></li>
-  <li><a href="#well-behaved-latent-space" id="toc-well-behaved-latent-space" class="nav-link" data-scroll-target="#well-behaved-latent-space"><span class="header-section-number">4.4</span> Well-Behaved Latent Space</a></li>
-  <li><a href="#disentangled-latent-space" id="toc-disentangled-latent-space" class="nav-link" data-scroll-target="#disentangled-latent-space"><span class="header-section-number">4.5</span> Disentangled Latent Space</a></li>
-  <li><a href="#efficient-likelihood-computation" id="toc-efficient-likelihood-computation" class="nav-link" data-scroll-target="#efficient-likelihood-computation"><span class="header-section-number">4.6</span> Efficient Likelihood Computation</a></li>
+  <li><a href="#efficient-sampling" id="toc-efficient-sampling" class="nav-link" data-scroll-target="#efficient-sampling"><span class="header-section-number">6.1</span> Efficient Sampling</a></li>
+  <li><a href="#high-quality-sampling" id="toc-high-quality-sampling" class="nav-link" data-scroll-target="#high-quality-sampling"><span class="header-section-number">6.2</span> High-Quality Sampling</a></li>
+  <li><a href="#coverage-diversity" id="toc-coverage-diversity" class="nav-link" data-scroll-target="#coverage-diversity"><span class="header-section-number">6.3</span> Coverage (Diversity)</a></li>
+  <li><a href="#well-behaved-latent-space" id="toc-well-behaved-latent-space" class="nav-link" data-scroll-target="#well-behaved-latent-space"><span class="header-section-number">6.4</span> Well-Behaved Latent Space</a></li>
+  <li><a href="#disentangled-latent-space" id="toc-disentangled-latent-space" class="nav-link" data-scroll-target="#disentangled-latent-space"><span class="header-section-number">6.5</span> Disentangled Latent Space</a></li>
+  <li><a href="#efficient-likelihood-computation" id="toc-efficient-likelihood-computation" class="nav-link" data-scroll-target="#efficient-likelihood-computation"><span class="header-section-number">6.6</span> Efficient Likelihood Computation</a></li>
   </ul></li>
-  <li><a href="#comparing-generative-modeling-approaches" id="toc-comparing-generative-modeling-approaches" class="nav-link" data-scroll-target="#comparing-generative-modeling-approaches"><span class="header-section-number">5</span> Comparing Generative Modeling Approaches</a></li>
-  <li><a href="#evaluating-generative-models" id="toc-evaluating-generative-models" class="nav-link" data-scroll-target="#evaluating-generative-models"><span class="header-section-number">6</span> Evaluating Generative Models</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">7</span> References</a></li>
+  <li><a href="#evaluating-generative-models" id="toc-evaluating-generative-models" class="nav-link" data-scroll-target="#evaluating-generative-models"><span class="header-section-number">7</span> Evaluating Generative Models</a>
+  <ul class="collapse">
+  <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood"><span class="header-section-number">7.1</span> Likelihood</a></li>
+  <li><a href="#human-evaluation" id="toc-human-evaluation" class="nav-link" data-scroll-target="#human-evaluation"><span class="header-section-number">7.2</span> Human Evaluation</a></li>
+  <li><a href="#distribution-level-metrics" id="toc-distribution-level-metrics" class="nav-link" data-scroll-target="#distribution-level-metrics"><span class="header-section-number">7.3</span> Distribution-Level Metrics</a></li>
+  <li><a href="#conditional-generation-metrics" id="toc-conditional-generation-metrics" class="nav-link" data-scroll-target="#conditional-generation-metrics"><span class="header-section-number">7.4</span> Conditional Generation Metrics</a></li>
+  <li><a href="#task-specific-evaluation" id="toc-task-specific-evaluation" class="nav-link" data-scroll-target="#task-specific-evaluation"><span class="header-section-number">7.5</span> Task-Specific Evaluation</a></li>
+  <li><a href="#bias-safety-and-provenance" id="toc-bias-safety-and-provenance" class="nav-link" data-scroll-target="#bias-safety-and-provenance"><span class="header-section-number">7.6</span> Bias, Safety, and Provenance</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">7.7</span> Summary</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">8</span> References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/genai_intro.html">8 - GenAI Intro</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../pages/lectures/intro.html">Lectures</a></li><li class="breadcrumb-item"><a href="../../pages/lectures/genai_intro.html">8 - Generative AI for Computer Vision</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">8 - GenAI Intro</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">8 - Generative AI for Computer Vision</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -827,8 +837,105 @@ Table&nbsp;1: Major image generation providers, model families, and platforms.
 </figure>
 </div>
 </section>
-<section id="what-is-generative-modelling" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="what-is-generative-modelling"><span class="header-section-number">2</span> What is Generative Modelling?</h2>
+<section id="what-can-be-generated" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="what-can-be-generated"><span class="header-section-number">2</span> What can be generated?</h2>
+<p>Generative models are often introduced as models that create images from text prompts. However, for computer vision this is only one important use case. More generally, generative models produce or modify visual data under different types of constraints.</p>
+<p>A useful distinction is between <strong>generation from scratch</strong>, <strong>editing existing data</strong>, and <strong>generating missing or enhanced information</strong>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 23%">
+<col style="width: 26%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Input</th>
+<th>Output</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Unconditional image generation</strong></td>
+<td>random noise</td>
+<td>image</td>
+<td>random face, random bedroom, random product</td>
+</tr>
+<tr class="even">
+<td><strong>Class-conditional generation</strong></td>
+<td>class label + noise</td>
+<td>image</td>
+<td>“dog”, “car”, “elephant”</td>
+</tr>
+<tr class="odd">
+<td><strong>Text-to-image generation</strong></td>
+<td>text prompt + noise</td>
+<td>image</td>
+<td>“a red chair in a modern living room”</td>
+</tr>
+<tr class="even">
+<td><strong>Image-to-image generation</strong></td>
+<td>image + instruction / prompt</td>
+<td>modified image</td>
+<td>change season, style, material, lighting</td>
+</tr>
+<tr class="odd">
+<td><strong>Inpainting</strong></td>
+<td>image + mask + prompt</td>
+<td>completed image</td>
+<td>remove object, fill missing region</td>
+</tr>
+<tr class="even">
+<td><strong>Outpainting</strong></td>
+<td>image + extended canvas</td>
+<td>expanded image</td>
+<td>extend background beyond image borders</td>
+</tr>
+<tr class="odd">
+<td><strong>Super-resolution / enhancement</strong></td>
+<td>low-resolution image</td>
+<td>high-resolution image</td>
+<td>upscaling, denoising, sharpening</td>
+</tr>
+<tr class="even">
+<td><strong>Image translation</strong></td>
+<td>source image</td>
+<td>target-domain image</td>
+<td>MRI to CT, sketch to photo, day to night</td>
+</tr>
+<tr class="odd">
+<td><strong>Synthetic data generation</strong></td>
+<td>task specification</td>
+<td>training examples</td>
+<td>rare classes, simulated defects, edge cases</td>
+</tr>
+<tr class="even">
+<td><strong>Video generation</strong></td>
+<td>prompt or image sequence</td>
+<td>video</td>
+<td>short clips, object motion, scene animation</td>
+</tr>
+</tbody>
+</table>
+<p>The important point is that generative computer vision is not only about creating new images. Many practical applications are <strong>conditional</strong>: the model must preserve some information from the input while generating other parts.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Discussion">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Discussion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Which of these tasks require the model to be creative, and which require the model to be faithful to a given input?</p>
+</div>
+</div>
+</section>
+<section id="what-is-generative-modelling" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="what-is-generative-modelling"><span class="header-section-number">3</span> What is Generative Modelling?</h2>
 <p>Let’s contrast generative modelling with a classification task (see <a href="#fig-genai-intro-basics-classifier" class="quarto-xref">Figure&nbsp;14</a>). Let’s denote <span class="math inline">\(f(\mathbf{x}) = \mathbf{y}\)</span> for a classifier, and <span class="math inline">\(g(\mathbf{y}) = \mathbf{x}\)</span> for a generative model.</p>
 <p>In classification the model has as input an image <span class="math inline">\(\mathbf{x}^{(i)}\)</span> and models a probability distribution over all classes <span class="math inline">\(\mathbf{\hat{y}}^{(i)}\)</span> which ideally matches the true label <span class="math inline">\(\mathbf{y}^{(i)}\)</span>.</p>
 <div id="fig-genai-intro-basics-classifier" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -853,7 +960,7 @@ Figure&nbsp;15: Generative modelling.
 </figure>
 </div>
 <div class="callout callout-style-default callout-note callout-titled" title="What is the problem?">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -862,7 +969,7 @@ Figure&nbsp;15: Generative modelling.
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Looking at the input and the output of <a href="#fig-genai-intro-basics-elephant" class="quarto-xref">Figure&nbsp;15</a>. What could be a problem?</p>
 <details>
@@ -892,21 +999,21 @@ Figure&nbsp;16: Generative modelling with a diverse set of outputs.
 </div>
 <p>One way to achieve this is to condition the generative model on a stochastic input <span class="math inline">\(\mathbf{z} \sim p(z)\)</span> and generate samples using <span class="math inline">\(g(\mathbf{y}, \mathbf{z})\)</span>. Often we use a simple Gaussian distribution: <span class="math inline">\(\mathbf{z} \sim \cal{N}(\mathbf{0}, \mathbfit{I})\)</span>.</p>
 <p>One way to think about <span class="math inline">\(\mathbf{z}\)</span> is that of a <strong>latent variable</strong>. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector <span class="math inline">\(\mathbf{y}\)</span> specifies that the image should show an elephant, while <span class="math inline">\(\mathbf{z}\)</span> might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Conditional vs. Unconditional Generation">
+<div class="callout callout-style-default callout-note callout-titled" title="Notation">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Conditional vs.&nbsp;Unconditional Generation
+<span class="screen-reader-only">Note</span>Notation
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In general we distinguish between <strong>conditional</strong> and <strong>unconditional</strong> generation. If we condition the input on a piece of data, such as a label vector, we refer to <strong>conditional generation</strong> <span class="math inline">\(g(\mathbf{c})\)</span>. If we just generate images we refer to <strong>unconditional generation</strong> <span class="math inline">\(g()\)</span>. In the following we often use <span class="math inline">\(g()\)</span> to simplify notation.</p>
+<p>In the following, we often write <span class="math inline">\(g()\)</span> to simplify notation. Depending on the setting, the model may generate unconditionally, <span class="math inline">\(g_{\theta}(\mathbf{z})\)</span>, or conditionally, <span class="math inline">\(g_{\theta}(\mathbf{z}, \mathbf{c})\)</span>.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled" title="Latent Variables Intuition">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -915,7 +1022,7 @@ Figure&nbsp;16: Generative modelling with a diverse set of outputs.
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
 <div class="callout-body-container callout-body">
 <p>Consider the dataset shown in <a href="#fig-genai-basics-latent-intuition" class="quarto-xref">Figure&nbsp;17</a>: What could be latent variables for this dataset?</p>
 <details>
@@ -949,16 +1056,121 @@ Figure&nbsp;18: Intuition about latent variables in generative models. From <spa
 </figure>
 </div>
 </section>
-<section id="learning-generative-models" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="learning-generative-models"><span class="header-section-number">3</span> Learning Generative Models</h2>
-<p>The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data <span class="math inline">\(\hat{\mathbf{x}}\)</span> should have a high probability under the probability density function of the real data <span class="math inline">\(p_{\text{data}}(\hat{\mathbf{x}})\)</span>. <a href="#fig-genai-intro-synthetic-quality" class="quarto-xref">Figure&nbsp;19</a> illustrates the principle: Models should aim to synthesize data points (x axis) which are probable under the true distribution.</p>
+<section id="unconditional-vs.-conditional-generation" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="unconditional-vs.-conditional-generation"><span class="header-section-number">4</span> Unconditional vs.&nbsp;Conditional Generation</h2>
+<p>A central distinction in generative modelling is whether the model generates samples freely or under additional constraints.</p>
+<p>In <strong>unconditional generation</strong>, the model receives only a random input, typically sampled from a simple distribution:</p>
+<p><span class="math display">\[
+\mathbf{z} \sim p(\mathbf{z})
+\]</span></p>
+<p>and generates an image:</p>
+<p><span class="math display">\[
+\hat{\mathbf{x}} = g_{\theta}(\mathbf{z})
+\]</span></p>
+<p>Here, <span class="math inline">\(\mathbf{z}\)</span> controls random variation. For example, sampling different values of <span class="math inline">\(\mathbf{z}\)</span> may generate different faces, animals, or rooms.</p>
+<p>In <strong>conditional generation</strong>, the model additionally receives some conditioning information <span class="math inline">\(\mathbf{c}\)</span>:</p>
+<p><span class="math display">\[
+\hat{\mathbf{x}} = g_{\theta}(\mathbf{z}, \mathbf{c})
+\]</span></p>
+<p>The condition <span class="math inline">\(\mathbf{c}\)</span> specifies what should be generated or preserved.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type of condition <span class="math inline">\(\mathbf{c}\)</span></th>
+<th>Example task</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>class label</td>
+<td>generate an image of an elephant</td>
+</tr>
+<tr class="even">
+<td>text prompt</td>
+<td>generate “a small cabin next to a lake”</td>
+</tr>
+<tr class="odd">
+<td>input image</td>
+<td>edit this image</td>
+</tr>
+<tr class="even">
+<td>mask</td>
+<td>fill this missing region</td>
+</tr>
+<tr class="odd">
+<td>low-resolution image</td>
+<td>super-resolution</td>
+</tr>
+<tr class="even">
+<td>segmentation map</td>
+<td>generate an image with this layout</td>
+</tr>
+<tr class="odd">
+<td>pose / depth / edge map</td>
+<td>control geometry and structure</td>
+</tr>
+<tr class="even">
+<td>reference image</td>
+<td>preserve identity, product, or style</td>
+</tr>
+</tbody>
+</table>
+<div id="fig-genai-unconditional-conditional" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-unconditional-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="../../assets/images/genai/random_person1.jpg" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="../../assets/images/genai/random_person2.jpg" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="../../assets/images/genai/random_person3.jpg" class="img-fluid figure-img"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="../../assets/images/genai/curly_person1.jpg" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="../../assets/images/genai/curly_person2.jpg" class="img-fluid figure-img"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img src="../../assets/images/genai/curly_person3.jpg" class="img-fluid figure-img"></p>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-unconditional-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Unconditional vs.&nbsp;conditional generation. The top row shows random samples of people, the bottom row shows samples of people conditioned on “create three images of young people with glasses and curly hair.”
+</figcaption>
+</figure>
+</div>
+<p>Conditional generation is especially important in computer vision because many applications require <strong>control</strong>. We usually do not just want any plausible image; we want an image that matches a prompt, preserves a product, fills a masked region, follows a layout, or remains consistent with a source image.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Key idea">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The random variable <span class="math inline">\(\mathbf{z}\)</span> provides <strong>diversity</strong>, while the condition <span class="math inline">\(\mathbf{c}\)</span> provides <strong>control</strong>.</p>
+</div>
+</div>
+</section>
+<section id="learning-generative-models" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="learning-generative-models"><span class="header-section-number">5</span> Learning Generative Models</h2>
+<p>The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data <span class="math inline">\(\hat{\mathbf{x}}\)</span> should have a high probability under the probability density function of the real data <span class="math inline">\(p_{\text{data}}(\hat{\mathbf{x}})\)</span>. <a href="#fig-genai-intro-synthetic-quality" class="quarto-xref">Figure&nbsp;20</a> illustrates the principle: Models should aim to synthesize data points (x axis) which are probable under the true distribution.</p>
 <div id="fig-genai-intro-synthetic-quality" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genai-intro-synthetic-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../../assets/images/genai/synthetic_quality/synthetic_quality_evaluation.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-synthetic-quality-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;19: Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.
+Figure&nbsp;20: Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.
 </figcaption>
 </figure>
 </div>
@@ -972,7 +1184,7 @@ Figure&nbsp;19: Shown is the true distribution (blue) of some 1-D data. Green ar
 <p><span class="math display">\[\begin{equation}
 \underset{\theta}{\arg\max} \frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\mathbf{x}^{(i)})
 \end{equation}\]</span></p>
-<p><a href="#fig-genai-intro-density-model" class="quarto-xref">Figure&nbsp;20</a> illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.</p>
+<p><a href="#fig-genai-intro-density-model" class="quarto-xref">Figure&nbsp;21</a> illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.</p>
 <div id="fig-genai-intro-density-model" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genai-intro-density-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -986,18 +1198,18 @@ Figure&nbsp;19: Shown is the true distribution (blue) of some 1-D data. Green ar
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-density-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;20: Example of learning a density model in 1D.
+Figure&nbsp;21: Example of learning a density model in 1D.
 </figcaption>
 </figure>
 </div>
 <p><strong>Examples:</strong> Variational Autoencoders (VAEs), normalizing flows, autoregressive models</p>
 <p><strong>Note:</strong> Once <span class="math inline">\(p_{\theta}\)</span> is modelled, a generative model needs a mechanism to sample from it. Otherwise we can only evaluate the likelihood of a data point. For example, to detect outliers.</p>
 </section>
-<section id="desirable-properties-of-generative-models" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="desirable-properties-of-generative-models"><span class="header-section-number">4</span> Desirable Properties of Generative Models</h2>
+<section id="desirable-properties-of-generative-models" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="desirable-properties-of-generative-models"><span class="header-section-number">6</span> Desirable Properties of Generative Models</h2>
 <p>When evaluating generative models, we consider several important properties. Unfortunately, <strong>no single approach achieves all these properties simultaneously</strong>.</p>
-<section id="efficient-sampling" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="efficient-sampling"><span class="header-section-number">4.1</span> Efficient Sampling</h3>
+<section id="efficient-sampling" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="efficient-sampling"><span class="header-section-number">6.1</span> Efficient Sampling</h3>
 <p>The ability to generate new samples quickly. This is crucial for practical applications.</p>
 <ul>
 <li><strong>Why it matters:</strong> Applications like real-time image generation, interactive tools, and large-scale dataset creation require fast sampling</li>
@@ -1005,8 +1217,8 @@ Figure&nbsp;20: Example of learning a density model in 1D.
 <li><strong>Which models struggle:</strong> Autoregressive models and some diffusion models require many sequential steps</li>
 </ul>
 </section>
-<section id="high-quality-sampling" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="high-quality-sampling"><span class="header-section-number">4.2</span> High-Quality Sampling</h3>
+<section id="high-quality-sampling" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="high-quality-sampling"><span class="header-section-number">6.2</span> High-Quality Sampling</h3>
 <p>Generated samples should be realistic, detailed, and indistinguishable from real data.</p>
 <ul>
 <li><strong>Why it matters:</strong> Low-quality samples limit practical utility and can be easily detected as synthetic</li>
@@ -1014,8 +1226,8 @@ Figure&nbsp;20: Example of learning a density model in 1D.
 <li><strong>Trade-off:</strong> Often achieved at the cost of computational expense or training complexity</li>
 </ul>
 </section>
-<section id="coverage-diversity" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="coverage-diversity"><span class="header-section-number">4.3</span> Coverage (Diversity)</h3>
+<section id="coverage-diversity" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="coverage-diversity"><span class="header-section-number">6.3</span> Coverage (Diversity)</h3>
 <p>The model should be able to generate the full diversity present in the training data, not just a subset of common examples.</p>
 <ul>
 <li><strong>Why it matters:</strong> A model that only generates a few “safe” outputs is not truly learning the data distribution</li>
@@ -1023,8 +1235,8 @@ Figure&nbsp;20: Example of learning a density model in 1D.
 <li><strong>Which models excel:</strong> VAEs tend to have good coverage but sometimes at the cost of sample quality</li>
 </ul>
 </section>
-<section id="well-behaved-latent-space" class="level3" data-number="4.4">
-<h3 data-number="4.4" class="anchored" data-anchor-id="well-behaved-latent-space"><span class="header-section-number">4.4</span> Well-Behaved Latent Space</h3>
+<section id="well-behaved-latent-space" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="well-behaved-latent-space"><span class="header-section-number">6.4</span> Well-Behaved Latent Space</h3>
 <p>The latent space <span class="math inline">\(\mathbf{Z}\)</span> should have smooth, meaningful structure where similar <span class="math inline">\(\mathbf{z}\)</span> values produce similar outputs.</p>
 <ul>
 <li><strong>Why it matters:</strong> Enables interpolation, controlled generation, and semantic editing</li>
@@ -1032,8 +1244,8 @@ Figure&nbsp;20: Example of learning a density model in 1D.
 <li><strong>Which models excel:</strong> VAEs explicitly encourage this through their training objective</li>
 </ul>
 </section>
-<section id="disentangled-latent-space" class="level3" data-number="4.5">
-<h3 data-number="4.5" class="anchored" data-anchor-id="disentangled-latent-space"><span class="header-section-number">4.5</span> Disentangled Latent Space</h3>
+<section id="disentangled-latent-space" class="level3" data-number="6.5">
+<h3 data-number="6.5" class="anchored" data-anchor-id="disentangled-latent-space"><span class="header-section-number">6.5</span> Disentangled Latent Space</h3>
 <p>Different dimensions of <span class="math inline">\(\mathbf{z}\)</span> should control independent factors of variation in the output.</p>
 <ul>
 <li><strong>Why it matters:</strong> Enables fine-grained control over specific attributes (e.g., separate controls for pose, lighting, color)</li>
@@ -1042,8 +1254,8 @@ Figure&nbsp;20: Example of learning a density model in 1D.
 <li><strong>Applications:</strong> Critical for controllable generation and interpretable models</li>
 </ul>
 </section>
-<section id="efficient-likelihood-computation" class="level3" data-number="4.6">
-<h3 data-number="4.6" class="anchored" data-anchor-id="efficient-likelihood-computation"><span class="header-section-number">4.6</span> Efficient Likelihood Computation</h3>
+<section id="efficient-likelihood-computation" class="level3" data-number="6.6">
+<h3 data-number="6.6" class="anchored" data-anchor-id="efficient-likelihood-computation"><span class="header-section-number">6.6</span> Efficient Likelihood Computation</h3>
 <p>The ability to evaluate <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> for any given sample <span class="math inline">\(\mathbf{x}\)</span>.</p>
 <ul>
 <li><strong>Why it matters:</strong>
@@ -1057,73 +1269,245 @@ Figure&nbsp;20: Example of learning a density model in 1D.
 </ul>
 </section>
 </section>
-<section id="comparing-generative-modeling-approaches" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="comparing-generative-modeling-approaches"><span class="header-section-number">5</span> Comparing Generative Modeling Approaches</h2>
-<p>Different generative modeling approaches make different tradeoffs. Here’s a comparison of major families:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Method</th>
-<th>Latent Variables</th>
-<th>Density</th>
-<th>Fast Sampling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Autoregressive</strong></td>
-<td>❌</td>
-<td>✅</td>
-<td>❌ (sequential)</td>
-</tr>
-<tr class="even">
-<td><strong>Diffusion</strong></td>
-<td>✅</td>
-<td>⚠️</td>
-<td>❌ (iterative)</td>
-</tr>
-<tr class="odd">
-<td><strong>GANs</strong></td>
-<td>✅</td>
-<td>❌</td>
-<td>✅</td>
-</tr>
-<tr class="even">
-<td><strong>VAEs</strong></td>
-<td>✅</td>
-<td>⚠️ (approx.)</td>
-<td>✅</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Key observations:</strong></p>
-<ol type="1">
-<li><strong>No method achieves all properties:</strong> There is no generative model that simultaneously has latent variables, exact density computation, fast sampling, perfect quality, and perfect coverage</li>
-<li><strong>GANs trade likelihood for quality:</strong> Excellent sample quality and fast generation, but no likelihood evaluation and potential coverage issues</li>
-<li><strong>VAEs balance tradeoffs:</strong> Good coverage and approximate likelihood, but sometimes lower sample quality</li>
-<li><strong>Diffusion models:</strong> Current state-of-the-art for quality and coverage, but slow sampling</li>
-<li><strong>Autoregressive models:</strong> Exact likelihood and good quality, but very slow sequential generation</li>
-</ol>
+<section id="evaluating-generative-models" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="evaluating-generative-models"><span class="header-section-number">7</span> Evaluating Generative Models</h2>
+<p>Evaluating generative models is difficult because there is usually no single correct output. For a given prompt, label, mask, or input image, many different outputs may be valid.</p>
+<p>A useful evaluation question is therefore not simply:</p>
+<blockquote class="blockquote">
+<p>Is the generated image correct?</p>
+</blockquote>
+<p>but rather:</p>
+<blockquote class="blockquote">
+<p>Is the generated image plausible, diverse, useful, and faithful to the condition?</p>
+</blockquote>
+<p>Different evaluation methods capture different aspects of this question.</p>
+<section id="likelihood" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="likelihood"><span class="header-section-number">7.1</span> Likelihood</h3>
+<p>For models that explicitly define a probability distribution <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span>, we can evaluate the likelihood of test data:</p>
+<p><span class="math display">\[
+\frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\mathbf{x}^{(i)})
+\]</span></p>
+<p>A high likelihood means that the model assigns high probability to real test examples.</p>
+<p>However, likelihood is not always available. GANs, for example, do not provide an explicit density. Moreover, high likelihood does not always imply perceptually high-quality samples.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Important limitation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Important limitation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Likelihood evaluates how well the model assigns probability to real data. It does not directly tell us whether generated samples look good, are useful, or follow a prompt.</p>
+</div>
+</div>
 </section>
-<section id="evaluating-generative-models" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="evaluating-generative-models"><span class="header-section-number">6</span> Evaluating Generative Models</h2>
-<p>Evaluating generative models and comparing different models with respect to sample quality and diversity is not a trivial task.</p>
-<p>One approach is to calculate the likelihood of a test-set under the generative model <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span>. However, this is not possible for models which do not model a probability distribution.</p>
-<p>A cumbersome approach is to use human studies by simply asking humans to compare samples from different models. This approach, however, is not always feasible when developing models. Other approaches</p>
-<p>Different scores have been proposed. A popular one is the Inception Score (IS), see <span class="citation" data-cites="salimans_improved_2016">Salimans et al. (<a href="#ref-salimans_improved_2016" role="doc-biblioref">2016</a>)</span>. This score is calculated using a classification model and thus only feasible for datasets with known classes. In this particular case, it is often used to compare generative models on the ImageNet dataset. This dataset has 1’000 classes with roughly equal distribution. The assumption is that a good generative model yields images which a classifier predicts accurately and with high confidence. In that case the marginal (averaged) distribution is close to unifrom, as illustrated in <a href="#fig-genai-basics-evaluating" class="quarto-xref">Figure&nbsp;21</a>.</p>
+<section id="human-evaluation" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="human-evaluation"><span class="header-section-number">7.2</span> Human Evaluation</h3>
+<p>A direct but expensive approach is to ask humans to compare generated images.</p>
+<p>Typical questions are:</p>
+<ul>
+<li>Which image looks more realistic?</li>
+<li>Which image better matches the prompt?</li>
+<li>Which image has fewer artifacts?</li>
+<li>Which image would you prefer to use?</li>
+</ul>
+<p>Human studies are often the most meaningful evaluation for visual quality, but they are slow, subjective, and difficult to use during model development.</p>
+</section>
+<section id="distribution-level-metrics" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="distribution-level-metrics"><span class="header-section-number">7.3</span> Distribution-Level Metrics</h3>
+<p>Many automatic metrics compare the distribution of generated images to the distribution of real images.</p>
+<p>A common metric is the <strong>Inception Score (IS)</strong>, see <span class="citation" data-cites="salimans_improved_2016">Salimans et al. (<a href="#ref-salimans_improved_2016" role="doc-biblioref">2016</a>)</span>. The idea is that good generated images should be classified confidently, while the full set of generated images should cover many classes.</p>
 <div id="fig-genai-basics-evaluating" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genai-basics-evaluating-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../../assets/images/genai/evaluating_genai.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-basics-evaluating-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;21: Evaluating generative AI models.
+Figure&nbsp;22: Evaluating generative AI models using a classifier-based score.
+</figcaption>
+</figure>
+</div>
+<p>However, Inception Score has important limitations:</p>
+<ul>
+<li>it depends on a pretrained classifier</li>
+<li>it is most meaningful for class-balanced datasets such as ImageNet</li>
+<li>it does not compare generated images directly to real images</li>
+<li>it does not evaluate prompt adherence or input fidelity</li>
+</ul>
+<p>Other commonly used distribution-level metrics include <strong>FID</strong> and <strong>KID</strong>. These metrics compare feature distributions of real and generated images, usually using a pretrained image model.</p>
+<p>Distribution-level metrics are useful for benchmarking, but they can hide important failures. A model can achieve a good average score while still failing on rare classes, spatial relations, text rendering, or fine-grained details.</p>
+</section>
+<section id="conditional-generation-metrics" class="level3" data-number="7.4">
+<h3 data-number="7.4" class="anchored" data-anchor-id="conditional-generation-metrics"><span class="header-section-number">7.4</span> Conditional Generation Metrics</h3>
+<p>For conditional generation, realism alone is not enough. The output also has to match the condition.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 82%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>What should be evaluated?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>text-to-image</td>
+<td>Does the image match the prompt?</td>
+</tr>
+<tr class="even">
+<td>image editing</td>
+<td>Was the requested change made?</td>
+</tr>
+<tr class="odd">
+<td>inpainting</td>
+<td>Is the filled region plausible and consistent?</td>
+</tr>
+<tr class="even">
+<td>super-resolution</td>
+<td>Are details realistic and faithful to the input?</td>
+</tr>
+<tr class="odd">
+<td>image translation</td>
+<td>Is the target domain reached while preserving content?</td>
+</tr>
+<tr class="even">
+<td>synthetic data generation</td>
+<td>Does it improve downstream model performance?</td>
+</tr>
+</tbody>
+</table>
+<p>For text-to-image models, prompt alignment is often measured using vision-language models such as CLIP. For image editing, one may evaluate whether the edit was successful while preserving unchanged regions.</p>
+<div id="fig-genai-evaluation-conditional" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-genai-evaluation-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../assets/images/genai/wine_comparison.jpg" class="img-fluid figure-img" width="850">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-evaluation-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: Evaluation of conditional generation.
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="references" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="references"><span class="header-section-number">7</span> References</h2>
+<section id="task-specific-evaluation" class="level3" data-number="7.5">
+<h3 data-number="7.5" class="anchored" data-anchor-id="task-specific-evaluation"><span class="header-section-number">7.5</span> Task-Specific Evaluation</h3>
+<p>For many computer vision applications, generic image quality is not sufficient. The evaluation should match the intended use case.</p>
+<p>Examples:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Application</th>
+<th>Possible evaluation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>medical image translation</td>
+<td>anatomical plausibility, expert review, downstream diagnosis</td>
+</tr>
+<tr class="even">
+<td>synthetic training data</td>
+<td>improvement on real validation/test data</td>
+</tr>
+<tr class="odd">
+<td>product image generation</td>
+<td>preservation of product identity and geometry</td>
+</tr>
+<tr class="even">
+<td>super-resolution</td>
+<td>perceptual quality, fidelity to input, downstream task performance</td>
+</tr>
+<tr class="odd">
+<td>inpainting</td>
+<td>boundary consistency, semantic plausibility, unchanged background</td>
+</tr>
+</tbody>
+</table>
+<p>This is particularly important for scientific, medical, and industrial applications. A generated image can look realistic but still be scientifically or semantically wrong.</p>
+</section>
+<section id="bias-safety-and-provenance" class="level3" data-number="7.6">
+<h3 data-number="7.6" class="anchored" data-anchor-id="bias-safety-and-provenance"><span class="header-section-number">7.6</span> Bias, Safety, and Provenance</h3>
+<p>Modern generative models are trained on large and often weakly curated datasets. Evaluation should therefore also consider societal and practical risks.</p>
+<p>Important questions include:</p>
+<ul>
+<li>Does the model reproduce stereotypes or dataset biases?</li>
+<li>Does it generate misleading or harmful content?</li>
+<li>Are generated images distinguishable from real evidence?</li>
+<li>Are there copyright or licensing concerns?</li>
+<li>Can generated content be traced, watermarked, or labeled?</li>
+<li>Does synthetic data introduce bias into downstream models?</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="Generative models optimize plausibility, not truth">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Generative models optimize plausibility, not truth
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A generated image may look realistic even when the depicted object, event, person, or measurement is incorrect.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="level3" data-number="7.7">
+<h3 data-number="7.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">7.7</span> Summary</h3>
+<p>There is no single best metric for generative models. A good evaluation usually combines several perspectives:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 54%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Evaluation aspect</th>
+<th>Example method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>realism / fidelity</td>
+<td>human judgement, FID, KID</td>
+</tr>
+<tr class="even">
+<td>diversity / coverage</td>
+<td>distribution metrics, class coverage</td>
+</tr>
+<tr class="odd">
+<td>likelihood</td>
+<td>test-set log-likelihood, if available</td>
+</tr>
+<tr class="even">
+<td>prompt adherence</td>
+<td>CLIP-based scores, human judgement</td>
+</tr>
+<tr class="odd">
+<td>input fidelity</td>
+<td>reconstruction or preservation metrics</td>
+</tr>
+<tr class="even">
+<td>downstream utility</td>
+<td>performance of a model trained with synthetic data</td>
+</tr>
+<tr class="odd">
+<td>safety and bias</td>
+<td>targeted audits and qualitative analysis</td>
+</tr>
+</tbody>
+</table>
+<p>The right evaluation depends on the task. For creative image generation, human preference may be central. For synthetic training data, downstream model performance may matter most. For scientific or medical images, fidelity and domain-expert validation are essential.</p>
+</section>
+</section>
+<section id="references" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="references"><span class="header-section-number">8</span> References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-betker_improving_2023" class="csl-entry" role="listitem">
 <span class="nocase">Betker, James, Gabriel Goh, Li Jing, et al.</span> 2023. <span>“Improving Image Generation with Better Captions.”</span> <em>Computer Science. Https://Cdn. Openai. Com/Papers/Dall-e-3. Pdf</em> 2 (3): 8.
@@ -1642,7 +2026,7 @@ Schärer, Florian. 2023. <span>“Improved <span>Evaluation</span> and <span>Ass
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "8 - GenAI Intro"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "8 - Generative AI for Computer Vision"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">   images_path: "/assets/images/genai/"</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
@@ -1857,243 +2241,432 @@ Schärer, Florian. 2023. <span>“Improved <span>Evaluation</span> and <span>Ass
 <span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a><span class="fu">## What is Generative Modelling?</span></span>
-<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>Let's contrast generative modelling with a classification task (see @fig-genai-intro-basics-classifier). Let's denote $f(\vect{x}) = \vect{y}$ for a classifier, and $g(\vect{y}) = \vect{x}$ for a generative model.</span>
-<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>In classification the model has as input an image $\vect{x}^{(i)}$ and models a probability distribution over all classes $\vect{\hat{y}}^{(i)}$ which ideally matches the true label $\vect{y}^{(i)}$.</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a><span class="fu">## What can be generated?</span></span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>Generative models are often introduced as models that create images from text prompts. However, for computer vision this is only one important use case. More generally, generative models produce or modify visual data under different types of constraints.</span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>A useful distinction is between **generation from scratch**, **editing existing data**, and **generating missing or enhanced information**.</span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-classifier}</span>
-<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_classifier.png)</span></span>
-<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>Classification.</span>
-<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a>In generative modelling the process is essentially reversed: The input (can) be a label $\vect{y}$, such as a class label, and the output is an image $\vect{x}^{(i)}$, see @fig-genai-intro-basics-elephant.</span>
-<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-elephant}</span>
-<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_elephant.png)</span></span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task <span class="pp">|</span> Input <span class="pp">|</span> Output <span class="pp">|</span> Example <span class="pp">|</span></span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a><span class="pp">|------|-------|--------|---------|</span></span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Unconditional image generation** <span class="pp">|</span> random noise <span class="pp">|</span> image <span class="pp">|</span> random face, random bedroom, random product <span class="pp">|</span></span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Class-conditional generation** <span class="pp">|</span> class label + noise <span class="pp">|</span> image <span class="pp">|</span> “dog”, “car”, “elephant” <span class="pp">|</span></span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Text-to-image generation** <span class="pp">|</span> text prompt + noise <span class="pp">|</span> image <span class="pp">|</span> “a red chair in a modern living room” <span class="pp">|</span></span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Image-to-image generation** <span class="pp">|</span> image + instruction / prompt <span class="pp">|</span> modified image <span class="pp">|</span> change season, style, material, lighting <span class="pp">|</span></span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Inpainting** <span class="pp">|</span> image + mask + prompt <span class="pp">|</span> completed image <span class="pp">|</span> remove object, fill missing region <span class="pp">|</span></span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Outpainting** <span class="pp">|</span> image + extended canvas <span class="pp">|</span> expanded image <span class="pp">|</span> extend background beyond image borders <span class="pp">|</span></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Super-resolution / enhancement** <span class="pp">|</span> low-resolution image <span class="pp">|</span> high-resolution image <span class="pp">|</span> upscaling, denoising, sharpening <span class="pp">|</span></span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Image translation** <span class="pp">|</span> source image <span class="pp">|</span> target-domain image <span class="pp">|</span> MRI to CT, sketch to photo, day to night <span class="pp">|</span></span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Synthetic data generation** <span class="pp">|</span> task specification <span class="pp">|</span> training examples <span class="pp">|</span> rare classes, simulated defects, edge cases <span class="pp">|</span></span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Video generation** <span class="pp">|</span> prompt or image sequence <span class="pp">|</span> video <span class="pp">|</span> short clips, object motion, scene animation <span class="pp">|</span></span>
 <span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>Generative modelling.</span>
-<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="What is the problem?" collapse="false"}</span>
-<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a>Looking at the input and the output of @fig-genai-intro-basics-elephant. What could be a problem?</span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>The important point is that generative computer vision is not only about creating new images. Many practical applications are **conditional**: the model must preserve some information from the input while generating other parts.</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Discussion"}</span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a>Which of these tasks require the model to be creative, and which require the model to be faithful to a given input?</span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
-<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Click for result<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
-<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>If the input (in this case) to the generative model is a label, such as elephant, how can the model generate not just that one elephant?</span>
-<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a><span class="fu">## What is Generative Modelling?</span></span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>Let's contrast generative modelling with a classification task (see @fig-genai-intro-basics-classifier). Let's denote $f(\vect{x}) = \vect{y}$ for a classifier, and $g(\vect{y}) = \vect{x}$ for a generative model.</span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>In classification the model has as input an image $\vect{x}^{(i)}$ and models a probability distribution over all classes $\vect{\hat{y}}^{(i)}$ which ideally matches the true label $\vect{y}^{(i)}$.</span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-classifier}</span>
 <span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>An important distinction between a classifier and a generative model is:</span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_classifier.png)</span></span>
 <span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$f(\vect{x})$ is a many-to-one mapping. Many inputs (e.g. images of elephants) should be associated with the same label (e.g the elephant label).</span>
-<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$g(\vect{y})$ is a one-to-many mapping. One label (e.g. elephant) should be associated with many output (e.g. images of elephants).</span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>Classification.</span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>Since neural networks consist of deterministic operations (such as matrix multiplications and additions) we need a way to transform $g()$ to a **stochastic** function. Only then is it possibe to generate different elephants and not always the same image (see @fig-genai-intro-basics-elephant-prob).</span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>In generative modelling the process is essentially reversed: The input (can) be a label $\vect{y}$, such as a class label, and the output is an image $\vect{x}^{(i)}$, see @fig-genai-intro-basics-elephant.</span>
 <span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-elephant-prob}</span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-elephant}</span>
 <span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_elephants_probabilistic.png)</span></span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_elephant.png)</span></span>
 <span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>Generative modelling with a diverse set of outputs.</span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>Generative modelling.</span>
 <span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>One way to achieve this is to condition the generative model on a stochastic input $\vect{z} \sim p(z)$ and generate samples using $g(\vect{y}, \vect{z})$. Often we use a simple Gaussian distribution: $\vect{z} \sim \cal{N}(\mathbf{0}, \mathbfit{I})$.</span>
-<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>One way to think about $\vect{z}$ is that of a **latent variable**. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector $\vect{y}$ specifies that the image should show an elephant, while $\vect{z}$ might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).</span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="What is the problem?" collapse="false"}</span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>Looking at the input and the output of @fig-genai-intro-basics-elephant. What could be a problem?</span>
 <span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Conditional vs. Unconditional Generation"}</span>
-<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>In general we distinguish between **conditional** and **unconditional** generation. If we condition the input on a piece of data, such as a label vector, we refer to **conditional generation** $g(\vect{c})$. If we just generate images we refer to **unconditional generation** $g()$. In the following we often use $g()$ to simplify notation.</span>
-<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Click for result<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>If the input (in this case) to the generative model is a label, such as elephant, how can the model generate not just that one elephant?</span>
 <span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Latent Variables Intuition" collapse="false"}</span>
-<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>Consider the dataset shown in @fig-genai-basics-latent-intuition: What could be latent variables for this dataset?</span>
-<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
-<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Click for result<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>An important distinction between a classifier and a generative model is:</span>
 <span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a>Each output is defined by it's width and height. Therefore, we have two (unobserved) latent variables.</span>
-<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
-<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$f(\vect{x})$ is a many-to-one mapping. Many inputs (e.g. images of elephants) should be associated with the same label (e.g the elephant label).</span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$g(\vect{y})$ is a one-to-many mapping. One label (e.g. elephant) should be associated with many output (e.g. images of elephants).</span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>Since neural networks consist of deterministic operations (such as matrix multiplications and additions) we need a way to transform $g()$ to a **stochastic** function. Only then is it possibe to generate different elephants and not always the same image (see @fig-genai-intro-basics-elephant-prob).</span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-basics-elephant-prob}</span>
 <span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-latent-intuition}</span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}basics_elephants_probabilistic.png)</span></span>
 <span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}latent_variables_intuition1.png)</span></span>
-<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>Intuition about latent variables in generative models. From @foster_generative_2023.</span>
-<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>Generative modelling with a diverse set of outputs.</span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>One way to achieve this is to condition the generative model on a stochastic input $\vect{z} \sim p(z)$ and generate samples using $g(\vect{y}, \vect{z})$. Often we use a simple Gaussian distribution: $\vect{z} \sim \cal{N}(\mathbf{0}, \mathbfit{I})$.</span>
 <span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>@fig-genai-basics-latent-intuition2 shows a plausible latent space and the corresponding mapping / samples from that space.</span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>One way to think about $\vect{z}$ is that of a **latent variable**. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector $\vect{y}$ specifies that the image should show an elephant, while $\vect{z}$ might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).</span>
 <span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-latent-intuition2}</span>
-<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}latent_variables_intuition2.png)</span></span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Notation"}</span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>In the following, we often write $g()$ to simplify notation. Depending on the setting, the model may generate unconditionally, $g_{\theta}(\vect{z})$, or conditionally, $g_{\theta}(\vect{z}, \vect{c})$.</span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>Intuition about latent variables in generative models. From @foster_generative_2023.</span>
-<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a><span class="fu">## Learning Generative Models</span></span>
-<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a>The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data $\hat{\vect{x}}$ should have a high probability under the probability density function of the real data $p_{\text{data}}(\hat{\vect{x}})$. @fig-genai-intro-synthetic-quality illustrates the principle: Models should aim to synthesize data points (x axis) which are probable under the true distribution.</span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Latent Variables Intuition" collapse="false"}</span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a>Consider the dataset shown in @fig-genai-basics-latent-intuition: What could be latent variables for this dataset?</span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">details</span><span class="dt">&gt;</span></span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">summary</span><span class="dt">&gt;</span>Click for result<span class="dt">&lt;/</span><span class="kw">summary</span><span class="dt">&gt;</span></span>
 <span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-synthetic-quality}</span>
+<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>Each output is defined by it's width and height. Therefore, we have two (unobserved) latent variables.</span>
 <span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}synthetic_quality/synthetic_quality_evaluation.png)</span></span>
+<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">details</span><span class="dt">&gt;</span></span>
 <span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.</span>
-<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a>In general there are two approaches to generative modelling:</span>
-<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>The **direct** (or implicit) approach learns a function that directly generates samples: $g(\vect{z}) = \vect{x}$.</span>
-<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a>**Indirect models** learn scoring functions and generate samples by finding high-scoring values. There are different types of such models, such as density models.</span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-latent-intuition}</span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}latent_variables_intuition1.png)</span></span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>Intuition about latent variables in generative models. From @foster_generative_2023.</span>
+<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>Density models learn a probability density function $p_{\theta}: \vect{x} \to [0, \infty)$ with the normalization constraint:</span>
+<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>@fig-genai-basics-latent-intuition2 shows a plausible latent space and the corresponding mapping / samples from that space.</span>
 <span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a>$$\int_{\mathbf{x}} p_{\theta}(\mathbf{x}) d\mathbf{x} = 1$$</span>
-<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a>The goal is to approximate the true probability density function $p_{\theta} \sim p_{\text{data}}$.</span>
-<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>This can be achieved by minimizing the difference between $p_{\theta}$ and $p_{\text{data}}$. However, since $p_{\text{data}}$ is unkown, we can simply maximize the likelihood of the training data under $p_{\theta}$.</span>
-<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
-<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a>\underset{\theta}{\arg\max} \frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\vect{x}^{(i)})</span>
-<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-latent-intuition2}</span>
+<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}latent_variables_intuition2.png)</span></span>
+<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a>Intuition about latent variables in generative models. From @foster_generative_2023.</span>
+<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a><span class="fu">## Unconditional vs. Conditional Generation</span></span>
 <span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>@fig-genai-intro-density-model illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.</span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>A central distinction in generative modelling is whether the model generates samples freely or under additional constraints.</span>
 <span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-density-model layout-ncol=2}</span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>In **unconditional generation**, the model receives only a random input, typically sampled from a simple distribution:</span>
 <span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}density_model_1d/initial_distribution.png)</span></span>
-<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}density_model_1d/improved_distribution.png)</span></span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>\vect{z} \sim p(\vect{z})</span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>Example of learning a density model in 1D.</span>
-<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a>**Examples:** Variational Autoencoders (VAEs), normalizing flows, autoregressive models</span>
-<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>and generates an image:</span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a>\hat{\vect{x}} = g_{\theta}(\vect{z})</span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a>$$</span>
 <span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a>**Note:** Once $p_{\theta}$ is modelled, a generative model needs a mechanism to sample from it. Otherwise we can only evaluate the likelihood of a data point. For example, to detect outliers.</span>
+<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a>Here, $\vect{z}$ controls random variation. For example, sampling different values of $\vect{z}$ may generate different faces, animals, or rooms.</span>
 <span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a><span class="fu">## Desirable Properties of Generative Models</span></span>
-<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a>When evaluating generative models, we consider several important properties. Unfortunately, **no single approach achieves all these properties simultaneously**.</span>
-<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a><span class="fu">### Efficient Sampling</span></span>
-<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a>The ability to generate new samples quickly. This is crucial for practical applications.</span>
-<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Applications like real-time image generation, interactive tools, and large-scale dataset creation require fast sampling</span>
-<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** GANs and normalizing flows typically have efficient sampling (single forward pass)</span>
-<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models struggle:** Autoregressive models and some diffusion models require many sequential steps</span>
-<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a><span class="fu">### High-Quality Sampling</span></span>
-<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>Generated samples should be realistic, detailed, and indistinguishable from real data.</span>
-<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Low-quality samples limit practical utility and can be easily detected as synthetic</span>
-<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** Modern GANs, diffusion models, and large-scale autoregressive models</span>
-<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Trade-off:** Often achieved at the cost of computational expense or training complexity</span>
+<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a>In **conditional generation**, the model additionally receives some conditioning information $\vect{c}$:</span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a>\hat{\vect{x}} = g_{\theta}(\vect{z}, \vect{c})</span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a>The condition $\vect{c}$ specifies what should be generated or preserved.</span>
+<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Type of condition $\vect{c}$ <span class="pp">|</span> Example task <span class="pp">|</span></span>
+<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a><span class="pp">|------------------------------|--------------|</span></span>
+<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> class label <span class="pp">|</span> generate an image of an elephant <span class="pp">|</span></span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> text prompt <span class="pp">|</span> generate “a small cabin next to a lake” <span class="pp">|</span></span>
+<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> input image <span class="pp">|</span> edit this image <span class="pp">|</span></span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> mask <span class="pp">|</span> fill this missing region <span class="pp">|</span></span>
+<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> low-resolution image <span class="pp">|</span> super-resolution <span class="pp">|</span></span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> segmentation map <span class="pp">|</span> generate an image with this layout <span class="pp">|</span></span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> pose / depth / edge map <span class="pp">|</span> control geometry and structure <span class="pp">|</span></span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> reference image <span class="pp">|</span> preserve identity, product, or style <span class="pp">|</span></span>
+<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-unconditional-conditional layout-nrow=2}</span>
 <span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coverage (Diversity)</span></span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}random_person1.jpg)</span></span>
 <span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a>The model should be able to generate the full diversity present in the training data, not just a subset of common examples.</span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}random_person2.jpg)</span></span>
 <span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** A model that only generates a few "safe" outputs is not truly learning the data distribution</span>
-<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Common failure:** Mode collapse in GANs, where the generator produces limited variety</span>
-<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** VAEs tend to have good coverage but sometimes at the cost of sample quality</span>
-<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a><span class="fu">###  Well-Behaved Latent Space</span></span>
-<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a>The latent space $\mathbf{Z}$ should have smooth, meaningful structure where similar $\mathbf{z}$ values produce similar outputs.</span>
-<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Enables interpolation, controlled generation, and semantic editing</span>
-<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Example:** Linearly interpolating between two latent codes should produce a smooth transition between outputs</span>
-<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** VAEs explicitly encourage this through their training objective</span>
-<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a><span class="fu">### Disentangled Latent Space</span></span>
-<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a>Different dimensions of $\mathbf{z}$ should control independent factors of variation in the output.</span>
-<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Enables fine-grained control over specific attributes (e.g., separate controls for pose, lighting, color)</span>
-<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Example:** One dimension controls "smiling" in face generation, another controls "age", independently</span>
-<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Challenge:** Difficult to achieve without explicit architectural design or training objectives</span>
-<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Applications:** Critical for controllable generation and interpretable models</span>
+<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}random_person3.jpg)</span></span>
+<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}curly_person1.jpg)</span></span>
+<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}curly_person2.jpg)</span></span>
+<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}curly_person3.jpg)</span></span>
+<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a>Unconditional vs. conditional generation. The top row shows random samples of people, the bottom row shows samples of people conditioned on "create three images of young people with glasses and curly hair."</span>
+<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a>Conditional generation is especially important in computer vision because many applications require **control**. We usually do not just want any plausible image; we want an image that matches a prompt, preserves a product, fills a masked region, follows a layout, or remains consistent with a source image.</span>
+<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Key idea"}</span>
+<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a>The random variable $\vect{z}$ provides **diversity**, while the condition $\vect{c}$ provides **control**.</span>
+<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a><span class="fu">## Learning Generative Models</span></span>
 <span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a><span class="fu">### Efficient Likelihood Computation</span></span>
+<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a>The objective of a generative model is to produce synthetic data that looks like real data. Mathematically, synthetic data $\hat{\vect{x}}$ should have a high probability under the probability density function of the real data $p_{\text{data}}(\hat{\vect{x}})$. @fig-genai-intro-synthetic-quality illustrates the principle: Models should aim to synthesize data points (x axis) which are probable under the true distribution.</span>
 <span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a>The ability to evaluate $p_{\theta}(\mathbf{x})$ for any given sample $\mathbf{x}$.</span>
+<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-synthetic-quality}</span>
 <span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:**</span>
-<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Enables direct optimization via maximum likelihood</span>
-<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Allows outlier/anomaly detection</span>
-<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Useful for model comparison and debugging</span>
-<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** Autoregressive models, normalizing flows, VAEs (approximate)</span>
-<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models lack this:** GANs, many diffusion models (cannot evaluate likelihood directly)</span>
-<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}synthetic_quality/synthetic_quality_evaluation.png)</span></span>
+<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a>Shown is the true distribution (blue) of some 1-D data. Green are plausible synthetic examples, while red crosses indicate data points which are improbable.</span>
+<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a>In general there are two approaches to generative modelling:</span>
 <span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparing Generative Modeling Approaches</span></span>
-<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a>Different generative modeling approaches make different tradeoffs. Here's a comparison of major families:</span>
-<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Method <span class="pp">|</span> Latent Variables <span class="pp">|</span> Density <span class="pp">|</span> Fast Sampling <span class="pp">|</span></span>
-<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a><span class="pp">|--------|-----------------|----------------|---------------|</span></span>
-<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Autoregressive** <span class="pp">|</span> ❌ <span class="pp">|</span> ✅ <span class="pp">|</span> ❌ (sequential) <span class="pp">|</span></span>
-<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Diffusion** <span class="pp">|</span> ✅ <span class="pp">|</span> ⚠️ <span class="pp">|</span> ❌ (iterative) <span class="pp">|</span></span>
-<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **GANs** <span class="pp">|</span> ✅ <span class="pp">|</span> ❌ <span class="pp">|</span> ✅ <span class="pp">|</span></span>
-<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **VAEs** <span class="pp">|</span> ✅ <span class="pp">|</span> ⚠️ (approx.) <span class="pp">|</span> ✅ <span class="pp">|</span></span>
+<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a>The **direct** (or implicit) approach learns a function that directly generates samples: $g(\vect{z}) = \vect{x}$.</span>
+<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a>**Indirect models** learn scoring functions and generate samples by finding high-scoring values. There are different types of such models, such as density models.</span>
+<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a>Density models learn a probability density function $p_{\theta}: \vect{x} \to [0, \infty)$ with the normalization constraint:</span>
+<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a>$$\int_{\mathbf{x}} p_{\theta}(\mathbf{x}) d\mathbf{x} = 1$$</span>
+<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a>The goal is to approximate the true probability density function $p_{\theta} \sim p_{\text{data}}$.</span>
+<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a>This can be achieved by minimizing the difference between $p_{\theta}$ and $p_{\text{data}}$. However, since $p_{\text{data}}$ is unkown, we can simply maximize the likelihood of the training data under $p_{\theta}$.</span>
 <span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a>**Key observations:**</span>
-<span id="cb1-424"><a href="#cb1-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**No method achieves all properties:** There is no generative model that simultaneously has latent variables, exact density computation, fast sampling, perfect quality, and perfect coverage</span>
-<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**GANs trade likelihood for quality:** Excellent sample quality and fast generation, but no likelihood evaluation and potential coverage issues</span>
-<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**VAEs balance tradeoffs:** Good coverage and approximate likelihood, but sometimes lower sample quality</span>
-<span id="cb1-428"><a href="#cb1-428" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Diffusion models:** Current state-of-the-art for quality and coverage, but slow sampling</span>
-<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Autoregressive models:** Exact likelihood and good quality, but very slow sequential generation</span>
+<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
+<span id="cb1-424"><a href="#cb1-424" aria-hidden="true" tabindex="-1"></a>\underset{\theta}{\arg\max} \frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\vect{x}^{(i)})</span>
+<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
+<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a>@fig-genai-intro-density-model illustrates how the modelled distribution improves by increasing the likelihood of observing the training data.</span>
+<span id="cb1-428"><a href="#cb1-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-density-model layout-ncol=2}</span>
 <span id="cb1-430"><a href="#cb1-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}density_model_1d/initial_distribution.png)</span></span>
 <span id="cb1-432"><a href="#cb1-432" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-433"><a href="#cb1-433" aria-hidden="true" tabindex="-1"></a><span class="fu">## Evaluating Generative Models</span></span>
+<span id="cb1-433"><a href="#cb1-433" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}density_model_1d/improved_distribution.png)</span></span>
 <span id="cb1-434"><a href="#cb1-434" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-435"><a href="#cb1-435" aria-hidden="true" tabindex="-1"></a>Evaluating generative models and comparing different models with respect to sample quality and diversity is not a trivial task.</span>
-<span id="cb1-436"><a href="#cb1-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-437"><a href="#cb1-437" aria-hidden="true" tabindex="-1"></a>One approach is to calculate the likelihood of a test-set under the generative model $p_{\theta}(\vect{x})$. However, this is not possible for models which do not model a probability distribution.</span>
-<span id="cb1-438"><a href="#cb1-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-439"><a href="#cb1-439" aria-hidden="true" tabindex="-1"></a>A cumbersome approach is to use human studies by simply asking humans to compare samples from different models. This approach, however, is not always feasible when developing models. Other approaches</span>
+<span id="cb1-435"><a href="#cb1-435" aria-hidden="true" tabindex="-1"></a>Example of learning a density model in 1D.</span>
+<span id="cb1-436"><a href="#cb1-436" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-437"><a href="#cb1-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-438"><a href="#cb1-438" aria-hidden="true" tabindex="-1"></a>**Examples:** Variational Autoencoders (VAEs), normalizing flows, autoregressive models</span>
+<span id="cb1-439"><a href="#cb1-439" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-440"><a href="#cb1-440" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-441"><a href="#cb1-441" aria-hidden="true" tabindex="-1"></a>Different scores have been proposed. A popular one is the Inception Score (IS), see @salimans_improved_2016. This score is calculated using a classification model and thus only feasible for datasets with known classes. In this particular case, it is often used to compare generative models on the ImageNet dataset. This dataset has 1'000 classes with roughly equal distribution. The assumption is that a good generative model yields images which a classifier predicts accurately and with high confidence. In that case the marginal (averaged) distribution is close to unifrom, as illustrated in @fig-genai-basics-evaluating.</span>
+<span id="cb1-441"><a href="#cb1-441" aria-hidden="true" tabindex="-1"></a>**Note:** Once $p_{\theta}$ is modelled, a generative model needs a mechanism to sample from it. Otherwise we can only evaluate the likelihood of a data point. For example, to detect outliers.</span>
 <span id="cb1-442"><a href="#cb1-442" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-443"><a href="#cb1-443" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-evaluating}</span>
-<span id="cb1-444"><a href="#cb1-444" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-445"><a href="#cb1-445" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}evaluating_genai.png)</span></span>
-<span id="cb1-446"><a href="#cb1-446" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-447"><a href="#cb1-447" aria-hidden="true" tabindex="-1"></a>Evaluating generative AI models.</span>
-<span id="cb1-448"><a href="#cb1-448" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-443"><a href="#cb1-443" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-444"><a href="#cb1-444" aria-hidden="true" tabindex="-1"></a><span class="fu">## Desirable Properties of Generative Models</span></span>
+<span id="cb1-445"><a href="#cb1-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-446"><a href="#cb1-446" aria-hidden="true" tabindex="-1"></a>When evaluating generative models, we consider several important properties. Unfortunately, **no single approach achieves all these properties simultaneously**.</span>
+<span id="cb1-447"><a href="#cb1-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-448"><a href="#cb1-448" aria-hidden="true" tabindex="-1"></a><span class="fu">### Efficient Sampling</span></span>
 <span id="cb1-449"><a href="#cb1-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-450"><a href="#cb1-450" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb1-450"><a href="#cb1-450" aria-hidden="true" tabindex="-1"></a>The ability to generate new samples quickly. This is crucial for practical applications.</span>
 <span id="cb1-451"><a href="#cb1-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-452"><a href="#cb1-452" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb1-453"><a href="#cb1-453" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-452"><a href="#cb1-452" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Applications like real-time image generation, interactive tools, and large-scale dataset creation require fast sampling</span>
+<span id="cb1-453"><a href="#cb1-453" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** GANs and normalizing flows typically have efficient sampling (single forward pass)</span>
+<span id="cb1-454"><a href="#cb1-454" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models struggle:** Autoregressive models and some diffusion models require many sequential steps</span>
+<span id="cb1-455"><a href="#cb1-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-456"><a href="#cb1-456" aria-hidden="true" tabindex="-1"></a><span class="fu">### High-Quality Sampling</span></span>
+<span id="cb1-457"><a href="#cb1-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-458"><a href="#cb1-458" aria-hidden="true" tabindex="-1"></a>Generated samples should be realistic, detailed, and indistinguishable from real data.</span>
+<span id="cb1-459"><a href="#cb1-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-460"><a href="#cb1-460" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Low-quality samples limit practical utility and can be easily detected as synthetic</span>
+<span id="cb1-461"><a href="#cb1-461" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** Modern GANs, diffusion models, and large-scale autoregressive models</span>
+<span id="cb1-462"><a href="#cb1-462" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Trade-off:** Often achieved at the cost of computational expense or training complexity</span>
+<span id="cb1-463"><a href="#cb1-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-464"><a href="#cb1-464" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coverage (Diversity)</span></span>
+<span id="cb1-465"><a href="#cb1-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-466"><a href="#cb1-466" aria-hidden="true" tabindex="-1"></a>The model should be able to generate the full diversity present in the training data, not just a subset of common examples.</span>
+<span id="cb1-467"><a href="#cb1-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-468"><a href="#cb1-468" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** A model that only generates a few "safe" outputs is not truly learning the data distribution</span>
+<span id="cb1-469"><a href="#cb1-469" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Common failure:** Mode collapse in GANs, where the generator produces limited variety</span>
+<span id="cb1-470"><a href="#cb1-470" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** VAEs tend to have good coverage but sometimes at the cost of sample quality</span>
+<span id="cb1-471"><a href="#cb1-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-472"><a href="#cb1-472" aria-hidden="true" tabindex="-1"></a><span class="fu">###  Well-Behaved Latent Space</span></span>
+<span id="cb1-473"><a href="#cb1-473" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-474"><a href="#cb1-474" aria-hidden="true" tabindex="-1"></a>The latent space $\mathbf{Z}$ should have smooth, meaningful structure where similar $\mathbf{z}$ values produce similar outputs.</span>
+<span id="cb1-475"><a href="#cb1-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-476"><a href="#cb1-476" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Enables interpolation, controlled generation, and semantic editing</span>
+<span id="cb1-477"><a href="#cb1-477" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Example:** Linearly interpolating between two latent codes should produce a smooth transition between outputs</span>
+<span id="cb1-478"><a href="#cb1-478" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** VAEs explicitly encourage this through their training objective</span>
+<span id="cb1-479"><a href="#cb1-479" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-480"><a href="#cb1-480" aria-hidden="true" tabindex="-1"></a><span class="fu">### Disentangled Latent Space</span></span>
+<span id="cb1-481"><a href="#cb1-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-482"><a href="#cb1-482" aria-hidden="true" tabindex="-1"></a>Different dimensions of $\mathbf{z}$ should control independent factors of variation in the output.</span>
+<span id="cb1-483"><a href="#cb1-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-484"><a href="#cb1-484" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:** Enables fine-grained control over specific attributes (e.g., separate controls for pose, lighting, color)</span>
+<span id="cb1-485"><a href="#cb1-485" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Example:** One dimension controls "smiling" in face generation, another controls "age", independently</span>
+<span id="cb1-486"><a href="#cb1-486" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Challenge:** Difficult to achieve without explicit architectural design or training objectives</span>
+<span id="cb1-487"><a href="#cb1-487" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Applications:** Critical for controllable generation and interpretable models</span>
+<span id="cb1-488"><a href="#cb1-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-489"><a href="#cb1-489" aria-hidden="true" tabindex="-1"></a><span class="fu">### Efficient Likelihood Computation</span></span>
+<span id="cb1-490"><a href="#cb1-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-491"><a href="#cb1-491" aria-hidden="true" tabindex="-1"></a>The ability to evaluate $p_{\theta}(\mathbf{x})$ for any given sample $\mathbf{x}$.</span>
+<span id="cb1-492"><a href="#cb1-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-493"><a href="#cb1-493" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Why it matters:**</span>
+<span id="cb1-494"><a href="#cb1-494" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Enables direct optimization via maximum likelihood</span>
+<span id="cb1-495"><a href="#cb1-495" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Allows outlier/anomaly detection</span>
+<span id="cb1-496"><a href="#cb1-496" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>Useful for model comparison and debugging</span>
+<span id="cb1-497"><a href="#cb1-497" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models excel:** Autoregressive models, normalizing flows, VAEs (approximate)</span>
+<span id="cb1-498"><a href="#cb1-498" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Which models lack this:** GANs, many diffusion models (cannot evaluate likelihood directly)</span>
+<span id="cb1-499"><a href="#cb1-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-500"><a href="#cb1-500" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-501"><a href="#cb1-501" aria-hidden="true" tabindex="-1"></a><span class="fu">## Evaluating Generative Models</span></span>
+<span id="cb1-502"><a href="#cb1-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-503"><a href="#cb1-503" aria-hidden="true" tabindex="-1"></a>Evaluating generative models is difficult because there is usually no single correct output. For a given prompt, label, mask, or input image, many different outputs may be valid.</span>
+<span id="cb1-504"><a href="#cb1-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-505"><a href="#cb1-505" aria-hidden="true" tabindex="-1"></a>A useful evaluation question is therefore not simply:</span>
+<span id="cb1-506"><a href="#cb1-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-507"><a href="#cb1-507" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Is the generated image correct?</span></span>
+<span id="cb1-508"><a href="#cb1-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-509"><a href="#cb1-509" aria-hidden="true" tabindex="-1"></a>but rather:</span>
+<span id="cb1-510"><a href="#cb1-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-511"><a href="#cb1-511" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Is the generated image plausible, diverse, useful, and faithful to the condition?</span></span>
+<span id="cb1-512"><a href="#cb1-512" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-513"><a href="#cb1-513" aria-hidden="true" tabindex="-1"></a>Different evaluation methods capture different aspects of this question.</span>
+<span id="cb1-514"><a href="#cb1-514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-515"><a href="#cb1-515" aria-hidden="true" tabindex="-1"></a><span class="fu">### Likelihood</span></span>
+<span id="cb1-516"><a href="#cb1-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-517"><a href="#cb1-517" aria-hidden="true" tabindex="-1"></a>For models that explicitly define a probability distribution $p_{\theta}(\vect{x})$, we can evaluate the likelihood of test data:</span>
+<span id="cb1-518"><a href="#cb1-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-519"><a href="#cb1-519" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-520"><a href="#cb1-520" aria-hidden="true" tabindex="-1"></a>\frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\vect{x}^{(i)})</span>
+<span id="cb1-521"><a href="#cb1-521" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-522"><a href="#cb1-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-523"><a href="#cb1-523" aria-hidden="true" tabindex="-1"></a>A high likelihood means that the model assigns high probability to real test examples.</span>
+<span id="cb1-524"><a href="#cb1-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-525"><a href="#cb1-525" aria-hidden="true" tabindex="-1"></a>However, likelihood is not always available. GANs, for example, do not provide an explicit density. Moreover, high likelihood does not always imply perceptually high-quality samples.</span>
+<span id="cb1-526"><a href="#cb1-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-527"><a href="#cb1-527" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Important limitation"}</span>
+<span id="cb1-528"><a href="#cb1-528" aria-hidden="true" tabindex="-1"></a>Likelihood evaluates how well the model assigns probability to real data. It does not directly tell us whether generated samples look good, are useful, or follow a prompt.</span>
+<span id="cb1-529"><a href="#cb1-529" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-530"><a href="#cb1-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-531"><a href="#cb1-531" aria-hidden="true" tabindex="-1"></a><span class="fu">### Human Evaluation</span></span>
+<span id="cb1-532"><a href="#cb1-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-533"><a href="#cb1-533" aria-hidden="true" tabindex="-1"></a>A direct but expensive approach is to ask humans to compare generated images.</span>
+<span id="cb1-534"><a href="#cb1-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-535"><a href="#cb1-535" aria-hidden="true" tabindex="-1"></a>Typical questions are:</span>
+<span id="cb1-536"><a href="#cb1-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-537"><a href="#cb1-537" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Which image looks more realistic?</span>
+<span id="cb1-538"><a href="#cb1-538" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Which image better matches the prompt?</span>
+<span id="cb1-539"><a href="#cb1-539" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Which image has fewer artifacts?</span>
+<span id="cb1-540"><a href="#cb1-540" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Which image would you prefer to use?</span>
+<span id="cb1-541"><a href="#cb1-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-542"><a href="#cb1-542" aria-hidden="true" tabindex="-1"></a>Human studies are often the most meaningful evaluation for visual quality, but they are slow, subjective, and difficult to use during model development.</span>
+<span id="cb1-543"><a href="#cb1-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-544"><a href="#cb1-544" aria-hidden="true" tabindex="-1"></a><span class="fu">### Distribution-Level Metrics</span></span>
+<span id="cb1-545"><a href="#cb1-545" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-546"><a href="#cb1-546" aria-hidden="true" tabindex="-1"></a>Many automatic metrics compare the distribution of generated images to the distribution of real images.</span>
+<span id="cb1-547"><a href="#cb1-547" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-548"><a href="#cb1-548" aria-hidden="true" tabindex="-1"></a>A common metric is the **Inception Score (IS)**, see @salimans_improved_2016. The idea is that good generated images should be classified confidently, while the full set of generated images should cover many classes.</span>
+<span id="cb1-549"><a href="#cb1-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-550"><a href="#cb1-550" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-basics-evaluating}</span>
+<span id="cb1-551"><a href="#cb1-551" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-552"><a href="#cb1-552" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}evaluating_genai.png)</span></span>
+<span id="cb1-553"><a href="#cb1-553" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-554"><a href="#cb1-554" aria-hidden="true" tabindex="-1"></a>Evaluating generative AI models using a classifier-based score.</span>
+<span id="cb1-555"><a href="#cb1-555" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-556"><a href="#cb1-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-557"><a href="#cb1-557" aria-hidden="true" tabindex="-1"></a>However, Inception Score has important limitations:</span>
+<span id="cb1-558"><a href="#cb1-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-559"><a href="#cb1-559" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>it depends on a pretrained classifier</span>
+<span id="cb1-560"><a href="#cb1-560" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>it is most meaningful for class-balanced datasets such as ImageNet</span>
+<span id="cb1-561"><a href="#cb1-561" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>it does not compare generated images directly to real images</span>
+<span id="cb1-562"><a href="#cb1-562" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>it does not evaluate prompt adherence or input fidelity</span>
+<span id="cb1-563"><a href="#cb1-563" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-564"><a href="#cb1-564" aria-hidden="true" tabindex="-1"></a>Other commonly used distribution-level metrics include **FID** and **KID**. These metrics compare feature distributions of real and generated images, usually using a pretrained image model.</span>
+<span id="cb1-565"><a href="#cb1-565" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-566"><a href="#cb1-566" aria-hidden="true" tabindex="-1"></a>Distribution-level metrics are useful for benchmarking, but they can hide important failures. A model can achieve a good average score while still failing on rare classes, spatial relations, text rendering, or fine-grained details.</span>
+<span id="cb1-567"><a href="#cb1-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-568"><a href="#cb1-568" aria-hidden="true" tabindex="-1"></a><span class="fu">### Conditional Generation Metrics</span></span>
+<span id="cb1-569"><a href="#cb1-569" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-570"><a href="#cb1-570" aria-hidden="true" tabindex="-1"></a>For conditional generation, realism alone is not enough. The output also has to match the condition.</span>
+<span id="cb1-571"><a href="#cb1-571" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-572"><a href="#cb1-572" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Task <span class="pp">|</span> What should be evaluated? <span class="pp">|</span></span>
+<span id="cb1-573"><a href="#cb1-573" aria-hidden="true" tabindex="-1"></a><span class="pp">|------|----------------------------|</span></span>
+<span id="cb1-574"><a href="#cb1-574" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> text-to-image <span class="pp">|</span> Does the image match the prompt? <span class="pp">|</span></span>
+<span id="cb1-575"><a href="#cb1-575" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> image editing <span class="pp">|</span> Was the requested change made? <span class="pp">|</span></span>
+<span id="cb1-576"><a href="#cb1-576" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> inpainting <span class="pp">|</span> Is the filled region plausible and consistent? <span class="pp">|</span></span>
+<span id="cb1-577"><a href="#cb1-577" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> super-resolution <span class="pp">|</span> Are details realistic and faithful to the input? <span class="pp">|</span></span>
+<span id="cb1-578"><a href="#cb1-578" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> image translation <span class="pp">|</span> Is the target domain reached while preserving content? <span class="pp">|</span></span>
+<span id="cb1-579"><a href="#cb1-579" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> synthetic data generation <span class="pp">|</span> Does it improve downstream model performance? <span class="pp">|</span></span>
+<span id="cb1-580"><a href="#cb1-580" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-581"><a href="#cb1-581" aria-hidden="true" tabindex="-1"></a>For text-to-image models, prompt alignment is often measured using vision-language models such as CLIP. For image editing, one may evaluate whether the edit was successful while preserving unchanged regions.</span>
+<span id="cb1-582"><a href="#cb1-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-583"><a href="#cb1-583" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-evaluation-conditional}</span>
+<span id="cb1-584"><a href="#cb1-584" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-585"><a href="#cb1-585" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}wine_comparison.jpg)</span>{width=850}</span>
+<span id="cb1-586"><a href="#cb1-586" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-587"><a href="#cb1-587" aria-hidden="true" tabindex="-1"></a>Evaluation of conditional generation.</span>
+<span id="cb1-588"><a href="#cb1-588" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-589"><a href="#cb1-589" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-590"><a href="#cb1-590" aria-hidden="true" tabindex="-1"></a><span class="fu">### Task-Specific Evaluation</span></span>
+<span id="cb1-591"><a href="#cb1-591" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-592"><a href="#cb1-592" aria-hidden="true" tabindex="-1"></a>For many computer vision applications, generic image quality is not sufficient. The evaluation should match the intended use case.</span>
+<span id="cb1-593"><a href="#cb1-593" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-594"><a href="#cb1-594" aria-hidden="true" tabindex="-1"></a>Examples:</span>
+<span id="cb1-595"><a href="#cb1-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-596"><a href="#cb1-596" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Application <span class="pp">|</span> Possible evaluation <span class="pp">|</span></span>
+<span id="cb1-597"><a href="#cb1-597" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------|--------------------|</span></span>
+<span id="cb1-598"><a href="#cb1-598" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> medical image translation <span class="pp">|</span> anatomical plausibility, expert review, downstream diagnosis <span class="pp">|</span></span>
+<span id="cb1-599"><a href="#cb1-599" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> synthetic training data <span class="pp">|</span> improvement on real validation/test data <span class="pp">|</span></span>
+<span id="cb1-600"><a href="#cb1-600" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> product image generation <span class="pp">|</span> preservation of product identity and geometry <span class="pp">|</span></span>
+<span id="cb1-601"><a href="#cb1-601" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> super-resolution <span class="pp">|</span> perceptual quality, fidelity to input, downstream task performance <span class="pp">|</span></span>
+<span id="cb1-602"><a href="#cb1-602" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> inpainting <span class="pp">|</span> boundary consistency, semantic plausibility, unchanged background <span class="pp">|</span></span>
+<span id="cb1-603"><a href="#cb1-603" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-604"><a href="#cb1-604" aria-hidden="true" tabindex="-1"></a>This is particularly important for scientific, medical, and industrial applications. A generated image can look realistic but still be scientifically or semantically wrong.</span>
+<span id="cb1-605"><a href="#cb1-605" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-606"><a href="#cb1-606" aria-hidden="true" tabindex="-1"></a><span class="fu">### Bias, Safety, and Provenance</span></span>
+<span id="cb1-607"><a href="#cb1-607" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-608"><a href="#cb1-608" aria-hidden="true" tabindex="-1"></a>Modern generative models are trained on large and often weakly curated datasets. Evaluation should therefore also consider societal and practical risks.</span>
+<span id="cb1-609"><a href="#cb1-609" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-610"><a href="#cb1-610" aria-hidden="true" tabindex="-1"></a>Important questions include:</span>
+<span id="cb1-611"><a href="#cb1-611" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-612"><a href="#cb1-612" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Does the model reproduce stereotypes or dataset biases?</span>
+<span id="cb1-613"><a href="#cb1-613" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Does it generate misleading or harmful content?</span>
+<span id="cb1-614"><a href="#cb1-614" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Are generated images distinguishable from real evidence?</span>
+<span id="cb1-615"><a href="#cb1-615" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Are there copyright or licensing concerns?</span>
+<span id="cb1-616"><a href="#cb1-616" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Can generated content be traced, watermarked, or labeled?</span>
+<span id="cb1-617"><a href="#cb1-617" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Does synthetic data introduce bias into downstream models?</span>
+<span id="cb1-618"><a href="#cb1-618" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-619"><a href="#cb1-619" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Generative models optimize plausibility, not truth"}</span>
+<span id="cb1-620"><a href="#cb1-620" aria-hidden="true" tabindex="-1"></a>A generated image may look realistic even when the depicted object, event, person, or measurement is incorrect.</span>
+<span id="cb1-621"><a href="#cb1-621" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-622"><a href="#cb1-622" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-623"><a href="#cb1-623" aria-hidden="true" tabindex="-1"></a><span class="fu">### Summary</span></span>
+<span id="cb1-624"><a href="#cb1-624" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-625"><a href="#cb1-625" aria-hidden="true" tabindex="-1"></a>There is no single best metric for generative models. A good evaluation usually combines several perspectives:</span>
+<span id="cb1-626"><a href="#cb1-626" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-627"><a href="#cb1-627" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Evaluation aspect <span class="pp">|</span> Example method <span class="pp">|</span></span>
+<span id="cb1-628"><a href="#cb1-628" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------------|----------------|</span></span>
+<span id="cb1-629"><a href="#cb1-629" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> realism / fidelity <span class="pp">|</span> human judgement, FID, KID <span class="pp">|</span></span>
+<span id="cb1-630"><a href="#cb1-630" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> diversity / coverage <span class="pp">|</span> distribution metrics, class coverage <span class="pp">|</span></span>
+<span id="cb1-631"><a href="#cb1-631" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> likelihood <span class="pp">|</span> test-set log-likelihood, if available <span class="pp">|</span></span>
+<span id="cb1-632"><a href="#cb1-632" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> prompt adherence <span class="pp">|</span> CLIP-based scores, human judgement <span class="pp">|</span></span>
+<span id="cb1-633"><a href="#cb1-633" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> input fidelity <span class="pp">|</span> reconstruction or preservation metrics <span class="pp">|</span></span>
+<span id="cb1-634"><a href="#cb1-634" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> downstream utility <span class="pp">|</span> performance of a model trained with synthetic data <span class="pp">|</span></span>
+<span id="cb1-635"><a href="#cb1-635" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> safety and bias <span class="pp">|</span> targeted audits and qualitative analysis <span class="pp">|</span></span>
+<span id="cb1-636"><a href="#cb1-636" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-637"><a href="#cb1-637" aria-hidden="true" tabindex="-1"></a>The right evaluation depends on the task. For creative image generation, human preference may be central. For synthetic training data, downstream model performance may matter most. For scientific or medical images, fidelity and domain-expert validation are essential.</span>
+<span id="cb1-638"><a href="#cb1-638" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-639"><a href="#cb1-639" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
+<span id="cb1-640"><a href="#cb1-640" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-641"><a href="#cb1-641" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb1-642"><a href="#cb1-642" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
