@@ -109,6 +109,66 @@ In practice, training alternates between:
 GAN learning process: As training progresses, the generator's distribution (green) moves closer to the real data distribution (black dots). The discriminator's decision boundary (blue) adapts accordingly. From @foster_generative_2023
 :::
 
+## Variational Autoencoders
+
+
+Variational Autoencoders (VAEs) [@Kingma2014] take a different approach to generative modeling, building on the autoencoder architecture (see @fig-genai-vae-illustration) but with a crucial probabilistic twist.
+
+::: {#fig-genai-vae-illustration}
+
+![]({{< meta params.images_path >}}vae_illustration.png)
+
+VAE architecture: The encoder maps inputs to latent distributions $q(z|x)$, while the decoder reconstructs from latent samples. From [Source](https://lilianweng.github.io/posts/2018-08-12-vae/).
+:::
+
+A VAE learns two networks that perform (approximate) inverse operations:
+
+- **Encoder** $q_{\psi}(z|x)$: Maps data $x$ to a distribution over latent codes $z$
+- **Decoder** $p_{\theta}(x|z)$: Maps latent codes $z$ back to data $x$
+
+Unlike standard autoencoders, VAEs enforce structure on the latent space through probabilistic modeling (see @fig-genai-vae-illustration2), ensuring that randomly sampled latent codes produce meaningful outputs.
+
+::: {#fig-genai-vae-illustration2}
+
+![]({{< meta params.images_path >}}vae_illustration2.png)
+
+VAE computational graph: The encoder outputs mean $\mu$ and variance $\sigma^2$ for each latent dimension. The **reparameterization trick** ($z = \mu + \epsilon \cdot \sigma$, where $\epsilon \sim \mathcal{N}(0, 1)$) enables gradient-based optimization. From [Source](https://lilianweng.github.io/posts/2018-08-12-vae/).
+:::
+
+
+VAEs optimize the **Evidence Lower Bound (ELBO)**, which consists of two terms:
+
+$$
+\text{ELBO} = \underbrace{\mathbb{E}_{z \sim q_{\psi}(z|x)}[\log p_{\theta}(x|z)]}_{\text{Reconstruction}} - \underbrace{\text{KL}(q_{\psi}(z|x) \| p(z))}_{\text{Regularization}}
+$$
+
+The **reconstruction term** ensures the decoder can recover the input from the latent code. The **KL regularization term** (typically with prior $p(z) = \mathcal{N}(0, I)$) prevents the latent space from developing "gaps and tendrils"—ensuring that random samples from $\mathcal{N}(0, I)$ decode to meaningful outputs.
+
+This balance is key to VAE behavior: the reconstruction loss wants to use the latent space flexibly, while KL regularization pushes latent codes toward a standard normal distribution. The result is a **structured, continuous latent space** where interpolation and attribute manipulation work smoothly.
+
+::: {#fig-genai-vae-latent-space}
+
+![]({{< meta params.images_path >}}vae_latent_space_face.png)
+
+VAE latent space: Traversing the latent space produces smooth interpolations between faces, demonstrating the structured representation learned by the model. From @prince_understanding_2023.
+:::
+
+::: {.callout-note title="Pros and Cons of VAEs"}
+
+**Pros**
+
+- Principled probabilistic foundation
+- Latent space structure: can interpolate in latent space and interpret factors
+- Stable training
+- Can be used for representation learning
+
+**Cons**
+
+- Blurry outputs (more complex variants can reduce this)
+
+:::
+
+
 
 ## Diffusion Models
 
@@ -208,64 +268,6 @@ This generalization reveals that diffusion's success stems from the gradual, mul
 
 
 
-## Variational Autoencoders
-
-
-Variational Autoencoders (VAEs) [@Kingma2014] take a different approach to generative modeling, building on the autoencoder architecture (see @fig-genai-vae-illustration) but with a crucial probabilistic twist.
-
-::: {#fig-genai-vae-illustration}
-
-![]({{< meta params.images_path >}}vae_illustration.png)
-
-VAE architecture: The encoder maps inputs to latent distributions $q(z|x)$, while the decoder reconstructs from latent samples. From [Source](https://lilianweng.github.io/posts/2018-08-12-vae/).
-:::
-
-A VAE learns two networks that perform (approximate) inverse operations:
-
-- **Encoder** $q_{\psi}(z|x)$: Maps data $x$ to a distribution over latent codes $z$
-- **Decoder** $p_{\theta}(x|z)$: Maps latent codes $z$ back to data $x$
-
-Unlike standard autoencoders, VAEs enforce structure on the latent space through probabilistic modeling (see @fig-genai-vae-illustration2), ensuring that randomly sampled latent codes produce meaningful outputs.
-
-::: {#fig-genai-vae-illustration2}
-
-![]({{< meta params.images_path >}}vae_illustration2.png)
-
-VAE computational graph: The encoder outputs mean $\mu$ and variance $\sigma^2$ for each latent dimension. The **reparameterization trick** ($z = \mu + \epsilon \cdot \sigma$, where $\epsilon \sim \mathcal{N}(0, 1)$) enables gradient-based optimization. From [Source](https://lilianweng.github.io/posts/2018-08-12-vae/).
-:::
-
-
-VAEs optimize the **Evidence Lower Bound (ELBO)**, which consists of two terms:
-
-$$
-\text{ELBO} = \underbrace{\mathbb{E}_{z \sim q_{\psi}(z|x)}[\log p_{\theta}(x|z)]}_{\text{Reconstruction}} - \underbrace{\text{KL}(q_{\psi}(z|x) \| p(z))}_{\text{Regularization}}
-$$
-
-The **reconstruction term** ensures the decoder can recover the input from the latent code. The **KL regularization term** (typically with prior $p(z) = \mathcal{N}(0, I)$) prevents the latent space from developing "gaps and tendrils"—ensuring that random samples from $\mathcal{N}(0, I)$ decode to meaningful outputs.
-
-This balance is key to VAE behavior: the reconstruction loss wants to use the latent space flexibly, while KL regularization pushes latent codes toward a standard normal distribution. The result is a **structured, continuous latent space** where interpolation and attribute manipulation work smoothly.
-
-::: {#fig-genai-vae-latent-space}
-
-![]({{< meta params.images_path >}}vae_latent_space_face.png)
-
-VAE latent space: Traversing the latent space produces smooth interpolations between faces, demonstrating the structured representation learned by the model. From @prince_understanding_2023.
-:::
-
-::: {.callout-note title="Pros and Cons of VAEs"}
-
-**Pros**
-
-- Principled probabilistic foundation
-- Latent space structure: can interpolate in latent space and interpret factors
-- Stable training
-- Can be used for representation learning
-
-**Cons**
-
-- Blurry outputs (more complex variants can reduce this)
-
-:::
 
 
 

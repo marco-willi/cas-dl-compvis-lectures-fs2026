@@ -1,5 +1,5 @@
 ---
-title: "8 - GenAI Intro"
+title: "8 - Generative AI for Computer Vision"
 params:
    images_path: "/assets/images/genai/"
 ---
@@ -214,6 +214,33 @@ Major image generation providers, model families, and platforms.
 
 
 
+## What can be generated?
+
+Generative models are often introduced as models that create images from text prompts. However, for computer vision this is only one important use case. More generally, generative models produce or modify visual data under different types of constraints.
+
+A useful distinction is between **generation from scratch**, **editing existing data**, and **generating missing or enhanced information**.
+
+
+
+| Task | Input | Output | Example |
+|------|-------|--------|---------|
+| **Unconditional image generation** | random noise | image | random face, random bedroom, random product |
+| **Class-conditional generation** | class label + noise | image | “dog”, “car”, “elephant” |
+| **Text-to-image generation** | text prompt + noise | image | “a red chair in a modern living room” |
+| **Image-to-image generation** | image + instruction / prompt | modified image | change season, style, material, lighting |
+| **Inpainting** | image + mask + prompt | completed image | remove object, fill missing region |
+| **Outpainting** | image + extended canvas | expanded image | extend background beyond image borders |
+| **Super-resolution / enhancement** | low-resolution image | high-resolution image | upscaling, denoising, sharpening |
+| **Image translation** | source image | target-domain image | MRI to CT, sketch to photo, day to night |
+| **Synthetic data generation** | task specification | training examples | rare classes, simulated defects, edge cases |
+| **Video generation** | prompt or image sequence | video | short clips, object motion, scene animation |
+
+The important point is that generative computer vision is not only about creating new images. Many practical applications are **conditional**: the model must preserve some information from the input while generating other parts.
+
+::: {.callout-note title="Discussion"}
+Which of these tasks require the model to be creative, and which require the model to be faithful to a given input?
+:::
+
 
 ## What is Generative Modelling?
 
@@ -270,9 +297,10 @@ One way to achieve this is to condition the generative model on a stochastic inp
 One way to think about $\vect{z}$ is that of a **latent variable**. A latent variable is not observed but specifies important characteristics of an image. In our elephant example, the label vector $\vect{y}$ specifies that the image should show an elephant, while $\vect{z}$ might define aspects of the animal (pose, size, numer of individuals) and aspects of the scene (time-of-day, surroundings).
 
 
-::: {.callout-note title="Conditional vs. Unconditional Generation"}
-In general we distinguish between **conditional** and **unconditional** generation. If we condition the input on a piece of data, such as a label vector, we refer to **conditional generation** $g(\vect{c})$. If we just generate images we refer to **unconditional generation** $g()$. In the following we often use $g()$ to simplify notation.
+::: {.callout-note title="Notation"}
+In the following, we often write $g()$ to simplify notation. Depending on the setting, the model may generate unconditionally, $g_{\theta}(\vect{z})$, or conditionally, $g_{\theta}(\vect{z}, \vect{c})$.
 :::
+
 
 ::: {.callout-note title="Latent Variables Intuition" collapse="false"}
 Consider the dataset shown in @fig-genai-basics-latent-intuition: What could be latent variables for this dataset?
@@ -302,6 +330,68 @@ Intuition about latent variables in generative models. From @foster_generative_2
 ![]({{< meta params.images_path >}}latent_variables_intuition2.png)
 
 Intuition about latent variables in generative models. From @foster_generative_2023.
+:::
+
+## Unconditional vs. Conditional Generation
+
+A central distinction in generative modelling is whether the model generates samples freely or under additional constraints.
+
+In **unconditional generation**, the model receives only a random input, typically sampled from a simple distribution:
+
+$$
+\vect{z} \sim p(\vect{z})
+$$
+
+and generates an image:
+
+$$
+\hat{\vect{x}} = g_{\theta}(\vect{z})
+$$
+
+Here, $\vect{z}$ controls random variation. For example, sampling different values of $\vect{z}$ may generate different faces, animals, or rooms.
+
+In **conditional generation**, the model additionally receives some conditioning information $\vect{c}$:
+
+$$
+\hat{\vect{x}} = g_{\theta}(\vect{z}, \vect{c})
+$$
+
+The condition $\vect{c}$ specifies what should be generated or preserved.
+
+| Type of condition $\vect{c}$ | Example task |
+|------------------------------|--------------|
+| class label | generate an image of an elephant |
+| text prompt | generate “a small cabin next to a lake” |
+| input image | edit this image |
+| mask | fill this missing region |
+| low-resolution image | super-resolution |
+| segmentation map | generate an image with this layout |
+| pose / depth / edge map | control geometry and structure |
+| reference image | preserve identity, product, or style |
+
+::: {#fig-genai-unconditional-conditional layout-nrow=2}
+
+![]({{< meta params.images_path >}}random_person1.jpg)
+
+![]({{< meta params.images_path >}}random_person2.jpg)
+
+![]({{< meta params.images_path >}}random_person3.jpg)
+
+
+![]({{< meta params.images_path >}}curly_person1.jpg)
+
+![]({{< meta params.images_path >}}curly_person2.jpg)
+
+![]({{< meta params.images_path >}}curly_person3.jpg)
+
+
+Unconditional vs. conditional generation. The top row shows random samples of people, the bottom row shows samples of people conditioned on "create three images of young people with glasses and curly hair."
+:::
+
+Conditional generation is especially important in computer vision because many applications require **control**. We usually do not just want any plausible image; we want an image that matches a prompt, preserves a product, fills a masked region, follows a layout, or remains consistent with a source image.
+
+::: {.callout-note title="Key idea"}
+The random variable $\vect{z}$ provides **diversity**, while the condition $\vect{c}$ provides **control**.
 :::
 
 ## Learning Generative Models
@@ -408,44 +498,143 @@ The ability to evaluate $p_{\theta}(\mathbf{x})$ for any given sample $\mathbf{x
 - **Which models lack this:** GANs, many diffusion models (cannot evaluate likelihood directly)
 
 
-
-## Comparing Generative Modeling Approaches
-
-Different generative modeling approaches make different tradeoffs. Here's a comparison of major families:
-
-| Method | Latent Variables | Density | Fast Sampling |
-|--------|-----------------|----------------|---------------|
-| **Autoregressive** | ❌ | ✅ | ❌ (sequential) |
-| **Diffusion** | ✅ | ⚠️ | ❌ (iterative) |
-| **GANs** | ✅ | ❌ | ✅ |
-| **VAEs** | ✅ | ⚠️ (approx.) | ✅ |
-
-**Key observations:**
-
-1. **No method achieves all properties:** There is no generative model that simultaneously has latent variables, exact density computation, fast sampling, perfect quality, and perfect coverage
-2. **GANs trade likelihood for quality:** Excellent sample quality and fast generation, but no likelihood evaluation and potential coverage issues
-3. **VAEs balance tradeoffs:** Good coverage and approximate likelihood, but sometimes lower sample quality
-4. **Diffusion models:** Current state-of-the-art for quality and coverage, but slow sampling
-5. **Autoregressive models:** Exact likelihood and good quality, but very slow sequential generation
-
-
-
 ## Evaluating Generative Models
 
-Evaluating generative models and comparing different models with respect to sample quality and diversity is not a trivial task.
+Evaluating generative models is difficult because there is usually no single correct output. For a given prompt, label, mask, or input image, many different outputs may be valid.
 
-One approach is to calculate the likelihood of a test-set under the generative model $p_{\theta}(\vect{x})$. However, this is not possible for models which do not model a probability distribution.
+A useful evaluation question is therefore not simply:
 
-A cumbersome approach is to use human studies by simply asking humans to compare samples from different models. This approach, however, is not always feasible when developing models. Other approaches
+> Is the generated image correct?
 
-Different scores have been proposed. A popular one is the Inception Score (IS), see @salimans_improved_2016. This score is calculated using a classification model and thus only feasible for datasets with known classes. In this particular case, it is often used to compare generative models on the ImageNet dataset. This dataset has 1'000 classes with roughly equal distribution. The assumption is that a good generative model yields images which a classifier predicts accurately and with high confidence. In that case the marginal (averaged) distribution is close to unifrom, as illustrated in @fig-genai-basics-evaluating.
+but rather:
+
+> Is the generated image plausible, diverse, useful, and faithful to the condition?
+
+Different evaluation methods capture different aspects of this question.
+
+### Likelihood
+
+For models that explicitly define a probability distribution $p_{\theta}(\vect{x})$, we can evaluate the likelihood of test data:
+
+$$
+\frac{1}{N} \sum_{i=1}^{N} \log p_{\theta}(\vect{x}^{(i)})
+$$
+
+A high likelihood means that the model assigns high probability to real test examples.
+
+However, likelihood is not always available. GANs, for example, do not provide an explicit density. Moreover, high likelihood does not always imply perceptually high-quality samples.
+
+::: {.callout-note title="Important limitation"}
+Likelihood evaluates how well the model assigns probability to real data. It does not directly tell us whether generated samples look good, are useful, or follow a prompt.
+:::
+
+### Human Evaluation
+
+A direct but expensive approach is to ask humans to compare generated images.
+
+Typical questions are:
+
+- Which image looks more realistic?
+- Which image better matches the prompt?
+- Which image has fewer artifacts?
+- Which image would you prefer to use?
+
+Human studies are often the most meaningful evaluation for visual quality, but they are slow, subjective, and difficult to use during model development.
+
+### Distribution-Level Metrics
+
+Many automatic metrics compare the distribution of generated images to the distribution of real images.
+
+A common metric is the **Inception Score (IS)**, see @salimans_improved_2016. The idea is that good generated images should be classified confidently, while the full set of generated images should cover many classes.
 
 ::: {#fig-genai-basics-evaluating}
 
 ![]({{< meta params.images_path >}}evaluating_genai.png)
 
-Evaluating generative AI models.
+Evaluating generative AI models using a classifier-based score.
 :::
+
+However, Inception Score has important limitations:
+
+- it depends on a pretrained classifier
+- it is most meaningful for class-balanced datasets such as ImageNet
+- it does not compare generated images directly to real images
+- it does not evaluate prompt adherence or input fidelity
+
+Other commonly used distribution-level metrics include **FID** and **KID**. These metrics compare feature distributions of real and generated images, usually using a pretrained image model.
+
+Distribution-level metrics are useful for benchmarking, but they can hide important failures. A model can achieve a good average score while still failing on rare classes, spatial relations, text rendering, or fine-grained details.
+
+### Conditional Generation Metrics
+
+For conditional generation, realism alone is not enough. The output also has to match the condition.
+
+| Task | What should be evaluated? |
+|------|----------------------------|
+| text-to-image | Does the image match the prompt? |
+| image editing | Was the requested change made? |
+| inpainting | Is the filled region plausible and consistent? |
+| super-resolution | Are details realistic and faithful to the input? |
+| image translation | Is the target domain reached while preserving content? |
+| synthetic data generation | Does it improve downstream model performance? |
+
+For text-to-image models, prompt alignment is often measured using vision-language models such as CLIP. For image editing, one may evaluate whether the edit was successful while preserving unchanged regions.
+
+::: {#fig-genai-evaluation-conditional}
+
+![]({{< meta params.images_path >}}wine_comparison.jpg){width=850}
+
+Evaluation of conditional generation.
+:::
+
+### Task-Specific Evaluation
+
+For many computer vision applications, generic image quality is not sufficient. The evaluation should match the intended use case.
+
+Examples:
+
+| Application | Possible evaluation |
+|-------------|--------------------|
+| medical image translation | anatomical plausibility, expert review, downstream diagnosis |
+| synthetic training data | improvement on real validation/test data |
+| product image generation | preservation of product identity and geometry |
+| super-resolution | perceptual quality, fidelity to input, downstream task performance |
+| inpainting | boundary consistency, semantic plausibility, unchanged background |
+
+This is particularly important for scientific, medical, and industrial applications. A generated image can look realistic but still be scientifically or semantically wrong.
+
+### Bias, Safety, and Provenance
+
+Modern generative models are trained on large and often weakly curated datasets. Evaluation should therefore also consider societal and practical risks.
+
+Important questions include:
+
+- Does the model reproduce stereotypes or dataset biases?
+- Does it generate misleading or harmful content?
+- Are generated images distinguishable from real evidence?
+- Are there copyright or licensing concerns?
+- Can generated content be traced, watermarked, or labeled?
+- Does synthetic data introduce bias into downstream models?
+
+::: {.callout-warning title="Generative models optimize plausibility, not truth"}
+A generated image may look realistic even when the depicted object, event, person, or measurement is incorrect.
+:::
+
+### Summary
+
+There is no single best metric for generative models. A good evaluation usually combines several perspectives:
+
+| Evaluation aspect | Example method |
+|-------------------|----------------|
+| realism / fidelity | human judgement, FID, KID |
+| diversity / coverage | distribution metrics, class coverage |
+| likelihood | test-set log-likelihood, if available |
+| prompt adherence | CLIP-based scores, human judgement |
+| input fidelity | reconstruction or preservation metrics |
+| downstream utility | performance of a model trained with synthetic data |
+| safety and bias | targeted audits and qualitative analysis |
+
+The right evaluation depends on the task. For creative image generation, human preference may be central. For synthetic training data, downstream model performance may matter most. For scientific or medical images, fidelity and domain-expert validation are essential.
 
 ## References
 
