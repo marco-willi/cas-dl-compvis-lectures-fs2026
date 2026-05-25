@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -96,7 +96,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-acf12a64177840b8d86f2d4f01b2e9fb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-f4818a9131c57a956df3f0f0ea9ba09d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -448,13 +448,8 @@ window.Quarto = {
   <li><a href="#generative-adversarial-networks" id="toc-generative-adversarial-networks" class="nav-link" data-scroll-target="#generative-adversarial-networks"><span class="header-section-number">3</span> Generative Adversarial Networks</a></li>
   <li><a href="#variational-autoencoders" id="toc-variational-autoencoders" class="nav-link" data-scroll-target="#variational-autoencoders"><span class="header-section-number">4</span> Variational Autoencoders</a></li>
   <li><a href="#diffusion-models" id="toc-diffusion-models" class="nav-link" data-scroll-target="#diffusion-models"><span class="header-section-number">5</span> Diffusion Models</a></li>
-  <li><a href="#comparing-gans-vaes-and-diffusion-models" id="toc-comparing-gans-vaes-and-diffusion-models" class="nav-link" data-scroll-target="#comparing-gans-vaes-and-diffusion-models"><span class="header-section-number">6</span> Comparing GANs, VAEs, and Diffusion Models</a>
-  <ul class="collapse">
-  <li><a href="#d-distribution-comparison" id="toc-d-distribution-comparison" class="nav-link" data-scroll-target="#d-distribution-comparison"><span class="header-section-number">6.1</span> 1D Distribution Comparison</a></li>
-  </ul></li>
-  <li><a href="#d-distribution-comparison-1" id="toc-d-distribution-comparison-1" class="nav-link" data-scroll-target="#d-distribution-comparison-1"><span class="header-section-number">7</span> 2D Distribution Comparison</a></li>
-  <li><a href="#conditional-generation" id="toc-conditional-generation" class="nav-link" data-scroll-target="#conditional-generation"><span class="header-section-number">8</span> Conditional Generation</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">9</span> References</a></li>
+  <li><a href="#conditioning-across-model-families" id="toc-conditioning-across-model-families" class="nav-link" data-scroll-target="#conditioning-across-model-families"><span class="header-section-number">6</span> Conditioning Across Model Families</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">7</span> References</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/marco-willi/cas-dl-compvis-lectures-fs2026/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -787,211 +782,45 @@ Figure&nbsp;11: Cold Diffusion: Various degradation operators (blur, downsamplin
 </div>
 </div>
 </section>
-<section id="comparing-gans-vaes-and-diffusion-models" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="comparing-gans-vaes-and-diffusion-models"><span class="header-section-number">6</span> Comparing GANs, VAEs, and Diffusion Models</h2>
-<p>Having explored each model family, how do they actually behave differently? Let’s examine their behavior on simple 1D and 2D distributions to build intuition about their strengths and failure modes.</p>
-<section id="d-distribution-comparison" class="level3" data-number="6.1">
-<h3 data-number="6.1" class="anchored" data-anchor-id="d-distribution-comparison"><span class="header-section-number">6.1</span> 1D Distribution Comparison</h3>
-<div id="fig-genai-1d-true" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-1d-true-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../assets/images/genai_models/1d_comparison/true_distribution.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-1d-true-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12: True 1D data distribution: A bimodal distribution that the generative models must learn to reproduce.
-</figcaption>
-</figure>
-</div>
-<div class="tabset-margin-container"></div><div id="fig-genai-1d-example" class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">GAN</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">VAE</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Diffusion</a></li></ul>
-<div id="fig-genai-1d-example" class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="fig-genai-1d-comparison" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-1d-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../assets/images/genai_models/1d_comparison/gan_training_progress.png" class="img-fluid figure-img"></p>
-<figcaption>GAN</figcaption>
-</figure>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-genai-1d-comparison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;13
-</figcaption>
-</figure>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="fig-genai-1d-example-vae" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-1d-example-vae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../assets/images/genai_models/1d_comparison/vae_training_progress.png" class="img-fluid figure-img"></p>
-<figcaption>VAE</figcaption>
-</figure>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-genai-1d-example-vae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14
-</figcaption>
-</figure>
-</div>
-</div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="fig-genai-1d-example-gan-diffusion" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-1d-example-gan-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../assets/images/genai_models/1d_comparison/diffusion_training_progress.png" class="img-fluid figure-img"></p>
-<figcaption>Diffusion</figcaption>
-</figure>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-genai-1d-example-gan-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15
-</figcaption>
-</figure>
-</div>
-<p>Training progression on 1D bimodal distribution. Each panel shows how the learned distribution (orange) approaches the true distribution (blue) over training iterations.</p>
-</div>
-</div>
-</div>
-<div id="fig-genai-1d-final" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-1d-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../assets/images/genai_models/1d_comparison/final_comparison.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-1d-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;16: Final comparison: All three models after convergence, showing their different biases in capturing the bimodal distribution.
-</figcaption>
-</figure>
-</div>
+<section id="conditioning-across-model-families" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="conditioning-across-model-families"><span class="header-section-number">6</span> Conditioning Across Model Families</h2>
+<p>So far, we have introduced the model families mostly in their unconditional form: they learn to model or sample from <span class="math inline">\(p(\mathbf{x})\)</span>.</p>
+<p>In practice, these model families can often be extended to conditional generation, where the model learns:</p>
+<p><span class="math display">\[
+p_\theta(\mathbf{x} \mid \mathbf{c})
+\]</span></p>
+<p>The condition <span class="math inline">\(\mathbf{c}\)</span> can be a class label, text prompt, source image, mask, layout, depth map, or reference image.</p>
+<p>For this lecture, the important point is simple: conditioning does not define a separate model family. It is a way to control models from different families.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model family</th>
+<th>How conditioning can enter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Autoregressive models</td>
+<td>condition each prediction step on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+<tr class="even">
+<td>VAEs</td>
+<td>condition encoder and/or decoder on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+<tr class="odd">
+<td>GANs</td>
+<td>condition generator and often discriminator on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+<tr class="even">
+<td>Diffusion models</td>
+<td>condition the denoising network on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Modern text-to-image and image-editing systems use these ideas extensively.</p>
 </section>
-</section>
-<section id="d-distribution-comparison-1" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="d-distribution-comparison-1"><span class="header-section-number">7</span> 2D Distribution Comparison</h2>
-<div id="fig-genai-2d-true" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-2d-true-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../assets/images/genai_models/2d_comparison/true_distribution.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-2d-true-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;17: True 2D data distribution: A complex spiral pattern in 2D space.
-</figcaption>
-</figure>
-</div>
-<div class="tabset-margin-container"></div><div id="fig-genai-2d-comparison" class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">GAN</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">VAE</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Diffusion</a></li></ul>
-<div id="fig-genai-2d-comparison" class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="fig-genai-2d-example-gan" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-2d-example-gan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../assets/images/genai_models/2d_comparison/gan_training_progress.png" class="img-fluid figure-img"></p>
-<figcaption>GAN</figcaption>
-</figure>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-genai-2d-example-gan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;18
-</figcaption>
-</figure>
-</div>
-</div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div id="fig-genai-2d-example-vae" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-2d-example-vae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../assets/images/genai_models/2d_comparison/vae_training_progress.png" class="img-fluid figure-img"></p>
-<figcaption>VAE</figcaption>
-</figure>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-genai-2d-example-vae-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;19
-</figcaption>
-</figure>
-</div>
-</div>
-<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
-<div id="fig-genai-2d-example-gan-diffusion" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-2d-example-gan-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../../assets/images/genai_models/2d_comparison/diffusion_training_progress.png" class="img-fluid figure-img"></p>
-<figcaption>Diffusion</figcaption>
-</figure>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-genai-2d-example-gan-diffusion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;20
-</figcaption>
-</figure>
-</div>
-<p>Training progression on 2D spiral distribution. The models must learn a complex curved manifold.</p>
-</div>
-</div>
-</div>
-<div id="fig-genai-2d-final" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-2d-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../assets/images/genai_models/2d_comparison/final_comparison.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-2d-final-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;21: Final 2D comparison: Converged distributions overlaid on the true spiral. Notice how each model type handles the complex geometry differently.
-</figcaption>
-</figure>
-</div>
-</section>
-<section id="conditional-generation" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="conditional-generation"><span class="header-section-number">8</span> Conditional Generation</h2>
-<p>So far, we have discussed <strong>unconditional generation</strong>: models that learn <span class="math inline">\(p(\mathbf{x})\)</span> or generate samples from the full training distribution. But many applications require <strong>conditional generation</strong>: producing outputs that match specific requirements or inputs.</p>
-<p>Conditional generation models learn <span class="math inline">\(p(\mathbf{x}|\mathbf{c})\)</span>, where <span class="math inline">\(\mathbf{c}\)</span> is a conditioning signal:</p>
-<ul>
-<li><strong>Text prompt</strong>: “A photo of a cat wearing sunglasses”</li>
-<li><strong>Class label</strong>: Generate a digit “7” or a face with “smiling” attribute</li>
-<li><strong>Image</strong>: Translate sketches to photos, colorize grayscale images</li>
-<li><strong>Other modalities</strong>: Depth maps, segmentation masks, audio, etc.</li>
-</ul>
-<p>The core modification is simple: provide the condition <span class="math inline">\(\mathbf{c}\)</span> as additional input to the model. However, the architectural integration varies by model family.</p>
-<p>One example are conditional GANs. As shown in <a href="#fig-genai-gan-conditional" class="quarto-xref">Figure&nbsp;22</a>. In this case typically only the generator receives the conditioning information <span class="math inline">\(g(\mathbf{z}, \mathbf{c})\)</span> and <span class="math inline">\(d(\mathbf{x})\)</span>. The discriminator does not require <span class="math inline">\(\mathbf{c}\)</span> in this case because input-output consistency is enforced with other losses that compare input and output (e.g.&nbsp;<span class="math inline">\(L_2\)</span> norm).</p>
-<div id="fig-genai-gan-conditional" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-genai-gan-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../../assets/images/genai_models/gan_conditional_generation.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-gan-conditional-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;22: Conditional GAN architecture: Generator receives the conditioning input, enabling controlled generation. From <span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#ref-prince_understanding_2023" role="doc-biblioref">2023</a>)</span>.
-</figcaption>
-</figure>
-</div>
-<p>Often, the discriminator needs to be conditioned on <span class="math inline">\(\mathbf{c}\)</span> as well. The discriminator thus must judge whether <span class="math inline">\(\mathbf{x}\)</span> matches the condition <span class="math inline">\(\mathbf{c}\)</span>, not just whether <span class="math inline">\(\mathbf{x}\)</span> looks realistic. This forces the generator to respect the conditioning signal to fool the discriminator.</p>
-<p><strong>Training objective</strong>: <span class="math display">\[\begin{equation}
-\min_{g} \max_{d} \mathbb{E}_{x, c}[\log d(\mathbf{x}, \mathbf{c})] + \mathbb{E}_{z, c}[\log(1 - d(g(\mathbf{z}, \mathbf{c}), \mathbf{c}))]
-\end{equation}\]</span></p>
-<p><strong>Common conditioning mechanisms</strong>:</p>
-<ul>
-<li><strong>Concatenation</strong>: Concatenate <span class="math inline">\(\mathbf{c}\)</span> with <span class="math inline">\(\mathbf{z}\)</span> for generator, with <span class="math inline">\(\mathbf{x}\)</span> for discriminator</li>
-<li><strong>Class embeddings</strong>: For discrete labels, learn embedding vectors</li>
-<li><strong>Cross-attention</strong>: For complex conditions (text, images), use attention mechanisms</li>
-</ul>
-<p>Beyond GANs, other model families support conditioning:</p>
-<ul>
-<li><strong>Conditional VAEs</strong>: Condition both encoder and decoder on <span class="math inline">\(c\)</span>, useful for disentangling style from content</li>
-<li><strong>Autoregressive models</strong>: Condition each step on <span class="math inline">\(c\)</span>, e.g., PixelCNN for class-conditional generation</li>
-<li><strong>ControlNet</strong>: Add spatial conditioning (edges, depth, pose) to pre-trained diffusion models without retraining from scratch</li>
-</ul>
-</section>
-<section id="references" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="references"><span class="header-section-number">9</span> References</h2>
+<section id="references" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="references"><span class="header-section-number">7</span> References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-bansal_cold_2022" class="csl-entry" role="listitem">
 Bansal, Arpit, Eitan Borgnia, Hong-Min Chu, et al. 2022. <em>Cold <span>Diffusion</span>: <span>Inverting</span> <span>Arbitrary</span> <span>Image</span> <span>Transforms</span> <span>Without</span> <span>Noise</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2208.09392">https://doi.org/10.48550/arXiv.2208.09392</a>.
@@ -1762,158 +1591,38 @@ Yu, Jiahui, Yuanzhong Xu, Jing Yu Koh, et al. 2022. <em>Scaling <span>Autoregres
 <span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conditioning Across Model Families</span></span>
 <span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a>So far, we have introduced the model families mostly in their unconditional form:</span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a>they learn to model or sample from $p(\vect{x})$.</span>
 <span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a><span class="fu">## Comparing GANs, VAEs, and Diffusion Models</span></span>
-<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a>Having explored each model family, how do they actually behave differently? Let's examine their behavior on simple 1D and 2D distributions to build intuition about their strengths and failure modes.</span>
-<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1D Distribution Comparison</span></span>
-<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-1d-true}</span>
-<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}1d_comparison/true_distribution.png)</span></span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>In practice, these model families can often be extended to conditional generation,</span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>where the model learns:</span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>p_\theta(\vect{x} \mid \vect{c})</span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>The condition $\vect{c}$ can be a class label, text prompt, source image, mask,</span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a>layout, depth map, or reference image.</span>
 <span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>True 1D data distribution: A bimodal distribution that the generative models must learn to reproduce.</span>
-<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>For this lecture, the important point is simple: conditioning does not define a</span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>separate model family. It is a way to control models from different families.</span>
 <span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>::: {.panel-tabset #fig-genai-1d-example}</span>
-<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a><span class="fu">### GAN</span></span>
-<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-1d-comparison}</span>
-<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a><span class="al">![GAN]({{&lt; meta params.images_path &gt;}}1d_comparison/gan_training_progress.png)</span></span>
-<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Model family <span class="pp">|</span> How conditioning can enter <span class="pp">|</span></span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------|----------------------------|</span></span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Autoregressive models <span class="pp">|</span> condition each prediction step on $\vect{c}$ <span class="pp">|</span></span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> VAEs <span class="pp">|</span> condition encoder and/or decoder on $\vect{c}$ <span class="pp">|</span></span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GANs <span class="pp">|</span> condition generator and often discriminator on $\vect{c}$ <span class="pp">|</span></span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Diffusion models <span class="pp">|</span> condition the denoising network on $\vect{c}$ <span class="pp">|</span></span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>Modern text-to-image and image-editing systems use these ideas extensively.</span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a><span class="fu">### VAE</span></span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
 <span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-1d-example-vae}</span>
-<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a><span class="al">![VAE]({{&lt; meta params.images_path &gt;}}1d_comparison/vae_training_progress.png)</span></span>
-<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a><span class="fu">### Diffusion</span></span>
-<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-1d-example-gan-diffusion}</span>
-<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a><span class="al">![Diffusion]({{&lt; meta params.images_path &gt;}}1d_comparison/diffusion_training_progress.png)</span></span>
-<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>Training progression on 1D bimodal distribution. Each panel shows how the learned distribution (orange) approaches the true distribution (blue) over training iterations.</span>
-<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-1d-final}</span>
-<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}1d_comparison/final_comparison.png)</span></span>
-<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a>Final comparison: All three models after convergence, showing their different biases in capturing the bimodal distribution.</span>
-<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2D Distribution Comparison</span></span>
-<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-2d-true}</span>
-<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}2d_comparison/true_distribution.png)</span></span>
-<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a>True 2D data distribution: A complex spiral pattern in 2D space.</span>
-<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a>::: {.panel-tabset #fig-genai-2d-comparison}</span>
-<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a><span class="fu">### GAN</span></span>
-<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-2d-example-gan}</span>
-<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a><span class="al">![GAN]({{&lt; meta params.images_path &gt;}}2d_comparison/gan_training_progress.png)</span></span>
-<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a><span class="fu">### VAE</span></span>
-<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-2d-example-vae}</span>
-<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a><span class="al">![VAE]({{&lt; meta params.images_path &gt;}}2d_comparison/vae_training_progress.png)</span></span>
-<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a><span class="fu">### Diffusion</span></span>
-<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-2d-example-gan-diffusion}</span>
-<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a><span class="al">![Diffusion]({{&lt; meta params.images_path &gt;}}2d_comparison/diffusion_training_progress.png)</span></span>
-<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a>Training progression on 2D spiral distribution. The models must learn a complex curved manifold.</span>
-<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-2d-final}</span>
-<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}2d_comparison/final_comparison.png)</span></span>
-<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>Final 2D comparison: Converged distributions overlaid on the true spiral. Notice how each model type handles the complex geometry differently.</span>
-<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conditional Generation</span></span>
-<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a>So far, we have discussed **unconditional generation**: models that learn $p(\vect{x})$ or generate samples from the full training distribution. But many applications require **conditional generation**: producing outputs that match specific requirements or inputs.</span>
-<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a>Conditional generation models learn $p(\vect{x}|\vect{c})$, where $\vect{c}$ is a conditioning signal:</span>
-<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Text prompt**: "A photo of a cat wearing sunglasses"</span>
-<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Class label**: Generate a digit "7" or a face with "smiling" attribute</span>
-<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Image**: Translate sketches to photos, colorize grayscale images</span>
-<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Other modalities**: Depth maps, segmentation masks, audio, etc.</span>
-<span id="cb1-383"><a href="#cb1-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-384"><a href="#cb1-384" aria-hidden="true" tabindex="-1"></a>The core modification is simple: provide the condition $\vect{c}$ as additional input to the model. However, the architectural integration varies by model family.</span>
-<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a>One example are conditional GANs. As shown in @fig-genai-gan-conditional. In this case typically only the generator receives the conditioning information $g(\vect{z}, \vect{c})$ and $d(\vect{x})$. The discriminator does not require $\vect{c}$ in this case because input-output consistency is enforced with other losses that compare input and output (e.g. $L_2$ norm).</span>
-<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-gan-conditional}</span>
-<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}gan_conditional_generation.png)</span></span>
-<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a>Conditional GAN architecture: Generator receives the conditioning input, enabling controlled generation. From @prince_understanding_2023.</span>
-<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a>Often, the discriminator needs to be conditioned on $\vect{c}$ as well. The discriminator thus must judge whether $\vect{x}$ matches the condition $\vect{c}$, not just whether $\vect{x}$ looks realistic. This forces the generator to respect the conditioning signal to fool the discriminator.</span>
-<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a>**Training objective**:</span>
-<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a>\begin{equation}</span>
-<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a>\min_{g} \max_{d} \mathbb{E}_{x, c}[\log d(\vect{x}, \vect{c})] + \mathbb{E}_{z, c}<span class="co">[</span><span class="ot">\log(1 - d(g(\vect{z}, \vect{c}), \vect{c}))</span><span class="co">]</span></span>
-<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a>\end{equation}</span>
-<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a>**Common conditioning mechanisms**:</span>
-<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Concatenation**: Concatenate $\vect{c}$ with $\vect{z}$ for generator, with $\vect{x}$ for discriminator</span>
-<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Class embeddings**: For discrete labels, learn embedding vectors</span>
-<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Cross-attention**: For complex conditions (text, images), use attention mechanisms</span>
-<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a>Beyond GANs, other model families support conditioning:</span>
-<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Conditional VAEs**: Condition both encoder and decoder on $c$, useful for disentangling style from content</span>
-<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Autoregressive models**: Condition each step on $c$, e.g., PixelCNN for class-conditional generation</span>
-<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**ControlNet**: Add spatial conditioning (edges, depth, pose) to pre-trained diffusion models without retraining from scratch</span>
-<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a><span class="fu">## References</span></span>
-<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
