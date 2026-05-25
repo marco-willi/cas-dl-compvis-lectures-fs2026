@@ -266,152 +266,32 @@ This generalization reveals that diffusion's success stems from the gradual, mul
 :::
 
 
+## Conditioning Across Model Families
 
+So far, we have introduced the model families mostly in their unconditional form:
+they learn to model or sample from $p(\vect{x})$.
 
+In practice, these model families can often be extended to conditional generation,
+where the model learns:
 
+$$
+p_\theta(\vect{x} \mid \vect{c})
+$$
 
+The condition $\vect{c}$ can be a class label, text prompt, source image, mask,
+layout, depth map, or reference image.
 
-## Comparing GANs, VAEs, and Diffusion Models
+For this lecture, the important point is simple: conditioning does not define a
+separate model family. It is a way to control models from different families.
 
-Having explored each model family, how do they actually behave differently? Let's examine their behavior on simple 1D and 2D distributions to build intuition about their strengths and failure modes.
+| Model family | How conditioning can enter |
+|-------------|----------------------------|
+| Autoregressive models | condition each prediction step on $\vect{c}$ |
+| VAEs | condition encoder and/or decoder on $\vect{c}$ |
+| GANs | condition generator and often discriminator on $\vect{c}$ |
+| Diffusion models | condition the denoising network on $\vect{c}$ |
 
-### 1D Distribution Comparison
-
-::: {#fig-genai-1d-true}
-
-![]({{< meta params.images_path >}}1d_comparison/true_distribution.png)
-
-True 1D data distribution: A bimodal distribution that the generative models must learn to reproduce.
-:::
-
-::: {.panel-tabset #fig-genai-1d-example}
-
-### GAN
-
-::: {#fig-genai-1d-comparison}
-
-![GAN]({{< meta params.images_path >}}1d_comparison/gan_training_progress.png)
-
-:::
-
-### VAE
-
-::: {#fig-genai-1d-example-vae}
-
-![VAE]({{< meta params.images_path >}}1d_comparison/vae_training_progress.png)
-
-:::
-
-### Diffusion
-
-::: {#fig-genai-1d-example-gan-diffusion}
-
-![Diffusion]({{< meta params.images_path >}}1d_comparison/diffusion_training_progress.png)
-
-:::
-
-Training progression on 1D bimodal distribution. Each panel shows how the learned distribution (orange) approaches the true distribution (blue) over training iterations.
-:::
-
-::: {#fig-genai-1d-final}
-
-![]({{< meta params.images_path >}}1d_comparison/final_comparison.png)
-
-Final comparison: All three models after convergence, showing their different biases in capturing the bimodal distribution.
-:::
-
-
-## 2D Distribution Comparison
-
-::: {#fig-genai-2d-true}
-
-![]({{< meta params.images_path >}}2d_comparison/true_distribution.png)
-
-True 2D data distribution: A complex spiral pattern in 2D space.
-:::
-
-
-::: {.panel-tabset #fig-genai-2d-comparison}
-
-### GAN
-
-::: {#fig-genai-2d-example-gan}
-
-![GAN]({{< meta params.images_path >}}2d_comparison/gan_training_progress.png)
-
-:::
-
-### VAE
-
-::: {#fig-genai-2d-example-vae}
-
-![VAE]({{< meta params.images_path >}}2d_comparison/vae_training_progress.png)
-
-:::
-
-### Diffusion
-
-::: {#fig-genai-2d-example-gan-diffusion}
-
-![Diffusion]({{< meta params.images_path >}}2d_comparison/diffusion_training_progress.png)
-
-:::
-
-Training progression on 2D spiral distribution. The models must learn a complex curved manifold.
-
-:::
-
-::: {#fig-genai-2d-final}
-
-![]({{< meta params.images_path >}}2d_comparison/final_comparison.png)
-
-Final 2D comparison: Converged distributions overlaid on the true spiral. Notice how each model type handles the complex geometry differently.
-:::
-
-
-
-## Conditional Generation
-
-So far, we have discussed **unconditional generation**: models that learn $p(\vect{x})$ or generate samples from the full training distribution. But many applications require **conditional generation**: producing outputs that match specific requirements or inputs.
-
-Conditional generation models learn $p(\vect{x}|\vect{c})$, where $\vect{c}$ is a conditioning signal:
-
-- **Text prompt**: "A photo of a cat wearing sunglasses"
-- **Class label**: Generate a digit "7" or a face with "smiling" attribute
-- **Image**: Translate sketches to photos, colorize grayscale images
-- **Other modalities**: Depth maps, segmentation masks, audio, etc.
-
-The core modification is simple: provide the condition $\vect{c}$ as additional input to the model. However, the architectural integration varies by model family.
-
-One example are conditional GANs. As shown in @fig-genai-gan-conditional. In this case typically only the generator receives the conditioning information $g(\vect{z}, \vect{c})$ and $d(\vect{x})$. The discriminator does not require $\vect{c}$ in this case because input-output consistency is enforced with other losses that compare input and output (e.g. $L_2$ norm).
-
-
-::: {#fig-genai-gan-conditional}
-
-![]({{< meta params.images_path >}}gan_conditional_generation.png)
-
-Conditional GAN architecture: Generator receives the conditioning input, enabling controlled generation. From @prince_understanding_2023.
-:::
-
-Often, the discriminator needs to be conditioned on $\vect{c}$ as well. The discriminator thus must judge whether $\vect{x}$ matches the condition $\vect{c}$, not just whether $\vect{x}$ looks realistic. This forces the generator to respect the conditioning signal to fool the discriminator.
-
-**Training objective**:
-\begin{equation}
-\min_{g} \max_{d} \mathbb{E}_{x, c}[\log d(\vect{x}, \vect{c})] + \mathbb{E}_{z, c}[\log(1 - d(g(\vect{z}, \vect{c}), \vect{c}))]
-\end{equation}
-
-**Common conditioning mechanisms**:
-
-- **Concatenation**: Concatenate $\vect{c}$ with $\vect{z}$ for generator, with $\vect{x}$ for discriminator
-- **Class embeddings**: For discrete labels, learn embedding vectors
-- **Cross-attention**: For complex conditions (text, images), use attention mechanisms
-
-Beyond GANs, other model families support conditioning:
-
-- **Conditional VAEs**: Condition both encoder and decoder on $c$, useful for disentangling style from content
-- **Autoregressive models**: Condition each step on $c$, e.g., PixelCNN for class-conditional generation
-- **ControlNet**: Add spatial conditioning (edges, depth, pose) to pre-trained diffusion models without retraining from scratch
-
+Modern text-to-image and image-editing systems use these ideas extensively.
 
 
 ## References

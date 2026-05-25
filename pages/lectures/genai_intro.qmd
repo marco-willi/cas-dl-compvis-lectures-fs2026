@@ -214,34 +214,6 @@ Major image generation providers, model families, and platforms.
 
 
 
-## What can be generated?
-
-Generative models are often introduced as models that create images from text prompts. However, for computer vision this is only one important use case. More generally, generative models produce or modify visual data under different types of constraints.
-
-A useful distinction is between **generation from scratch**, **editing existing data**, and **generating missing or enhanced information**.
-
-
-
-| Task | Input | Output | Example |
-|------|-------|--------|---------|
-| **Unconditional image generation** | random noise | image | random face, random bedroom, random product |
-| **Class-conditional generation** | class label + noise | image | “dog”, “car”, “elephant” |
-| **Text-to-image generation** | text prompt + noise | image | “a red chair in a modern living room” |
-| **Image-to-image generation** | image + instruction / prompt | modified image | change season, style, material, lighting |
-| **Inpainting** | image + mask + prompt | completed image | remove object, fill missing region |
-| **Outpainting** | image + extended canvas | expanded image | extend background beyond image borders |
-| **Super-resolution / enhancement** | low-resolution image | high-resolution image | upscaling, denoising, sharpening |
-| **Image translation** | source image | target-domain image | MRI to CT, sketch to photo, day to night |
-| **Synthetic data generation** | task specification | training examples | rare classes, simulated defects, edge cases |
-| **Video generation** | prompt or image sequence | video | short clips, object motion, scene animation |
-
-The important point is that generative computer vision is not only about creating new images. Many practical applications are **conditional**: the model must preserve some information from the input while generating other parts.
-
-::: {.callout-note title="Discussion"}
-Which of these tasks require the model to be creative, and which require the model to be faithful to a given input?
-:::
-
-
 ## What is Generative Modelling?
 
 Let's contrast generative modelling with a classification task (see @fig-genai-intro-basics-classifier). Let's denote $f(\vect{x}) = \vect{y}$ for a classifier, and $g(\vect{y}) = \vect{x}$ for a generative model.
@@ -332,11 +304,25 @@ Intuition about latent variables in generative models. From @foster_generative_2
 Intuition about latent variables in generative models. From @foster_generative_2023.
 :::
 
-## Unconditional vs. Conditional Generation
+## Unconditional and Conditional Generation
 
-A central distinction in generative modelling is whether the model generates samples freely or under additional constraints.
+Generative models differ in what information is given to the model.
 
-In **unconditional generation**, the model receives only a random input, typically sampled from a simple distribution:
+Sometimes we want the model to generate freely. For example, we may ask for any
+plausible face, room, product image, or video clip. This is called
+**unconditional generation**.
+
+More often, especially in computer vision applications, we want the model to
+generate under constraints. The constraint may be a class label, text prompt,
+input image, mask, low-resolution image, layout, pose map, or reference image.
+This is called **conditional generation**.
+
+In practice, this means that generative computer vision is broader than
+text-to-image generation. Models can create, edit, complete, enhance, translate,
+or animate visual data.
+
+In **unconditional generation**, the model receives only a stochastic input,
+typically sampled from a simple distribution:
 
 $$
 \vect{z} \sim p(\vect{z})
@@ -348,26 +334,63 @@ $$
 \hat{\vect{x}} = g_{\theta}(\vect{z})
 $$
 
-Here, $\vect{z}$ controls random variation. For example, sampling different values of $\vect{z}$ may generate different faces, animals, or rooms.
+Here, $\vect{z}$ provides diversity. Different samples of $\vect{z}$ can produce
+different plausible outputs, such as different faces, animals, rooms, or product
+images.
 
-In **conditional generation**, the model additionally receives some conditioning information $\vect{c}$:
+In **conditional generation**, the model additionally receives conditioning
+information $\vect{c}$:
 
 $$
 \hat{\vect{x}} = g_{\theta}(\vect{z}, \vect{c})
 $$
 
-The condition $\vect{c}$ specifies what should be generated or preserved.
+The condition $\vect{c}$ specifies what should be generated, preserved,
+completed, enhanced, or changed.
 
-| Type of condition $\vect{c}$ | Example task |
-|------------------------------|--------------|
-| class label | generate an image of an elephant |
-| text prompt | generate “a small cabin next to a lake” |
-| input image | edit this image |
-| mask | fill this missing region |
-| low-resolution image | super-resolution |
-| segmentation map | generate an image with this layout |
-| pose / depth / edge map | control geometry and structure |
-| reference image | preserve identity, product, or style |
+::: {#tbl-genai-intro-tasks}
+
+| Setting | Condition $\vect{c}$ | Typical task | Example |
+|---------|----------------------|--------------|---------|
+| **Unconditional generation** | none | image generation | generate a random face, room, or product image |
+| **Class-conditional generation** | class label | class-guided image generation | generate an elephant |
+| **Text-to-image generation** | text prompt | prompt-guided image generation | “a red chair in a modern living room” |
+| **Image editing** | image + instruction | modify an existing image | change season, style, material, or lighting |
+| **Inpainting** | image + mask | complete missing content | remove an object or fill a missing region |
+| **Outpainting** | image + extended canvas | extend an image | expand the background beyond the image borders |
+| **Super-resolution / enhancement** | low-resolution or degraded image | enhance visual detail | upscaling, denoising, sharpening |
+| **Image translation** | source image | translate to another domain | MRI to CT, sketch to photo, day to night |
+| **Layout-controlled generation** | segmentation map, depth map, pose, or edges | generate with structural control | create an image following a given layout |
+| **Reference-based generation** | reference image | preserve identity, product, or style | generate new views of the same product |
+| **Synthetic data generation** | task specification | training examples | rare classes, simulated defects, edge cases |
+| **Video generation** | prompt, image, or frame sequence | video | short clips, object motion, scene animation |
+
+: {tbl-colwidths="[20,20,20,40]"}
+
+::: 
+
+::: {.callout-note title="Key idea"}
+The stochastic variable $\vect{z}$ provides **diversity**, while the condition
+$\vect{c}$ provides **control**.
+:::
+
+::: {.callout-note title="Discussion"}
+Which of the tasks above require the model to be creative, and which require the
+model to be faithful to a given input?
+
+<details>
+<summary>Click for possible answer</summary>
+
+Unconditional image generation and text-to-image generation often emphasize
+creative diversity, although they still need to produce plausible images.
+
+Tasks such as inpainting, super-resolution, image translation, and image editing
+usually require stronger fidelity to the input. The model should generate new
+visual content, but it should also preserve important information from the
+condition, such as identity, geometry, anatomy, layout, or product appearance.
+
+</details>
+:::
 
 ::: {#fig-genai-unconditional-conditional layout-nrow=2}
 
@@ -385,13 +408,13 @@ The condition $\vect{c}$ specifies what should be generated or preserved.
 ![]({{< meta params.images_path >}}curly_person3.jpg)
 
 
-Unconditional vs. conditional generation. The top row shows random samples of people, the bottom row shows samples of people conditioned on "create three images of young people with glasses and curly hair."
+Unconditional vs. conditional generation. The top row shows random samples of
+people, while the bottom row shows samples of people conditioned on the prompt
+"young person with glasses and curly hair."
 :::
 
-Conditional generation is especially important in computer vision because many applications require **control**. We usually do not just want any plausible image; we want an image that matches a prompt, preserves a product, fills a masked region, follows a layout, or remains consistent with a source image.
-
-::: {.callout-note title="Key idea"}
-The random variable $\vect{z}$ provides **diversity**, while the condition $\vect{c}$ provides **control**.
+::: {.callout-note title="Discussion"}
+Looking at @fig-genai-unconditional-conditional, what do you notice? The images were generated with ChatGPT's image generation model.
 :::
 
 ## Learning Generative Models
