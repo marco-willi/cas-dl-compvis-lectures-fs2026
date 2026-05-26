@@ -1959,45 +1959,309 @@
   {
     "objectID": "pages/lectures/genai_practical.html",
     "href": "pages/lectures/genai_practical.html",
-    "title": "10 - GenAI Practical",
+    "title": "10 - GenAI: Modern Systems",
     "section": "",
-    "text": "TipLearning Objectives\n\n\n\n\n\nAfter this lecture you should be able to:\n\nExplain the core mechanisms of major generative model families: autoregressive, diffusion, GANs, and VAEs\nCompare tradeoffs between these approaches (sampling speed, quality, coverage, likelihood computation)\nUnderstand how conditional generation extends models to accept additional inputs (text, images, class labels)\nUtilize pre-trained models (Stable Diffusion) and efficient fine-tuning techniques (LoRA) for practical applications",
+    "text": "TipLearning Objectives\n\n\n\n\n\nAfter this lecture you should be able to:\n\nExplain why pixel-space diffusion is computationally expensive\nDescribe the core idea of latent diffusion\nExplain the connection between latent diffusion and VAEs\nIdentify the main components of a Stable Diffusion-style system\nUnderstand why latent representations made high-resolution image generation practical",
     "crumbs": [
       "Lectures",
-      "10 - GenAI Practical"
+      "10 - GenAI: Modern Systems"
     ]
   },
   {
-    "objectID": "pages/lectures/genai_practical.html#pre-trained-models",
-    "href": "pages/lectures/genai_practical.html#pre-trained-models",
-    "title": "10 - GenAI Practical",
-    "section": "1 Pre-Trained Models",
-    "text": "1 Pre-Trained Models\nTraining generative models from scratch requires massive datasets (millions of images), significant compute resources (weeks on multiple GPUs), and careful hyperparameter tuning. For most practical applications, pre-trained models provide a much more accessible starting point.\nThe landscape has been transformed by models like Stable Diffusion, which bring state-of-the-art generation capabilities to consumer hardware. These models are trained on billions of image-text pairs and can generate high-quality, diverse images from text prompts—with minimal customization required for many use cases.\n\n\n\n\n\n\nNotePros and Cons of Pre-Trained Models\n\n\n\nPros\n\nHigh-quality image generation out-of-the-box\nGenerate images via natural language prompts\nEasy to customize or fine-tune with minimal investment (LoRA, DreamBooth)\nActive community sharing models, techniques, and improvements\n\nCons\n\nNot suitable if your data is from a highly specific domain (e.g., medical imaging, satellite imagery)\nMay not work well for very specific output constraints (e.g., exact branding requirements)\nBiases from training data may propagate to outputs\nLicensing considerations for commercial use\n\n\n\n\n1.1 Stable Diffusion: Practical State-of-the-Art\nStable Diffusion (Rombach et al. 2022) is an open-source text-to-image model that has become the de facto standard for accessible, high-quality image generation. See Figure 1 for some examples.\n\n\n\n\n\n\nFigure 1: Stable Diffusion XL: Example generations showing diverse styles and subjects from text prompts. Source.\n\n\n\nUnlike pure pixel-space diffusion (which is computationally expensive), Stable Diffusion uses latent diffusion—running the diffusion process in a compressed latent space.\n\n\n\n\n\n\nFigure 2: Stable Diffusion pipeline: Text is encoded via CLIP, diffusion runs in VAE latent space (much smaller than pixel space), and the VAE decoder produces the final image. Adapted from GenBook.\n\n\n\n\n\n1.2 Why Latent Diffusion?\nRunning diffusion directly on high-resolution images (e.g., 512×512×3) is computationally expensive—the U-Net must process millions of values at each denoising step. Latent Diffusion solves this by:\n\nPre-training a VAE to compress images into a lower-dimensional latent space (e.g., 64×64×4)\nRunning diffusion in the latent space (much faster!)\nDecoding the final latent representation back to pixel space\n\nThis provides an 8× reduction in memory and computation, making high-resolution generation practical on consumer GPUs.\n\n\n1.3 Conditioning on Text (and More)\nStable Diffusion supports text-conditional generation via cross-attention to CLIP text embeddings. The U-Net attends to text features at multiple scales, enabling precise control over generated content. Beyond text, the framework supports conditioning on:\n\nImages: For inpainting, outpainting, and image-to-image translation\nDepth maps: For 3D-aware generation\nSegmentation masks: For spatial control\nStyle embeddings: For artistic control\n\n\n\n\n\n\n\nFigure 3: Latent Diffusion architecture: The denoising U-Net operates in VAE latent space and uses cross-attention to condition on text (or other modalities). From Rombach et al. (2022).\n\n\n\n\n\n1.4 Fine-Tuning with LoRA\nWhile pre-trained models are powerful, you often want to adapt them to specific styles, subjects, or domains. Traditional fine-tuning updates all model parameters (billions of weights!), requiring massive memory and compute. LoRA (Low-Rank Adaptation), see Figure 4, offers a far more efficient alternative.\nKey idea: Instead of updating the full weight matrix \\(W\\), LoRA learns a low-rank update \\(\\Delta W = BA\\) where:\n\n\\(B \\in \\mathbb{R}^{d \\times r}\\) and \\(A \\in \\mathbb{R}^{r \\times k}\\)\n\\(r \\ll \\min(d, k)\\) (typically \\(r = 4\\) to \\(16\\))\nOnly \\(A\\) and \\(B\\) are trained; original weights \\(W\\) remain frozen\n\nThis reduces trainable parameters by 1000× or more, enabling fine-tuning on a single consumer GPU in hours rather than days. LoRA adapters can be easily shared, combined, and switched, creating a thriving ecosystem of specialized models.\nPopular use cases:\n\nStyle transfer: Train on artworks to mimic specific artistic styles\nSubject learning: DreamBooth + LoRA to generate images of specific people/objects\nDomain adaptation: Adapt to specialized domains (anime, architecture, product photography)\n\n\n\n\n\n\n\nFigure 4: LoRA (Low-Rank Adaptation): Instead of fine-tuning all weights \\(W\\), LoRA trains low-rank matrices \\(A\\) and \\(B\\) where \\(\\Delta W = BA\\). This drastically reduces trainable parameters. From Hu et al. (2021).\n\n\n\n\n\n1.5 Hardware Requirements\nThe computational demands vary significantly between inference and training:\n\n1.5.1 Inference (Image Generation)\n\nMinimum: 4-6 GB VRAM (GPU)\n\nStable Diffusion 1.5 at 512×512 resolution\nLonger generation times, limited batch sizes\n\nRecommended: 8-12 GB VRAM\n\nStable Diffusion XL at 1024×1024\nComfortable batch sizes, faster generation\n\nHigh-end: 16+ GB VRAM\n\nMultiple models loaded simultaneously\nVideo generation, 3D-aware models\n\n\nCPU-only inference is possible but extremely slow (minutes per image vs. seconds). Many optimization techniques exist: quantization, attention slicing, model offloading.\n\n\n1.5.2 Fine-Tuning (LoRA)\n\nMinimum: 12-16 GB VRAM\n\nLoRA fine-tuning with small batch sizes\nGradient checkpointing, mixed precision required\n\nRecommended: 24 GB VRAM\n\nComfortable batch sizes for faster convergence\nMultiple LoRA ranks simultaneously\n\n\n\n\n1.5.3 Full Training (From Scratch)\n\nMinimum: Multiple A100 GPUs (40-80 GB each)\nTypical: Clusters with 100+ GPUs\nDuration: Days to weeks\nCost: $10,000s to $100,000s\n\nFor most researchers and practitioners, pre-trained models + LoRA fine-tuning offer the best trade-off.\n\n\n\n1.6 Open-Source Ecosystem\nThe open-source community has created a rich ecosystem of tools, models, and resources:\n\n1.6.1 HuggingFace\nHuggingFace is the central hub for open-source generative models:\n\nDiffusers library: Unified Python API for diffusion models with extensive documentation\nfrom diffusers import StableDiffusionPipeline\npipe = StableDiffusionPipeline.from_pretrained(\"stabilityai/stable-diffusion-2-1\")\nimage = pipe(\"A photo of a cat wearing sunglasses\").images[0]\nModel Hub: 100,000+ models including base models, fine-tunes, and LoRA adapters\nSpaces: Interactive demos for trying models before downloading\nDocumentation: Comprehensive guides for inference, fine-tuning, and training\n\nBest for: Programmatic access, research, production deployments, custom workflows\n\n\n1.6.2 CivitAI\nCivitAI is a community-driven platform specializing in Stable Diffusion models:\n\nExtensive model library: Thousands of community-created models, LoRAs, and embeddings\nStyle-focused: Strong emphasis on artistic styles, anime, photorealism\nPreview images: See example outputs before downloading\nVersion control: Track model updates and improvements\n\nBest for: Exploring diverse styles, finding specialized models, community engagement\n\n\n1.6.3 Automatic1111 WebUI\nAutomatic1111 provides a feature-rich web interface for local generation:\n\nLocal execution: Run models on your own hardware with full control\nAdvanced features: Inpainting, img2img, ControlNet, depth guidance\nExtensions ecosystem: Hundreds of community plugins\nBatch processing: Generate and iterate efficiently\n\nBest for: Interactive experimentation, full control over generation, no API costs\n\n\n\n1.7 Closed-Source Platforms\nCommercial platforms offer convenient APIs and frontier models:\n\n1.7.1 OpenAI\n\nLatest model: 4o Image with enhanced prompt following and coherence\nAPI access: Programmatic generation, inpainting, variations\nPricing: Pay per image generated\nStrengths: Strong text understanding, safe outputs, reliable API\n\n\n\n1.7.2 Google Gemini (Imagen)\n\nHigh photorealism: Particularly strong at realistic images\nMultimodal: Integration with Gemini’s broader capabilities\nControlled access: Available through Google Cloud\nStrengths: Photo-quality outputs, factual accuracy\n\n\n\n1.7.3 Replicate\n\nHybrid platform: Both open- and closed-source models via unified API\nPay-per-use: No infrastructure management, pay only for inference\nHost custom models: Deploy your own fine-tuned models\nWide selection: SDXL, Midjourney alternatives, domain-specific models\n\n\n\n1.7.4 Midjourney\n\nArtistic focus: Highly curated, aesthetic, and stylized outputs\nDiscord interface: Community-driven prompt engineering\nNo API: Interface only, no programmatic access\nStrengths: Artistic coherence, aesthetic quality, strong defaults\n\nChoosing a platform:\n\nFor prototyping: HuggingFace Spaces or Replicate (fast, no setup)\nFor production: HuggingFace Diffusers or OpenAI API (reliable, scalable)\nFor experimentation: Automatic1111 (full control, no API costs)\nFor art/design: Midjourney or CivitAI models (aesthetic quality)",
+    "objectID": "pages/lectures/genai_practical.html#the-pixel-space-bottleneck",
+    "href": "pages/lectures/genai_practical.html#the-pixel-space-bottleneck",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "1.1 The Pixel-Space Bottleneck",
+    "text": "1.1 The Pixel-Space Bottleneck\nA 512 × 512 RGB image contains:\n\\[\n512 \\times 512 \\times 3 = 786{,}432\n\\]\npixel values.\nIf diffusion is performed directly in pixel space, the denoising network must operate on a very large representation. Moreover, it does not process this representation only once. It processes noisy image representations repeatedly over many denoising steps.\nA rough intuition for the computational cost is:\n\\[\n\\text{image size}\n\\times\n\\text{number of denoising steps}\n\\times\n\\text{cost of the denoising network}\n\\]\nThis is only an intuition, not an exact runtime formula, but it captures the core problem. High-resolution images increase the size of the representation, and diffusion requires many repeated denoising operations. As a result, pixel-space diffusion quickly becomes expensive.",
     "crumbs": [
       "Lectures",
-      "10 - GenAI Practical"
+      "10 - GenAI: Modern Systems"
     ]
   },
   {
-    "objectID": "pages/lectures/genai_practical.html#conclusions-discussions",
-    "href": "pages/lectures/genai_practical.html#conclusions-discussions",
-    "title": "10 - GenAI Practical",
-    "section": "2 Conclusions & Discussions",
-    "text": "2 Conclusions & Discussions\nAn interesting thought: What happens if models are trained (inadvertedly) on synhetic data? Alemohammad et al. (2023) studies this and found remarkable degradation, see Figure 5.\n\n\n\n\n\n\nFigure 5: Example: Deterioration of generated image quality under pollution or domain shift. From Alemohammad et al. (2023).\n\n\n\nFurthermore, synthetic imagery has obvious consequences on all of us. The lines between real and synthetic are starting to blur and it becomes increasingly difficult to distinguish both. See the following quote with respect to Figure 6.\n\nZunächst hatte die Polizei … die Aktion habe nicht stattgefunden, das Bild davon sei ein »Fake«. … Auf Anfrage des SPIEGEL sagte ein Sprecher der Brandenburger Polizei: »Ob die Projektion tatsächlich so ablief, ist Teil dieser Ermittlungen. Derzeit können wir es jedenfalls nicht ausschließen.«\n\n\n\n\n\n\n\nFigure 6: “Real or Not?” Link\n\n\n\nFurthermore, biases from the internet-scale data the models have been trained on seep into the models. An interesting article by the Washington post Link investigated this Figure 7.\n\n\n\n\n\n\nFigure 7: AI bias: Example from a whitepaper front page. Link\n\n\n\nThey found strong biases, for example, with respect to the depiction of beautiful women, see Figure 8.\n\n\n\n\n\n\nFigure 8: AI bias: Additional examples. Link",
+    "objectID": "pages/lectures/genai_practical.html#resolution-makes-the-problem-worse",
+    "href": "pages/lectures/genai_practical.html#resolution-makes-the-problem-worse",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "1.2 Resolution Makes the Problem Worse",
+    "text": "1.2 Resolution Makes the Problem Worse\nIncreasing the image resolution quickly increases the number of values the model must process.\n\n\n\nResolution\nNumber of RGB values\n\n\n\n\n256 × 256\n196,608\n\n\n512 × 512\n786,432\n\n\n1024 × 1024\n3,145,728\n\n\n\nA 1024 × 1024 image has four times as many pixel values as a 512 × 512 image. For iterative generation, this matters a lot. The increase affects memory usage, computation, and sampling time.\nThe core bottleneck is therefore that pixel-space diffusion asks the denoising network to operate directly on a large, high-dimensional representation. This creates three practical problems:\n\nhigh memory usage\nslow training and sampling\nexpensive high-resolution generation\n\nThis leads to the idea of latent diffusion:\n\nDo not run diffusion directly on pixels if a smaller learned representation is sufficient.",
     "crumbs": [
       "Lectures",
-      "10 - GenAI Practical"
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#from-u-net-denoisers-to-diffusion-transformers",
+    "href": "pages/lectures/genai_practical.html#from-u-net-denoisers-to-diffusion-transformers",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "3.1 From U-Net Denoisers to Diffusion Transformers",
+    "text": "3.1 From U-Net Denoisers to Diffusion Transformers\nIn the original Stable Diffusion-style setup, the denoising network is usually a U-Net (see Figure 3). This is a natural choice for image-like data. A U-Net processes feature maps at multiple resolutions: the downsampling path captures increasingly global information, while the upsampling path reconstructs spatial detail. Skip connections help preserve fine-grained information across resolutions.\n\n\n\n\n\n\nFigure 3: U-Net architecture for diffusion models: Downsampling path (left) captures context, upsampling path (right) enables precise localization, and skip connections (horizontal) preserve spatial details. Timestep embeddings condition the network on noise level. From Prince (2023).\n\n\n\nThis architecture works well because images have strong local structure. Nearby pixels are usually strongly related, edges and textures are spatially local, and many visual patterns appear at different scales. Convolutional U-Net architectures therefore provide a useful inductive bias for image generation.\nHowever, more recent systems increasingly replace the U-Net denoiser with a transformer-based denoiser (see Figure 4). The basic idea is to represent the noisy image or noisy latent as a sequence of tokens. These tokens may correspond to patches, latent patches, or learned visual tokens. The transformer then predicts how these tokens should be denoised.\n\n\n\n\n\n\nFigure 4: Transformer-based architecture for diffusion models: Tokens (patches or latent representations) interact through self-attention, capturing long-range dependencies. Timestep embeddings condition the network on noise level. From Peebles and Xie (2023).\n\n\n\nConceptually, this is similar to the transition from convolutional networks to vision transformers in discriminative computer vision. Instead of processing the representation primarily as a spatial feature map, the model processes it as a sequence. Attention allows each token to interact with other tokens, which can be useful for modeling long-range relationships and global structure.\nThe comparison is summarized below.\n\n\n\n\n\n\n\n\nAspect\nU-Net diffusion\nDiffusion transformer\n\n\n\n\nRepresentation\nspatial feature maps\ntoken sequence\n\n\nMain operation\nconvolution + attention blocks\nself-attention + MLP blocks\n\n\nInductive bias\nstrong image locality\nmore general sequence modeling\n\n\nConditioning\noften cross-attention\ncross-attention or conditioning tokens\n\n\nScaling behavior\nstrong, but architecture-specific\noften attractive for large-scale training\n\n\nMultimodal extension\npossible\nmore natural\n\n\n\nThe important point is not that transformers are always better. U-Nets remain effective and efficient in many settings. The important point is that transformer-based denoisers fit naturally into a broader trend: text, image, video, and other modalities can all be represented as tokens or token-like latent representations. This makes it easier to build models that combine multiple modalities.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#why-token-based-architectures-are-attractive",
+    "href": "pages/lectures/genai_practical.html#why-token-based-architectures-are-attractive",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "3.2 Why Token-Based Architectures Are Attractive",
+    "text": "3.2 Why Token-Based Architectures Are Attractive\nA token-based representation gives a more uniform interface between modalities. Text is already represented as a sequence of tokens. Images can be represented as patch tokens, latent tokens, or visual embeddings. Video can be represented as tokens across space and time. Reference images, masks, or editing instructions can also be converted into conditioning representations.\nThis does not mean that all modalities become identical. Text tokens and image tokens still have different origins and structure. But a transformer architecture provides a common computational mechanism: attention over sequences of representations.\nThis is one reason diffusion transformers and multimodal transformers are attractive for modern systems. They provide a route toward architectures where text, image, and possibly video information can interact more directly.\nA simplified view is:\n\\[\n\\text{text}\n\\rightarrow\n\\text{text tokens}\n\\]\n\\[\n\\text{image or latent}\n\\rightarrow\n\\text{visual tokens}\n\\]\n\\[\n\\text{reference image}\n\\rightarrow\n\\text{reference tokens}\n\\]\nThese representations can then condition the generation process through attention, additional conditioning layers, or joint processing inside a transformer.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#multimodal-diffusion-systems",
+    "href": "pages/lectures/genai_practical.html#multimodal-diffusion-systems",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "3.3 Multimodal Diffusion Systems",
+    "text": "3.3 Multimodal Diffusion Systems\nA multimodal diffusion system extends the basic text-to-image setup by accepting more than one type of input. Instead of conditioning only on a text prompt, the model may also condition on an image, a mask, a reference subject, an editing instruction, or previous generated content.\nThis enables workflows that are difficult to achieve with text prompts alone. For example, a user may provide an image and ask the model to change only the background. Or the user may provide a reference image of a product and ask the model to generate advertising images while preserving the product identity. Or the user may iteratively refine a generated image in a conversational interface.\nThe distinction between the underlying model and the user-facing system becomes important here. A user may experience the system as a single assistant, but internally it may involve several components: a multimodal language model, an image encoder, an image generation model, an editing model, safety filters, retrieval systems, or tool-calling infrastructure.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#how-to-explain-systems-like-chatgpt-or-gemini",
+    "href": "pages/lectures/genai_practical.html#how-to-explain-systems-like-chatgpt-or-gemini",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "3.4 How to Explain Systems Like ChatGPT or Gemini",
+    "text": "3.4 How to Explain Systems Like ChatGPT or Gemini\nA modern multimodal assistant may combine several capabilities:\n\nunderstanding text instructions\nunderstanding uploaded images\nmaintaining conversational context\nplanning an edit or generation request\nusing a specialized image generation model\nusing a specialized image editing model\nchecking safety constraints\nreturning the result through a unified interface\n\nThe user experiences one coherent system. Internally, the system may be modular, unified, or somewhere in between.\nThis is the main conceptual takeaway:\n\nModern multimodal generation is not just a model that maps one prompt to one image. It is increasingly a system for understanding, planning, generating, editing, and iterating across modalities.\n\nThis perspective also helps explain why modern image generation is moving closer to general AI assistants. The image model is no longer only a standalone generator. It becomes one capability inside a broader multimodal system.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#the-adaptation-spectrum",
+    "href": "pages/lectures/genai_practical.html#the-adaptation-spectrum",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.1 The Adaptation Spectrum",
+    "text": "4.1 The Adaptation Spectrum\nThe simplest way to adapt a generative model is prompting. We keep the model fixed and only change the text instruction. This is cheap, immediate, and often surprisingly effective. However, prompting is limited. It can guide the model toward concepts it already knows, but it cannot reliably teach the model a new identity, a specific product, or a domain that was poorly represented during training.\nAt the other end is full fine-tuning. Here, we update many or all parameters of the model on a new dataset. This can be powerful, but it is expensive, requires careful data preparation, and can degrade general model behavior if done poorly.\nMost practical adaptation methods sit between these two extremes.\n\n\n\n\n\n\n\n\nMethod\nWhat changes?\nTypical use\n\n\n\n\nPrompting\nonly the input text\nfast exploration and weak control\n\n\nNegative prompting / guidance\nsampling behavior\nsuppress unwanted attributes\n\n\nTextual inversion\na learned token embedding\nintroduce a new concept token\n\n\nDreamBooth-style training\nparts of the model adapt to a subject\npersonalize to an object, person, or style\n\n\nLoRA\nsmall low-rank weight updates\nefficient style, subject, or domain adaptation\n\n\nFull fine-tuning\nmany or all model parameters\nspecialized domains or strong behavioral change\n\n\n\nThe practical question is therefore:\n\nWhat is the smallest intervention that gives enough control for the task?\n\nThis question matters because stronger adaptation methods usually require more data, more compute, more engineering effort, and more validation.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#prompting-as-the-first-adaptation-layer",
+    "href": "pages/lectures/genai_practical.html#prompting-as-the-first-adaptation-layer",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.2 Prompting as the First Adaptation Layer",
+    "text": "4.2 Prompting as the First Adaptation Layer\nPrompting should usually be the first adaptation method tried. It is fast and has no training cost. For many use cases, especially early exploration, the best workflow is to generate examples, inspect failures, refine prompts, and decide whether stronger control is actually needed.\nPrompting can control many high-level properties:\n\nsubject matter\nvisual style\ncamera angle\nlighting\ncomposition\nmood\nlevel of realism\noutput format\n\nFor example, the prompt\na studio product photo of a hiking backpack, white background, softbox lighting, high detail, commercial photography\nalready encodes subject, scene, lighting, and style. For many simple applications, this may be enough.\nHowever, prompting does not give reliable control over everything. It may fail when we need exact identity preservation, precise spatial layout, consistent branding, or a specific object that the model has never seen. Prompting is also often unstable: small changes in wording can produce noticeably different outputs.\nThis is why prompting is best understood as the lowest-cost adaptation method, not as a complete solution for all control problems.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#dreambooth-style-personalization",
+    "href": "pages/lectures/genai_practical.html#dreambooth-style-personalization",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.3 DreamBooth-Style Personalization",
+    "text": "4.3 DreamBooth-Style Personalization\nDreamBooth-style personalization methods adapt a model so that it can generate a specific subject, object, or style across different contexts. The typical use case is subject preservation: given a small set of images of a particular object or person, the adapted model should generate that subject in new scenes while preserving its identity.\nA simplified example is:\na photo of [specific subject] on a beach\na photo of [specific subject] in a studio\na photo of [specific subject] as a product advertisement\nThe goal is not just to produce visually similar objects, but to preserve enough identity that the generated outputs are recognizable as the same subject.\nThis is more powerful than prompting because the model is adapted using examples. However, it also introduces risks. With too little data, the model may overfit. With poorly prepared data, it may learn irrelevant background details. If all training images show the object in the same pose or environment, the model may struggle to generalize.\nDreamBooth-style methods are therefore useful, but they require careful dataset design. The training images should represent the subject clearly and should avoid unnecessary correlations that the model might memorize.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#fine-tuning-with-lora",
+    "href": "pages/lectures/genai_practical.html#fine-tuning-with-lora",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.4 Fine-Tuning with LoRA",
+    "text": "4.4 Fine-Tuning with LoRA\nWhile pre-trained models are powerful, you often want to adapt them to specific styles, subjects, or domains. Traditional fine-tuning updates all model parameters (billions of weights!), requiring massive memory and compute. LoRA (Low-Rank Adaptation), see Figure 7, offers a far more efficient alternative.\nKey idea: Instead of updating the full weight matrix \\(W\\), LoRA learns a low-rank update \\(\\Delta W = BA\\) where:\n\n\\(B \\in \\mathbb{R}^{d \\times r}\\) and \\(A \\in \\mathbb{R}^{r \\times k}\\)\n\\(r \\ll \\min(d, k)\\) (typically \\(r = 4\\) to \\(16\\))\nOnly \\(A\\) and \\(B\\) are trained; original weights \\(W\\) remain frozen\n\nThis reduces trainable parameters by 1000× or more, enabling fine-tuning on a single consumer GPU in hours rather than days. LoRA adapters can be easily shared, combined, and switched, creating a thriving ecosystem of specialized models.\nPopular use cases:\n\nStyle transfer: Train on artworks to mimic specific artistic styles\nSubject learning: DreamBooth + LoRA to generate images of specific people/objects\nDomain adaptation: Adapt to specialized domains (anime, architecture, product photography)\n\n\n\n\n\n\n\nFigure 7: LoRA (Low-Rank Adaptation): Instead of fine-tuning all weights \\(W\\), LoRA trains low-rank matrices \\(A\\) and \\(B\\) where \\(\\Delta W = BA\\). This drastically reduces trainable parameters. From Hu et al. (2021).",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#why-lora-is-practical",
+    "href": "pages/lectures/genai_practical.html#why-lora-is-practical",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.5 Why LoRA Is Practical",
+    "text": "4.5 Why LoRA Is Practical\nLoRA is attractive for generative models for several reasons. First, it greatly reduces the number of trainable parameters. This lowers memory requirements and makes fine-tuning feasible on more modest hardware. Second, LoRA adapters are small compared with full model checkpoints. They can be stored, shared, versioned, and switched more easily. Third, the same base model can be reused with many different adapters.\nThis makes LoRA a practical compromise between prompting and full fine-tuning.\nTypical LoRA use cases include:\n\nadapting a model to a visual style\nlearning a specific product or subject\nadapting to a domain such as architecture or fashion\ncreating brand-consistent image generation\nspecializing a model for a narrow type of output\n\nLoRA does not magically solve all adaptation problems. The quality still depends on the base model, the training data, the rank, the layers adapted, the training objective, and the evaluation procedure. But in practice, it is often a strong default when prompting is not enough and full fine-tuning is too expensive.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#full-fine-tuning",
+    "href": "pages/lectures/genai_practical.html#full-fine-tuning",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.6 Full Fine-Tuning",
+    "text": "4.6 Full Fine-Tuning\nFull fine-tuning updates many or all parameters of the model. This gives the highest flexibility, but it is also the most demanding option.\nFull fine-tuning may be appropriate when the target domain is very different from the pretraining distribution, when strong behavioral changes are required, or when the organization has enough data and compute to support a specialized model. Examples might include medical imaging, satellite imagery, industrial inspection, or highly constrained product imagery.\nHowever, full fine-tuning has several risks:\n\nit requires more compute\nit requires more data\nit can overfit\nit can reduce general capabilities\nit creates large model artifacts\nit requires careful evaluation and monitoring\n\nFor many practical projects, full fine-tuning is not the first choice. A common workflow is to start with prompting, then try structured inputs or editing tools, then use LoRA or another lightweight adaptation method, and only consider full fine-tuning if these are insufficient.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#choosing-an-adaptation-strategy",
+    "href": "pages/lectures/genai_practical.html#choosing-an-adaptation-strategy",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.7 Choosing an Adaptation Strategy",
+    "text": "4.7 Choosing an Adaptation Strategy\nThe choice of adaptation method depends on the gap between the base model and the target use case.\nIf the model already knows the visual domain and only needs better instructions, prompting may be enough. If the model needs to suppress certain artifacts or follow the prompt more strongly, negative prompting and guidance may help. If the model needs a new concept token, textual inversion may be sufficient. If the model needs to preserve a specific subject, DreamBooth-style personalization or LoRA is more appropriate. If the entire visual domain is different, full fine-tuning or custom training may be required.\nA useful decision matrix is:\n\n\n\n\n\n\n\nSituation\nLikely strategy\n\n\n\n\nNeed quick exploration\nprompting\n\n\nNeed slightly stronger prompt adherence\nguidance / negative prompting\n\n\nNeed a lightweight new concept token\ntextual inversion\n\n\nNeed a specific subject or product\nDreamBooth-style training or LoRA\n\n\nNeed a specific visual style\nLoRA\n\n\nNeed domain-specific behavior\nLoRA or fine-tuning\n\n\nNeed strong control in a very different domain\nfull fine-tuning or custom model training\n\n\n\nThe key is to avoid over-engineering. Many projects do not need fine-tuning. They need better prompting, better reference images, better editing workflows, or clearer evaluation criteria. Adaptation should be introduced when there is a specific failure mode that cannot be solved by simpler methods.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#practical-evaluation-of-adapted-models",
+    "href": "pages/lectures/genai_practical.html#practical-evaluation-of-adapted-models",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "4.8 Practical Evaluation of Adapted Models",
+    "text": "4.8 Practical Evaluation of Adapted Models\nAdapting a generative model is only useful if the adapted model is evaluated. Visual quality alone is not enough. The relevant evaluation depends on the use case.\nFor a style adapter, we might ask whether the style is recognizable and consistent. For a product adapter, we might ask whether the product identity is preserved. For an enterprise use case, we might ask whether the generated outputs follow brand, safety, and legal constraints. For a domain-specific model, we might ask whether generated images are realistic according to domain experts.\nUseful evaluation questions include:\n\nDoes the adapted model preserve the desired subject or style?\nDoes it still respond to different prompts?\nDoes it overfit to the training examples?\nDoes it introduce artifacts?\nDoes it reduce diversity?\nDoes it behave safely on unrelated prompts?\nIs the adapter useful enough to justify its maintenance cost?\n\nThis is especially important because generative model adaptation can look good in cherry-picked examples. A few impressive outputs do not prove that the adapted model is robust.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#three-practical-access-patterns",
+    "href": "pages/lectures/genai_practical.html#three-practical-access-patterns",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.1 Three Practical Access Patterns",
+    "text": "5.1 Three Practical Access Patterns\nThere are three common ways to use modern image generation models.\n\n\n\n\n\n\n\n\nAccess pattern\nExamples\nTypical motivation\n\n\n\n\nHosted API\nOpenAI, Google, Replicate, fal.ai\nfast prototyping and simple integration\n\n\nEnterprise platform\nVertex AI, Azure, Bedrock\ngovernance, monitoring, access control, cloud integration\n\n\nOpen-weight model\nHugging Face Diffusers, ComfyUI, Automatic1111\ncontrol, customization, reproducibility, local/private use\n\n\n\nThese categories are not perfectly separate. For example, Replicate can host open-weight models behind an API, and enterprise platforms can provide access to both proprietary and open models. Still, the distinction is useful because it highlights different engineering and governance tradeoffs.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#hosted-apis",
+    "href": "pages/lectures/genai_practical.html#hosted-apis",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.2 Hosted APIs",
+    "text": "5.2 Hosted APIs\nHosted APIs are often the fastest way to start. They remove most infrastructure concerns. A developer can send a prompt or image editing request and receive a generated image without managing GPUs, model weights, inference servers, or dependency conflicts.\nThis is attractive for prototypes, internal demos, product experiments, and applications where time-to-value matters more than deep control over the model.\nThe advantages are clear:\n\nsimple integration\nno local GPU setup\naccess to strong models\nrelatively predictable interface\neasy scaling for early prototypes\n\nHowever, APIs also introduce limitations. The model is controlled by the provider. The exact architecture, training data, safety filters, and sampling details may not be visible. Reproducibility may be limited because models can change over time. Costs scale with usage. Data privacy and data retention policies must be checked carefully, especially for sensitive images or customer data.\nHosted APIs are therefore best when the main goal is to build something quickly, test a workflow, or access strong models without operating the infrastructure.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#enterprise-platforms",
+    "href": "pages/lectures/genai_practical.html#enterprise-platforms",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.3 Enterprise Platforms",
+    "text": "5.3 Enterprise Platforms\nEnterprise platforms are useful when generative AI must fit into an organization’s broader cloud, security, and governance environment. Examples include Google Vertex AI, Microsoft Azure, and AWS Bedrock.\nThe main benefit is not only model access. The main benefit is integration into enterprise workflows:\n\nidentity and access management\naudit logging\nmonitoring\nbilling and quota control\ncompliance processes\nintegration with cloud storage and data pipelines\ndeployment and lifecycle management\n\nFor companies, these features often matter as much as model quality. A model may be technically impressive but unusable if it cannot meet governance, compliance, or data handling requirements.\nEnterprise platforms are usually a good choice when the use case involves internal company data, regulated environments, multiple users, production monitoring, or integration with existing cloud infrastructure.\nThe tradeoff is complexity. Enterprise platforms can require more setup than a simple API, and they may introduce vendor lock-in. They are often less flexible than fully self-managed open-weight workflows, but more manageable from an organizational perspective.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#open-weight-models",
+    "href": "pages/lectures/genai_practical.html#open-weight-models",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.4 Open-Weight Models",
+    "text": "5.4 Open-Weight Models\nOpen-weight models provide the most control. They allow teams to inspect the model card, choose model versions, run inference locally or on private infrastructure, customize pipelines, and apply adaptation methods such as LoRA.\nCommon tools include:\n\nHugging Face Diffusers\nComfyUI\nAutomatic1111 WebUI\ncustom Python inference pipelines\nself-hosted inference services\n\nOpen-weight workflows are attractive when customization, privacy, reproducibility, or experimentation matters. They are also useful in teaching, because students can inspect the components of the pipeline more directly: the text encoder, VAE, denoising model, scheduler, prompts, guidance scale, and generated outputs.\nHowever, open-weight models create operational responsibility. Someone must manage dependencies, model downloads, GPU resources, inference speed, security, safety filters, licensing, and deployment. Output quality may also vary widely across models and checkpoints.\nOpen source gives control, but control creates responsibility. This is a recurring theme in practical machine learning.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#choosing-an-access-pattern",
+    "href": "pages/lectures/genai_practical.html#choosing-an-access-pattern",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.5 Choosing an Access Pattern",
+    "text": "5.5 Choosing an Access Pattern\nThe right access pattern depends on the constraints of the project.\nUse a hosted API when speed and convenience are more important than deep control. Use an enterprise platform when governance and integration are central. Use open-weight models when customization, privacy, reproducibility, or research flexibility matter most.\nA simple decision table is:\n\n\n\n\n\n\n\n\n\nCriterion\nHosted API\nEnterprise platform\nOpen-weight model\n\n\n\n\nSetup effort\nlow\nmedium\nmedium to high\n\n\nInfrastructure control\nlow\nmedium\nhigh\n\n\nModel transparency\nlow\nmedium\nhigher, depending on model\n\n\nCustomization\nlimited\nmedium\nhigh\n\n\nPrivacy control\nprovider-dependent\ngoverned\ncan be local/private\n\n\nReproducibility\nlimited\nmedium\nhigh if versions are fixed\n\n\nGovernance\nprovider-dependent\nstrong\nself-managed\n\n\nCost structure\npay per use\nplatform and usage cost\nhardware and maintenance\n\n\nBest for\nprototypes\nproduction in organizations\nresearch, control, adaptation\n\n\n\nThe important practical point is that the “best” model is not always the best choice. The best choice depends on the use case, constraints, and operating environment.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#generated-images-are-not-evidence",
+    "href": "pages/lectures/genai_practical.html#generated-images-are-not-evidence",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.6 Generated Images Are Not Evidence",
+    "text": "5.6 Generated Images Are Not Evidence\nThe final part of the lecture should emphasize a central limitation:\n\nA generated image can be plausible without being true.\n\nModern image generation systems can create images that look photographic, coherent, and emotionally convincing. This does not mean that the depicted event happened, that the object exists, or that the visual details are accurate.\nThis matters because images have traditionally been treated as evidence. Synthetic imagery weakens that assumption. Even if people know that image generation exists, realistic images can still influence perception, memory, and trust.\nIn practical terms, generated images should not be used as factual evidence unless their provenance can be verified. This is especially important for journalism, legal contexts, scientific communication, political communication, medical communication, and any high-stakes domain.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#hallucination-in-image-generation",
+    "href": "pages/lectures/genai_practical.html#hallucination-in-image-generation",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.7 Hallucination in Image Generation",
+    "text": "5.7 Hallucination in Image Generation\nHallucination is often discussed for language models, but image models can hallucinate too.\nThey may invent:\n\nobjects\ntext\nlogos\nidentities\nphysical relationships\nmedical or technical details\nimpossible geometry\nmisleading context\n\nThe output may look visually convincing while being factually wrong. For example, a generated product image may include plausible but nonexistent features. A generated street scene may show signs or architecture that never existed. A generated scientific illustration may look authoritative while being anatomically or technically incorrect.\nThis is why visual plausibility should not be confused with correctness.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#synthetic-data-useful-but-risky",
+    "href": "pages/lectures/genai_practical.html#synthetic-data-useful-but-risky",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.8 Synthetic Data: Useful but Risky",
+    "text": "5.8 Synthetic Data: Useful but Risky\nSynthetic data is an important application of generative models. It can be useful when real data is scarce, labels are expensive, rare cases are underrepresented, or privacy concerns limit data collection.\nExamples include:\n\ngenerating rare object poses\naugmenting defect detection datasets\nsimulating unusual lighting conditions\ncreating training examples for early prototypes\ngenerating privacy-preserving examples for demonstrations\n\nHowever, synthetic data also creates risks. If models are trained on increasing amounts of synthetic data without careful filtering, artifacts can be amplified. Diversity can decrease. The generated distribution may drift away from the real data distribution. Models may start learning the mistakes of previous models.\nThis problem is sometimes discussed as synthetic data pollution or model collapse. The exact outcome depends on the data mixture, filtering, training setup, and evaluation procedure, but the general warning is simple: synthetic data should be validated, not assumed to be beneficial.\n\n\n\n\n\n\nFigure 8: Example: deterioration of generated image quality under pollution or domain shift. From Alemohammad et al. (2023).\n\n\n\nThe practical question is therefore not whether synthetic data is good or bad. The practical question is whether a specific synthetic dataset improves performance on the real target distribution.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#bias-in-generated-images",
+    "href": "pages/lectures/genai_practical.html#bias-in-generated-images",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.9 Bias in Generated Images",
+    "text": "5.9 Bias in Generated Images\nGenerative models learn from large-scale datasets, and large-scale datasets reflect the biases of the world and the biases of data collection. These biases can appear in generated outputs.\nA model may associate certain occupations with certain genders. It may represent beauty, professionalism, wealth, poverty, or danger in stereotyped ways. It may overrepresent some cultures and underrepresent others. It may produce different levels of realism or dignity for different demographic groups.\nThis is not only a technical issue. It affects how generated images shape expectations, reinforce stereotypes, and influence communication.\n\n\n\n\n\n\nFigure 9: AI bias example. Source: Washington Post.\n\n\n\n\n\n\n\n\n\nFigure 10: Example outputs illustrating biased visual associations. Source: Washington Post.\n\n\n\nFor practical work, bias evaluation should be tied to the use case. A creative toy application has different risks than a hiring platform, educational tool, public communication campaign, or medical assistant. But in all cases, generated outputs should be inspected critically rather than treated as neutral.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#provenance-watermarking-and-detection",
+    "href": "pages/lectures/genai_practical.html#provenance-watermarking-and-detection",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.10 Provenance, Watermarking, and Detection",
+    "text": "5.10 Provenance, Watermarking, and Detection\nAs synthetic images become more realistic, provenance becomes increasingly important. Provenance asks where an image came from, who created it, whether it was edited, and whether the editing history can be verified.\nRelevant questions include:\n\nWas the image captured by a camera or generated by a model?\nWas it edited after capture?\nWhich parts were modified?\nIs there metadata describing the origin?\nIs there a watermark or content credential?\nCan the source be cryptographically verified?\n\n\n\n\n\n\n\nFigure 11: “Real or Not?” Example of uncertainty around whether an event image is real or synthetic. Source: Spiegel.\n\n\n\nThere are several possible approaches:\n\nvisible watermarks\ninvisible watermarks\nmetadata-based provenance\ncryptographic signatures\nsynthetic image detectors\ncontent credentials\n\nNone of these is perfect. Metadata can be removed. Watermarks can sometimes be attacked. Detectors can fail under distribution shift or adversarial manipulation. Provenance is therefore best understood as a system-level problem rather than a single model-level solution.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#copyright-and-licensing",
+    "href": "pages/lectures/genai_practical.html#copyright-and-licensing",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.11 Copyright and Licensing",
+    "text": "5.11 Copyright and Licensing\nGenerated images also raise copyright and licensing questions. These questions can concern the training data, the model weights, the generated outputs, and any adapters or fine-tuned checkpoints used in the workflow.\nImportant questions include:\n\nWhat data was used to train the model?\nIs the model license compatible with the intended use?\nCan outputs be used commercially?\nCould outputs resemble protected training examples?\nAre there restrictions on generated content?\nAre LoRA adapters or fine-tuned models licensed separately?\nAre reference images owned or licensed by the user?\n\nFor professional use, these questions should be addressed explicitly. From an engineering perspective, licensing is part of the model selection process, not an afterthought.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
+    ]
+  },
+  {
+    "objectID": "pages/lectures/genai_practical.html#practical-responsibility-checklist",
+    "href": "pages/lectures/genai_practical.html#practical-responsibility-checklist",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.12 Practical Responsibility Checklist",
+    "text": "5.12 Practical Responsibility Checklist\nBefore using generated images in a project, it is useful to ask a few basic questions.\nFirst, what is the risk level of the use case? A playful internal prototype is different from a medical, legal, political, or journalistic use case.\nSecond, could the image mislead people? If so, labeling, provenance, and review become more important.\nThird, are there identity, privacy, or consent issues? This matters especially when generating or editing images of people.\nFourth, are there copyright or licensing constraints? This applies to the base model, reference images, generated outputs, and adapters.\nFifth, could the output reinforce stereotypes or biased visual associations? If the output will be public or influence decisions, this needs careful review.\nFinally, can the result be verified? If the image is meant to support a factual claim, visual plausibility is not enough.",
+    "crumbs": [
+      "Lectures",
+      "10 - GenAI: Modern Systems"
     ]
   },
   {
     "objectID": "pages/lectures/genai_practical.html#references",
     "href": "pages/lectures/genai_practical.html#references",
-    "title": "10 - GenAI Practical",
-    "section": "3 References",
-    "text": "3 References\n\n\nAlemohammad, Sina, Josue Casco-Rodriguez, Lorenzo Luzi, et al. 2023. Self-Consuming Generative Models Go MAD. arXiv. https://doi.org/10.48550/arXiv.2307.01850.\n\n\nHu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. LoRA: Low-Rank Adaptation of Large Language Models. arXiv. https://doi.org/10.48550/arXiv.2106.09685.\n\n\nRombach, Robin, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-Resolution Image Synthesis with Latent Diffusion Models. arXiv. http://arxiv.org/abs/2112.10752.",
+    "title": "10 - GenAI: Modern Systems",
+    "section": "5.13 References",
+    "text": "5.13 References\n\n\nAlemohammad, Sina, Josue Casco-Rodriguez, Lorenzo Luzi, et al. 2023. Self-Consuming Generative Models Go MAD. arXiv. https://doi.org/10.48550/arXiv.2307.01850.\n\n\nHu, Edward J., Yelong Shen, Phillip Wallis, et al. 2021. LoRA: Low-Rank Adaptation of Large Language Models. arXiv. https://doi.org/10.48550/arXiv.2106.09685.\n\n\nPeebles, William, and Saining Xie. 2023. Scalable Diffusion Models with Transformers. arXiv. https://doi.org/10.48550/arXiv.2212.09748.\n\n\nPrince, Simon J. D. 2023. Understanding Deep Learning. MIT Press. https://udlbook.github.io/udlbook/.\n\n\nRombach, Robin, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. 2022. High-Resolution Image Synthesis with Latent Diffusion Models. arXiv. http://arxiv.org/abs/2112.10752.",
     "crumbs": [
       "Lectures",
-      "10 - GenAI Practical"
+      "10 - GenAI: Modern Systems"
     ]
   },
   {
@@ -3116,7 +3380,7 @@
     "href": "pages/background/frameworks.html#tensors",
     "title": "3 - Software & Hardware",
     "section": "2.2 Tensors",
-    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.8224, 0.2508],\n        [0.5108, 0.0613]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.0482, 0.1625, 0.3329],\n        [0.5355, 0.2870, 0.0367]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
+    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.1911, 0.3395],\n        [0.3560, 0.8481]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.6441, 0.5556, 0.4804],\n        [0.7599, 0.3710, 0.7500]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware"
@@ -3127,7 +3391,7 @@
     "href": "pages/background/frameworks.html#autograd",
     "title": "3 - Software & Hardware",
     "section": "2.3 Autograd",
-    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.0654, 0.2344, 0.0296],\n        [0.0654, 0.2344, 0.0296],\n        [0.0654, 0.2344, 0.0296],\n        [0.0654, 0.2344, 0.0296],\n        [0.0654, 0.2344, 0.0296]])\ntensor([0.0654, 0.2344, 0.0296])",
+    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.2991, 0.0400, 0.0660],\n        [0.2991, 0.0400, 0.0660],\n        [0.2991, 0.0400, 0.0660],\n        [0.2991, 0.0400, 0.0660],\n        [0.2991, 0.0400, 0.0660]])\ntensor([0.2991, 0.0400, 0.0660])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware"

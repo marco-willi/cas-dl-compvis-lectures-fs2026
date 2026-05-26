@@ -310,7 +310,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/lectures/genai_practical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">10 - GenAI Practical</span></a>
+ <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -629,7 +629,7 @@ Figure&nbsp;2: Computational Graph.
 </figcaption>
 </figure>
 </div>
-<div id="9265b175" class="cell" data-execution_count="1">
+<div id="9908399b" class="cell" data-execution_count="1">
 <div id="lst-frameworks-numpy-graph" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-numpy-graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -679,7 +679,7 @@ df/dc=
 </div>
 </div>
 <p><a href="#lst-frameworks-pytorch-graph" class="quarto-xref">Listing&nbsp;2</a> shows the same example in PyTorch. Using <code>x.backward()</code>, gradients with respect to <code>x</code> are computed for variables connected to <code>x</code>.</p>
-<div id="e7788612" class="cell" data-execution_count="2">
+<div id="69e86ec9" class="cell" data-execution_count="2">
 <div id="lst-frameworks-pytorch-graph" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-pytorch-graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -728,7 +728,7 @@ Figure&nbsp;3: computational graph
 </div>
 </div>
 <p>To perform the computation on a GPU, a simple instruction (see <a href="#lst-frameworks-gpu" class="quarto-xref">Listing&nbsp;3</a>).</p>
-<div id="07526f7c" class="cell" data-execution_count="4">
+<div id="8e4d1c44" class="cell" data-execution_count="4">
 <div id="lst-frameworks-gpu" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-gpu-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -796,7 +796,7 @@ Listing&nbsp;3: Move computations to GPU
 <h2 data-number="2.2" class="anchored" data-anchor-id="tensors"><span class="header-section-number">2.2</span> Tensors</h2>
 <p><a href="https://pytorch.org/docs/stable/tensors.html"><code>torch.Tensor</code></a> is the central data structure in PyTorch. Essentially very similar to <code>numpy.array</code>, it can be easily loaded onto GPUs.</p>
 <p>Tensors can be created in various ways. For example, from lists:</p>
-<div id="4cf79cf3" class="cell" data-execution_count="5">
+<div id="1554fb10" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">2</span>],[<span class="dv">3</span>, <span class="dv">4</span>]]</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>x_data <span class="op">=</span> torch.tensor(data)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -806,7 +806,7 @@ Listing&nbsp;3: Move computations to GPU
 </div>
 </div>
 <p>Or from numpy.ndarray:</p>
-<div id="c94ff7cc" class="cell" data-execution_count="6">
+<div id="9a569926" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>np_array <span class="op">=</span> np.array(data)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>x_np <span class="op">=</span> torch.from_numpy(np_array)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x_np)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -816,7 +816,7 @@ Listing&nbsp;3: Move computations to GPU
 </div>
 </div>
 <p>Or from other tensors:</p>
-<div id="7a24d1e9" class="cell" data-execution_count="7">
+<div id="9a9cabd7" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x_ones <span class="op">=</span> torch.ones_like(x_data) <span class="co"># retains the properties of x_data</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Ones Tensor: </span><span class="ch">\n</span><span class="ss"> </span><span class="sc">{</span>x_ones<span class="sc">}</span><span class="ss"> </span><span class="ch">\n</span><span class="ss">"</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -828,13 +828,13 @@ Listing&nbsp;3: Move computations to GPU
         [1, 1]]) 
 
 Random Tensor: 
- tensor([[0.8224, 0.2508],
-        [0.5108, 0.0613]]) 
+ tensor([[0.1911, 0.3395],
+        [0.3560, 0.8481]]) 
 </code></pre>
 </div>
 </div>
 <p>Or with randomly generated numbers or constants:</p>
-<div id="84c8ea84" class="cell" data-execution_count="8">
+<div id="b8df3d46" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>shape <span class="op">=</span> (<span class="dv">2</span>,<span class="dv">3</span>,)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rand_tensor <span class="op">=</span> torch.rand(shape)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ones_tensor <span class="op">=</span> torch.ones(shape)</span>
@@ -845,8 +845,8 @@ Random Tensor:
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Zeros Tensor: </span><span class="ch">\n</span><span class="ss"> </span><span class="sc">{</span>zeros_tensor<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Random Tensor: 
- tensor([[0.0482, 0.1625, 0.3329],
-        [0.5355, 0.2870, 0.0367]]) 
+ tensor([[0.6441, 0.5556, 0.4804],
+        [0.7599, 0.3710, 0.7500]]) 
 
 Ones Tensor: 
  tensor([[1., 1., 1.],
@@ -858,7 +858,7 @@ Zeros Tensor:
 </div>
 </div>
 <p>Tensor attributes:</p>
-<div id="e0d8400c" class="cell" data-execution_count="9">
+<div id="220d7e6a" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tensor <span class="op">=</span> torch.rand(<span class="dv">3</span>,<span class="dv">4</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of tensor: </span><span class="sc">{</span>tensor<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -872,7 +872,7 @@ Device tensor is stored on: cpu</code></pre>
 </div>
 <p>There are over 100 operations that can be performed on a tensor. The full list is available <a href="https://pytorch.org/docs/stable/torch.html">here</a>.</p>
 <p>Indexing and Slicing:</p>
-<div id="544a5d68" class="cell" data-execution_count="10">
+<div id="87c97b50" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tensor <span class="op">=</span> torch.ones(<span class="dv">4</span>, <span class="dv">4</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First row: </span><span class="sc">{</span>tensor[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First column: </span><span class="sc">{</span>tensor[:, <span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -890,7 +890,7 @@ tensor([[1., 0., 1., 1.],
 </div>
 </div>
 <p>Joining tensors:</p>
-<div id="06371835" class="cell" data-execution_count="11">
+<div id="d9deea0c" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="op">=</span> torch.cat([tensor, tensor, tensor], dim<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -901,7 +901,7 @@ tensor([[1., 0., 1., 1.],
 </div>
 </div>
 <p>Arithmetic operations:</p>
-<div id="9ff9abd5" class="cell" data-execution_count="12">
+<div id="99d0a396" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>y1 <span class="op">=</span> tensor <span class="op">@</span> tensor.T</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>y2 <span class="op">=</span> tensor.matmul(tensor.T)</span>
@@ -957,7 +957,7 @@ Figure&nbsp;4: Source: <a href="https://pytorch.org/tutorials/beginner/basics/au
 </figure>
 </div>
 <p>The network from <a href="#fig-infrastructure-comp-graph" class="quarto-xref">Figure&nbsp;4</a> is defined in PyTorch code in <a href="#lst-frameworks-example-network" class="quarto-xref">Listing&nbsp;4</a>.</p>
-<div id="a5495798" class="cell" data-execution_count="13">
+<div id="3dead36c" class="cell" data-execution_count="13">
 <div id="lst-frameworks-example-network" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-example-network-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -977,17 +977,17 @@ Listing&nbsp;4: Example computational graph.
 </div>
 </div>
 <p>We can now use Autograd to compute the gradient:</p>
-<div id="4848876e" class="cell" data-execution_count="14">
+<div id="e2c7dbdc" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>loss.backward()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w.grad)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b.grad)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>tensor([[0.0654, 0.2344, 0.0296],
-        [0.0654, 0.2344, 0.0296],
-        [0.0654, 0.2344, 0.0296],
-        [0.0654, 0.2344, 0.0296],
-        [0.0654, 0.2344, 0.0296]])
-tensor([0.0654, 0.2344, 0.0296])</code></pre>
+<pre><code>tensor([[0.2991, 0.0400, 0.0660],
+        [0.2991, 0.0400, 0.0660],
+        [0.2991, 0.0400, 0.0660],
+        [0.2991, 0.0400, 0.0660],
+        [0.2991, 0.0400, 0.0660]])
+tensor([0.2991, 0.0400, 0.0660])</code></pre>
 </div>
 </div>
 </section>
@@ -1026,7 +1026,7 @@ tensor([0.0654, 0.2344, 0.0296])</code></pre>
 </div>
 </div>
 <p><a href="#lst-frameworks-example-module" class="quarto-xref">Listing&nbsp;5</a> depicts an example of a class that inherits from <code>torch.nn.Module</code>.</p>
-<div id="07435f45" class="cell" data-execution_count="15">
+<div id="28f6a70f" class="cell" data-execution_count="15">
 <div id="lst-frameworks-example-module" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-example-module-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1056,7 +1056,7 @@ Listing&nbsp;5: Example nn.Module.
 </div>
 </div>
 <p>You can also visualize the model:</p>
-<div id="6315eed7" class="cell" data-execution_count="16">
+<div id="c490e87e" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NeuralNetwork()</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1073,7 +1073,7 @@ Listing&nbsp;5: Example nn.Module.
 </div>
 </div>
 <p>To use the model, you can pass input data. This will execute the <code>forward()</code> method, along with background operations.</p>
-<div id="03c1c05c" class="cell" data-execution_count="17">
+<div id="13b0b31b" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.rand(<span class="dv">1</span>, <span class="dv">28</span>, <span class="dv">28</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>logits <span class="op">=</span> model(X)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>pred_probab <span class="op">=</span> nn.Softmax(dim<span class="op">=</span><span class="dv">1</span>)(logits)</span>
@@ -1084,7 +1084,7 @@ Listing&nbsp;5: Example nn.Module.
 </div>
 </div>
 <p>The executed operations will look like this:</p>
-<div id="6e2ce750" class="cell" data-execution_count="18">
+<div id="8fb91a2f" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchviz <span class="im">import</span> make_dot</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>make_dot(logits)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
@@ -1096,7 +1096,7 @@ Listing&nbsp;5: Example nn.Module.
 </div>
 </div>
 <p>For more in-depth information about the model you can use the external library <a href="https://github.com/tyleryep/torchinfo">torchinfo</a> as seen in <a href="#lst-frameworks-example-torchinfo" class="quarto-xref">Listing&nbsp;6</a>.</p>
-<div id="69b36ca2" class="cell" data-execution_count="19">
+<div id="4b3c6603" class="cell" data-execution_count="19">
 <div id="lst-frameworks-example-torchinfo" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-example-torchinfo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1159,12 +1159,12 @@ Estimated Total Size (MB): 4.14
 <p><strong>Rule of thumb</strong>: Start with Adam, then try SGD with momentum if you need better generalization.</p>
 </div>
 </div>
-<div id="47a518b4" class="cell" data-execution_count="20">
+<div id="a593028c" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> optim</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>, momentum<span class="op">=</span><span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You can then use the optimizer to adjust the parameters by minimizing a loss function. See <a href="#lst-frameworks-example-optim" class="quarto-xref">Listing&nbsp;7</a> for an example.</p>
-<div id="d92f7372" class="cell" data-execution_count="21">
+<div id="fd30f926" class="cell" data-execution_count="21">
 <div id="lst-frameworks-example-optim" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-example-optim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1233,7 +1233,7 @@ Listing&nbsp;7: Dummy iterations to minimize a loss function using an optimizer.
 <section id="training-loops" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="training-loops"><span class="header-section-number">2.6</span> Training Loops</h2>
 <p>Typically, you put together a training loop to train a model. A training loop iterates over batches of data and optimizes the model parameters with each iteration.</p>
-<div id="f2a3ba10" class="cell" data-execution_count="22">
+<div id="817ca48a" class="cell" data-execution_count="22">
 <div id="lst-frameworks-train-loop" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-train-loop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1280,7 +1280,7 @@ Listing&nbsp;8: Training and test loop.
 </figure>
 </div>
 </div>
-<div id="7653ddd7" class="cell" data-execution_count="23">
+<div id="460b9449" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>loss_fn <span class="op">=</span> nn.CrossEntropyLoss()</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span>learning_rate)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1308,7 +1308,7 @@ Note
 <section id="pre-trained-models" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="pre-trained-models"><span class="header-section-number">2.7</span> Pre-trained models</h2>
 <p>Since training models can be time-consuming and expensive, pre-trained models are often used. They allow models to be adapted to a specific task more quickly and cost-effectively. In many areas, particularly NLP and computer vision, using pre-trained models is standard. PyTorch provides <a href="https://pytorch.org/vision/stable/index.html"><code>torchvision</code></a> for computer vision applications. <code>torchvision</code> provides functionalities useful for modeling image data. Pre-trained models can also be easily integrated, as shown in <a href="#lst-frameworks-pre-trained-model" class="quarto-xref">Listing&nbsp;9</a>.</p>
-<div id="75327e85" class="cell" data-execution_count="24">
+<div id="54be9f33" class="cell" data-execution_count="24">
 <div id="lst-frameworks-pre-trained-model" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-pre-trained-model-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1337,7 +1337,7 @@ Listing&nbsp;9: Example of importing ResNet-50 model with pre-trained weights fr
 <h2 data-number="3.2" class="anchored" data-anchor-id="keras"><span class="header-section-number">3.2</span> Keras</h2>
 <p><a href="https://keras.io/">Keras</a> started as an independent high-level deep learning API designed to simplify model creation with a clean and intuitive syntax. Since 2017, it has been tightly integrated into TensorFlow as its official front-end (tf.keras), and in 2023, Keras Core was introduced, a framework-agnostic version that can run on multiple backends such as TensorFlow, JAX, and PyTorch.</p>
 <p>Keras focuses on ease of use, modularity, and rapid prototyping, making it an excellent choice for teaching, applied machine learning, and fast experimentation, while still being production-ready through TensorFlow’s ecosystem. See <a href="#lst-frameworks-example-tf" class="quarto-xref">Listing&nbsp;10</a> for example code using Keras.</p>
-<div id="9eac38e8" class="cell" data-execution_count="25">
+<div id="37e64577" class="cell" data-execution_count="25">
 <div id="lst-frameworks-example-tf" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-example-tf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1368,7 +1368,7 @@ Listing&nbsp;10: Example with TensorFlow.
 <section id="jax" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="jax"><span class="header-section-number">3.3</span> Jax</h2>
 <p><a href="https://jax.readthedocs.io/en/latest/">Jax</a> has gained significant popularity in recent years. Developed by researchers at Google, it is primarily used in research and foundation-model development. Jax provides a NumPy-like API with automatic differentiation (autodiff) and function transformations such as jit (for compilation) and vmap (for vectorization). It enables high-performance, composable numerical computing, and serves as the foundation for frameworks such as <a href="https://flax.readthedocs.io/en/stable/">Flax (Neural Networks)</a> and <a href="https://dm-haiku.readthedocs.io/en/latest/">Haiku (ML Research)</a>. See <a href="#lst-frameworks-example-jax" class="quarto-xref">Listing&nbsp;11</a> for an example using <a href="https://flax.readthedocs.io/en/latest/">Flax</a>.</p>
-<div id="6e27ff00" class="cell" data-execution_count="26">
+<div id="42c2302a" class="cell" data-execution_count="26">
 <div id="lst-frameworks-example-jax" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-frameworks-example-jax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
