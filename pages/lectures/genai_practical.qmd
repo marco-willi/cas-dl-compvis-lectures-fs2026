@@ -15,36 +15,38 @@ $$
 
 After this lecture you should be able to:
 
-- Explain why pixel-space diffusion is computationally expensive
-- Describe the core idea of latent diffusion
-- Explain the connection between latent diffusion and VAEs
-- Identify the main components of a Stable Diffusion-style system
-- Understand why latent representations made high-resolution image generation practical
+- Explain why pixel-space diffusion is computationally expensive and how latent diffusion addresses this
+- Describe the components of a Stable Diffusion-style system: text encoder, VAE encoder/decoder, and diffusion model
+- Understand the architectural shift from U-Net denoisers to Diffusion Transformers and why it matters
+- Explain how multimodal conditioning extends image generation beyond simple text prompts
+- Choose appropriate adaptation strategies — prompting, reference images, LoRA, or fine-tuning — for different use cases
+- Compare practical deployment options: hosted APIs, enterprise platforms, and open-weight models
+- Recognize responsible use considerations: hallucination, bias, synthetic data risks, provenance, and copyright
 
 :::
 
 
 ::: {.callout-tip title="TLDR Recap" collapse="true"}
 
-In Part 2, we saw how diffusion models generate images by starting from noise and gradually denoising. In practical image generation systems, this process is usually not performed directly in pixel space. High-resolution images contain many pixel values, and the denoising network must process them repeatedly over many sampling steps.
-
-**Latent diffusion** solves this by moving the diffusion process into a compressed representation space. A VAE encoder maps images into latent representations, diffusion is performed in this smaller latent space, and a VAE decoder maps the final latent back to pixels. This is the key idea behind Stable Diffusion-style systems.
+**Latent diffusion** avoids the cost of denoising directly in pixel space. A VAE encoder compresses images into a compact latent space, the diffusion model operates there, and a VAE decoder converts the final latent back to pixels — this is the core of **Stable Diffusion**-style systems. Modern systems increasingly replace the U-Net denoiser with **Diffusion Transformers**, which process images as patch tokens and scale naturally to richer multimodal conditioning. Beyond text prompts, systems can condition on reference images, masks, editing instructions, and conversational context. **Adaptation** should start with prompting and reference images; **LoRA** is useful when a subject, style, or domain needs to be reused persistently. In practice, teams choose between hosted APIs (fast setup, opaque), enterprise platforms (governance, cloud integration), or open-weight models (control, operational responsibility). Responsible use requires attention to hallucination, bias, synthetic data risks, provenance, and copyright.
 
 :::
 
 
 # Motivation
 
-Diffusion models learn to reverse a noising process. In the simplest setting, the model starts from random noise and gradually denoises it into an image:
+Diffusion models learn to reverse a noising process. In the simplest
+pixel-space setting, the model starts from random noise and gradually denoises it
+into an image:
 
 $$
-\vect{z}_T \sim \mathcal{N}(0, I)
+\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})
 \quad \rightarrow \quad
-\vect{z}_{T-1}
+\vect{x}_{T-1}
 \quad \rightarrow \quad
 \cdots
 \quad \rightarrow \quad
-\vect{z}_0 \approx \vect{x}
+\vect{x}_0
 $$
 
 This gives us the basic generative mechanism. However, a practical image generation system needs more than the abstract denoising idea. It must be efficient enough to generate high-resolution images, support repeated sampling, and respond quickly enough for interactive use.
@@ -118,15 +120,8 @@ This leads to the idea of **latent diffusion**:
 
 # Latent Diffusion
 
-Pixel-space diffusion is expensive because the denoising network has to operate on a high-dimensional image representation over many sampling steps. A 512 × 512 RGB image already contains
-
-$$
-512 \times 512 \times 3 = 786{,}432
-$$
-
-pixel values. If the model denoises directly in pixel space, each denoising step must process a representation of this size. For high-resolution images, repeated sampling, and interactive workflows, this quickly becomes costly.
-
-The key idea behind **latent diffusion** is to avoid running the diffusion process directly on pixels. Instead, the image is represented in a smaller learned latent space. The diffusion model operates in that latent space, and only the final latent representation is decoded back into pixels.
+The key idea behind **latent diffusion** is to avoid running the diffusion process directly on pixels. Instead, the image is represented in a smaller learned latent space. The diffusion model operates in that latent space, and only the final
+latent representation is decoded back into pixels.
 
 **Stable Diffusion** [@rombach_high-resolution_2022] is the canonical example of this idea. It made diffusion-based image generation much more practical and helped popularize open-weight text-to-image generation.
 
@@ -148,55 +143,12 @@ Stable Diffusion pipeline: text is encoded, diffusion runs in VAE latent space, 
 
 :::
 
-This figure captures the main division of labor. The VAE encoder maps images into a compact latent representation. The diffusion model learns to generate or denoise representations in that latent space. The VAE decoder maps the final latent representation back to an image. The text encoder provides semantic conditioning from the prompt.
+This figure captures the main division of labor. The text encoder provides
+semantic conditioning from the prompt. The VAE maps between pixel space and
+latent space. The diffusion model learns to generate or denoise representations
+inside that latent space.
 
-In pixel-space diffusion, the denoising process can be written schematically as
-
-$$
-\vect{x}_t
-\rightarrow
-\vect{x}_{t-1}
-\rightarrow
-\cdots
-\rightarrow
-\vect{x}_0
-$$
-
-where the model directly denoises image-like pixel representations. In latent diffusion, the corresponding process is
-
-$$
-\vect{z}_t
-\rightarrow
-\vect{z}_{t-1}
-\rightarrow
-\cdots
-\rightarrow
-\vect{z}_0
-$$
-
-where $\vect{z}_t$ is a noisy latent representation. The final latent $\vect{z}_0$ is then decoded into an image.
-
-This is where the connection to VAEs becomes important. A VAE-style autoencoder learns two mappings:
-
-$$
-\text{Encoder:}
-\quad
-\vect{x}
-\rightarrow
-\vect{z}
-$$
-
-$$
-\text{Decoder:}
-\quad
-\vect{z}
-\rightarrow
-\hat{\vect{x}}
-$$
-
-The encoder compresses the image into a latent representation. The decoder reconstructs an image from that representation. Latent diffusion uses this learned latent space as the space where diffusion happens.
-
-The full process can therefore be summarized as:
+During training, images are first encoded into latent space:
 
 $$
 \vect{x}
@@ -204,15 +156,30 @@ $$
 \xrightarrow{\text{VAE encoder}}
 \quad
 \vect{z}
-\quad
-\xrightarrow{\text{diffusion model}}
-\quad
-\hat{\vect{z}}
+$$
+
+The diffusion model is then trained to denoise noisy versions of these latent
+representations.
+
+During text-to-image sampling, we do not start from an input image. We start
+from latent noise and denoise in latent space:
+
+$$
+\vect{z}_T
+\rightarrow
+\vect{z}_{T-1}
+\rightarrow
+\cdots
+\rightarrow
+\vect{z}_0
 \quad
 \xrightarrow{\text{VAE decoder}}
 \quad
 \hat{\vect{x}}
 $$
+
+For image-to-image generation, inpainting, or editing, the VAE encoder is also
+used at inference time to map the input image into latent space.
 
 The important point is that the diffusion model does not need to model every low-level pixel detail directly. It learns to generate plausible latent representations. The decoder then turns those latent representations into images.
 
@@ -229,10 +196,10 @@ A useful way to remember the architecture is:
 | Component | Role |
 |----------|------|
 | Text encoder | converts the prompt into semantic conditioning |
-| VAE encoder | compresses images into latent space during training |
+| VAE encoder | compresses training images, or input images for image-to-image/editing |
+| VAE decoder | converts generated latent representation back to pixels |
 | Diffusion model | denoises or generates latent representations |
 | Sampler | controls the iterative denoising process |
-| VAE decoder | converts final latent representation back to pixels |
 
 The main takeaway is:
 
@@ -251,19 +218,9 @@ The purpose of this section is not to describe one specific commercial architect
 
 ## From U-Net Denoisers to Diffusion Transformers
 
-In the original Stable Diffusion-style setup, the denoising network is usually a U-Net (see @fig-genai-modern-diffusion-unet). This is a natural choice for image-like data. A U-Net processes feature maps at multiple resolutions: the downsampling path captures increasingly global information, while the upsampling path reconstructs spatial detail. Skip connections help preserve fine-grained information across resolutions.
+Earlier diffusion systems commonly used U-Net denoisers. This is a natural choice for images because convolutions encode locality and the encoder-decoder structure captures both global context and spatial detail.
 
-::: {#fig-genai-modern-diffusion-unet}
-
-![]({{< meta params.images_path >}}diffusion_unet.png)
-
-U-Net architecture for diffusion models: Downsampling path (left) captures context, upsampling path (right) enables precise localization, and skip connections (horizontal) preserve spatial details. Timestep embeddings condition the network on noise level. From @prince_understanding_2023.
-:::
-
-
-This architecture works well because images have strong local structure. Nearby pixels are usually strongly related, edges and textures are spatially local, and many visual patterns appear at different scales. Convolutional U-Net architectures therefore provide a useful inductive bias for image generation.
-
-However, more recent systems increasingly replace the U-Net denoiser with a transformer-based denoiser (see @fig-genai-modern-diffusion-transformer). The basic idea is to represent the noisy image or noisy latent as a sequence of tokens. These tokens may correspond to patches, latent patches, or learned visual tokens. The transformer then predicts how these tokens should be denoised.
+More recent systems increasingly use transformer-based denoisers (see @fig-genai-modern-diffusion-transformer). The basic idea is to represent the noisy image or noisy latent as a sequence of tokens. These tokens may correspond to patches, latent patches, or learned visual tokens. The transformer then predicts how these tokens should be denoised.
 
 
 ::: {#fig-genai-modern-diffusion-transformer}
@@ -327,7 +284,32 @@ These representations can then condition the generation process through attentio
 
 A multimodal diffusion system extends the basic text-to-image setup by accepting more than one type of input. Instead of conditioning only on a text prompt, the model may also condition on an image, a mask, a reference subject, an editing instruction, or previous generated content.
 
-This enables workflows that are difficult to achieve with text prompts alone. For example, a user may provide an image and ask the model to change only the background. Or the user may provide a reference image of a product and ask the model to generate advertising images while preserving the product identity. Or the user may iteratively refine a generated image in a conversational interface.
+This enables workflows that are difficult to achieve with text prompts alone. For example, a user may provide an image and ask the model to change only the background. Or the user may provide a reference image of a product and ask the model to generate advertising images while preserving the product identity. Or the user may iteratively refine a generated image in a conversational interface. See @fig-genai-modern-interative-generation for an example of a multimodal interactive generation workflow (done with Nano Banana 2,  @raisinghani_nano_2026).
+
+
+::: {#fig-genai-modern-interative-generation}
+
+![]({{< meta params.images_path >}}dada_design-9KGB4HspwsM-unsplash.jpg)
+
+[Source](https://unsplash.com/photos/a-living-room-with-a-couch-and-a-table-9KGB4HspwsM)
+
+
+![]({{< meta params.images_path >}}room_step1_no_books.jpg)
+
+After: "Remove the book lying on the floor, replace it with clean floor"
+
+![]({{< meta params.images_path >}}room_step2_turquoise_sofa.jpg)
+
+After: "Recolor the sofa and ottoman to a vibrant turquoise color"
+
+![]({{< meta params.images_path >}}room_step3_matching_carpet.jpg)
+
+After: "Change the carpet color to match the turquoise sofa"
+
+:::
+
+
+
 
 The distinction between the underlying model and the user-facing system becomes important here. A user may experience the system as a single assistant, but internally it may involve several components: a multimodal language model, an image encoder, an image generation model, an editing model, safety filters, retrieval systems, or tool-calling infrastructure.
 
@@ -357,325 +339,299 @@ This perspective also helps explain why modern image generation is moving closer
 
 # Adapting and Personalizing Generative Models
 
-Modern generative models are usually trained as large, general-purpose foundation models. They can generate a wide range of images, styles, and visual concepts, but they are not automatically optimized for a specific project, brand, subject, dataset, or domain.
-
-
+Modern image generators are trained as large, general-purpose foundation models.
+They can generate many subjects, styles, and visual concepts, but they are not
+automatically optimized for one specific project, product, brand, character, or
+visual domain.
 
 ::: {#fig-genai-modern-person-adaptation}
-
 ![]({{< meta params.images_path >}}person_comparison.jpg)
-
 :::
 
+In practice, the question is not only:
 
-In practice, this creates a common problem. A base model may be impressive, but still not quite do what we need. It may not know a specific product. It may not reproduce a particular visual style reliably. It may not follow a company’s brand guidelines. It may not generate the kind of domain-specific imagery needed in medicine, manufacturing, architecture, e-commerce, or scientific visualization.
+> Can the model generate good images?
 
+but also:
 
+> Can it generate the right images consistently for this use case?
 
-::: {#fig-genai-modern-ferrari-adaptation}
-
-![]({{< meta params.images_path >}}ferrari_comparison.jpg)
-
-:::
-
-
-
-This is where model adaptation becomes important. The question is not only how to generate images, but how much we need to change the behavior of the model for a particular use case.
-
-There is a spectrum of adaptation methods. At one end, we only change the input prompt. At the other end, we update many or all model parameters. Between these extremes are lightweight adaptation methods such as textual inversion, DreamBooth-style personalization, and LoRA.
-
+Recent multimodal image systems have made this easier. Many tasks that used to
+require fine-tuning can now be handled with better prompts, reference images,
+image editing, inpainting, masks, or multi-turn refinement. Therefore,
+adaptation should usually start with the smallest intervention that gives enough
+control.
 
 ## The Adaptation Spectrum
 
-The simplest way to adapt a generative model is prompting. We keep the model fixed and only change the text instruction. This is cheap, immediate, and often surprisingly effective. However, prompting is limited. It can guide the model toward concepts it already knows, but it cannot reliably teach the model a new identity, a specific product, or a domain that was poorly represented during training.
+| Method | What changes? | Use when... |
+|---|---|---|
+| Prompting | only the input text | you need fast exploration or weak control |
+| Reference images / image editing | input image context | you need one-off subject, style, or local edits |
+| Masks / inpainting / control inputs | generation is constrained | you need spatial or structural control |
+| Textual inversion | a learned token embedding | you need a lightweight concept token |
+| LoRA / DreamBooth-LoRA | small trainable adapter weights | you need persistent style, subject, or domain adaptation |
+| Full fine-tuning | many or all model parameters | you need a strongly specialized model and have enough data/compute |
 
-At the other end is full fine-tuning. Here, we update many or all parameters of the model on a new dataset. This can be powerful, but it is expensive, requires careful data preparation, and can degrade general model behavior if done poorly.
+The practical rule is:
 
-Most practical adaptation methods sit between these two extremes.
-
-| Method | What changes? | Typical use |
-|--------|---------------|-------------|
-| Prompting | only the input text | fast exploration and weak control |
-| Negative prompting / guidance | sampling behavior | suppress unwanted attributes |
-| Textual inversion | a learned token embedding | introduce a new concept token |
-| DreamBooth-style training | parts of the model adapt to a subject | personalize to an object, person, or style |
-| LoRA | small low-rank weight updates | efficient style, subject, or domain adaptation |
-| Full fine-tuning | many or all model parameters | specialized domains or strong behavioral change |
-
-The practical question is therefore:
-
-> What is the smallest intervention that gives enough control for the task?
-
-This question matters because stronger adaptation methods usually require more data, more compute, more engineering effort, and more validation.
-
-
-## Prompting as the First Adaptation Layer
-
-Prompting should usually be the first adaptation method tried. It is fast and has no training cost. For many use cases, especially early exploration, the best workflow is to generate examples, inspect failures, refine prompts, and decide whether stronger control is actually needed.
-
-Prompting can control many high-level properties:
-
-- subject matter
-- visual style
-- camera angle
-- lighting
-- composition
-- mood
-- level of realism
-- output format
-
-For example, the prompt
-
-```text
-a studio product photo of a hiking backpack, white background, softbox lighting, high detail, commercial photography
-```
-
-already encodes subject, scene, lighting, and style. For many simple applications, this may be enough.
-
-However, prompting does not give reliable control over everything. It may fail when we need exact identity preservation, precise spatial layout, consistent branding, or a specific object that the model has never seen. Prompting is also often unstable: small changes in wording can produce noticeably different outputs.
-
-This is why prompting is best understood as the lowest-cost adaptation method, not as a complete solution for all control problems.
-
-
-## DreamBooth-Style Personalization
-
-DreamBooth-style personalization methods adapt a model so that it can generate a specific subject, object, or style across different contexts. The typical use case is subject preservation: given a small set of images of a particular object or person, the adapted model should generate that subject in new scenes while preserving its identity.
-
-A simplified example is:
-
-```text
-a photo of [specific subject] on a beach
-a photo of [specific subject] in a studio
-a photo of [specific subject] as a product advertisement
-```
-
-The goal is not just to produce visually similar objects, but to preserve enough identity that the generated outputs are recognizable as the same subject.
-
-This is more powerful than prompting because the model is adapted using examples. However, it also introduces risks. With too little data, the model may overfit. With poorly prepared data, it may learn irrelevant background details. If all training images show the object in the same pose or environment, the model may struggle to generalize.
-
-DreamBooth-style methods are therefore useful, but they require careful dataset design. The training images should represent the subject clearly and should avoid unnecessary correlations that the model might memorize.
+> Do not fine-tune because the model is imperfect. Fine-tune when the same
+> failure appears repeatedly and simpler controls are not enough.
 
 
 
-## Fine-Tuning with LoRA
+## Prompting and Reference Images First
 
-While pre-trained models are powerful, you often want to adapt them to specific styles, subjects, or domains. Traditional fine-tuning updates all model parameters (billions of weights!), requiring massive memory and compute. **LoRA (Low-Rank Adaptation)**, see @fig-genai-lora-architecture, offers a far more efficient alternative.
+Prompting is the lowest-cost form of adaptation. It can control subject matter,
+style, camera angle, lighting, composition, mood, and output format.
 
-**Key idea**: Instead of updating the full weight matrix $W$, LoRA learns a low-rank update $\Delta W = BA$ where:
+~~~text
+a studio product photo of a hiking backpack,
+white background, softbox lighting,
+high detail, commercial photography
+~~~
 
-- $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$
-- $r \ll \min(d, k)$ (typically $r = 4$ to $16$)
-- Only $A$ and $B$ are trained; original weights $W$ remain frozen
+For many applications, this is enough. Modern image models can also use
+reference images, masks, and multi-turn edits to preserve a product, character,
+or style without any training.
 
-This reduces trainable parameters by **1000×** or more, enabling fine-tuning on a single consumer GPU in hours rather than days. LoRA adapters can be easily shared, combined, and switched, creating a thriving ecosystem of specialized models.
+A typical first workflow is:
 
-**Popular use cases**:
+~~~text
+prompt
+→ inspect result
+→ add reference image or mask
+→ edit locally
+→ only then consider training
+~~~
 
-- **Style transfer**: Train on artworks to mimic specific artistic styles
-- **Subject learning**: DreamBooth + LoRA to generate images of specific people/objects
-- **Domain adaptation**: Adapt to specialized domains (anime, architecture, product photography)
+However, prompting and reference images may still fail when we need strong
+repeatability: the same product in hundreds of scenes, a fixed brand style, a
+recurring character, or a specialized visual domain.
 
+## When LoRA Still Makes Sense
 
-::: {#fig-genai-lora-architecture}
+LoRA is a lightweight fine-tuning method. Instead of updating all model weights,
+it freezes the base model and learns a small low-rank update:
 
-![]({{< meta params.images_path >}}lora.png){width=600}
+$$
+\Delta W = BA
+$$
 
-LoRA (Low-Rank Adaptation): Instead of fine-tuning all weights $W$, LoRA trains low-rank matrices $A$ and $B$ where $\Delta W = BA$. This drastically reduces trainable parameters. From @hu_lora_2021.
-:::
+The result is a small adapter that can be loaded on top of the base model.
 
-## Why LoRA Is Practical
+LoRA is useful when the goal is not just one good image, but a reusable image
+generator with a persistent bias toward a subject, style, or domain.
 
-LoRA is attractive for generative models for several reasons. First, it greatly reduces the number of trainable parameters. This lowers memory requirements and makes fine-tuning feasible on more modest hardware. Second, LoRA adapters are small compared with full model checkpoints. They can be stored, shared, versioned, and switched more easily. Third, the same base model can be reused with many different adapters.
+Good LoRA use cases include:
 
-This makes LoRA a practical compromise between prompting and full fine-tuning.
+- a recurring character or mascot
+- a specific product or object
+- a consistent brand or illustration style
+- a domain such as fashion, architecture, product photography, microscopy, or industrial imagery
+- local or private deployment with an open model
+- many lightweight variants of one base model
 
-Typical LoRA use cases include:
+LoRA is less useful for:
 
-- adapting a model to a visual style
-- learning a specific product or subject
-- adapting to a domain such as architecture or fashion
-- creating brand-consistent image generation
-- specializing a model for a narrow type of output
+- one-off image generation
+- general image quality
+- factual reasoning
+- precise spatial layout
+- problems that can be solved with masks, reference images, or editing
 
-LoRA does not magically solve all adaptation problems. The quality still depends on the base model, the training data, the rank, the layers adapted, the training objective, and the evaluation procedure. But in practice, it is often a strong default when prompting is not enough and full fine-tuning is too expensive.
+In other words:
 
+> LoRA is no longer the default answer to "how do I control the model?" It is
+> useful when we need persistent specialization.
 
+## Example Workflows
+
+| Situation | Preferred workflow |
+|---|---|
+| One-off image | prompt + reference image + editing |
+| Product shown in a few scenes | reference image + image-to-image / inpainting |
+| Product or character reused across many scenes | DreamBooth-LoRA or LoRA |
+| Company-wide visual style | style LoRA |
+| Specialized visual domain | LoRA first, full fine-tuning only if necessary |
+
+Several current tools make this accessible without large budgets. Hugging Face
+Diffusers provides LoRA and DreamBooth-LoRA training examples, including
+FLUX-based workflows. Replicate provides hosted FLUX fine-tuning via web
+interface or API, so users can train a subject or style adapter without managing
+GPU infrastructure.
+
+Useful references:
+
+- Hugging Face Diffusers LoRA: <https://huggingface.co/docs/diffusers/en/training/lora>
+- Hugging Face FLUX QLoRA example: <https://huggingface.co/blog/flux-qlora>
+- Replicate FLUX fine-tuning: <https://replicate.com/docs/get-started/fine-tune-with-flux>
+- Replicate FLUX fine-tuning API: <https://replicate.com/blog/fine-tune-flux-with-an-api>
 
 ## Full Fine-Tuning
 
-Full fine-tuning updates many or all parameters of the model. This gives the highest flexibility, but it is also the most demanding option.
+Full fine-tuning updates many or all model parameters. This gives maximum
+flexibility, but it is expensive and risky. It requires more data, more compute,
+larger model artifacts, and careful evaluation.
 
-Full fine-tuning may be appropriate when the target domain is very different from the pretraining distribution, when strong behavioral changes are required, or when the organization has enough data and compute to support a specialized model. Examples might include medical imaging, satellite imagery, industrial inspection, or highly constrained product imagery.
+It may be appropriate for highly specialized domains such as medical imaging,
+satellite imagery, industrial inspection, or proprietary product imagery. For
+most projects, it should not be the first choice.
 
-However, full fine-tuning has several risks:
+A useful decision rule is:
 
-- it requires more compute
-- it requires more data
-- it can overfit
-- it can reduce general capabilities
-- it creates large model artifacts
-- it requires careful evaluation and monitoring
+| Situation | Prefer |
+|---|---|
+| quick exploration | prompting |
+| local edit | inpainting / image editing |
+| preserve layout or pose | masks, depth, pose, edges, ControlNet-like conditioning |
+| reuse a subject or product many times | DreamBooth-LoRA / LoRA |
+| reproduce a visual style consistently | LoRA |
+| adapt to a narrow visual domain | LoRA, possibly full fine-tuning later |
+| build a fully specialized generator | full fine-tuning or custom training |
 
-For many practical projects, full fine-tuning is not the first choice. A common workflow is to start with prompting, then try structured inputs or editing tools, then use LoRA or another lightweight adaptation method, and only consider full fine-tuning if these are insufficient.
+## Evaluating Adapted Models
 
+Adaptation is only useful if it is evaluated. A few cherry-picked images are not
+enough.
 
-## Choosing an Adaptation Strategy
+For an adapted model, ask:
 
-The choice of adaptation method depends on the gap between the base model and the target use case.
-
-If the model already knows the visual domain and only needs better instructions, prompting may be enough. If the model needs to suppress certain artifacts or follow the prompt more strongly, negative prompting and guidance may help. If the model needs a new concept token, textual inversion may be sufficient. If the model needs to preserve a specific subject, DreamBooth-style personalization or LoRA is more appropriate. If the entire visual domain is different, full fine-tuning or custom training may be required.
-
-A useful decision matrix is:
-
-| Situation | Likely strategy |
-|----------|-----------------|
-| Need quick exploration | prompting |
-| Need slightly stronger prompt adherence | guidance / negative prompting |
-| Need a lightweight new concept token | textual inversion |
-| Need a specific subject or product | DreamBooth-style training or LoRA |
-| Need a specific visual style | LoRA |
-| Need domain-specific behavior | LoRA or fine-tuning |
-| Need strong control in a very different domain | full fine-tuning or custom model training |
-
-The key is to avoid over-engineering. Many projects do not need fine-tuning. They need better prompting, better reference images, better editing workflows, or clearer evaluation criteria. Adaptation should be introduced when there is a specific failure mode that cannot be solved by simpler methods.
-
-
-## Practical Evaluation of Adapted Models
-
-Adapting a generative model is only useful if the adapted model is evaluated. Visual quality alone is not enough. The relevant evaluation depends on the use case.
-
-For a style adapter, we might ask whether the style is recognizable and consistent. For a product adapter, we might ask whether the product identity is preserved. For an enterprise use case, we might ask whether the generated outputs follow brand, safety, and legal constraints. For a domain-specific model, we might ask whether generated images are realistic according to domain experts.
-
-Useful evaluation questions include:
-
-- Does the adapted model preserve the desired subject or style?
+- Does it preserve the subject, product, or style?
 - Does it still respond to different prompts?
 - Does it overfit to the training examples?
-- Does it introduce artifacts?
 - Does it reduce diversity?
-- Does it behave safely on unrelated prompts?
-- Is the adapter useful enough to justify its maintenance cost?
+- Does it introduce artifacts?
+- Is the improvement large enough to justify maintaining the adapter?
 
-This is especially important because generative model adaptation can look good in cherry-picked examples. A few impressive outputs do not prove that the adapted model is robust.
+A simple evaluation strategy is to define a fixed prompt suite before training
+and compare:
 
+~~~text
+base model
+vs.
+prompt/reference-image workflow
+vs.
+LoRA-adapted model
+~~~
+
+This keeps the central question clear:
+
+> Did adaptation solve a real, repeated failure mode?
+
+# Case Study: Novel-Domain Image Synthesis
+
+General-purpose image models are strongest on common visual domains. In medical,
+scientific, or industrial imagery, visual realism is not enough.
+
+Examples:
+
+| Domain | Typical task | Main risk |
+|---|---|---|
+| MRI → CT (see @scharer_improved_2023)| image-to-image translation | anatomy or dose-relevant structure is wrong |
+| solar flares (see @ramunno_solar_2024) | conditional / temporal synthesis | physically implausible flare patterns |
+| industrial defects | rare-defect generation | synthetic artifacts do not match real defects |
+
+Practical workflow:
+
+1. Define why generation is needed.
+2. Start with a supervised domain-specific baseline.
+3. Use generative models when uncertainty, diversity, or augmentation matters.
+4. Condition on the variables that matter: images, masks, metadata, time, sensors.
+5. Evaluate utility, not just realism.
+
+
+## Example: MRI to CT
+
+MRI-to-CT synthesis is a typical image-to-image translation problem.
+
+The goal is not simply to create a plausible CT-like image. The output should
+preserve anatomy and provide meaningful information for the downstream use case.
+
+This suggests a workflow such as:
+
+- collect paired and registered MRI/CT data
+- train a supervised translation model
+- evaluate structural accuracy and downstream usefulness
+- use generative models only if they provide a clear benefit
+
+This is a good example where physical validity matters more than photorealism.
+
+## Example: Solar Activity With and Without Flares
+
+Generating solar images with and without flares is a conditional scientific
+generation problem.
+
+The model may be asked to:
+
+- generate images conditioned on flare class
+- predict future observations from previous frames
+- simulate possible flare-related changes
+- generate rare-event examples for augmentation
+
+Here, temporal information, multi-channel sensor data, and event labels may all
+be important conditioning signals.
+
+Again, the key question is not just whether the generated image looks realistic,
+but whether it is scientifically meaningful and useful for analysis or prediction.
 
 
 # Practical Use, Deployment Choices, and Responsible Use
 
-After understanding latent diffusion, modern multimodal architectures, and adaptation methods, the final question is practical: how should we actually use these systems in a real project?
+After understanding latent diffusion, modern multimodal architectures, and
+adaptation methods, the final question is practical:
 
-For most applied work, we do not train a generative image model from scratch. Instead, we choose an access pattern. We may use a hosted API, an enterprise platform, or an open-weight model. Each choice comes with different tradeoffs around quality, cost, control, privacy, reproducibility, customization, and governance.
+> How should we actually use these systems in a real project?
 
-This section connects the technical ideas from the previous sections to realistic project decisions. It also closes the lecture by discussing the limitations and responsibilities that come with highly realistic synthetic media.
-
-
-## Three Practical Access Patterns
-
-There are three common ways to use modern image generation models.
-
-| Access pattern | Examples | Typical motivation |
-|---------------|----------|--------------------|
-| Hosted API | OpenAI, Google, Replicate, fal.ai | fast prototyping and simple integration |
-| Enterprise platform | Vertex AI, Azure, Bedrock | governance, monitoring, access control, cloud integration |
-| Open-weight model | Hugging Face Diffusers, ComfyUI, Automatic1111 | control, customization, reproducibility, local/private use |
-
-These categories are not perfectly separate. For example, Replicate can host open-weight models behind an API, and enterprise platforms can provide access to both proprietary and open models. Still, the distinction is useful because it highlights different engineering and governance tradeoffs.
-
-
-## Hosted APIs
-
-Hosted APIs are often the fastest way to start. They remove most infrastructure concerns. A developer can send a prompt or image editing request and receive a generated image without managing GPUs, model weights, inference servers, or dependency conflicts.
-
-This is attractive for prototypes, internal demos, product experiments, and applications where time-to-value matters more than deep control over the model.
-
-The advantages are clear:
-
-- simple integration
-- no local GPU setup
-- access to strong models
-- relatively predictable interface
-- easy scaling for early prototypes
-
-However, APIs also introduce limitations. The model is controlled by the provider. The exact architecture, training data, safety filters, and sampling details may not be visible. Reproducibility may be limited because models can change over time. Costs scale with usage. Data privacy and data retention policies must be checked carefully, especially for sensitive images or customer data.
-
-Hosted APIs are therefore best when the main goal is to build something quickly, test a workflow, or access strong models without operating the infrastructure.
-
-
-## Enterprise Platforms
-
-Enterprise platforms are useful when generative AI must fit into an organization's broader cloud, security, and governance environment. Examples include Google Vertex AI, Microsoft Azure, and AWS Bedrock.
-
-The main benefit is not only model access. The main benefit is integration into enterprise workflows:
-
-- identity and access management
-- audit logging
-- monitoring
-- billing and quota control
-- compliance processes
-- integration with cloud storage and data pipelines
-- deployment and lifecycle management
-
-For companies, these features often matter as much as model quality. A model may be technically impressive but unusable if it cannot meet governance, compliance, or data handling requirements.
-
-Enterprise platforms are usually a good choice when the use case involves internal company data, regulated environments, multiple users, production monitoring, or integration with existing cloud infrastructure.
-
-The tradeoff is complexity. Enterprise platforms can require more setup than a simple API, and they may introduce vendor lock-in. They are often less flexible than fully self-managed open-weight workflows, but more manageable from an organizational perspective.
-
-
-## Open-Weight Models
-
-Open-weight models provide the most control. They allow teams to inspect the model card, choose model versions, run inference locally or on private infrastructure, customize pipelines, and apply adaptation methods such as LoRA.
-
-Common tools include:
-
-- Hugging Face Diffusers
-- ComfyUI
-- Automatic1111 WebUI
-- custom Python inference pipelines
-- self-hosted inference services
-
-Open-weight workflows are attractive when customization, privacy, reproducibility, or experimentation matters. They are also useful in teaching, because students can inspect the components of the pipeline more directly: the text encoder, VAE, denoising model, scheduler, prompts, guidance scale, and generated outputs.
-
-However, open-weight models create operational responsibility. Someone must manage dependencies, model downloads, GPU resources, inference speed, security, safety filters, licensing, and deployment. Output quality may also vary widely across models and checkpoints.
-
-Open source gives control, but control creates responsibility. This is a recurring theme in practical machine learning.
-
+For most applied work, we do not train a generative image model from scratch.
+Instead, we choose an access pattern. The main options are hosted APIs,
+enterprise platforms, and open-weight models.
 
 ## Choosing an Access Pattern
 
-The right access pattern depends on the constraints of the project.
+| Need | Prefer | Why |
+|---|---|---|
+| Fastest prototype | Hosted API | minimal setup, no GPU operations |
+| Strong current model quality | Hosted API | access to frontier or near-frontier models |
+| Internal demo or product experiment | Hosted API or Replicate/fal.ai | quick integration and iteration |
+| Governance, IAM, logging, quotas | Enterprise platform | fits organizational cloud and security workflows |
+| Regulated or sensitive company workflow | Enterprise platform | better auditability and access control |
+| Private or sensitive images | Enterprise platform or private deployment | stronger control over data handling |
+| Reproducible experiments | Open-weight model | fixed model versions and controllable inference pipeline |
+| Customization / LoRA | Open-weight model or hosted fine-tuning | access to weights or adapter workflows |
+| Local/offline use | Open-weight model | no dependency on external API availability |
+| Maximum control | Open-weight model | inspectable pipeline, custom schedulers, adapters, safety layers |
+| Lowest operational burden | Hosted API | provider manages infrastructure |
+| Lowest vendor lock-in | Open-weight model | easier to move across infrastructure providers |
 
-Use a hosted API when speed and convenience are more important than deep control. Use an enterprise platform when governance and integration are central. Use open-weight models when customization, privacy, reproducibility, or research flexibility matter most.
+The categories are not perfectly separate. For example, Replicate can expose
+open-weight models through a hosted API, and enterprise platforms may provide
+access to both proprietary and open models. Still, the distinction is useful
+because each option makes a different tradeoff between convenience, control,
+governance, cost, and reproducibility.
 
-A simple decision table is:
+## Three Access Patterns
 
-| Criterion | Hosted API | Enterprise platform | Open-weight model |
-|----------|------------|--------------------|-------------------|
-| Setup effort | low | medium | medium to high |
-| Infrastructure control | low | medium | high |
-| Model transparency | low | medium | higher, depending on model |
-| Customization | limited | medium | high |
-| Privacy control | provider-dependent | governed | can be local/private |
-| Reproducibility | limited | medium | high if versions are fixed |
-| Governance | provider-dependent | strong | self-managed |
-| Cost structure | pay per use | platform and usage cost | hardware and maintenance |
-| Best for | prototypes | production in organizations | research, control, adaptation |
+| Access pattern | Examples | Strengths | Limitations |
+|---|---|---|---|
+| Hosted API | OpenAI, Google, Replicate, fal.ai | fastest setup, strong models, no GPU management | opaque model changes, provider dependency, usage-based cost |
+| Enterprise platform | Vertex AI, Azure, Bedrock | IAM, logging, monitoring, quotas, compliance integration | more setup, cloud/vendor lock-in, sometimes less flexible |
+| Open-weight model | Hugging Face Diffusers, ComfyUI, self-hosted pipelines | control, reproducibility, private deployment, LoRA/fine-tuning | operational burden, GPU cost, licensing and safety responsibility |
 
-The important practical point is that the “best” model is not always the best choice. The best choice depends on the use case, constraints, and operating environment.
+A practical rule of thumb:
+
+> Start with a hosted API for exploration, move to an enterprise platform when
+> governance matters, and use open-weight models when control, reproducibility,
+> privacy, or adaptation becomes central.
 
 
+::: {#fig-genai-modern-replicate}
 
-## Generated Images Are Not Evidence
+![]({{< meta params.images_path >}}replicate.jpg)
 
-The final part of the lecture should emphasize a central limitation:
+Replicate: a hosted API that provides access to both proprietary and open-weight models, allowing users to choose between convenience and control. [Source](https://replicate.com/).
+:::
 
-> A generated image can be plausible without being true.
-
-Modern image generation systems can create images that look photographic, coherent, and emotionally convincing. This does not mean that the depicted event happened, that the object exists, or that the visual details are accurate.
-
-This matters because images have traditionally been treated as evidence. Synthetic imagery weakens that assumption. Even if people know that image generation exists, realistic images can still influence perception, memory, and trust.
-
-In practical terms, generated images should not be used as factual evidence unless their provenance can be verified. This is especially important for journalism, legal contexts, scientific communication, political communication, medical communication, and any high-stakes domain.
 
 
 ## Hallucination in Image Generation
@@ -696,6 +652,15 @@ They may invent:
 The output may look visually convincing while being factually wrong. For example, a generated product image may include plausible but nonexistent features. A generated street scene may show signs or architecture that never existed. A generated scientific illustration may look authoritative while being anatomically or technically incorrect.
 
 This is why visual plausibility should not be confused with correctness.
+
+
+::: {#fig-genai-modern-luce-rear}
+
+![]({{< meta params.images_path >}}ferrari_rear_nanob2.jpg)
+
+The new electric Ferrari Luce seen from the rear. This image is visually plausible but given the vehicle is electric, it is unlikely to have a visible exhaust pipe. This is an example of a plausible but factually incorrect generated image.
+:::
+
 
 
 ## Synthetic Data: Useful but Risky
@@ -815,8 +780,6 @@ Third, are there identity, privacy, or consent issues? This matters especially w
 Fourth, are there copyright or licensing constraints? This applies to the base model, reference images, generated outputs, and adapters.
 
 Fifth, could the output reinforce stereotypes or biased visual associations? If the output will be public or influence decisions, this needs careful review.
-
-Finally, can the result be verified? If the image is meant to support a factual claim, visual plausibility is not enough.
 
 
 ## References

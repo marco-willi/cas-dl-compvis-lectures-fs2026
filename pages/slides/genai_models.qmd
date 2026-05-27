@@ -1,0 +1,400 @@
+---
+title: "9 - GenAI Model Families"
+params:
+   images_path: "/assets/images/genai_models/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Overview {.center}
+
+Four major generative model families:
+
+- **Autoregressive** models
+- **GANs**
+- **VAEs**
+- **Diffusion** models
+
+Plus: how **conditioning** fits into each.
+
+
+## A Tradeoff Map {.center}
+
+| Family | Sampling | Quality | Coverage | Likelihood |
+|---|---|---|---|---|
+| Autoregressive | slow | high | good | exact |
+| GAN | fast | sharp | risky | none |
+| VAE | fast | blurrier | good | approx (ELBO) |
+| Diffusion | slow (iterative) | SOTA | good | approx |
+
+::: {.fragment}
+**No family wins on every axis.**
+:::
+
+
+# Autoregressive Models
+
+## Sequential Generation
+
+![]({{< meta params.images_path >}}autoregressive_overview.png){.r-stretch}
+
+::: {.fragment}
+Predict one element at a time, conditioned on all previous elements (@torralba_foundations_2024).
+:::
+
+
+## Factorization
+
+::: {.fragment}
+$$p(x_1, \ldots, x_n) = p(x_1)\, p(x_2|x_1)\, p(x_3|x_1, x_2) \cdots p(x_n|x_1, \ldots, x_{n-1})$$
+:::
+
+::: {.fragment}
+Each conditional $p(x_i \mid x_1, \ldots, x_{i-1})$ is modeled by a neural network (masked CNN or Transformer).
+:::
+
+::: {.fragment}
+> Image generation becomes a **sequence prediction problem.**
+:::
+
+
+## Sampling Step by Step
+
+::: {.incremental}
+1. Sample $x_1 \sim p(x_1)$
+2. Sample $x_2 \sim p(x_2 \mid x_1)$
+3. Sample $x_3 \sim p(x_3 \mid x_1, x_2)$
+4. … continue until all pixels are generated
+:::
+
+
+## Examples
+
+::: {.incremental}
+- **PixelCNN** (@oord_conditional_2016) — masked convolutions
+- **Parti** (@yu_scaling_2022) — transformer over discrete image tokens
+- **OpenAI 4o image generation** — described as autoregressive + natively multimodal
+:::
+
+::: {.fragment}
+Modern multimodal systems often *combine* autoregressive reasoning with diffusion-based image generation.
+:::
+
+
+## Pros & Cons
+
+::: {.fragment}
+**Pros**
+
+- Exact likelihood computation
+- Natural fit for language / discrete tokens
+:::
+
+::: {.fragment}
+**Cons**
+
+- Sequential generation is slow
+- Pixel-level image generation is expensive
+- Errors can accumulate during sampling
+:::
+
+
+# Generative Adversarial Networks
+
+## The Adversarial Game
+
+![]({{< meta params.images_path >}}gan-architecture.jpg){.r-stretch}
+
+::: {.fragment}
+Generator $g(\vect{z})$ fakes — Discriminator $d(\vect{x})$ judges (@goodfellow_generative_2014).
+:::
+
+
+## Minimax Objective
+
+::: {.fragment}
+$$\min_{g} \max_{d} \mathbb{E}_{\vect{x} \sim p_{\text{data}}}[\log d(\vect{x})] + \mathbb{E}_{\vect{z} \sim p_z}[\log(1 - d(g(\vect{z})))]$$
+:::
+
+::: {.incremental}
+- $d$: maximize correct real/fake classification
+- $g$: minimize $d$'s success — fool the discriminator
+- Training **alternates** between the two
+:::
+
+
+## GAN Learning Process
+
+![]({{< meta params.images_path >}}gan_learning.png){.r-stretch}
+
+::: {.fragment}
+Generator distribution (green) moves toward real data (black dots), discriminator boundary (blue) adapts (@foster_generative_2023).
+:::
+
+
+## Pros & Cons
+
+::: {.fragment}
+**Pros**
+
+- Fast sampling — one forward pass
+- Can produce sharp images
+- Historically pivotal for image generation
+:::
+
+::: {.fragment}
+**Cons**
+
+- Training can be unstable
+- **Mode collapse** — limited variety
+- No direct likelihood
+- Modern text-to-image systems are rarely pure GANs
+:::
+
+
+# Variational Autoencoders
+
+## VAE Architecture
+
+![]({{< meta params.images_path >}}vae_illustration.png){.r-stretch}
+
+::: {.fragment}
+**Encoder** $q_{\psi}(\vect{z} \mid \vect{x})$ — **Decoder** $p_{\theta}(\vect{x} \mid \vect{z})$
+:::
+
+
+## Probabilistic Twist
+
+::: {.fragment}
+Unlike standard autoencoders, the latent space is **structured probabilistically**, so random samples decode to meaningful outputs.
+:::
+
+
+## Reparameterization Trick
+
+![]({{< meta params.images_path >}}vae_illustration2.png){.r-stretch}
+
+::: {.fragment}
+$$\vect{z} = \vect{\mu} + \vect{\epsilon} \cdot \vect{\sigma}, \qquad \vect{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})$$
+:::
+
+::: {.fragment}
+Lets gradients flow through stochastic sampling.
+:::
+
+
+## ELBO Objective
+
+::: {.fragment}
+$$\text{ELBO} = \underbrace{\mathbb{E}_{\vect{z} \sim q_{\psi}(\vect{z}|\vect{x})}[\log p_{\theta}(\vect{x}|\vect{z})]}_{\text{Reconstruction}} - \underbrace{\text{KL}(q_{\psi}(\vect{z}|\vect{x}) \,\|\, p(\vect{z}))}_{\text{Regularization}}$$
+:::
+
+::: {.incremental}
+- **Reconstruction** — decoder must recover the input
+- **KL regularization** — pull posterior toward prior $p(\vect{z}) = \mathcal{N}(\mathbf{0}, \mathbfit{I})$
+- Result: a **smooth, continuous** latent space
+:::
+
+
+## VAE Latent Space
+
+![]({{< meta params.images_path >}}vae_latent_space_face.png){.r-stretch}
+
+::: {.fragment}
+Traversing the latent space → smooth interpolation between faces (@prince_understanding_2023).
+:::
+
+
+## Pros & Cons
+
+::: {.fragment}
+**Pros**
+
+- Principled probabilistic foundation
+- Structured, interpretable latent space (interpolation, factor analysis)
+- Stable training
+- Useful for representation learning
+:::
+
+::: {.fragment}
+**Cons**
+
+- Tend to produce blurry outputs (improvable with more complex variants)
+:::
+
+
+# Diffusion Models
+
+## Core Idea {.center}
+
+::: {.r-fit-text}
+**Learn to reverse a gradual noising process.**
+:::
+
+::: {.fragment}
+@ho_denoising_2020, @sohl-dickstein_deep_2015 — powers Stable Diffusion and modern T2I systems.
+:::
+
+
+## Forward Diffusion
+
+![]({{< meta params.images_path >}}forward_diffusion_fcv.png){.r-stretch}
+
+::: {.fragment}
+Gradually add Gaussian noise over $T$ steps (@torralba_foundations_2024). **Fixed**, no neural network.
+:::
+
+
+## Forward Process
+
+::: {.fragment}
+$$\vect{x}_t = \sqrt{1 - \beta_t}\, \vect{x}_{t-1} + \sqrt{\beta_t}\, \vect{\epsilon}_t, \qquad \vect{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})$$
+:::
+
+::: {.incremental}
+- $\beta_t$ — **noise schedule** (linear, cosine, …)
+- $\vect{x}_0$ (clean) → $\vect{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbfit{I})$
+- Can sample $\vect{x}_t$ **directly from** $\vect{x}_0$ → efficient training over many noise levels
+:::
+
+
+## Reverse Diffusion
+
+![]({{< meta params.images_path >}}reverse_diffusion_fcv.png){.r-stretch}
+
+::: {.fragment}
+A neural network learns to gradually remove noise, step by step (@torralba_foundations_2024).
+:::
+
+
+## Reverse Process
+
+::: {.fragment}
+Start from pure noise:
+$$\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})$$
+:::
+
+::: {.fragment}
+Iteratively denoise to a realistic sample $\vect{x}_0$.
+:::
+
+::: {.fragment}
+The network is **conditioned on the timestep $t$** — noise level varies dramatically across steps.
+:::
+
+
+## Training Objective
+
+::: {.fragment}
+$$\mathcal{L} = \mathbb{E}_{t, \vect{x}_0, \vect{\epsilon}}\left[\,\|\, \vect{\epsilon} - f_\theta(\vect{x}_t, t)\,\|^2\,\right]$$
+:::
+
+::: {.fragment}
+The model predicts the **noise** $\vect{\epsilon}$ that was added to $\vect{x}_0$ to produce $\vect{x}_t$.
+:::
+
+
+## Training & Sampling
+
+![]({{< meta params.images_path >}}diffusion_algorithm.png){.r-stretch}
+
+::: {.fragment}
+Training: random $t$, random $\vect{\epsilon}$. Sampling: iterate from $T$ down to $0$.
+:::
+
+
+## U-Net Denoiser
+
+![]({{< meta params.images_path >}}diffusion_unet.png){.r-stretch}
+
+::: {.fragment}
+Encoder–decoder with skip connections; timestep $t$ embedded throughout (@prince_understanding_2023).
+:::
+
+
+## Pros & Cons
+
+::: {.fragment}
+**Pros**
+
+- High-quality, diverse outputs (currently SOTA)
+- Stable, reliable training
+:::
+
+::: {.fragment}
+**Cons**
+
+- Slow inference — iterative sampling
+- High compute cost (training **and** inference)
+:::
+
+
+## Aside: Cold Diffusion
+
+![]({{< meta params.images_path >}}cold_diffusion.png){.r-stretch}
+
+::: {.fragment}
+Gaussian noise isn't fundamental — any **invertible degradation** works (blur, masking, pixelation) (@bansal_cold_2022).
+:::
+
+::: {.fragment}
+Success comes from the **gradual, multi-step inversion**, not the noise itself.
+:::
+
+
+# Conditioning Across Families
+
+## From $p(\vect{x})$ to $p(\vect{x} \mid \vect{c})$
+
+::: {.fragment}
+So far: model $p(\vect{x})$ unconditionally.
+:::
+
+::: {.fragment}
+In practice: model
+$$p_\theta(\vect{x} \mid \vect{c})$$
+:::
+
+::: {.fragment}
+$\vect{c}$ — class label, text prompt, source image, mask, layout, depth, reference…
+:::
+
+
+## Conditioning Is Not a Separate Family
+
+| Family | How conditioning enters |
+|---|---|
+| Autoregressive | condition each prediction step on $\vect{c}$ |
+| VAEs | condition encoder and/or decoder on $\vect{c}$ |
+| GANs | condition generator (and often discriminator) on $\vect{c}$ |
+| Diffusion | condition the **denoising network** on $\vect{c}$ |
+
+::: {.fragment}
+Modern text-to-image and image-editing systems use these mechanisms extensively.
+:::
+
+
+## Recap {.center}
+
+::: {.incremental}
+- **Autoregressive** — exact likelihood, slow sequential sampling
+- **GAN** — fast & sharp, unstable, mode collapse risk
+- **VAE** — structured latent, stable, blurrier
+- **Diffusion** — SOTA quality, iterative & costly
+- **Conditioning** — applies to *all* of them
+:::
+
+
+# References
+
+::: {style="font-size: 50%;"}
+
+::: {#refs}
+:::
+
+:::

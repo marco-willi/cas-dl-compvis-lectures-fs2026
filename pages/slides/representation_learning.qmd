@@ -1,5 +1,5 @@
 ---
-title: "Representation Learning"
+title: "5 - Representation Learning"
 params:
    images_path: "/assets/images/representation_learning/"
 ---

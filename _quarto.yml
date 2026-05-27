@@ -75,8 +75,8 @@ website:
           - pages/lectures/genai_intro.qmd
           - pages/lectures/genai_models.qmd
           - pages/lectures/genai_practical.qmd
-          - pages/lectures/generative_models.qmd
-          - pages/lectures/generative_models2.qmd
+          # - pages/lectures/generative_models.qmd
+          # - pages/lectures/generative_models2.qmd
       # ------ SLIDES ---------------------------- #
       - section: Slides
         contents:
@@ -87,6 +87,9 @@ website:
           - pages/slides/representation_learning.qmd
           - pages/slides/downstream_adaptation.qmd
           - pages/slides/vision_transformers.qmd
+          - pages/slides/genai_intro.qmd
+          - pages/slides/genai_models.qmd
+          - pages/slides/genai_practical.qmd
       # ------ Exercises ---------------------------- #
       - text: "Exercises"
         href: pages/misc/exercises.qmd

@@ -1,5 +1,5 @@
 ---
-title: "Images as Data"
+title: "2 - Images as Data"
 params:
    images_path: "/assets/images/images_as_data/"
 ---

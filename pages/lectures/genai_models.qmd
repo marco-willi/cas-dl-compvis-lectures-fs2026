@@ -15,17 +15,17 @@ $$
 
 After this lecture you should be able to:
 
-- Explain the core mechanisms of major generative model families: autoregressive, diffusion, GANs, and VAEs
-- Compare tradeoffs between these approaches (sampling speed, quality, coverage, likelihood computation)
-- Understand how conditional generation extends models to accept additional inputs (text, images, class labels)
-- Utilize pre-trained models (Stable Diffusion) and efficient fine-tuning techniques (LoRA) for practical applications
+- Explain the core mechanisms of four major generative model families: autoregressive models, GANs, VAEs, and diffusion models
+- Compare the tradeoffs of each family across sampling speed, output quality, coverage, and likelihood computation
+- Identify the key strengths and limitations of each family
+- Understand how conditional generation can be applied within each model family
 
 :::
 
 
 ::: {.callout-tip title="TLDR Recap" collapse="true"}
 
-Four major generative model families make different tradeoffs: **Autoregressive** (exact likelihood, slow sequential sampling), **Diffusion** (SOTA quality, iterative denoising), **GANs** (fast generation, adversarial training, mode collapse risk), **VAEs** (structured latent space, approximate likelihood). **Conditional generation** extends models to accept text, images, or labels as input. **Stable Diffusion** runs diffusion in VAE latent space for efficiency, enabling practical high-resolution generation. **LoRA** fine-tuning adapts pre-trained models with minimal compute. Societal considerations include synthetic data pollution, authenticity challenges, and embedded biases.
+Four major generative model families make different tradeoffs. **Autoregressive models** factorize the data distribution sequentially and compute exact likelihood, but generation is slow and cannot be parallelized. **GANs** use an adversarial generator–discriminator game for fast, sharp sampling, but training can be unstable and mode collapse is a risk. **VAEs** learn a structured probabilistic latent space with stable training, but classical VAEs tend to produce blurrier outputs. **Diffusion models** learn to reverse a noising process and currently deliver state-of-the-art image quality and diversity, at the cost of iterative, compute-intensive sampling. **Conditional generation** — where models additionally receive a class label, text prompt, image, or mask — can be applied within any of these four families.
 
 :::
 
@@ -69,13 +69,29 @@ Autoregressive generation. Models predict each element sequentially, conditionin
 :::
 
 
-**Key advantage**: Exact likelihood computation. We can evaluate $p(x)$ for any sample.
-
-**Key limitation**: Sequential generation is slow. We cannot parallelize pixel prediction.
-
+::: {.callout-note}
+Autoregressive ideas are still very important. Many modern multimodal systems use LLM-like components, visual tokens, or autoregressive reasoning, even if the final image generation is diffusion-based.
+:::
 
 A prominent example of autoregressive models is PixelCNN [@oord_conditional_2016], which uses masked convolutions to ensure the autoregressive property. More recently, transformer-based autoregressive models (e.g., Parti @yu_scaling_2022) have shown strong performance by modeling images as sequences of discrete tokens. Also, OpenAI's GPT Image / 4o image generation is described by OpenAI as an autoregressive, natively multimodal image generation model, in contrast to DALL·E-style diffusion models. The exact image tokenization and decoder architecture are not publicly specified.
 
+
+::: {.callout-note title="Pros and Cons of Autoregressive Models"}
+
+**Pros**
+
+- Exact likelihood computation
+- Natural fit for language models
+- Strong for discrete tokens
+
+**Cons**
+
+- Sequential generation is slow
+- Pixel-level image generation is expensive
+- High-resolution images require long sequences
+- Errors can accumulate during sampling
+
+:::
 
 ## Generative Adversarial Networks
 
@@ -107,6 +123,23 @@ In practice, training alternates between:
 ![]({{< meta params.images_path >}}gan_learning.png)
 
 GAN learning process: As training progresses, the generator's distribution (green) moves closer to the real data distribution (black dots). The discriminator's decision boundary (blue) adapts accordingly. From @foster_generative_2023
+:::
+
+::: {.callout-note title="Pros and Cons of GANs"}
+
+**Pros**
+
+- Fast sampling: one forward pass
+- Can produce sharp images
+- Historically very important for image generation
+
+**Cons**
+
+- Training can be unstable
+- Mode collapse: generator produces limited variety
+- No direct likelihood computation
+- Modern text-to-image systems are less commonly pure GANs
+
 :::
 
 ## Variational Autoencoders
@@ -183,18 +216,33 @@ Diffusion models @ho_denoising_2020 @sohl-dickstein_deep_2015 have emerged as th
 Forward diffusion process. From @torralba_foundations_2024.
 :::
 
-The Gaussian noise is added to data over $T$ steps (typically 1000), following a pre-specified noise schedule. This is a deterministic process, thus no neural network is involved.
+The Gaussian noise is added to data over $T$ steps, following a pre-specified
+noise schedule. The forward noising process is fixed and does not involve a
+neural network. However, it is stochastic because Gaussian noise is sampled.
 
-The forward process at step $t$ is defined by:
+The forward process at step $t$ can be written as:
 
 \begin{equation}
-z_t = \sqrt{1-\beta_t} z_{t-1} + \sqrt{\beta_t} \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I)
+\vect{x}_t =
+\sqrt{1-\beta_t}\vect{x}_{t-1}
++
+\sqrt{\beta_t}\vect{\epsilon}_t,
+\quad
+\vect{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})
 \end{equation}
 
-where $\beta_t$ controls the noise level (**the noise schedule**). This process gradually degrades the data $z_0 = x$ into pure noise $z_T \approx \mathcal{N}(0, I)$ over $T$ steps. Common noise schedules (linear, cosine) start with small $\beta_t$ values and gradually increase, ensuring smooth degradation from data to noise.
+where $\beta_t$ controls the noise level (**the noise schedule**). This process
+gradually degrades the clean image $\vect{x}_0$ into an almost pure-noise image
+$\vect{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbfit{I})$.
 
-A crucial mathematical property: we can **directly jump to any timestep** $z_t$ without iterating through all intermediate steps. This enables efficient training, where we randomly sample timesteps and train the denoiser on all noise levels simultaneously.
+Common noise schedules, such as linear or cosine schedules, start with small
+$\beta_t$ values and gradually increase them. This produces a smooth transition
+from data to noise.
 
+A crucial mathematical property is that we can sample $\vect{x}_t$ directly from
+$\vect{x}_0$ without iterating through all intermediate steps. This enables
+efficient training: we randomly sample timesteps and train the denoiser on many
+noise levels simultaneously.
 
 
 The core idea is to train a neural network to model  the **reverse diffusion** process, thus going in the opposite direction and denoise an image. @fig-genai-diffusion-reverse-fcv shows the idea.
@@ -206,16 +254,38 @@ The core idea is to train a neural network to model  the **reverse diffusion** p
 Reverse diffusion process visualization. From @torralba_foundations_2024.
 :::
 
-A neural network learns to gradually remove noise, step by step. Starting from pure noise $z_T \sim \mathcal{N}(0, I)$, the model denoises iteratively to produce realistic samples.
+A neural network learns to gradually remove noise, step by step. Starting from
+pure noise
 
+$$
+\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I}),
+$$
 
-The neural network learns to predict the noise $\epsilon_t$ that was added at each timestep. Crucially, the network is **conditioned on the timestep** $t$, since the noise level varies dramatically from early (almost clean) to late (almost pure noise) steps. The training objective is simple:
+the model denoises iteratively to produce a realistic sample
+$\vect{x}_0$.
+
+The neural network learns to predict the noise $\vect{\epsilon}$ that was added
+at a given timestep. Crucially, the network is conditioned on the timestep $t$,
+since the noise level varies dramatically from early timesteps, where the image
+is almost clean, to late timesteps, where it is almost pure noise.
+
+A common simplified training objective is:
 
 \begin{equation}
-\mathcal{L} = \mathbb{E}_{t, x, \epsilon} \| \epsilon - f_\theta(z_t, t) \|^2
+\mathcal{L}
+=
+\mathbb{E}_{t, \vect{x}_0, \vect{\epsilon}}
+\left[
+\left\|
+\vect{\epsilon}
+-
+f_\theta(\vect{x}_t, t)
+\right\|^2
+\right]
 \end{equation}
 
-Train the network to predict the noise $\epsilon$ that was added to create $z_t$ from $x$.
+The model is trained to predict the noise $\vect{\epsilon}$ that was used to
+create the noised image $\vect{x}_t$ from the clean image $\vect{x}_0$.
 
 ::: {#fig-genai-diffusion-algorithm}
 
@@ -292,6 +362,7 @@ separate model family. It is a way to control models from different families.
 | Diffusion models | condition the denoising network on $\vect{c}$ |
 
 Modern text-to-image and image-editing systems use these ideas extensively.
+
 
 
 ## References

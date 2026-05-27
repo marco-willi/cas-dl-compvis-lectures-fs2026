@@ -1,5 +1,5 @@
 ---
-title: "Modern Vision Backbones"
+title: "7 - Modern Vision Backbones"
 params:
    images_path: "/assets/images/vision_transformers/"
 ---

@@ -1,0 +1,697 @@
+---
+title: "10 - GenAI: Modern Systems"
+params:
+   images_path: "/assets/images/genai_modern/"
+---
+
+::: {.content-hidden}
+$$
+{{< include /assets/_macros.tex >}}
+$$
+:::
+
+
+## Overview {.center}
+
+- Why pixel-space diffusion is too expensive
+- **Latent Diffusion** & Stable Diffusion
+- Modern architectures: **Diffusion Transformers** & multimodal systems
+- **Adapting** models: prompting → reference → LoRA → fine-tuning
+- Case study: novel-domain synthesis
+- Deployment choices & **responsible use**
+
+
+# Motivation
+
+## Diffusion in Pixel Space
+
+::: {.fragment}
+Start from random noise, iteratively denoise:
+
+$$\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I}) \rightarrow \vect{x}_{T-1} \rightarrow \cdots \rightarrow \vect{x}_0$$
+:::
+
+::: {.fragment}
+> How do we make diffusion **efficient enough** for high-resolution images?
+:::
+
+
+## Practical Workflows Demand Speed
+
+::: {.incremental}
+- High-resolution images
+- Many candidate images
+- Fast previews
+- Repeated prompt iteration
+- Image edits and variations
+- Batch generation
+:::
+
+
+## The Pixel-Space Bottleneck
+
+::: {.fragment}
+A $512 \times 512$ RGB image has:
+$$512 \times 512 \times 3 = 786{,}432 \text{ values}$$
+:::
+
+::: {.fragment}
+And diffusion processes this representation **many times**:
+$$\text{image size} \times \text{denoising steps} \times \text{denoiser cost}$$
+:::
+
+
+## Resolution Makes It Worse
+
+| Resolution | RGB values |
+|---|---|
+| 256 × 256 | 196,608 |
+| 512 × 512 | 786,432 |
+| 1024 × 1024 | 3,145,728 |
+
+::: {.fragment}
+1024² has **4×** the values of 512². And every step processes them.
+:::
+
+
+## The Idea {.center}
+
+::: {.r-fit-text}
+**Don't run diffusion on pixels if a smaller representation is enough.**
+:::
+
+
+# Latent Diffusion
+
+## Stable Diffusion Examples
+
+![]({{< meta params.images_path >}}pract_stable_diffusion_xl_examples.png){.r-stretch}
+
+::: {.fragment}
+Stable Diffusion (@rombach_high-resolution_2022) — canonical latent diffusion system.
+:::
+
+
+## Latent Diffusion Architecture
+
+![]({{< meta params.images_path >}}diffusion_sd_architecture_genbook.png){.r-stretch}
+
+::: {.fragment}
+Text encoded → diffusion runs in **VAE latent space** → VAE decoder produces image.
+:::
+
+
+## Training: Encode First
+
+::: {.fragment}
+$$\vect{x} \xrightarrow{\text{VAE encoder}} \vect{z}$$
+:::
+
+::: {.fragment}
+The diffusion model is trained to denoise noisy versions of latents $\vect{z}$ — never pixels.
+:::
+
+
+## Sampling: Diffuse in Latent Space
+
+::: {.fragment}
+$$\vect{z}_T \rightarrow \vect{z}_{T-1} \rightarrow \cdots \rightarrow \vect{z}_0 \xrightarrow{\text{VAE decoder}} \hat{\vect{x}}$$
+:::
+
+::: {.fragment}
+For image-to-image / inpainting / editing, VAE encoder runs at inference time too.
+:::
+
+
+## Division of Labor
+
+| Component | Role |
+|---|---|
+| Text encoder | semantic conditioning from prompt |
+| VAE encoder | compress images to latents |
+| VAE decoder | latents back to pixels |
+| Diffusion model | denoise / generate in latent space |
+| Sampler | controls iterative denoising |
+
+
+## Why It Works
+
+::: {.incremental}
+- Smaller denoising representation
+- Less memory
+- Cheaper sampling
+- Practical at high resolution
+- Easier to adapt and experiment
+:::
+
+::: {.fragment}
+> Stable Diffusion doesn't draw pixels — it generates **latents**, then decodes.
+:::
+
+
+# Modern Architectures
+
+## Beyond Stable Diffusion
+
+::: {.incremental}
+- The **denoiser** itself is evolving (U-Net → Transformer)
+- Image gen is **integrated** into multimodal assistants
+- Many commercial systems aren't fully disclosed — focus on the **ideas**
+:::
+
+
+## U-Net → Diffusion Transformer
+
+![]({{< meta params.images_path >}}diffusion_transformer.jpg){.r-stretch}
+
+::: {.fragment}
+Image / latent → sequence of patch tokens. Self-attention denoises them (@peebles_scalable_2023).
+:::
+
+
+## U-Net vs. Diffusion Transformer
+
+| Aspect | U-Net | Diffusion Transformer |
+|---|---|---|
+| Representation | spatial feature maps | token sequence |
+| Main op | conv + attention | self-attention + MLP |
+| Inductive bias | strong image locality | general sequence modeling |
+| Conditioning | cross-attention | cross-attn / conditioning tokens |
+| Multimodal | possible | more natural |
+
+::: {.fragment}
+U-Nets remain effective — but transformers fit a **broader trend**.
+:::
+
+
+## Tokens as a Common Interface
+
+::: {.fragment}
+$$\text{text} \rightarrow \text{text tokens}$$
+:::
+
+::: {.fragment}
+$$\text{image / latent} \rightarrow \text{visual tokens}$$
+:::
+
+::: {.fragment}
+$$\text{reference image} \rightarrow \text{reference tokens}$$
+:::
+
+::: {.fragment}
+All can interact through **attention** in a unified architecture.
+:::
+
+
+## Multimodal Diffusion Systems
+
+::: {.fragment}
+Conditioning isn't only text — also images, masks, reference subjects, editing instructions, prior outputs.
+:::
+
+::: {.incremental}
+- Change only the background
+- Preserve product identity across scenes
+- Iteratively refine in a chat
+:::
+
+
+## Example: Interactive Editing
+
+![Source]({{< meta params.images_path >}}dada_design-9KGB4HspwsM-unsplash.jpg){width=45%}
+
+::: {.fragment}
+Starting image of a living room (Unsplash).
+:::
+
+
+## Step 1: Remove Object
+
+![]({{< meta params.images_path >}}room_step1_no_books.jpg){width=45%}
+
+::: {.fragment}
+*"Remove the book on the floor, replace with clean floor"*
+:::
+
+
+## Step 2: Recolor
+
+![]({{< meta params.images_path >}}room_step2_turquoise_sofa.jpg){width=45%}
+
+::: {.fragment}
+*"Recolor sofa and ottoman to vibrant turquoise"*
+:::
+
+
+## Step 3: Match Style
+
+![]({{< meta params.images_path >}}room_step3_matching_carpet.jpg){width=45%}
+
+::: {.fragment}
+*"Change the carpet color to match the turquoise sofa"* (Nano Banana 2, @raisinghani_nano_2026)
+:::
+
+
+## What's Inside a Modern Assistant?
+
+::: {.incremental}
+- Understanding text instructions
+- Understanding uploaded images
+- Maintaining conversational context
+- Planning the edit / generation
+- Calling a specialized image generator
+- Calling an editor
+- Checking safety constraints
+- Returning a unified response
+:::
+
+
+## Model vs. System {.center}
+
+::: {.r-fit-text}
+**Modern multimodal generation is not one model — it's a system for understanding, planning, generating, editing, and iterating.**
+:::
+
+
+# Adapting Generative Models
+
+## Two Questions
+
+::: {.fragment}
+**Can the model generate good images?**
+:::
+
+::: {.fragment}
+And:
+
+**Can it generate the *right* images, *consistently*, for *this* use case?**
+:::
+
+
+## Subject Consistency
+
+![]({{< meta params.images_path >}}person_comparison.jpg){.r-stretch}
+
+::: {.fragment}
+Same person across different scenes — requires more than a prompt.
+:::
+
+
+## The Adaptation Spectrum
+
+| Method | What changes | When |
+|---|---|---|
+| Prompting | only the text | fast exploration |
+| Reference images / editing | input context | one-off subject or local edit |
+| Masks / inpainting / control | constrained generation | spatial / structural control |
+| Textual inversion | a learned token | lightweight concept |
+| **LoRA / DreamBooth-LoRA** | small adapter weights | persistent specialization |
+| Full fine-tuning | many / all weights | strongly specialized domain |
+
+
+## The Rule {.center}
+
+::: {.r-fit-text}
+**Don't fine-tune because the model is imperfect.**
+**Fine-tune when the same failure appears repeatedly and simpler controls aren't enough.**
+:::
+
+
+## Prompting First
+
+```text
+a studio product photo of a hiking backpack,
+white background, softbox lighting,
+high detail, commercial photography
+```
+
+::: {.fragment}
+Cheapest control over subject, style, camera, lighting, composition, mood, format.
+:::
+
+
+## A Typical Workflow
+
+```text
+prompt
+ → inspect result
+ → add reference image or mask
+ → edit locally
+ → only then consider training
+```
+
+::: {.fragment}
+Modern models can do a lot **without any training**.
+:::
+
+
+## When LoRA Still Makes Sense
+
+::: {.fragment}
+Freeze base weights, learn a small low-rank update:
+
+$$\Delta W = BA$$
+:::
+
+::: {.fragment}
+Small adapter, loadable on top of a base model.
+:::
+
+
+## Good LoRA Use Cases
+
+::: {.incremental}
+- Recurring character or mascot
+- Specific product / object
+- Consistent brand or illustration style
+- Specialized domain (fashion, architecture, microscopy, industrial)
+- Local / private deployment with open weights
+- Many lightweight variants from one base
+:::
+
+
+## Where LoRA Doesn't Help
+
+::: {.incremental}
+- One-off images
+- General image quality
+- Factual reasoning
+- Precise spatial layout
+- Things solvable with masks, references, or editing
+:::
+
+::: {.fragment}
+> LoRA is no longer the default answer — it's the answer for **persistent specialization**.
+:::
+
+
+## Workflow Cheat Sheet
+
+| Situation | Preferred workflow |
+|---|---|
+| One-off image | prompt + reference + editing |
+| Product in a few scenes | reference + img2img / inpainting |
+| Product / character reused widely | **DreamBooth-LoRA / LoRA** |
+| Company-wide style | **style LoRA** |
+| Specialized domain | LoRA, full fine-tune only if needed |
+
+
+## Tooling
+
+::: {.incremental}
+- **HF Diffusers** — LoRA / DreamBooth-LoRA training
+- **HF FLUX QLoRA** — quantized LoRA example
+- **Replicate** — hosted FLUX fine-tuning, UI or API
+:::
+
+
+## Full Fine-Tuning
+
+::: {.incremental}
+- Updates many / all parameters
+- Maximum flexibility — but expensive and risky
+- Needs more data, more compute, larger artifacts
+- Justified for medical, satellite, industrial inspection, proprietary domains
+- **Not** the first choice
+:::
+
+
+## Evaluating Adaptation
+
+::: {.incremental}
+- Preserves the subject / product / style?
+- Still responds to different prompts?
+- Overfits to training examples?
+- Reduces diversity?
+- Introduces artifacts?
+- Improvement worth the maintenance cost?
+:::
+
+
+## Comparison Protocol
+
+```text
+fixed prompt suite (defined before training)
+
+  base model
+  vs.
+  prompt + reference workflow
+  vs.
+  LoRA-adapted model
+```
+
+::: {.fragment}
+> Did adaptation solve a **real, repeated** failure mode?
+:::
+
+
+# Case Study: Novel Domains
+
+## Where General Models Struggle
+
+| Domain | Task | Main risk |
+|---|---|---|
+| MRI → CT (@scharer_improved_2023) | image-to-image translation | wrong anatomy / dose-relevant structure |
+| Solar flares (@ramunno_solar_2024) | conditional / temporal synthesis | implausible flare patterns |
+| Industrial defects | rare-defect generation | synthetic artifacts mismatch real |
+
+
+## Practical Workflow
+
+::: {.incremental}
+1. Define **why** generation is needed
+2. Start with a supervised domain-specific baseline
+3. Use generative models when uncertainty / diversity / augmentation matters
+4. Condition on what matters: images, masks, metadata, time, sensors
+5. Evaluate **utility**, not just realism
+:::
+
+
+## Example: MRI → CT
+
+::: {.incremental}
+- Goal: not pretty CT-like images — **preserve anatomy** for downstream use
+- Collect paired, registered MRI/CT
+- Train supervised translation
+- Evaluate structural accuracy + downstream usefulness
+- Add generative methods only if they clearly help
+:::
+
+::: {.fragment}
+**Physical validity > photorealism.**
+:::
+
+
+## Example: Solar Activity
+
+::: {.incremental}
+- Generate images conditioned on flare class
+- Predict future observations from past frames
+- Simulate flare-related changes
+- Augment with rare-event examples
+- Use temporal info, multi-channel sensors, event labels as conditions
+:::
+
+::: {.fragment}
+Realism is necessary, **not sufficient** — outputs must be *scientifically* meaningful.
+:::
+
+
+# Deployment & Responsible Use
+
+## How Will You Actually Use This? {.center}
+
+Three main access patterns:
+
+::: {.incremental}
+- **Hosted API** — fastest, opaque
+- **Enterprise platform** — governance, integrated cloud
+- **Open-weight model** — control, operational responsibility
+:::
+
+
+## Three Access Patterns
+
+| Pattern | Examples | Strengths | Limits |
+|---|---|---|---|
+| Hosted API | OpenAI, Google, Replicate, fal.ai | fast, strong models, no GPUs | opaque, vendor dependency |
+| Enterprise platform | Vertex AI, Azure, Bedrock | IAM, logging, quotas, compliance | setup, lock-in |
+| Open-weight | HF Diffusers, ComfyUI, self-host | control, reproducibility, privacy, adapters | ops burden, GPU cost |
+
+
+## A Practical Rule {.center}
+
+::: {.r-fit-text}
+Start with a **hosted API**.
+Move to an **enterprise platform** when governance matters.
+Use **open-weight models** when you need control, reproducibility, privacy, or adaptation.
+:::
+
+
+## Replicate
+
+![]({{< meta params.images_path >}}replicate.jpg){.r-stretch}
+
+::: {.fragment}
+Hosted access to both proprietary and open-weight models.
+:::
+
+
+## Image Models Hallucinate Too
+
+::: {.incremental}
+- Invented objects, text, logos, identities
+- Wrong physical relationships
+- Wrong medical / technical details
+- Impossible geometry
+- Misleading context
+:::
+
+::: {.fragment}
+**Visually convincing ≠ factually correct.**
+:::
+
+
+## Plausible but Wrong
+
+![]({{< meta params.images_path >}}ferrari_rear_nanob2.jpg){.r-stretch}
+
+::: {.fragment}
+The new electric Ferrari Luce — with a visible exhaust pipe?
+:::
+
+
+## Synthetic Data: Useful
+
+::: {.incremental}
+- Generate rare object poses
+- Augment defect-detection datasets
+- Simulate unusual lighting
+- Privacy-preserving demo examples
+- Early prototype training
+:::
+
+
+## Synthetic Data: Risky
+
+![]({{< meta params.images_path >}}deterioration_on_pollution.png){.r-stretch}
+
+::: {.fragment}
+Quality degrades under synthetic-data pollution / model collapse (@alemohammad_self-consuming_2023).
+:::
+
+::: {.fragment}
+Question is not *good or bad?* but: **does it improve performance on the real target distribution?**
+:::
+
+
+## Bias in Generated Images
+
+![]({{< meta params.images_path >}}ai_bias_wp_front.png){.r-stretch}
+
+::: {.fragment}
+Models inherit the biases of their training data. (Source: Washington Post.)
+:::
+
+
+## Bias Examples
+
+![]({{< meta params.images_path >}}ai_bias_wp_examples.png){.r-stretch}
+
+::: {.fragment}
+Stereotyped associations across occupations, beauty, wealth, culture, dignity.
+:::
+
+
+## Risk Depends on Use Case
+
+::: {.incremental}
+- Creative toy app vs. hiring tool
+- Educational content vs. public campaign
+- Internal demo vs. medical assistant
+- Treat outputs **critically** — not as neutral
+:::
+
+
+## Provenance
+
+::: {.incremental}
+- Camera capture or model output?
+- Edited after capture?
+- Which parts modified?
+- Metadata describing origin?
+- Watermark / content credential?
+- Cryptographically verifiable source?
+:::
+
+
+## Real or Not?
+
+![]({{< meta params.images_path >}}real_or_not_musk.png){.r-stretch}
+
+::: {.fragment}
+Increasingly hard to tell. (Source: Spiegel.)
+:::
+
+
+## Provenance Approaches
+
+::: {.incremental}
+- Visible / invisible watermarks
+- Metadata-based provenance
+- Cryptographic signatures
+- Synthetic-image detectors
+- Content credentials
+:::
+
+::: {.fragment}
+**None is perfect.** Provenance is a **system-level** problem.
+:::
+
+
+## Copyright & Licensing
+
+::: {.incremental}
+- What data trained the model?
+- Is the model license compatible with your use?
+- Can outputs be used commercially?
+- Could outputs resemble protected examples?
+- Adapters / fine-tunes licensed separately?
+- Reference images licensed by you?
+:::
+
+::: {.fragment}
+Licensing is part of **model selection**, not an afterthought.
+:::
+
+
+## Responsibility Checklist
+
+::: {.incremental}
+1. What's the **risk level** of the use case?
+2. Could the image **mislead** people?
+3. Identity / privacy / consent issues?
+4. Copyright / licensing constraints?
+5. Could output reinforce **stereotypes** or biased associations?
+:::
+
+
+## Takeaways {.center}
+
+::: {.incremental}
+- **Latent diffusion** made high-res generation practical
+- **Transformers + multimodality** are the architectural direction
+- Adapt with the **smallest intervention** that works
+- Choose **deployment** by control vs. convenience tradeoff
+- **Responsibility** is part of engineering — not optional
+:::
+
+
+# References
+
+::: {style="font-size: 50%;"}
+
+::: {#refs}
+:::
+
+:::

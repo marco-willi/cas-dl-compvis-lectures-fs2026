@@ -16,16 +16,18 @@ $$
 After this lecture you should be able to:
 
 - Explain how generative modeling differs from classification (one-to-many vs. many-to-one mapping)
-- Understand the role of latent variables in enabling diverse outputs
-- Describe the mathematical objective of generative models: maximizing likelihood of training data
-- Compare key properties and tradeoffs of different generative modeling approaches (GANs, VAEs, diffusion models, autoregressive models)
+- Describe the role of latent variables in enabling diverse outputs from a single condition
+- Distinguish unconditional and conditional generation, and recognize common conditional generation tasks
+- Describe the mathematical objective of generative models: maximizing the likelihood of training data
+- Name and explain desirable properties of generative models: sampling efficiency, output quality, coverage, and likelihood computation
+- Select appropriate evaluation methods for generative models depending on the task and available ground truth
 
 :::
 
 
 ::: {.callout-tip title="TLDR Recap" collapse="true"}
 
-**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many, requiring **latent variables** $\vect{z}$ for diversity. The goal: maximize $p_{\theta}(\vect{x})$ for training data. Different approaches make tradeoffs: **GANs** (fast, high quality, no likelihood), **VAEs** (approximate likelihood, good coverage), **diffusion models** (state-of-the-art quality, slow sampling), **autoregressive** (exact likelihood, sequential generation).
+**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: **latent variables** $\vect{z}$ provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize $p_{\theta}(\vect{x})$ for training data. Models can generate **unconditionally** (free sampling) or **conditionally**, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties — sampling efficiency, output quality, coverage, and likelihood computation — are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, IS/FID/KID, human preference studies, and task-specific metrics.
 
 :::
 
@@ -183,35 +185,6 @@ Evolution of generative AI. From left to righ, top to bottom: @goodfellow_genera
 :::
 
 
-@tbl-genai-providers shows a few commercial providers of image generative models.
-
-
-::: {#tbl-genai-providers}
-
-| Provider | Product / Model Family | Key Features |
-|----------|------------------------|--------------|
-| [OpenAI](https://platform.openai.com/docs/guides/image-generation) | GPT Image / Image API | High-quality text-to-image and image editing, ChatGPT/API integration, strong prompt following and text rendering |
-| [Google](https://ai.google.dev/gemini-api/docs/image-generation) | Gemini Image / Nano Banana | Native image generation and editing, conversational edits, multi-image fusion, fast API access |
-| [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) | Imagen 4 / Gemini on Vertex AI | Enterprise API, Vertex AI integration, safety controls, Imagen for high-quality text-to-image |
-| [Midjourney](https://www.midjourney.com) | Midjourney V7 | High-quality, style-driven image generation, strong aesthetic control, web/Discord workflows |
-| [Adobe](https://www.adobe.com/products/firefly.html) | Firefly Image Model | Creative Cloud integration, commercially oriented workflows, image generation/editing, design tools |
-| [Black Forest Labs](https://bfl.ai) | FLUX | Strong open/proprietary model family, image generation and editing, high-quality photorealism, controllable generation |
-| [Stability AI](https://stability.ai) | Stable Diffusion / SD3.5 | Open-weight ecosystem, local/self-hosted workflows, ControlNet/LoRA/community tooling |
-| [AWS](https://docs.aws.amazon.com/nova/latest/nova2-userguide/what-is-nova-2.html) | Amazon Nova Canvas / Titan Image | Managed Bedrock service, image generation/editing, enterprise deployment and governance |
-| [Microsoft](https://m365.cloud.microsoft/ai-image-generator) | Copilot / Designer / Bing Image Creator | Consumer and productivity workflows, Microsoft 365 integration, design generation from prompts |
-| [Ideogram](https://ideogram.ai) | Ideogram | Strong typography and text-in-image generation, marketing/design-oriented image creation |
-| [Runway](https://runwayml.com) | Gen-4 Image / Video | Reference-based image generation, image-to-video workflows, creative production tooling |
-| [Leonardo AI](https://leonardo.ai) | Leonardo Platform | Web + API workflows, custom models, styles, upscaling, game/asset-oriented generation |
-| [Recraft](https://www.recraft.ai) | Recraft | Raster and vector generation, SVG/logos/icons, brand-style workflows |
-| [Canva](https://www.canva.com/ai-image-generator/) | Magic Media | Built-in design workflows, templates, social/media asset creation |
-| [Getty Images](https://www.gettyimages.com/ai) | Generative AI by Getty Images | Stock-safe/commercially oriented generation, licensed training corpus, legal protection emphasis |
-| [Shutterstock](https://www.shutterstock.com/business/generative-ai) | Shutterstock AI Image Generator | Stock-library-integrated generation, licensing ecosystem, ideation and mood-board workflows |
-| [fal.ai](https://fal.ai) / [Replicate](https://replicate.com) | Model API Platforms | Hosted access to many image/video models, useful for prototyping and demos, not primarily model owners |
-
-Major image generation providers, model families, and platforms.
-
-:::
-
 
 
 ## What is Generative Modelling?
@@ -348,7 +321,6 @@ $$
 The condition $\vect{c}$ specifies what should be generated, preserved,
 completed, enhanced, or changed.
 
-::: {#tbl-genai-intro-tasks}
 
 | Setting | Condition $\vect{c}$ | Typical task | Example |
 |---------|----------------------|--------------|---------|
@@ -367,11 +339,34 @@ completed, enhanced, or changed.
 
 : {tbl-colwidths="[20,20,20,40]"}
 
-::: 
+
 
 ::: {.callout-note title="Key idea"}
 The stochastic variable $\vect{z}$ provides **diversity**, while the condition
 $\vect{c}$ provides **control**.
+:::
+
+::: {.callout-note title="Quiz"}
+
+| Task | What is the condition? |
+|---|---|
+| super-resolution | ? |
+| inpainting | ? |
+| MRI → CT | ? |
+| text-to-image | ? |
+| product image generation from reference | ? |
+
+
+<details>
+<summary>Click for possible answer</summary>
+
+- low-resolution image
+- image + mask
+- source MRI image
+- text prompt
+- reference product image
+
+</details>
 :::
 
 ::: {.callout-note title="Discussion"}
@@ -626,22 +621,7 @@ Examples:
 
 This is particularly important for scientific, medical, and industrial applications. A generated image can look realistic but still be scientifically or semantically wrong.
 
-### Bias, Safety, and Provenance
 
-Modern generative models are trained on large and often weakly curated datasets. Evaluation should therefore also consider societal and practical risks.
-
-Important questions include:
-
-- Does the model reproduce stereotypes or dataset biases?
-- Does it generate misleading or harmful content?
-- Are generated images distinguishable from real evidence?
-- Are there copyright or licensing concerns?
-- Can generated content be traced, watermarked, or labeled?
-- Does synthetic data introduce bias into downstream models?
-
-::: {.callout-warning title="Generative models optimize plausibility, not truth"}
-A generated image may look realistic even when the depicted object, event, person, or measurement is incorrect.
-:::
 
 ### Summary
 
@@ -655,7 +635,6 @@ There is no single best metric for generative models. A good evaluation usually 
 | prompt adherence | CLIP-based scores, human judgement |
 | input fidelity | reconstruction or preservation metrics |
 | downstream utility | performance of a model trained with synthetic data |
-| safety and bias | targeted audits and qualitative analysis |
 
 The right evaluation depends on the task. For creative image generation, human preference may be central. For synthetic training data, downstream model performance may matter most. For scientific or medical images, fidelity and domain-expert validation are essential.
 

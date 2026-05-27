@@ -64,8 +64,14 @@ Hier finden Sie Unterlagen und aktuelle Informationen zum Modul.
 
 | Zeit | Thema |
 |------|--------|
-|8:45 - 10:30	| Theorie: Intro Gen AI und Generative Modelle Part 1
-|10:30 - 12:00 	| Übung: Generative Modelle trainieren und vergleichen
-|12:00 - 13:00	| Mittagspause
-|13:00 - 15:30	| Theorie: Generative Modelle Part 2 und Praxis-Tips
-|15:30  - 16:30	| Übung: Vortrainerte Generative Modelle und APIs
+|8:45 - 09:00	| Admin, Recap, Quiz |
+|09:00 - 10:00	| Intro Generative AI for Computer Vision |
+|10:00 - 10:15	| Pause |
+|10:15 - 11:00 	| Generative Models: Part 1 |
+|11:00 - 11:30 	| Übung Generative Models |
+|11:30 - 12:00 	| Generative Models: Part 2 |
+|12:00 - 13:00	| Mittagspause |
+|13:00 - 14:00 	| Moderen Generative Models: Part 1 |
+|14:00  - 15:00	| Übung: Vortrainerte Generative Modelle und APIs |
+|15:00 - 16:00 	| Moderen Generative Models: Part 2 |
+|16:00  - 16:30	| Finish |

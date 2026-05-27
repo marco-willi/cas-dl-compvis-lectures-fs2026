@@ -1,5 +1,5 @@
 ---
-title: "Convolutional Neural Networks"
+title: "3 - Convolutional Neural Networks"
 params:
    images_path: "/assets/images/cnns/"
 ---
