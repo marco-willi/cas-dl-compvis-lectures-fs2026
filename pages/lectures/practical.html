@@ -313,18 +313,6 @@ window.Quarto = {
  <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/lectures/generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">9 - Generative Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/lectures/generative_models2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">9 - Generative Models</span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -339,43 +327,61 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+ <span class="menu-text">1 - Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/images_as_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Images as Data</span></a>
+ <span class="menu-text">2 - Images as Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/cnns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Convolutional Neural Networks</span></a>
+ <span class="menu-text">3 - Convolutional Neural Networks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Image Classification</span></a>
+ <span class="menu-text">4 - Image Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/representation_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Representation Learning</span></a>
+ <span class="menu-text">5 - Representation Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/downstream_adaptation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Adapting Models</span></a>
+ <span class="menu-text">6 - Adapting Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/vision_transformers.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Modern Vision Backbones</span></a>
+ <span class="menu-text">7 - Modern Vision Backbones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8 - Generative AI for Computer Vision</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9 - GenAI Model Families</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_practical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
       </ul>
@@ -557,7 +563,7 @@ window.Quarto = {
 <section id="a-recipe-for-training-neural-networks" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="a-recipe-for-training-neural-networks"><span class="header-section-number">1</span> A Recipe for Training Neural Networks</h2>
 <p>How does one successfully train a deep learning model? Modern ML frameworks make training appear straightforward, but Karpathy observed that these abstractions are <strong>leaky</strong>: without a solid understanding of what happens inside, backpropagation, gradient descent, loss dynamics, mistakes creep in undetected. A model with a learning rate that is too high may converge to a poor solution without raising any error. A data preprocessing bug may silently corrupt every batch. <strong>Training neural networks fails silently.</strong></p>
-<div id="18f1ddf1" class="cell" data-execution_count="1">
+<div id="636f6bf0" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>your_data <span class="op">=</span> <span class="co"># plug your awesome dataset here</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SuperCrossValidator(SuperDuper.fit, your_data, ResNet50, SGDOptimizer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>

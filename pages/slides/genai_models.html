@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="Marco Willi">
-  <title>CAS Deep Learning - Computer Vision – 6 - Adapting Models</title>
+  <title>CAS Deep Learning - Computer Vision – 9 - GenAI Model Families</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -161,7 +161,7 @@
     <div class="slides">
 
 <section id="title-slide" data-background-image="../../assets/fhnw_bg.png" data-background-opacity="1.0" data-background-size="contain" class="quarto-title-block center">
-  <h1 class="title">6 - Adapting Models</h1>
+  <h1 class="title">9 - GenAI Model Families</h1>
   <p class="subtitle">CAS Deep Learning - Computer Vision (Part1)</p>
 
 <div class="quarto-title-authors">
@@ -178,308 +178,431 @@ Marco Willi
 </section>
 <section id="overview" class="slide level2 center">
 <h2>Overview</h2>
+<p>Four major generative model families:</p>
 <ul>
-<li>Motivation</li>
-<li>The adaptation hierarchy</li>
-<li>Choosing a strategy</li>
-<li>Worked scenarios</li>
+<li><strong>Autoregressive</strong> models</li>
+<li><strong>GANs</strong></li>
+<li><strong>VAEs</strong></li>
+<li><strong>Diffusion</strong> models</li>
 </ul>
+<p>Plus: how <strong>conditioning</strong> fits into each.</p>
 </section>
-<section>
-<section id="motivation" class="title-slide slide level1 center">
-<h1>Motivation</h1>
-
-</section>
-<section id="the-question" class="slide level2 center">
-<h2>The Question</h2>
-<div class="fragment">
-<p>You have a pretrained encoder.</p>
-</div>
-<div class="fragment">
-<p>You have a task with <strong>limited labeled data</strong>.</p>
-</div>
-<div class="fragment">
-<p><strong>How much of the model should you train?</strong></p>
-</div>
-</section>
-<section id="three-tensions" class="slide level2 center">
-<h2>Three Tensions</h2>
-<ul>
-<li class="fragment"><strong>Labeled data</strong>: how much supervision do you have?</li>
-<li class="fragment"><strong>Domain similarity</strong>: how close is the target task to pretraining?</li>
-<li class="fragment"><strong>Compute budget</strong>: how much training and tuning can you afford?</li>
-</ul>
-<div class="fragment">
-<p>These factors determine whether you should freeze, adapt, or fine-tune.</p>
-</div>
-</section></section>
-<section>
-<section id="the-adaptation-hierarchy" class="title-slide slide level1 center">
-<h1>The Adaptation Hierarchy</h1>
-
-</section>
-<section id="five-strategies-one-hierarchy" class="slide level2">
-<h2>Five Strategies, One Hierarchy</h2>
-
-<img data-src="../../assets/images/downstream_adaptation/adaptation_hierarchy.png" style="width:80.0%" class="r-stretch quarto-figure-center" id="fig-da-hierarchy"><p class="caption">
-Figure&nbsp;1: Adaptation strategies.
-</p><div class="fragment highlight-red">
-<p><strong>Start simple. Descend only when performance demands it.</strong></p>
-</div>
-</section>
-<section id="at-a-glance" class="slide level2">
-<h2>At a Glance</h2>
+<section id="a-tradeoff-map" class="slide level2 center">
+<h2>A Tradeoff Map</h2>
 <table class="caption-top">
-<colgroup>
-<col style="width: 22%">
-<col style="width: 23%">
-<col style="width: 55%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Strategy</th>
-<th style="text-align: right;">Trainable Parameters</th>
-<th>When to Use</th>
+<th>Family</th>
+<th>Sampling</th>
+<th>Quality</th>
+<th>Coverage</th>
+<th>Likelihood</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>k-NN</td>
-<td style="text-align: right;">0</td>
-<td>Quick representation-quality check</td>
+<td>Autoregressive</td>
+<td>slow</td>
+<td>high</td>
+<td>good</td>
+<td>exact</td>
 </tr>
 <tr class="even">
-<td>Linear probe</td>
-<td style="text-align: right;">Head only</td>
-<td>Good embeddings, small dataset</td>
+<td>GAN</td>
+<td>fast</td>
+<td>sharp</td>
+<td>risky</td>
+<td>none</td>
 </tr>
 <tr class="odd">
-<td>LoRA / adapters</td>
-<td style="text-align: right;">Few parameters</td>
-<td>Moderate data or mild domain shift</td>
+<td>VAE</td>
+<td>fast</td>
+<td>blurrier</td>
+<td>good</td>
+<td>approx (ELBO)</td>
 </tr>
 <tr class="even">
-<td>Partial fine-tune</td>
-<td style="text-align: right;">Top layers + head</td>
-<td>Larger data or stronger domain shift</td>
-</tr>
-<tr class="odd">
-<td>Full fine-tune</td>
-<td style="text-align: right;">All weights</td>
-<td>Large data and strong task mismatch</td>
-</tr>
-</tbody>
-</table>
-</section></section>
-<section>
-<section id="the-strategies" class="title-slide slide level1 center">
-<h1>The Strategies</h1>
-
-</section>
-<section id="k-nn-no-training" class="slide level2">
-<h2>k-NN — No Training</h2>
-<ul>
-<li class="fragment">Embed labeled images with a <strong>frozen encoder</strong></li>
-<li class="fragment">Store embeddings and labels</li>
-<li class="fragment">For a new image, retrieve nearest neighbours in embedding space</li>
-<li class="fragment">Predict by majority vote or similarity-weighted vote</li>
-</ul>
-<div class="fragment">
-<p><strong>What it tells you:</strong> whether the pretrained representation already separates your target data.</p>
-</div>
-<div class="fragment">
-<p>If k-NN works well, further adaptation may be unnecessary.</p>
-</div>
-</section>
-<section id="linear-probe-freeze-encoder-train-head" class="slide level2">
-<h2>Linear Probe — Freeze Encoder, Train Head</h2>
-<ul>
-<li class="fragment">Keep the pretrained encoder frozen</li>
-<li class="fragment">Extract one embedding per image</li>
-<li class="fragment">Train only a small classification head</li>
-<li class="fragment">Usually a single linear layer: <span class="math inline">\(\text{Linear}(d, K)\)</span></li>
-</ul>
-<div class="fragment">
-<p>If a linear boundary works, the embedding already contains task-relevant structure.</p>
-</div>
-<div class="fragment">
-<p>Cheap, stable, and a strong baseline for limited labeled data.</p>
-</div>
-</section>
-<section id="lora-adapters-parameter-efficient-adaptation" class="slide level2">
-<h2>LoRA / Adapters — Parameter-Efficient Adaptation</h2>
-<ul>
-<li class="fragment">Insert small trainable modules into the pretrained model</li>
-<li class="fragment">Keep most original weights frozen</li>
-<li class="fragment">Train only adapters and the task head</li>
-<li class="fragment">Useful when a linear probe is not flexible enough</li>
-</ul>
-<div class="fragment">
-<p>Good default for moderate data or mild domain shift.</p>
-</div>
-</section>
-<section id="partial-fine-tuning" class="slide level2">
-<h2>Partial Fine-Tuning</h2>
-<ul>
-<li class="fragment">Freeze lower layers</li>
-<li class="fragment">Unfreeze the last few encoder blocks and the task head</li>
-<li class="fragment">Lower layers retain generic features</li>
-<li class="fragment">Higher layers adapt to the target task</li>
-</ul>
-<div class="fragment">
-<p>Useful when the target task needs more task-specific high-level features.</p>
-</div>
-</section>
-<section id="full-fine-tuning-last-resort" class="slide level2">
-<h2>Full Fine-Tuning — Last Resort</h2>
-<ul>
-<li class="fragment">Train all model weights</li>
-<li class="fragment">Most flexible strategy</li>
-<li class="fragment">Highest compute cost</li>
-<li class="fragment">Highest overfitting risk with small datasets</li>
-</ul>
-<div class="fragment">
-<p>Use only when simpler approaches plateau and data + compute justify it.</p>
-</div>
-</section></section>
-<section>
-<section id="choosing-a-strategy" class="title-slide slide level1 center">
-<h1>Choosing a Strategy</h1>
-
-</section>
-<section id="dataset-size-domain" class="slide level2">
-<h2>Dataset Size × Domain</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 40%">
-<col style="width: 40%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Dataset Size</th>
-<th>Similar to Pretraining Data</th>
-<th>Different Domain</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>&lt; 500</td>
-<td>k-NN / linear probe</td>
-<td>k-NN, then LoRA if needed</td>
-</tr>
-<tr class="even">
-<td>500–5K</td>
-<td>Linear probe / LoRA</td>
-<td>LoRA / partial FT</td>
-</tr>
-<tr class="odd">
-<td>5K–50K</td>
-<td>Partial FT</td>
-<td>Partial / full FT</td>
-</tr>
-<tr class="even">
-<td>&gt; 50K</td>
-<td>Full FT possible</td>
-<td>Full FT possible</td>
+<td>Diffusion</td>
+<td>slow (iterative)</td>
+<td>SOTA</td>
+<td>good</td>
+<td>approx</td>
 </tr>
 </tbody>
 </table>
 <div class="fragment">
-<p>The stronger the domain shift, the more adaptation you usually need.</p>
+<p><strong>No family wins on every axis.</strong></p>
 </div>
 </section>
-<section id="practical-rule-of-thumb" class="slide level2">
-<h2>Practical Rule of Thumb</h2>
+<section>
+<section id="autoregressive-models" class="title-slide slide level1 center">
+<h1>Autoregressive Models</h1>
+
+</section>
+<section id="sequential-generation" class="slide level2">
+<h2>Sequential Generation</h2>
+<img data-src="../../assets/images/genai_models/autoregressive_overview.png" class="r-stretch">
+<div class="fragment">
+<p>Predict one element at a time, conditioned on all previous elements (<span class="citation" data-cites="torralba_foundations_2024">Torralba et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>).</p>
+</div>
+</section>
+<section id="factorization" class="slide level2">
+<h2>Factorization</h2>
+<div class="fragment">
+<p><span class="math display">\[p(x_1, \ldots, x_n) = p(x_1)\, p(x_2|x_1)\, p(x_3|x_1, x_2) \cdots p(x_n|x_1, \ldots, x_{n-1})\]</span></p>
+</div>
+<div class="fragment">
+<p>Each conditional <span class="math inline">\(p(x_i \mid x_1, \ldots, x_{i-1})\)</span> is modeled by a neural network (masked CNN or Transformer).</p>
+</div>
+<div class="fragment">
+<blockquote>
+<p>Image generation becomes a <strong>sequence prediction problem.</strong></p>
+</blockquote>
+</div>
+</section>
+<section id="sampling-step-by-step" class="slide level2">
+<h2>Sampling Step by Step</h2>
 <ol type="1">
-<li class="fragment">Start with <strong>k-NN</strong> to test representation quality</li>
-<li class="fragment">Try a <strong>linear probe</strong> as the first trained baseline</li>
-<li class="fragment">Use <strong>LoRA / adapters</strong> when the head is not flexible enough</li>
-<li class="fragment">Use <strong>partial fine-tuning</strong> for stronger domain shift</li>
-<li class="fragment">Use <strong>full fine-tuning</strong> only when data and compute justify it</li>
+<li class="fragment">Sample <span class="math inline">\(x_1 \sim p(x_1)\)</span></li>
+<li class="fragment">Sample <span class="math inline">\(x_2 \sim p(x_2 \mid x_1)\)</span></li>
+<li class="fragment">Sample <span class="math inline">\(x_3 \sim p(x_3 \mid x_1, x_2)\)</span></li>
+<li class="fragment">… continue until all pixels are generated</li>
 </ol>
+</section>
+<section id="examples" class="slide level2">
+<h2>Examples</h2>
+<ul>
+<li class="fragment"><strong>PixelCNN</strong> (<span class="citation" data-cites="oord_conditional_2016">Oord et al. (<a href="#/references" role="doc-biblioref" onclick="">2016</a>)</span>) — masked convolutions</li>
+<li class="fragment"><strong>Parti</strong> (<span class="citation" data-cites="yu_scaling_2022">Yu et al. (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span>) — transformer over discrete image tokens</li>
+<li class="fragment"><strong>OpenAI 4o image generation</strong> — described as autoregressive + natively multimodal</li>
+</ul>
 <div class="fragment">
-<p>Each step should improve enough to justify the added complexity.</p>
+<p>Modern multimodal systems often <em>combine</em> autoregressive reasoning with diffusion-based image generation.</p>
+</div>
+</section>
+<section id="pros-cons" class="slide level2">
+<h2>Pros &amp; Cons</h2>
+<div class="fragment">
+<p><strong>Pros</strong></p>
+<ul>
+<li>Exact likelihood computation</li>
+<li>Natural fit for language / discrete tokens</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Cons</strong></p>
+<ul>
+<li>Sequential generation is slow</li>
+<li>Pixel-level image generation is expensive</li>
+<li>Errors can accumulate during sampling</li>
+</ul>
 </div>
 </section></section>
 <section>
-<section id="worked-scenarios" class="title-slide slide level1 center">
-<h1>Worked Scenarios</h1>
+<section id="generative-adversarial-networks" class="title-slide slide level1 center">
+<h1>Generative Adversarial Networks</h1>
 
 </section>
-<section id="scenario-1-small-similar-dataset" class="slide level2">
-<h2>Scenario 1: Small Similar Dataset</h2>
-<p><strong>Scenario</strong></p>
-<ul>
-<li>300 labeled product images</li>
-<li>Classes: shoes, bags, jackets, furniture</li>
-<li>Similar to common web images</li>
-</ul>
+<section id="the-adversarial-game" class="slide level2">
+<h2>The Adversarial Game</h2>
+<img data-src="../../assets/images/genai_models/gan-architecture.jpg" class="r-stretch">
 <div class="fragment">
-<p>Recommended start: <strong>k-NN or linear probe</strong></p>
-</div>
-<div class="fragment">
-<p>Why: small dataset, similar domain, pretrained visual features are likely useful.</p>
-</div>
-<div class="fragment">
-<p>Avoid full fine-tuning unless simple baselines clearly fail.</p>
+<p>Generator <span class="math inline">\(g(\mathbf{z})\)</span> fakes — Discriminator <span class="math inline">\(d(\mathbf{x})\)</span> judges (<span class="citation" data-cites="goodfellow_generative_2014">Goodfellow et al. (<a href="#/references" role="doc-biblioref" onclick="">2014</a>)</span>).</p>
 </div>
 </section>
-<section id="scenario-2-medical-domain-shift" class="slide level2">
-<h2>Scenario 2: Medical Domain Shift</h2>
-<p><strong>Scenario</strong></p>
+<section id="minimax-objective" class="slide level2">
+<h2>Minimax Objective</h2>
+<div class="fragment">
+<p><span class="math display">\[\min_{g} \max_{d} \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}}[\log d(\mathbf{x})] + \mathbb{E}_{\mathbf{z} \sim p_z}[\log(1 - d(g(\mathbf{z})))]\]</span></p>
+</div>
 <ul>
-<li>800 labeled chest X-rays</li>
-<li>Task: pneumonia classification</li>
-<li>Backbone: DINOv2 pretrained on natural images</li>
+<li class="fragment"><span class="math inline">\(d\)</span>: maximize correct real/fake classification</li>
+<li class="fragment"><span class="math inline">\(g\)</span>: minimize <span class="math inline">\(d\)</span>’s success — fool the discriminator</li>
+<li class="fragment">Training <strong>alternates</strong> between the two</li>
 </ul>
+</section>
+<section id="gan-learning-process" class="slide level2">
+<h2>GAN Learning Process</h2>
+<img data-src="../../assets/images/genai_models/gan_learning.png" class="r-stretch">
 <div class="fragment">
-<p>Recommended start: <strong>linear probe</strong>, then <strong>LoRA</strong> if needed.</p>
-</div>
-<div class="fragment">
-<p>Why: small dataset, but strong domain shift.</p>
-</div>
-<div class="fragment">
-<p>Full fine-tuning is risky with 800 images unless strongly regularized.</p>
+<p>Generator distribution (green) moves toward real data (black dots), discriminator boundary (blue) adapts (<span class="citation" data-cites="foster_generative_2023">Foster (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
 </div>
 </section>
-<section id="scenario-3-larger-domain-specific-dataset" class="slide level2">
-<h2>Scenario 3: Larger Domain-Specific Dataset</h2>
-<p><strong>Scenario</strong></p>
-<ul>
-<li>30,000 labeled satellite images</li>
-<li>Strong domain shift from natural images</li>
-</ul>
+<section id="pros-cons-1" class="slide level2">
+<h2>Pros &amp; Cons</h2>
 <div class="fragment">
-<p>Recommended start: <strong>LoRA or partial fine-tuning</strong></p>
+<p><strong>Pros</strong></p>
+<ul>
+<li>Fast sampling — one forward pass</li>
+<li>Can produce sharp images</li>
+<li>Historically pivotal for image generation</li>
+</ul>
 </div>
 <div class="fragment">
-<p>Why: enough data to adapt more parameters, but full fine-tuning should still be justified by validation.</p>
+<p><strong>Cons</strong></p>
+<ul>
+<li>Training can be unstable</li>
+<li><strong>Mode collapse</strong> — limited variety</li>
+<li>No direct likelihood</li>
+<li>Modern text-to-image systems are rarely pure GANs</li>
+</ul>
 </div>
 </section></section>
 <section>
-<section id="summary" class="title-slide slide level1 center">
-<h1>Summary</h1>
+<section id="variational-autoencoders" class="title-slide slide level1 center">
+<h1>Variational Autoencoders</h1>
 
 </section>
-<section id="key-takeaways" class="slide level2">
-<h2>Key Takeaways</h2>
-<ul>
-<li class="fragment">Adaptation is a hierarchy: <strong>k-NN → linear probe → LoRA → partial FT → full FT</strong></li>
-<li class="fragment">Start with the simplest method that answers the question</li>
-<li class="fragment">With little data, keep most of the encoder frozen</li>
-<li class="fragment">Larger domain shift usually requires more adaptation</li>
-<li class="fragment">Full fine-tuning is powerful, but data-hungry and easier to overfit</li>
-</ul>
+<section id="vae-architecture" class="slide level2">
+<h2>VAE Architecture</h2>
+<img data-src="../../assets/images/genai_models/vae_illustration.png" class="r-stretch">
 <div class="fragment">
-<p><strong>Final rule:</strong> start frozen, train more only when the data demands it.</p>
+<p><strong>Encoder</strong> <span class="math inline">\(q_{\psi}(\mathbf{z} \mid \mathbf{x})\)</span> — <strong>Decoder</strong> <span class="math inline">\(p_{\theta}(\mathbf{x} \mid \mathbf{z})\)</span></p>
 </div>
+</section>
+<section id="probabilistic-twist" class="slide level2">
+<h2>Probabilistic Twist</h2>
+<div class="fragment">
+<p>Unlike standard autoencoders, the latent space is <strong>structured probabilistically</strong>, so random samples decode to meaningful outputs.</p>
+</div>
+</section>
+<section id="reparameterization-trick" class="slide level2">
+<h2>Reparameterization Trick</h2>
+<img data-src="../../assets/images/genai_models/vae_illustration2.png" class="r-stretch">
+<div class="fragment">
+<p><span class="math display">\[\mathbf{z} = \mathbf{\mu} + \mathbf{\epsilon} \cdot \mathbf{\sigma}, \qquad \mathbf{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})\]</span></p>
+</div>
+<div class="fragment">
+<p>Lets gradients flow through stochastic sampling.</p>
+</div>
+</section>
+<section id="elbo-objective" class="slide level2">
+<h2>ELBO Objective</h2>
+<div class="fragment">
+<p><span class="math display">\[\text{ELBO} = \underbrace{\mathbb{E}_{\mathbf{z} \sim q_{\psi}(\mathbf{z}|\mathbf{x})}[\log p_{\theta}(\mathbf{x}|\mathbf{z})]}_{\text{Reconstruction}} - \underbrace{\text{KL}(q_{\psi}(\mathbf{z}|\mathbf{x}) \,\|\, p(\mathbf{z}))}_{\text{Regularization}}\]</span></p>
+</div>
+<ul>
+<li class="fragment"><strong>Reconstruction</strong> — decoder must recover the input</li>
+<li class="fragment"><strong>KL regularization</strong> — pull posterior toward prior <span class="math inline">\(p(\mathbf{z}) = \mathcal{N}(\mathbf{0}, \mathbfit{I})\)</span></li>
+<li class="fragment">Result: a <strong>smooth, continuous</strong> latent space</li>
+</ul>
+</section>
+<section id="vae-latent-space" class="slide level2">
+<h2>VAE Latent Space</h2>
+<img data-src="../../assets/images/genai_models/vae_latent_space_face.png" class="r-stretch">
+<div class="fragment">
+<p>Traversing the latent space → smooth interpolation between faces (<span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
+</div>
+</section>
+<section id="pros-cons-2" class="slide level2">
+<h2>Pros &amp; Cons</h2>
+<div class="fragment">
+<p><strong>Pros</strong></p>
+<ul>
+<li>Principled probabilistic foundation</li>
+<li>Structured, interpretable latent space (interpolation, factor analysis)</li>
+<li>Stable training</li>
+<li>Useful for representation learning</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Cons</strong></p>
+<ul>
+<li>Tend to produce blurry outputs (improvable with more complex variants)</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="diffusion-models" class="title-slide slide level1 center">
+<h1>Diffusion Models</h1>
+
+</section>
+<section id="core-idea" class="slide level2 center">
+<h2>Core Idea</h2>
+<div class="r-fit-text">
+<p><strong>Learn to reverse a gradual noising process.</strong></p>
+</div>
+<div class="fragment">
+<p><span class="citation" data-cites="ho_denoising_2020">Ho et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>, <span class="citation" data-cites="sohl-dickstein_deep_2015">Sohl-Dickstein et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> — powers Stable Diffusion and modern T2I systems.</p>
+</div>
+</section>
+<section id="forward-diffusion" class="slide level2">
+<h2>Forward Diffusion</h2>
+<img data-src="../../assets/images/genai_models/forward_diffusion_fcv.png" class="r-stretch">
+<div class="fragment">
+<p>Gradually add Gaussian noise over <span class="math inline">\(T\)</span> steps (<span class="citation" data-cites="torralba_foundations_2024">Torralba et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>). <strong>Fixed</strong>, no neural network.</p>
+</div>
+</section>
+<section id="forward-process" class="slide level2">
+<h2>Forward Process</h2>
+<div class="fragment">
+<p><span class="math display">\[\mathbf{x}_t = \sqrt{1 - \beta_t}\, \mathbf{x}_{t-1} + \sqrt{\beta_t}\, \mathbf{\epsilon}_t, \qquad \mathbf{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})\]</span></p>
+</div>
+<ul>
+<li class="fragment"><span class="math inline">\(\beta_t\)</span> — <strong>noise schedule</strong> (linear, cosine, …)</li>
+<li class="fragment"><span class="math inline">\(\mathbf{x}_0\)</span> (clean) → <span class="math inline">\(\mathbf{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbfit{I})\)</span></li>
+<li class="fragment">Can sample <span class="math inline">\(\mathbf{x}_t\)</span> <strong>directly from</strong> <span class="math inline">\(\mathbf{x}_0\)</span> → efficient training over many noise levels</li>
+</ul>
+</section>
+<section id="reverse-diffusion" class="slide level2">
+<h2>Reverse Diffusion</h2>
+<img data-src="../../assets/images/genai_models/reverse_diffusion_fcv.png" class="r-stretch">
+<div class="fragment">
+<p>A neural network learns to gradually remove noise, step by step (<span class="citation" data-cites="torralba_foundations_2024">Torralba et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>).</p>
+</div>
+</section>
+<section id="reverse-process" class="slide level2">
+<h2>Reverse Process</h2>
+<div class="fragment">
+<p>Start from pure noise: <span class="math display">\[\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})\]</span></p>
+</div>
+<div class="fragment">
+<p>Iteratively denoise to a realistic sample <span class="math inline">\(\mathbf{x}_0\)</span>.</p>
+</div>
+<div class="fragment">
+<p>The network is <strong>conditioned on the timestep <span class="math inline">\(t\)</span></strong> — noise level varies dramatically across steps.</p>
+</div>
+</section>
+<section id="training-objective" class="slide level2">
+<h2>Training Objective</h2>
+<div class="fragment">
+<p><span class="math display">\[\mathcal{L} = \mathbb{E}_{t, \mathbf{x}_0, \mathbf{\epsilon}}\left[\,\|\, \mathbf{\epsilon} - f_\theta(\mathbf{x}_t, t)\,\|^2\,\right]\]</span></p>
+</div>
+<div class="fragment">
+<p>The model predicts the <strong>noise</strong> <span class="math inline">\(\mathbf{\epsilon}\)</span> that was added to <span class="math inline">\(\mathbf{x}_0\)</span> to produce <span class="math inline">\(\mathbf{x}_t\)</span>.</p>
+</div>
+</section>
+<section id="training-sampling" class="slide level2">
+<h2>Training &amp; Sampling</h2>
+<img data-src="../../assets/images/genai_models/diffusion_algorithm.png" class="r-stretch">
+<div class="fragment">
+<p>Training: random <span class="math inline">\(t\)</span>, random <span class="math inline">\(\mathbf{\epsilon}\)</span>. Sampling: iterate from <span class="math inline">\(T\)</span> down to <span class="math inline">\(0\)</span>.</p>
+</div>
+</section>
+<section id="u-net-denoiser" class="slide level2">
+<h2>U-Net Denoiser</h2>
+<img data-src="../../assets/images/genai_models/diffusion_unet.png" class="r-stretch">
+<div class="fragment">
+<p>Encoder–decoder with skip connections; timestep <span class="math inline">\(t\)</span> embedded throughout (<span class="citation" data-cites="prince_understanding_2023">Prince (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
+</div>
+</section>
+<section id="pros-cons-3" class="slide level2">
+<h2>Pros &amp; Cons</h2>
+<div class="fragment">
+<p><strong>Pros</strong></p>
+<ul>
+<li>High-quality, diverse outputs (currently SOTA)</li>
+<li>Stable, reliable training</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Cons</strong></p>
+<ul>
+<li>Slow inference — iterative sampling</li>
+<li>High compute cost (training <strong>and</strong> inference)</li>
+</ul>
+</div>
+</section>
+<section id="aside-cold-diffusion" class="slide level2">
+<h2>Aside: Cold Diffusion</h2>
+<img data-src="../../assets/images/genai_models/cold_diffusion.png" class="r-stretch">
+<div class="fragment">
+<p>Gaussian noise isn’t fundamental — any <strong>invertible degradation</strong> works (blur, masking, pixelation) (<span class="citation" data-cites="bansal_cold_2022">Bansal et al. (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span>).</p>
+</div>
+<div class="fragment">
+<p>Success comes from the <strong>gradual, multi-step inversion</strong>, not the noise itself.</p>
+</div>
+</section></section>
+<section>
+<section id="conditioning-across-families" class="title-slide slide level1 center">
+<h1>Conditioning Across Families</h1>
+
+</section>
+<section id="from-pmathbfx-to-pmathbfx-mid-mathbfc" class="slide level2">
+<h2>From <span class="math inline">\(p(\mathbf{x})\)</span> to <span class="math inline">\(p(\mathbf{x} \mid \mathbf{c})\)</span></h2>
+<div class="fragment">
+<p>So far: model <span class="math inline">\(p(\mathbf{x})\)</span> unconditionally.</p>
+</div>
+<div class="fragment">
+<p>In practice: model <span class="math display">\[p_\theta(\mathbf{x} \mid \mathbf{c})\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\mathbf{c}\)</span> — class label, text prompt, source image, mask, layout, depth, reference…</p>
+</div>
+</section>
+<section id="conditioning-is-not-a-separate-family" class="slide level2">
+<h2>Conditioning Is Not a Separate Family</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Family</th>
+<th>How conditioning enters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Autoregressive</td>
+<td>condition each prediction step on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+<tr class="even">
+<td>VAEs</td>
+<td>condition encoder and/or decoder on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+<tr class="odd">
+<td>GANs</td>
+<td>condition generator (and often discriminator) on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+<tr class="even">
+<td>Diffusion</td>
+<td>condition the <strong>denoising network</strong> on <span class="math inline">\(\mathbf{c}\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p>Modern text-to-image and image-editing systems use these mechanisms extensively.</p>
+</div>
+</section>
+<section id="recap" class="slide level2 center">
+<h2>Recap</h2>
+<ul>
+<li class="fragment"><strong>Autoregressive</strong> — exact likelihood, slow sequential sampling</li>
+<li class="fragment"><strong>GAN</strong> — fast &amp; sharp, unstable, mode collapse risk</li>
+<li class="fragment"><strong>VAE</strong> — structured latent, stable, blurrier</li>
+<li class="fragment"><strong>Diffusion</strong> — SOTA quality, iterative &amp; costly</li>
+<li class="fragment"><strong>Conditioning</strong> — applies to <em>all</em> of them</li>
+</ul>
 </section></section>
 <section id="references" class="title-slide slide level1 smaller scrollable">
 <h1>References</h1>
 <div style="font-size: 50%;">
-<div id="refs" role="list">
-
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-bansal_cold_2022" class="csl-entry" role="listitem">
+Bansal, Arpit, Eitan Borgnia, Hong-Min Chu, et al. 2022. <em>Cold <span>Diffusion</span>: <span>Inverting</span> <span>Arbitrary</span> <span>Image</span> <span>Transforms</span> <span>Without</span> <span>Noise</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2208.09392">https://doi.org/10.48550/arXiv.2208.09392</a>.
+</div>
+<div id="ref-foster_generative_2023" class="csl-entry" role="listitem">
+Foster, David. 2023. <em>Generative <span>Deep</span> <span>Learning</span></em>. 2nd ed. O’Reilly Media, Inc.
+</div>
+<div id="ref-goodfellow_generative_2014" class="csl-entry" role="listitem">
+Goodfellow, Ian J., Jean Pouget-Abadie, Mehdi Mirza, et al. 2014. <em>Generative <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1406.2661">https://doi.org/10.48550/arXiv.1406.2661</a>.
+</div>
+<div id="ref-ho_denoising_2020" class="csl-entry" role="listitem">
+Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <em>Denoising <span>Diffusion</span> <span>Probabilistic</span> <span>Models</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2006.11239">https://doi.org/10.48550/arXiv.2006.11239</a>.
+</div>
+<div id="ref-oord_conditional_2016" class="csl-entry" role="listitem">
+Oord, Aaron van den, Nal Kalchbrenner, Oriol Vinyals, Lasse Espeholt, Alex Graves, and Koray Kavukcuoglu. 2016. <em>Conditional <span>Image</span> <span>Generation</span> with <span>PixelCNN</span> <span>Decoders</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1606.05328">https://doi.org/10.48550/arXiv.1606.05328</a>.
+</div>
+<div id="ref-prince_understanding_2023" class="csl-entry" role="listitem">
+Prince, Simon J. D. 2023. <em>Understanding <span>Deep</span> <span>Learning</span></em>. MIT Press. <a href="https://udlbook.github.io/udlbook/">https://udlbook.github.io/udlbook/</a>.
+</div>
+<div id="ref-sohl-dickstein_deep_2015" class="csl-entry" role="listitem">
+Sohl-Dickstein, Jascha, Eric A. Weiss, Niru Maheswaranathan, and Surya Ganguli. 2015. <em>Deep <span>Unsupervised</span> <span>Learning</span> Using <span>Nonequilibrium</span> <span>Thermodynamics</span></em>. arXiv. <a href="http://arxiv.org/abs/1503.03585">http://arxiv.org/abs/1503.03585</a>.
+</div>
+<div id="ref-torralba_foundations_2024" class="csl-entry" role="listitem">
+Torralba, A., P. Isola, and W. T. Freeman. 2024. <em>Foundations of <span>Computer</span> <span>Vision</span></em>. Adaptive <span>Computation</span> and <span>Machine</span> <span>Learning</span> Series. MIT Press. <a href="https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/">https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/</a>.
+</div>
+<div id="ref-yu_scaling_2022" class="csl-entry" role="listitem">
+Yu, Jiahui, Yuanzhong Xu, Jing Yu Koh, et al. 2022. <em>Scaling <span>Autoregressive</span> <span>Models</span> for <span>Content</span>-<span>Rich</span> <span>Text</span>-to-<span>Image</span> <span>Generation</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2206.10789">https://doi.org/10.48550/arXiv.2206.10789</a>.
+</div>
 </div>
 </div>
 

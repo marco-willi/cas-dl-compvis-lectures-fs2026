@@ -316,18 +316,6 @@ window.Quarto = {
  <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/lectures/generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">9 - Generative Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/lectures/generative_models2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">9 - Generative Models</span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -342,43 +330,61 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+ <span class="menu-text">1 - Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/images_as_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Images as Data</span></a>
+ <span class="menu-text">2 - Images as Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/cnns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Convolutional Neural Networks</span></a>
+ <span class="menu-text">3 - Convolutional Neural Networks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Image Classification</span></a>
+ <span class="menu-text">4 - Image Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/representation_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Representation Learning</span></a>
+ <span class="menu-text">5 - Representation Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/downstream_adaptation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Adapting Models</span></a>
+ <span class="menu-text">6 - Adapting Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/vision_transformers.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Modern Vision Backbones</span></a>
+ <span class="menu-text">7 - Modern Vision Backbones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8 - Generative AI for Computer Vision</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9 - GenAI Model Families</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_practical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
       </ul>
@@ -579,7 +585,7 @@ Figure&nbsp;1: Example image. <a href="https://unsplash.com/de/fotos/elefantenwa
 </figure>
 </div>
 <p>It is easy for humans to describe the image. For example:</p>
-<div id="16007acf" class="cell" data-execution_count="1">
+<div id="b77c511c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">A photograph of an elephant facing the camera.</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">The elephant has large tusks and ears and is standing in a flat savannah.</span></span>
@@ -606,7 +612,7 @@ Figure&nbsp;1: Example image. <a href="https://unsplash.com/de/fotos/elefantenwa
 <li>Channels: 3 (RGB)</li>
 <li>Bits per pixel: 8 bits per channel</li>
 </ul>
-<div id="2721d858" class="cell" data-execution_count="2">
+<div id="9823b605" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <table class="dataframe table table-sm table-striped align-middle caption-top small">
 <thead>

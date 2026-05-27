@@ -313,18 +313,6 @@ window.Quarto = {
  <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/lectures/generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">9 - Generative Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../pages/lectures/generative_models2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">9 - Generative Models</span></a>
-  </div>
-</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -339,43 +327,61 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction</span></a>
+ <span class="menu-text">1 - Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/images_as_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Images as Data</span></a>
+ <span class="menu-text">2 - Images as Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/cnns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Convolutional Neural Networks</span></a>
+ <span class="menu-text">3 - Convolutional Neural Networks</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Image Classification</span></a>
+ <span class="menu-text">4 - Image Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/representation_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Representation Learning</span></a>
+ <span class="menu-text">5 - Representation Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/downstream_adaptation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Adapting Models</span></a>
+ <span class="menu-text">6 - Adapting Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../pages/slides/vision_transformers.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Modern Vision Backbones</span></a>
+ <span class="menu-text">7 - Modern Vision Backbones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8 - Generative AI for Computer Vision</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9 - GenAI Model Families</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../pages/slides/genai_practical.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 - GenAI: Modern Systems</span></a>
   </div>
 </li>
       </ul>
@@ -757,7 +763,7 @@ Tip
 <section id="implementation-in-pytorch" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="implementation-in-pytorch"><span class="header-section-number">5</span> Implementation in PyTorch</h2>
 <p>The following code shows how we can implement a configurable neural network.</p>
-<div id="1ab2c9da" class="cell" data-execution_count="2">
+<div id="b09a17c8" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
@@ -802,7 +808,7 @@ Tip
 <span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> model(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can easily display the architecture details with <code>torchinfo</code></p>
-<div id="f1a9df46" class="cell" data-execution_count="3">
+<div id="6f8c348f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the model architecture</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchinfo <span class="im">import</span> summary</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>summary(model, input_size<span class="op">=</span>(<span class="dv">32</span>, <span class="dv">784</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
