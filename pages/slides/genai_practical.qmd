@@ -11,16 +11,6 @@ $$
 :::
 
 
-## Overview {.center}
-
-- Why pixel-space diffusion is too expensive
-- **Latent Diffusion** & Stable Diffusion
-- Modern architectures: **Diffusion Transformers** & multimodal systems
-- **Adapting** models: prompting → reference → LoRA → fine-tuning
-- Case study: novel-domain synthesis
-- Deployment choices & **responsible use**
-
-
 # Motivation
 
 ## Diffusion in Pixel Space
@@ -28,7 +18,7 @@ $$
 ::: {.fragment}
 Start from random noise, iteratively denoise:
 
-$$\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I}) \rightarrow \vect{x}_{T-1} \rightarrow \cdots \rightarrow \vect{x}_0$$
+$$\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I}) \rightarrow \vect{x}_{T-1} \rightarrow \cdots \rightarrow \vect{x}_0$$
 :::
 
 ::: {.fragment}
@@ -370,31 +360,6 @@ Small adapter, loadable on top of a base model.
 :::
 
 
-## Where LoRA Doesn't Help
-
-::: {.incremental}
-- One-off images
-- General image quality
-- Factual reasoning
-- Precise spatial layout
-- Things solvable with masks, references, or editing
-:::
-
-::: {.fragment}
-> LoRA is no longer the default answer — it's the answer for **persistent specialization**.
-:::
-
-
-## Workflow Cheat Sheet
-
-| Situation | Preferred workflow |
-|---|---|
-| One-off image | prompt + reference + editing |
-| Product in a few scenes | reference + img2img / inpainting |
-| Product / character reused widely | **DreamBooth-LoRA / LoRA** |
-| Company-wide style | **style LoRA** |
-| Specialized domain | LoRA, full fine-tune only if needed |
-
 
 ## Tooling
 
@@ -405,44 +370,6 @@ Small adapter, loadable on top of a base model.
 :::
 
 
-## Full Fine-Tuning
-
-::: {.incremental}
-- Updates many / all parameters
-- Maximum flexibility — but expensive and risky
-- Needs more data, more compute, larger artifacts
-- Justified for medical, satellite, industrial inspection, proprietary domains
-- **Not** the first choice
-:::
-
-
-## Evaluating Adaptation
-
-::: {.incremental}
-- Preserves the subject / product / style?
-- Still responds to different prompts?
-- Overfits to training examples?
-- Reduces diversity?
-- Introduces artifacts?
-- Improvement worth the maintenance cost?
-:::
-
-
-## Comparison Protocol
-
-```text
-fixed prompt suite (defined before training)
-
-  base model
-  vs.
-  prompt + reference workflow
-  vs.
-  LoRA-adapted model
-```
-
-::: {.fragment}
-> Did adaptation solve a **real, repeated** failure mode?
-:::
 
 
 # Case Study: Novel Domains
@@ -455,46 +382,6 @@ fixed prompt suite (defined before training)
 | Solar flares (@ramunno_solar_2024) | conditional / temporal synthesis | implausible flare patterns |
 | Industrial defects | rare-defect generation | synthetic artifacts mismatch real |
 
-
-## Practical Workflow
-
-::: {.incremental}
-1. Define **why** generation is needed
-2. Start with a supervised domain-specific baseline
-3. Use generative models when uncertainty / diversity / augmentation matters
-4. Condition on what matters: images, masks, metadata, time, sensors
-5. Evaluate **utility**, not just realism
-:::
-
-
-## Example: MRI → CT
-
-::: {.incremental}
-- Goal: not pretty CT-like images — **preserve anatomy** for downstream use
-- Collect paired, registered MRI/CT
-- Train supervised translation
-- Evaluate structural accuracy + downstream usefulness
-- Add generative methods only if they clearly help
-:::
-
-::: {.fragment}
-**Physical validity > photorealism.**
-:::
-
-
-## Example: Solar Activity
-
-::: {.incremental}
-- Generate images conditioned on flare class
-- Predict future observations from past frames
-- Simulate flare-related changes
-- Augment with rare-event examples
-- Use temporal info, multi-channel sensors, event labels as conditions
-:::
-
-::: {.fragment}
-Realism is necessary, **not sufficient** — outputs must be *scientifically* meaningful.
-:::
 
 
 # Deployment & Responsible Use

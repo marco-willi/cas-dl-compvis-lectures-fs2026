@@ -11,32 +11,6 @@ $$
 :::
 
 
-## Overview {.center}
-
-Four major generative model families:
-
-- **Autoregressive** models
-- **GANs**
-- **VAEs**
-- **Diffusion** models
-
-Plus: how **conditioning** fits into each.
-
-
-## A Tradeoff Map {.center}
-
-| Family | Sampling | Quality | Coverage | Likelihood |
-|---|---|---|---|---|
-| Autoregressive | slow | high | good | exact |
-| GAN | fast | sharp | risky | none |
-| VAE | fast | blurrier | good | approx (ELBO) |
-| Diffusion | slow (iterative) | SOTA | good | approx |
-
-::: {.fragment}
-**No family wins on every axis.**
-:::
-
-
 # Autoregressive Models
 
 ## Sequential Generation
@@ -72,18 +46,6 @@ Each conditional $p(x_i \mid x_1, \ldots, x_{i-1})$ is modeled by a neural netwo
 4. … continue until all pixels are generated
 :::
 
-
-## Examples
-
-::: {.incremental}
-- **PixelCNN** (@oord_conditional_2016) — masked convolutions
-- **Parti** (@yu_scaling_2022) — transformer over discrete image tokens
-- **OpenAI 4o image generation** — described as autoregressive + natively multimodal
-:::
-
-::: {.fragment}
-Modern multimodal systems often *combine* autoregressive reasoning with diffusion-based image generation.
-:::
 
 
 ## Pros & Cons
@@ -180,7 +142,7 @@ Unlike standard autoencoders, the latent space is **structured probabilistically
 ![]({{< meta params.images_path >}}vae_illustration2.png){.r-stretch}
 
 ::: {.fragment}
-$$\vect{z} = \vect{\mu} + \vect{\epsilon} \cdot \vect{\sigma}, \qquad \vect{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})$$
+$$\vect{z} = \vect{\mu} + \vect{\epsilon} \cdot \vect{\sigma}, \qquad \vect{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$$
 :::
 
 ::: {.fragment}
@@ -196,7 +158,7 @@ $$\text{ELBO} = \underbrace{\mathbb{E}_{\vect{z} \sim q_{\psi}(\vect{z}|\vect{x}
 
 ::: {.incremental}
 - **Reconstruction** — decoder must recover the input
-- **KL regularization** — pull posterior toward prior $p(\vect{z}) = \mathcal{N}(\mathbf{0}, \mathbfit{I})$
+- **KL regularization** — pull posterior toward prior $p(\vect{z}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$
 - Result: a **smooth, continuous** latent space
 :::
 
@@ -237,7 +199,7 @@ Traversing the latent space → smooth interpolation between faces (@prince_unde
 :::
 
 ::: {.fragment}
-@ho_denoising_2020, @sohl-dickstein_deep_2015 — powers Stable Diffusion and modern T2I systems.
+@ho_denoising_2020, @sohl-dickstein_deep_2015 — powers Stable Diffusion and modern text to image systems.
 :::
 
 
@@ -253,12 +215,12 @@ Gradually add Gaussian noise over $T$ steps (@torralba_foundations_2024). **Fixe
 ## Forward Process
 
 ::: {.fragment}
-$$\vect{x}_t = \sqrt{1 - \beta_t}\, \vect{x}_{t-1} + \sqrt{\beta_t}\, \vect{\epsilon}_t, \qquad \vect{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})$$
+$$\vect{x}_t = \sqrt{1 - \beta_t}\, \vect{x}_{t-1} + \sqrt{\beta_t}\, \vect{\epsilon}_t, \qquad \vect{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$$
 :::
 
 ::: {.incremental}
 - $\beta_t$ — **noise schedule** (linear, cosine, …)
-- $\vect{x}_0$ (clean) → $\vect{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbfit{I})$
+- $\vect{x}_0$ (clean) → $\vect{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbf{I})$
 - Can sample $\vect{x}_t$ **directly from** $\vect{x}_0$ → efficient training over many noise levels
 :::
 
@@ -276,7 +238,7 @@ A neural network learns to gradually remove noise, step by step (@torralba_found
 
 ::: {.fragment}
 Start from pure noise:
-$$\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})$$
+$$\vect{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$$
 :::
 
 ::: {.fragment}

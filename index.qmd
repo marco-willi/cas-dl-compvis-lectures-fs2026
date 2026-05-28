@@ -19,6 +19,7 @@ Hier finden Sie Unterlagen und aktuelle Informationen zum Modul.
 - Convolutional Neural Networks verstehen, implementieren und trainieren können
 - Foundation-Models als Grundlage für viele Vision Tasks verstehen und einsetzten können
 - Bildklassifikation verstehen und systematisch umsetzen können
+- Generative Modelle verstehen und praktische Anwendungen mit modernen Generative AI Modellen umsetzen können
 - Mit Deep Learning Frameworks umgehen und Libraries verwenden können
 - Praktische Anwendung umsetzen, vorstellen und erklären können
 
