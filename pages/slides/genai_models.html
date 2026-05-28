@@ -176,64 +176,6 @@ Marco Willi
 </div>
 
 </section>
-<section id="overview" class="slide level2 center">
-<h2>Overview</h2>
-<p>Four major generative model families:</p>
-<ul>
-<li><strong>Autoregressive</strong> models</li>
-<li><strong>GANs</strong></li>
-<li><strong>VAEs</strong></li>
-<li><strong>Diffusion</strong> models</li>
-</ul>
-<p>Plus: how <strong>conditioning</strong> fits into each.</p>
-</section>
-<section id="a-tradeoff-map" class="slide level2 center">
-<h2>A Tradeoff Map</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Family</th>
-<th>Sampling</th>
-<th>Quality</th>
-<th>Coverage</th>
-<th>Likelihood</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Autoregressive</td>
-<td>slow</td>
-<td>high</td>
-<td>good</td>
-<td>exact</td>
-</tr>
-<tr class="even">
-<td>GAN</td>
-<td>fast</td>
-<td>sharp</td>
-<td>risky</td>
-<td>none</td>
-</tr>
-<tr class="odd">
-<td>VAE</td>
-<td>fast</td>
-<td>blurrier</td>
-<td>good</td>
-<td>approx (ELBO)</td>
-</tr>
-<tr class="even">
-<td>Diffusion</td>
-<td>slow (iterative)</td>
-<td>SOTA</td>
-<td>good</td>
-<td>approx</td>
-</tr>
-</tbody>
-</table>
-<div class="fragment">
-<p><strong>No family wins on every axis.</strong></p>
-</div>
-</section>
 <section>
 <section id="autoregressive-models" class="title-slide slide level1 center">
 <h1>Autoregressive Models</h1>
@@ -268,17 +210,6 @@ Marco Willi
 <li class="fragment">Sample <span class="math inline">\(x_3 \sim p(x_3 \mid x_1, x_2)\)</span></li>
 <li class="fragment">… continue until all pixels are generated</li>
 </ol>
-</section>
-<section id="examples" class="slide level2">
-<h2>Examples</h2>
-<ul>
-<li class="fragment"><strong>PixelCNN</strong> (<span class="citation" data-cites="oord_conditional_2016">Oord et al. (<a href="#/references" role="doc-biblioref" onclick="">2016</a>)</span>) — masked convolutions</li>
-<li class="fragment"><strong>Parti</strong> (<span class="citation" data-cites="yu_scaling_2022">Yu et al. (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span>) — transformer over discrete image tokens</li>
-<li class="fragment"><strong>OpenAI 4o image generation</strong> — described as autoregressive + natively multimodal</li>
-</ul>
-<div class="fragment">
-<p>Modern multimodal systems often <em>combine</em> autoregressive reasoning with diffusion-based image generation.</p>
-</div>
 </section>
 <section id="pros-cons" class="slide level2">
 <h2>Pros &amp; Cons</h2>
@@ -370,7 +301,7 @@ Marco Willi
 <h2>Reparameterization Trick</h2>
 <img data-src="../../assets/images/genai_models/vae_illustration2.png" class="r-stretch">
 <div class="fragment">
-<p><span class="math display">\[\mathbf{z} = \mathbf{\mu} + \mathbf{\epsilon} \cdot \mathbf{\sigma}, \qquad \mathbf{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})\]</span></p>
+<p><span class="math display">\[\mathbf{z} = \mathbf{\mu} + \mathbf{\epsilon} \cdot \mathbf{\sigma}, \qquad \mathbf{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\]</span></p>
 </div>
 <div class="fragment">
 <p>Lets gradients flow through stochastic sampling.</p>
@@ -383,7 +314,7 @@ Marco Willi
 </div>
 <ul>
 <li class="fragment"><strong>Reconstruction</strong> — decoder must recover the input</li>
-<li class="fragment"><strong>KL regularization</strong> — pull posterior toward prior <span class="math inline">\(p(\mathbf{z}) = \mathcal{N}(\mathbf{0}, \mathbfit{I})\)</span></li>
+<li class="fragment"><strong>KL regularization</strong> — pull posterior toward prior <span class="math inline">\(p(\mathbf{z}) = \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span></li>
 <li class="fragment">Result: a <strong>smooth, continuous</strong> latent space</li>
 </ul>
 </section>
@@ -423,7 +354,7 @@ Marco Willi
 <p><strong>Learn to reverse a gradual noising process.</strong></p>
 </div>
 <div class="fragment">
-<p><span class="citation" data-cites="ho_denoising_2020">Ho et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>, <span class="citation" data-cites="sohl-dickstein_deep_2015">Sohl-Dickstein et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> — powers Stable Diffusion and modern T2I systems.</p>
+<p><span class="citation" data-cites="ho_denoising_2020">Ho et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>, <span class="citation" data-cites="sohl-dickstein_deep_2015">Sohl-Dickstein et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> — powers Stable Diffusion and modern text to image systems.</p>
 </div>
 </section>
 <section id="forward-diffusion" class="slide level2">
@@ -436,11 +367,11 @@ Marco Willi
 <section id="forward-process" class="slide level2">
 <h2>Forward Process</h2>
 <div class="fragment">
-<p><span class="math display">\[\mathbf{x}_t = \sqrt{1 - \beta_t}\, \mathbf{x}_{t-1} + \sqrt{\beta_t}\, \mathbf{\epsilon}_t, \qquad \mathbf{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})\]</span></p>
+<p><span class="math display">\[\mathbf{x}_t = \sqrt{1 - \beta_t}\, \mathbf{x}_{t-1} + \sqrt{\beta_t}\, \mathbf{\epsilon}_t, \qquad \mathbf{\epsilon}_t \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\]</span></p>
 </div>
 <ul>
 <li class="fragment"><span class="math inline">\(\beta_t\)</span> — <strong>noise schedule</strong> (linear, cosine, …)</li>
-<li class="fragment"><span class="math inline">\(\mathbf{x}_0\)</span> (clean) → <span class="math inline">\(\mathbf{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbfit{I})\)</span></li>
+<li class="fragment"><span class="math inline">\(\mathbf{x}_0\)</span> (clean) → <span class="math inline">\(\mathbf{x}_T \approx \mathcal{N}(\mathbf{0}, \mathbf{I})\)</span></li>
 <li class="fragment">Can sample <span class="math inline">\(\mathbf{x}_t\)</span> <strong>directly from</strong> <span class="math inline">\(\mathbf{x}_0\)</span> → efficient training over many noise levels</li>
 </ul>
 </section>
@@ -454,7 +385,7 @@ Marco Willi
 <section id="reverse-process" class="slide level2">
 <h2>Reverse Process</h2>
 <div class="fragment">
-<p>Start from pure noise: <span class="math display">\[\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I})\]</span></p>
+<p>Start from pure noise: <span class="math display">\[\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\]</span></p>
 </div>
 <div class="fragment">
 <p>Iteratively denoise to a realistic sample <span class="math inline">\(\mathbf{x}_0\)</span>.</p>
@@ -588,9 +519,6 @@ Goodfellow, Ian J., Jean Pouget-Abadie, Mehdi Mirza, et al. 2014. <em>Generative
 <div id="ref-ho_denoising_2020" class="csl-entry" role="listitem">
 Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <em>Denoising <span>Diffusion</span> <span>Probabilistic</span> <span>Models</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2006.11239">https://doi.org/10.48550/arXiv.2006.11239</a>.
 </div>
-<div id="ref-oord_conditional_2016" class="csl-entry" role="listitem">
-Oord, Aaron van den, Nal Kalchbrenner, Oriol Vinyals, Lasse Espeholt, Alex Graves, and Koray Kavukcuoglu. 2016. <em>Conditional <span>Image</span> <span>Generation</span> with <span>PixelCNN</span> <span>Decoders</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1606.05328">https://doi.org/10.48550/arXiv.1606.05328</a>.
-</div>
 <div id="ref-prince_understanding_2023" class="csl-entry" role="listitem">
 Prince, Simon J. D. 2023. <em>Understanding <span>Deep</span> <span>Learning</span></em>. MIT Press. <a href="https://udlbook.github.io/udlbook/">https://udlbook.github.io/udlbook/</a>.
 </div>
@@ -599,9 +527,6 @@ Sohl-Dickstein, Jascha, Eric A. Weiss, Niru Maheswaranathan, and Surya Ganguli. 
 </div>
 <div id="ref-torralba_foundations_2024" class="csl-entry" role="listitem">
 Torralba, A., P. Isola, and W. T. Freeman. 2024. <em>Foundations of <span>Computer</span> <span>Vision</span></em>. Adaptive <span>Computation</span> and <span>Machine</span> <span>Learning</span> Series. MIT Press. <a href="https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/">https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/</a>.
-</div>
-<div id="ref-yu_scaling_2022" class="csl-entry" role="listitem">
-Yu, Jiahui, Yuanzhong Xu, Jing Yu Koh, et al. 2022. <em>Scaling <span>Autoregressive</span> <span>Models</span> for <span>Content</span>-<span>Rich</span> <span>Text</span>-to-<span>Image</span> <span>Generation</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2206.10789">https://doi.org/10.48550/arXiv.2206.10789</a>.
 </div>
 </div>
 </div>

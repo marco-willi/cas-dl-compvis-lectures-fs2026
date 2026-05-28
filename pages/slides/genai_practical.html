@@ -242,17 +242,6 @@ Marco Willi
 </div>
 
 </section>
-<section id="overview" class="slide level2 center">
-<h2>Overview</h2>
-<ul>
-<li>Why pixel-space diffusion is too expensive</li>
-<li><strong>Latent Diffusion</strong> &amp; Stable Diffusion</li>
-<li>Modern architectures: <strong>Diffusion Transformers</strong> &amp; multimodal systems</li>
-<li><strong>Adapting</strong> models: prompting → reference → LoRA → fine-tuning</li>
-<li>Case study: novel-domain synthesis</li>
-<li>Deployment choices &amp; <strong>responsible use</strong></li>
-</ul>
-</section>
 <section>
 <section id="motivation" class="title-slide slide level1 center">
 <h1>Motivation</h1>
@@ -262,7 +251,7 @@ Marco Willi
 <h2>Diffusion in Pixel Space</h2>
 <div class="fragment">
 <p>Start from random noise, iteratively denoise:</p>
-<p><span class="math display">\[\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbfit{I}) \rightarrow \mathbf{x}_{T-1} \rightarrow \cdots \rightarrow \mathbf{x}_0\]</span></p>
+<p><span class="math display">\[\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I}) \rightarrow \mathbf{x}_{T-1} \rightarrow \cdots \rightarrow \mathbf{x}_0\]</span></p>
 </div>
 <div class="fragment">
 <blockquote>
@@ -662,54 +651,6 @@ Marco Willi
 <li class="fragment">Many lightweight variants from one base</li>
 </ul>
 </section>
-<section id="where-lora-doesnt-help" class="slide level2">
-<h2>Where LoRA Doesn’t Help</h2>
-<ul>
-<li class="fragment">One-off images</li>
-<li class="fragment">General image quality</li>
-<li class="fragment">Factual reasoning</li>
-<li class="fragment">Precise spatial layout</li>
-<li class="fragment">Things solvable with masks, references, or editing</li>
-</ul>
-<div class="fragment">
-<blockquote>
-<p>LoRA is no longer the default answer — it’s the answer for <strong>persistent specialization</strong>.</p>
-</blockquote>
-</div>
-</section>
-<section id="workflow-cheat-sheet" class="slide level2">
-<h2>Workflow Cheat Sheet</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Situation</th>
-<th>Preferred workflow</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>One-off image</td>
-<td>prompt + reference + editing</td>
-</tr>
-<tr class="even">
-<td>Product in a few scenes</td>
-<td>reference + img2img / inpainting</td>
-</tr>
-<tr class="odd">
-<td>Product / character reused widely</td>
-<td><strong>DreamBooth-LoRA / LoRA</strong></td>
-</tr>
-<tr class="even">
-<td>Company-wide style</td>
-<td><strong>style LoRA</strong></td>
-</tr>
-<tr class="odd">
-<td>Specialized domain</td>
-<td>LoRA, full fine-tune only if needed</td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="tooling" class="slide level2">
 <h2>Tooling</h2>
 <ul>
@@ -717,42 +658,6 @@ Marco Willi
 <li class="fragment"><strong>HF FLUX QLoRA</strong> — quantized LoRA example</li>
 <li class="fragment"><strong>Replicate</strong> — hosted FLUX fine-tuning, UI or API</li>
 </ul>
-</section>
-<section id="full-fine-tuning" class="slide level2">
-<h2>Full Fine-Tuning</h2>
-<ul>
-<li class="fragment">Updates many / all parameters</li>
-<li class="fragment">Maximum flexibility — but expensive and risky</li>
-<li class="fragment">Needs more data, more compute, larger artifacts</li>
-<li class="fragment">Justified for medical, satellite, industrial inspection, proprietary domains</li>
-<li class="fragment"><strong>Not</strong> the first choice</li>
-</ul>
-</section>
-<section id="evaluating-adaptation" class="slide level2">
-<h2>Evaluating Adaptation</h2>
-<ul>
-<li class="fragment">Preserves the subject / product / style?</li>
-<li class="fragment">Still responds to different prompts?</li>
-<li class="fragment">Overfits to training examples?</li>
-<li class="fragment">Reduces diversity?</li>
-<li class="fragment">Introduces artifacts?</li>
-<li class="fragment">Improvement worth the maintenance cost?</li>
-</ul>
-</section>
-<section id="comparison-protocol" class="slide level2">
-<h2>Comparison Protocol</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb3-1"><a></a>fixed prompt suite (defined before training)</span>
-<span id="cb3-2"><a></a></span>
-<span id="cb3-3"><a></a>  base model</span>
-<span id="cb3-4"><a></a>  vs.</span>
-<span id="cb3-5"><a></a>  prompt + reference workflow</span>
-<span id="cb3-6"><a></a>  vs.</span>
-<span id="cb3-7"><a></a>  LoRA-adapted model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="fragment">
-<blockquote>
-<p>Did adaptation solve a <strong>real, repeated</strong> failure mode?</p>
-</blockquote>
-</div>
 </section></section>
 <section>
 <section id="case-study-novel-domains" class="title-slide slide level1 center">
@@ -792,42 +697,6 @@ Marco Willi
 </tr>
 </tbody>
 </table>
-</section>
-<section id="practical-workflow" class="slide level2">
-<h2>Practical Workflow</h2>
-<ol type="1">
-<li class="fragment">Define <strong>why</strong> generation is needed</li>
-<li class="fragment">Start with a supervised domain-specific baseline</li>
-<li class="fragment">Use generative models when uncertainty / diversity / augmentation matters</li>
-<li class="fragment">Condition on what matters: images, masks, metadata, time, sensors</li>
-<li class="fragment">Evaluate <strong>utility</strong>, not just realism</li>
-</ol>
-</section>
-<section id="example-mri-ct" class="slide level2">
-<h2>Example: MRI → CT</h2>
-<ul>
-<li class="fragment">Goal: not pretty CT-like images — <strong>preserve anatomy</strong> for downstream use</li>
-<li class="fragment">Collect paired, registered MRI/CT</li>
-<li class="fragment">Train supervised translation</li>
-<li class="fragment">Evaluate structural accuracy + downstream usefulness</li>
-<li class="fragment">Add generative methods only if they clearly help</li>
-</ul>
-<div class="fragment">
-<p><strong>Physical validity &gt; photorealism.</strong></p>
-</div>
-</section>
-<section id="example-solar-activity" class="slide level2">
-<h2>Example: Solar Activity</h2>
-<ul>
-<li class="fragment">Generate images conditioned on flare class</li>
-<li class="fragment">Predict future observations from past frames</li>
-<li class="fragment">Simulate flare-related changes</li>
-<li class="fragment">Augment with rare-event examples</li>
-<li class="fragment">Use temporal info, multi-channel sensors, event labels as conditions</li>
-</ul>
-<div class="fragment">
-<p>Realism is necessary, <strong>not sufficient</strong> — outputs must be <em>scientifically</em> meaningful.</p>
-</div>
 </section></section>
 <section>
 <section id="deployment-responsible-use" class="title-slide slide level1 center">
