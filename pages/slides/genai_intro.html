@@ -456,6 +456,21 @@ Marco Willi
 <li><span class="math inline">\(\mathbf{z}\)</span> → <strong>how it varies</strong> (diversity)</li>
 </ul>
 </div>
+<div class="fragment">
+<div class="quarto-layout-panel" data-layout-ncol="3">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img data-src="../../assets/images/genai/elephant.jpg"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img data-src="../../assets/images/genai/elephant_edit_lion_nano-banana-2.jpg"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<p><img data-src="../../assets/images/genai/elephant_edit_dawn_nano-banana-2.jpg"></p>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="quiz-latent-variables" class="slide level2 center">
 <h2>Quiz: Latent Variables</h2>
@@ -655,40 +670,36 @@ Marco Willi
 </section>
 <section id="creative-vs.-faithful" class="slide level2">
 <h2>Creative vs.&nbsp;Faithful</h2>
+<style>
+.creative-faithful-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.0rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.creative-faithful-images img {
+  max-width: 100%;
+  max-height: 32vh;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+}
+</style>
 <ul>
-<li class="fragment"><strong>Creative</strong>: unconditional, text-to-image — needs diversity, plausibility</li>
-<li class="fragment"><strong>Faithful</strong>: inpainting, super-res, translation, editing — preserve identity, geometry, layout</li>
+<li class="fragment"><strong>Creative</strong>: unconditional, text-to-image — diversity, plausibility</li>
+<li class="fragment"><strong>Faithful</strong>: inpainting, super-res, translation, editing — identity, geometry, layout</li>
 <li class="fragment">Most real systems need <strong>both</strong></li>
 </ul>
-</section>
-<section id="unconditional-vs.-conditional-in-practice" class="slide level2">
-<h2>Unconditional vs.&nbsp;Conditional in Practice</h2>
-<div class="quarto-layout-panel" data-layout-nrow="2">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img data-src="../../assets/images/genai/random_person1.jpg"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img data-src="../../assets/images/genai/random_person2.jpg"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img data-src="../../assets/images/genai/random_person3.jpg"></p>
-</div>
-</div>
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img data-src="../../assets/images/genai/curly_person1.jpg"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img data-src="../../assets/images/genai/curly_person2.jpg"></p>
-</div>
-<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
-<p><img data-src="../../assets/images/genai/curly_person3.jpg"></p>
-</div>
-</div>
-</div>
 <div class="fragment">
-<p>Top: unconditional. Bottom: conditioned on <em>“young person with glasses and curly hair”</em>.</p>
+<div class="creative-faithful-images">
+<p><img data-src="../../assets/images/genai/monkey_toy.webp"></p>
+<p><img data-src="../../assets/images/genai/monkey_toy_jungle_nano-banana-2.jpg"></p>
+</div>
+<div class="smaller">
+<p><em>Prompt: Create an image where this object is shown dancing in the jungle with a banana in one hand and a shampoo in the other hand.</em></p>
+</div>
 </div>
 </section></section>
 <section>
