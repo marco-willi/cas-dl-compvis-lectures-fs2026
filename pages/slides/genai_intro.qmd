@@ -279,6 +279,22 @@ $$\hat{\vect{x}} = g_{\theta}(\vect{y}, \vect{z}), \qquad \vect{z} \sim \mathcal
 - $\vect{z}$ → **how it varies** (diversity)
 :::
 
+::: {.fragment}
+::: {layout-ncol=3}
+
+![]({{< meta params.images_path >}}elephant.jpg)
+
+![]({{< meta params.images_path >}}elephant_edit_lion_nano-banana-2.jpg)
+
+
+![]({{< meta params.images_path >}}elephant_edit_dawn_nano-banana-2.jpg)
+
+:::
+:::
+
+
+
+
 
 ## Quiz: Latent Variables {.center}
 
@@ -386,36 +402,50 @@ $\vect{c}$ specifies what should be generated, preserved, completed, enhanced, o
 
 :::
 
+
+
+
 ## Creative vs. Faithful
 
+<style>
+.creative-faithful-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.0rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.creative-faithful-images img {
+  max-width: 100%;
+  max-height: 32vh;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+}
+</style>
+
+
 ::: {.incremental}
-- **Creative**: unconditional, text-to-image — needs diversity, plausibility
-- **Faithful**: inpainting, super-res, translation, editing — preserve identity, geometry, layout
+- **Creative**: unconditional, text-to-image — diversity, plausibility
+- **Faithful**: inpainting, super-res, translation, editing — identity, geometry, layout
 - Most real systems need **both**
 :::
 
-
-## Unconditional vs. Conditional in Practice
-
-::: {layout-nrow=2}
-
-![]({{< meta params.images_path >}}random_person1.jpg){height=45%}
-
-![]({{< meta params.images_path >}}random_person2.jpg){height=45%}
-
-![]({{< meta params.images_path >}}random_person3.jpg){height=45%}
-
-![]({{< meta params.images_path >}}curly_person1.jpg){height=45%}
-
-![]({{< meta params.images_path >}}curly_person2.jpg){height=45%}
-
-![]({{< meta params.images_path >}}curly_person3.jpg){height=45%}
-
-:::
-
 ::: {.fragment}
-Top: unconditional. Bottom: conditioned on *"young person with glasses and curly hair"*.
+
+::: {.creative-faithful-images}
+![]({{< meta params.images_path >}}monkey_toy.webp)
+
+![]({{< meta params.images_path >}}monkey_toy_jungle_nano-banana-2.jpg)
 :::
+
+::: {.smaller}
+*Prompt: Create an image where this object is shown dancing in the jungle with a banana in one hand and a shampoo in the other hand.*
+:::
+
+:::
+
 
 
 # Learning Generative Models
