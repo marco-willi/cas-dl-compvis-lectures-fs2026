@@ -25,7 +25,7 @@ Hier finden Sie Unterlagen und aktuelle Informationen zum Modul.
 
 ## Inhalte
 
-### Tag 1 — Grundlagen CNNs und Bildklassifikation
+### Tag 1: Grundlagen CNNs und Bildklassifikation
 
 | Zeit | Thema |
 |------|--------|
@@ -43,7 +43,7 @@ Hier finden Sie Unterlagen und aktuelle Informationen zum Modul.
 | 16:00 - 16:30 | Recap and Discussion of the Exercise |
 
 
-### Tag 2 — Representations, Retrieval und moderne Backbones
+### Tag 2: Representations, Retrieval und moderne Backbones
 
 | Zeit | Thema |
 |------|--------|
@@ -61,7 +61,7 @@ Hier finden Sie Unterlagen und aktuelle Informationen zum Modul.
 | 16:15 - 16:30 | Finish |
 
 
-### Tag 3 -  Generative AI
+### Tag 3: Generative AI
 
 | Zeit | Thema |
 |------|--------|
@@ -72,7 +72,7 @@ Hier finden Sie Unterlagen und aktuelle Informationen zum Modul.
 |11:00 - 11:30 	| Übung Generative Models |
 |11:30 - 12:00 	| Generative Models: Part 2 |
 |12:00 - 13:00	| Mittagspause |
-|13:00 - 14:00 	| Moderen Generative Models: Part 1 |
+|13:00 - 14:00 	| Moderne Generative Models: Part 1 |
 |14:00  - 15:00	| Übung: Vortrainerte Generative Modelle und APIs |
-|15:00 - 16:00 	| Moderen Generative Models: Part 2 |
+|15:00 - 16:00 	| Moderne Generative Models: Part 2 |
 |16:00  - 16:30	| Finish |

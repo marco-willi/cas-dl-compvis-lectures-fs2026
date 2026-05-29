@@ -27,13 +27,13 @@ After this lecture you should be able to:
 
 ::: {.callout-tip title="TLDR Recap" collapse="true"}
 
-**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: **latent variables** $\vect{z}$ provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize $p_{\theta}(\vect{x})$ for training data. Models can generate **unconditionally** (free sampling) or **conditionally**, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties — sampling efficiency, output quality, coverage, and likelihood computation — are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, IS/FID/KID, human preference studies, and task-specific metrics.
+**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: **latent variables** $\vect{z}$ provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize $p_{\theta}(\vect{x})$ for training data. Models can generate **unconditionally** (free sampling) or **conditionally**, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties: sampling efficiency, output quality, coverage, and likelihood computation, are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, distributional metrics, human preference studies, and task-specific metrics.
 
 :::
 
 ## Motivation
 
-Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT @openai_introducing_2022 kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see @fig-genai-intro-receipt).
+Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT [see @openai_introducing_2022] kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see @fig-genai-intro-receipt).
 
 ::: {#fig-genai-intro-receipt}
 
@@ -73,7 +73,7 @@ Companies such as Canva have integrated generative models into their design tool
 [Source](https://www.canva.com/)
 :::
 
-AI-generated content in advertisements seems particularly prevalent. Suspected content is shown in @fig-genai-intro-advertisement.
+AI-generated content in advertisements seems particularly prevalent. Suspected AI-generated content is shown in @fig-genai-intro-advertisement.
 
 ::: {#fig-genai-intro-advertisement layout-nrow=2}
 
@@ -119,7 +119,7 @@ Not all generative models create images from scratch. Image super resolution is 
 
 ![]({{< meta params.images_path >}}intro_superres_images.png)
 
-Super-resolution example
+From @ledig_photo-realistic_2017
 :::
 
 The sampe principle is used in the gaming industry. Interestingly, up-scaling images using neural networks is cheaper than computing images natively in such high resolutions (see @fig-genai-intro-nvidia-dlss).
