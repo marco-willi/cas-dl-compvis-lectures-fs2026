@@ -548,13 +548,13 @@ window.Quarto = {
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Generative models</strong> create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: <strong>latent variables</strong> <span class="math inline">\(\mathbf{z}\)</span> provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> for training data. Models can generate <strong>unconditionally</strong> (free sampling) or <strong>conditionally</strong>, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties — sampling efficiency, output quality, coverage, and likelihood computation — are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, IS/FID/KID, human preference studies, and task-specific metrics.</p>
+<p><strong>Generative models</strong> create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: <strong>latent variables</strong> <span class="math inline">\(\mathbf{z}\)</span> provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize <span class="math inline">\(p_{\theta}(\mathbf{x})\)</span> for training data. Models can generate <strong>unconditionally</strong> (free sampling) or <strong>conditionally</strong>, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties: sampling efficiency, output quality, coverage, and likelihood computation, are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, distributional metrics, human preference studies, and task-specific metrics.</p>
 </div>
 </div>
 </div>
 <section id="motivation" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">1</span> Motivation</h2>
-<p>Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT <span class="citation" data-cites="openai_introducing_2022">OpenAI (<a href="#ref-openai_introducing_2022" role="doc-biblioref">2022</a>)</span> kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see <a href="#fig-genai-intro-receipt" class="quarto-xref">Figure&nbsp;1</a>).</p>
+<p>Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT <span class="citation" data-cites="openai_introducing_2022">(see <a href="#ref-openai_introducing_2022" role="doc-biblioref">OpenAI 2022</a>)</span> kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see <a href="#fig-genai-intro-receipt" class="quarto-xref">Figure&nbsp;1</a>).</p>
 <div id="fig-genai-intro-receipt" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genai-intro-receipt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -605,7 +605,7 @@ Figure&nbsp;4: <a href="https://www.canva.com/">Source</a>
 </figcaption>
 </figure>
 </div>
-<p>AI-generated content in advertisements seems particularly prevalent. Suspected content is shown in <a href="#fig-genai-intro-advertisement" class="quarto-xref">Figure&nbsp;5</a>.</p>
+<p>AI-generated content in advertisements seems particularly prevalent. Suspected AI-generated content is shown in <a href="#fig-genai-intro-advertisement" class="quarto-xref">Figure&nbsp;5</a>.</p>
 <div id="fig-genai-intro-advertisement" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-genai-intro-advertisement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -659,7 +659,7 @@ Figure&nbsp;6: <a href="https://www.midjourney.com">Source</a>
 <img src="../../assets/images/genai/intro_superres_images.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-genai-intro-superres-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Super-resolution example
+Figure&nbsp;7: From <span class="citation" data-cites="ledig_photo-realistic_2017">Ledig et al. (<a href="#ref-ledig_photo-realistic_2017" role="doc-biblioref">2017</a>)</span>
 </figcaption>
 </figure>
 </div>
@@ -1440,6 +1440,9 @@ Karras, Tero, Samuli Laine, and Timo Aila. 2019. <em>A <span>Style</span>-<span>
 <div id="ref-karras_analyzing_2020" class="csl-entry" role="listitem">
 Karras, Tero, Samuli Laine, Miika Aittala, Janne Hellsten, Jaakko Lehtinen, and Timo Aila. 2020. <em>Analyzing and <span>Improving</span> the <span>Image</span> <span>Quality</span> of <span>StyleGAN</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1912.04958">https://doi.org/10.48550/arXiv.1912.04958</a>.
 </div>
+<div id="ref-ledig_photo-realistic_2017" class="csl-entry" role="listitem">
+Ledig, Christian, Lucas Theis, Ferenc Huszar, et al. 2017. <em>Photo-<span>Realistic</span> <span>Single</span> <span>Image</span> <span>Super</span>-<span>Resolution</span> <span>Using</span> a <span>Generative</span> <span>Adversarial</span> <span>Network</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1609.04802">https://doi.org/10.48550/arXiv.1609.04802</a>.
+</div>
 <div id="ref-liu_coupled_2016" class="csl-entry" role="listitem">
 Liu, Ming-Yu, and Oncel Tuzel. 2016. <em>Coupled <span>Generative</span> <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1606.07536">https://doi.org/10.48550/arXiv.1606.07536</a>.
 </div>
@@ -1964,13 +1967,13 @@ Schärer, Florian. 2023. <span>“Improved <span>Evaluation</span> and <span>Ass
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="TLDR Recap" collapse="true"}</span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: **latent variables** $\vect{z}$ provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize $p_{\theta}(\vect{x})$ for training data. Models can generate **unconditionally** (free sampling) or **conditionally**, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties — sampling efficiency, output quality, coverage, and likelihood computation — are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, IS/FID/KID, human preference studies, and task-specific metrics.</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>**Generative models** create synthetic data that resembles real data. Unlike classification (many-to-one), generation is one-to-many: **latent variables** $\vect{z}$ provide the diversity that allows one condition to map to many different outputs. The formal goal is to maximize $p_{\theta}(\vect{x})$ for training data. Models can generate **unconditionally** (free sampling) or **conditionally**, guided by a text prompt, class label, mask, reference image, or other input. Desirable properties: sampling efficiency, output quality, coverage, and likelihood computation, are in tension; no single model family achieves all of them simultaneously. Evaluation is challenging because many outputs can be valid: useful methods include likelihood, distributional metrics, human preference studies, and task-specific metrics.</span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Motivation</span></span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT @openai_introducing_2022 kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see @fig-genai-intro-receipt).</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>Generative AI has had a profound effect on many aspects of our society. Particularly, the release of ChatGPT <span class="co">[</span><span class="ot">see @openai_introducing_2022</span><span class="co">]</span> kicked off a new era of AI applications, focused on generating natural language. Recently, the quality of image generative models has made significant leaps: Nowadays, it is difficult to distinguish between real and synthetic images (see @fig-genai-intro-receipt).</span>
 <span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-receipt}</span>
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
@@ -2010,7 +2013,7 @@ Schärer, Florian. 2023. <span>“Improved <span>Evaluation</span> and <span>Ass
 <span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Source</span><span class="co">](https://www.canva.com/)</span></span>
 <span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>AI-generated content in advertisements seems particularly prevalent. Suspected content is shown in @fig-genai-intro-advertisement.</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>AI-generated content in advertisements seems particularly prevalent. Suspected AI-generated content is shown in @fig-genai-intro-advertisement.</span>
 <span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>::: {#fig-genai-intro-advertisement layout-nrow=2}</span>
 <span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
@@ -2056,7 +2059,7 @@ Schärer, Florian. 2023. <span>“Improved <span>Evaluation</span> and <span>Ass
 <span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a><span class="al">![]({{&lt; meta params.images_path &gt;}}intro_superres_images.png)</span></span>
 <span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>Super-resolution example</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>From @ledig_photo-realistic_2017</span>
 <span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>The sampe principle is used in the gaming industry. Interestingly, up-scaling images using neural networks is cheaper than computing images natively in such high resolutions (see @fig-genai-intro-nvidia-dlss).</span>
