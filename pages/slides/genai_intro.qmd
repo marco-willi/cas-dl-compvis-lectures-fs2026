@@ -11,77 +11,6 @@ $$
 :::
 
 
-# Quiz: Real or Fake?
-
-## Can You Spot the Real One? {.center}
-
-<style>
-.real-fake-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
-  align-items: center;
-}
-
-.real-fake-grid figure {
-  margin: 0;
-  text-align: center;
-}
-
-.real-fake-grid img {
-  max-width: 100%;
-  max-height: 55vh;
-  object-fit: contain;
-}
-
-.real-fake-grid figcaption {
-  font-size: 0.8em;
-  margin-top: 0.25rem;
-}
-</style>
-
-::: {.panel-tabset}
-
-### Set 1
-
-::: {.real-fake-grid}
-
-![A]({{< meta params.images_path >}}real_vs_fake/image1/albert-dera-ILip77SbmOE-unsplash.jpg)
-
-![B]({{< meta params.images_path >}}real_vs_fake/image1/Gemini_Generated_Image_xmdey6xmdey6xmde.png)
-
-![C]({{< meta params.images_path >}}real_vs_fake/image1/ChatGPT%20Image%20May%2022,%202026,%2010_32_18%20PM.png)
-
-:::
-
-
-### Set 2
-
-::: {.real-fake-grid}
-
-![A]({{< meta params.images_path >}}real_vs_fake/image2/Gemini_Generated_Image_vr6skcvr6skcvr6s.png)
-
-![B]({{< meta params.images_path >}}real_vs_fake/image2/peter-noah-58qVxGi7slU-unsplash.jpg)
-
-![C]({{< meta params.images_path >}}real_vs_fake/image2/ChatGPT%20Image%20May%2022,%202026,%2010_39_35%20PM.png)
-
-:::
-
-
-### Set 3
-
-::: {.real-fake-grid}
-
-![A]({{< meta params.images_path >}}real_vs_fake/image4/ChatGPT%20Image%20May%2022,%202026,%2010_44_43%20PM.png)
-
-![B]({{< meta params.images_path >}}real_vs_fake/image4/rayul-_M6gy9oHgII-unsplash.jpg)
-
-![C]({{< meta params.images_path >}}real_vs_fake/image4/Gemini_Generated_Image_uylc0muylc0muylc.png)
-
-:::
-
-:::
-
 # Motivation
 
 ## Can You Tell This Is Fake?
@@ -370,40 +299,6 @@ $\vect{c}$ specifies what should be generated, preserved, completed, enhanced, o
 | Video | prompt / frames | clips, motion |
 
 
-## Quiz: Match Task and Condition {.center}
-
-::: {.columns}
-
-::: {.column width="55%"}
-**Tasks**
-
-| # | Task |
-|---:|---|
-| 1 | Super-resolution |
-| 2 | Inpainting |
-| 3 | MRI → CT |
-| 4 | Text-to-image |
-| 5 | Product image from reference |
-| 6 | Image outpainting |
-:::
-
-::: {.column width="45%"}
-**Conditions**
-
-| | |
-|---|---|
-| A | image + mask |
-| B | low-res image |
-| C | text prompt |
-| D | source MRI image |
-| E | reference image |
-| F | image + extended canvas |
-:::
-
-:::
-
-
-
 
 ## Creative vs. Faithful
 
@@ -525,13 +420,6 @@ To **generate**, we additionally need a sampling mechanism.
 
 
 # Desirable Properties
-
-## No Free Lunch {.center}
-
-::: {.r-fit-text}
-**No single model achieves all desirable properties simultaneously.**
-:::
-
 
 ## 1. Efficient Sampling
 
@@ -697,20 +585,6 @@ A generated image can look realistic but be scientifically wrong.
 :::
 
 
-## Summary: No Single Metric
-
-| Aspect | Example method |
-|---|---|
-| realism / fidelity | human judgement, FID, KID |
-| diversity / coverage | distribution metrics, class coverage |
-| likelihood | test-set log-likelihood (if available) |
-| prompt adherence | CLIP-based scores, human judgement |
-| input fidelity | reconstruction / preservation metrics |
-| downstream utility | model trained on synthetic data |
-
-::: {.fragment}
-The right evaluation **depends on the task.**
-:::
 
 
 # References

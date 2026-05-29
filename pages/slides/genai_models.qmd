@@ -95,7 +95,7 @@ $$\min_{g} \max_{d} \mathbb{E}_{\vect{x} \sim p_{\text{data}}}[\log d(\vect{x})]
 ![]({{< meta params.images_path >}}gan_learning.png){.r-stretch}
 
 ::: {.fragment}
-Generator distribution (green) moves toward real data (black dots), discriminator boundary (blue) adapts (@foster_generative_2023).
+Generator distribution tries to fool discriminator, while discriminator must distinguish real from fake (@foster_generative_2023).
 :::
 
 
@@ -104,7 +104,7 @@ Generator distribution (green) moves toward real data (black dots), discriminato
 ::: {.fragment}
 **Pros**
 
-- Fast sampling — one forward pass
+- Fast sampling, one forward pass
 - Can produce sharp images
 - Historically pivotal for image generation
 :::
@@ -113,7 +113,7 @@ Generator distribution (green) moves toward real data (black dots), discriminato
 **Cons**
 
 - Training can be unstable
-- **Mode collapse** — limited variety
+- **Mode collapse**, limited variety
 - No direct likelihood
 - Modern text-to-image systems are rarely pure GANs
 :::
@@ -191,16 +191,6 @@ Traversing the latent space → smooth interpolation between faces (@prince_unde
 
 
 # Diffusion Models
-
-## Core Idea {.center}
-
-::: {.r-fit-text}
-**Learn to reverse a gradual noising process.**
-:::
-
-::: {.fragment}
-@ho_denoising_2020, @sohl-dickstein_deep_2015 — powers Stable Diffusion and modern text to image systems.
-:::
 
 
 ## Forward Diffusion
