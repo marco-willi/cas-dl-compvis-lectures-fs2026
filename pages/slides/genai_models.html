@@ -256,7 +256,7 @@ Marco Willi
 <h2>GAN Learning Process</h2>
 <img data-src="../../assets/images/genai_models/gan_learning.png" class="r-stretch">
 <div class="fragment">
-<p>Generator distribution (green) moves toward real data (black dots), discriminator boundary (blue) adapts (<span class="citation" data-cites="foster_generative_2023">Foster (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
+<p>Generator distribution tries to fool discriminator, while discriminator must distinguish real from fake (<span class="citation" data-cites="foster_generative_2023">Foster (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span>).</p>
 </div>
 </section>
 <section id="pros-cons-1" class="slide level2">
@@ -264,7 +264,7 @@ Marco Willi
 <div class="fragment">
 <p><strong>Pros</strong></p>
 <ul>
-<li>Fast sampling — one forward pass</li>
+<li>Fast sampling, one forward pass</li>
 <li>Can produce sharp images</li>
 <li>Historically pivotal for image generation</li>
 </ul>
@@ -273,7 +273,7 @@ Marco Willi
 <p><strong>Cons</strong></p>
 <ul>
 <li>Training can be unstable</li>
-<li><strong>Mode collapse</strong> — limited variety</li>
+<li><strong>Mode collapse</strong>, limited variety</li>
 <li>No direct likelihood</li>
 <li>Modern text-to-image systems are rarely pure GANs</li>
 </ul>
@@ -347,15 +347,6 @@ Marco Willi
 <section id="diffusion-models" class="title-slide slide level1 center">
 <h1>Diffusion Models</h1>
 
-</section>
-<section id="core-idea" class="slide level2 center">
-<h2>Core Idea</h2>
-<div class="r-fit-text">
-<p><strong>Learn to reverse a gradual noising process.</strong></p>
-</div>
-<div class="fragment">
-<p><span class="citation" data-cites="ho_denoising_2020">Ho et al. (<a href="#/references" role="doc-biblioref" onclick="">2020</a>)</span>, <span class="citation" data-cites="sohl-dickstein_deep_2015">Sohl-Dickstein et al. (<a href="#/references" role="doc-biblioref" onclick="">2015</a>)</span> — powers Stable Diffusion and modern text to image systems.</p>
-</div>
 </section>
 <section id="forward-diffusion" class="slide level2">
 <h2>Forward Diffusion</h2>
@@ -516,14 +507,8 @@ Foster, David. 2023. <em>Generative <span>Deep</span> <span>Learning</span></em>
 <div id="ref-goodfellow_generative_2014" class="csl-entry" role="listitem">
 Goodfellow, Ian J., Jean Pouget-Abadie, Mehdi Mirza, et al. 2014. <em>Generative <span>Adversarial</span> <span>Networks</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.1406.2661">https://doi.org/10.48550/arXiv.1406.2661</a>.
 </div>
-<div id="ref-ho_denoising_2020" class="csl-entry" role="listitem">
-Ho, Jonathan, Ajay Jain, and Pieter Abbeel. 2020. <em>Denoising <span>Diffusion</span> <span>Probabilistic</span> <span>Models</span></em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2006.11239">https://doi.org/10.48550/arXiv.2006.11239</a>.
-</div>
 <div id="ref-prince_understanding_2023" class="csl-entry" role="listitem">
 Prince, Simon J. D. 2023. <em>Understanding <span>Deep</span> <span>Learning</span></em>. MIT Press. <a href="https://udlbook.github.io/udlbook/">https://udlbook.github.io/udlbook/</a>.
-</div>
-<div id="ref-sohl-dickstein_deep_2015" class="csl-entry" role="listitem">
-Sohl-Dickstein, Jascha, Eric A. Weiss, Niru Maheswaranathan, and Surya Ganguli. 2015. <em>Deep <span>Unsupervised</span> <span>Learning</span> Using <span>Nonequilibrium</span> <span>Thermodynamics</span></em>. arXiv. <a href="http://arxiv.org/abs/1503.03585">http://arxiv.org/abs/1503.03585</a>.
 </div>
 <div id="ref-torralba_foundations_2024" class="csl-entry" role="listitem">
 Torralba, A., P. Isola, and W. T. Freeman. 2024. <em>Foundations of <span>Computer</span> <span>Vision</span></em>. Adaptive <span>Computation</span> and <span>Machine</span> <span>Learning</span> Series. MIT Press. <a href="https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/">https://mitpress.mit.edu/9780262048972/foundations-of-computer-vision/</a>.

@@ -540,7 +540,7 @@
     "href": "pages/slides/genai_models.html#gan-learning-process",
     "title": "9 - GenAI Model Families",
     "section": "GAN Learning Process",
-    "text": "GAN Learning Process\n\n\nGenerator distribution (green) moves toward real data (black dots), discriminator boundary (blue) adapts (Foster (2023)).",
+    "text": "GAN Learning Process\n\n\nGenerator distribution tries to fool discriminator, while discriminator must distinguish real from fake (Foster (2023)).",
     "crumbs": [
       "Slides",
       "9 - GenAI Model Families"
@@ -551,7 +551,7 @@
     "href": "pages/slides/genai_models.html#pros-cons-1",
     "title": "9 - GenAI Model Families",
     "section": "Pros & Cons",
-    "text": "Pros & Cons\n\nPros\n\nFast sampling — one forward pass\nCan produce sharp images\nHistorically pivotal for image generation\n\n\n\nCons\n\nTraining can be unstable\nMode collapse — limited variety\nNo direct likelihood\nModern text-to-image systems are rarely pure GANs",
+    "text": "Pros & Cons\n\nPros\n\nFast sampling, one forward pass\nCan produce sharp images\nHistorically pivotal for image generation\n\n\n\nCons\n\nTraining can be unstable\nMode collapse, limited variety\nNo direct likelihood\nModern text-to-image systems are rarely pure GANs",
     "crumbs": [
       "Slides",
       "9 - GenAI Model Families"
@@ -618,17 +618,6 @@
     "title": "9 - GenAI Model Families",
     "section": "Pros & Cons",
     "text": "Pros & Cons\n\nPros\n\nPrincipled probabilistic foundation\nStructured, interpretable latent space (interpolation, factor analysis)\nStable training\nUseful for representation learning\n\n\n\nCons\n\nTend to produce blurry outputs (improvable with more complex variants)",
-    "crumbs": [
-      "Slides",
-      "9 - GenAI Model Families"
-    ]
-  },
-  {
-    "objectID": "pages/slides/genai_models.html#core-idea",
-    "href": "pages/slides/genai_models.html#core-idea",
-    "title": "9 - GenAI Model Families",
-    "section": "Core Idea",
-    "text": "Core Idea\n\nLearn to reverse a gradual noising process.\n\n\nHo et al. (2020), Sohl-Dickstein et al. (2015) — powers Stable Diffusion and modern text to image systems.",
     "crumbs": [
       "Slides",
       "9 - GenAI Model Families"
@@ -1511,7 +1500,7 @@
     "href": "pages/background/frameworks.html#tensors",
     "title": "3 - Software & Hardware",
     "section": "2.2 Tensors",
-    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.4002, 0.9089],\n        [0.9323, 0.1206]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.9230, 0.3957, 0.9182],\n        [0.5642, 0.7656, 0.7745]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
+    "text": "2.2 Tensors\ntorch.Tensor is the central data structure in PyTorch. Essentially very similar to numpy.array, it can be easily loaded onto GPUs.\nTensors can be created in various ways. For example, from lists:\n\ndata = [[1, 2],[3, 4]]\nx_data = torch.tensor(data)\nprint(x_data)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from numpy.ndarray:\n\nnp_array = np.array(data)\nx_np = torch.from_numpy(np_array)\nprint(x_np)\n\ntensor([[1, 2],\n        [3, 4]])\n\n\nOr from other tensors:\n\nx_ones = torch.ones_like(x_data) # retains the properties of x_data\nprint(f\"Ones Tensor: \\n {x_ones} \\n\")\n\nx_rand = torch.rand_like(x_data, dtype=torch.float) # overrides the datatype of x_data\nprint(f\"Random Tensor: \\n {x_rand} \\n\")\n\nOnes Tensor: \n tensor([[1, 1],\n        [1, 1]]) \n\nRandom Tensor: \n tensor([[0.1033, 0.2260],\n        [0.9185, 0.0313]]) \n\n\n\nOr with randomly generated numbers or constants:\n\nshape = (2,3,)\nrand_tensor = torch.rand(shape)\nones_tensor = torch.ones(shape)\nzeros_tensor = torch.zeros(shape)\n\nprint(f\"Random Tensor: \\n {rand_tensor} \\n\")\nprint(f\"Ones Tensor: \\n {ones_tensor} \\n\")\nprint(f\"Zeros Tensor: \\n {zeros_tensor}\")\n\nRandom Tensor: \n tensor([[0.9132, 0.5552, 0.0140],\n        [0.8374, 0.6089, 0.1738]]) \n\nOnes Tensor: \n tensor([[1., 1., 1.],\n        [1., 1., 1.]]) \n\nZeros Tensor: \n tensor([[0., 0., 0.],\n        [0., 0., 0.]])\n\n\nTensor attributes:\n\ntensor = torch.rand(3,4)\n\nprint(f\"Shape of tensor: {tensor.shape}\")\nprint(f\"Datatype of tensor: {tensor.dtype}\")\nprint(f\"Device tensor is stored on: {tensor.device}\")\n\nShape of tensor: torch.Size([3, 4])\nDatatype of tensor: torch.float32\nDevice tensor is stored on: cpu\n\n\nThere are over 100 operations that can be performed on a tensor. The full list is available here.\nIndexing and Slicing:\n\ntensor = torch.ones(4, 4)\nprint(f\"First row: {tensor[0]}\")\nprint(f\"First column: {tensor[:, 0]}\")\nprint(f\"Last column: {tensor[:, -1]}\")\ntensor[:,1] = 0\nprint(tensor)\n\nFirst row: tensor([1., 1., 1., 1.])\nFirst column: tensor([1., 1., 1., 1.])\nLast column: tensor([1., 1., 1., 1.])\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])\n\n\nJoining tensors:\n\nt1 = torch.cat([tensor, tensor, tensor], dim=1)\nprint(t1)\n\ntensor([[1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.],\n        [1., 0., 1., 1., 1., 0., 1., 1., 1., 0., 1., 1.]])\n\n\nArithmetic operations:\n\n# This computes the matrix multiplication between two tensors. y1, y2, y3 will have the same value\ny1 = tensor @ tensor.T\ny2 = tensor.matmul(tensor.T)\n\ny3 = torch.rand_like(y1)\ntorch.matmul(tensor, tensor.T, out=y3)\n\n\n# This computes the element-wise product. z1, z2, z3 will have the same value\nz1 = tensor * tensor\nz2 = tensor.mul(tensor)\n\nz3 = torch.rand_like(tensor)\ntorch.mul(tensor, tensor, out=z3)\n\ntensor([[1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.],\n        [1., 0., 1., 1.]])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware"
@@ -1522,7 +1511,7 @@
     "href": "pages/background/frameworks.html#autograd",
     "title": "3 - Software & Hardware",
     "section": "2.3 Autograd",
-    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.2960, 0.1853, 0.2236],\n        [0.2960, 0.1853, 0.2236],\n        [0.2960, 0.1853, 0.2236],\n        [0.2960, 0.1853, 0.2236],\n        [0.2960, 0.1853, 0.2236]])\ntensor([0.2960, 0.1853, 0.2236])",
+    "text": "2.3 Autograd\nTo train neural networks, backpropagation is typically used. This calculates the gradient of the loss function with respect to the model parameters. To compute these gradients, PyTorch provides an auto-diff functionality: torch.autograd. This can automatically compute gradients for a computational graph.\n\n\n\n\n\n\nTipAutograd Key Points\n\n\n\n\nSet requires_grad=True on tensors you want to track for gradient computation\nCall .backward() on a scalar loss to compute all gradients\nAccess gradients via .grad attribute of tensors\nUse torch.no_grad() context for inference to save memory and speed up computation\n\n\n\nThe following is an example using a 1-layer neural network (see Figure 4 ):\n\n\n\n\n\n\nFigure 4: Source: PyTorch\n\n\n\nThe network from Figure 4 is defined in PyTorch code in Listing 4.\n\n\n\n\nListing 4: Example computational graph.\n\n\nimport torch\n\nx = torch.ones(5)  # input tensor\ny = torch.zeros(3)  # expected output\nw = torch.randn(5, 3, requires_grad=True)\nb = torch.randn(3, requires_grad=True)\nz = torch.matmul(x, w)+b\nloss = torch.nn.functional.binary_cross_entropy_with_logits(z, y)\n\n\n\n\nWe can now use Autograd to compute the gradient:\n\nloss.backward()\nprint(w.grad)\nprint(b.grad)\n\ntensor([[0.0737, 0.1280, 0.2145],\n        [0.0737, 0.1280, 0.2145],\n        [0.0737, 0.1280, 0.2145],\n        [0.0737, 0.1280, 0.2145],\n        [0.0737, 0.1280, 0.2145]])\ntensor([0.0737, 0.1280, 0.2145])",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware"
@@ -1533,7 +1522,7 @@
     "href": "pages/background/frameworks.html#torch.nn",
     "title": "3 - Software & Hardware",
     "section": "2.4 torch.nn",
-    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([1])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
+    "text": "2.4 torch.nn\nPyTorch provides various building blocks for creating neural networks. These are available in torch.nn. Additionally, you can define any compositions of such building blocks that inherit from torch.nn.Module. A neural network is typically a torch.nn.Module. Each module implements the forward() method to define how data is processed.\n\n\n\n\n\n\nTipBuilding Blocks in torch.nn\n\n\n\nCommon layers:\n\nnn.Linear: Fully connected layer\nnn.Conv2d: 2D convolutional layer\nnn.MaxPool2d: Max pooling layer\nnn.Dropout: Regularization via random dropout\nnn.BatchNorm2d: Batch normalization\n\nCommon activations:\n\nnn.ReLU(), nn.LeakyReLU(), nn.GELU()\nnn.Sigmoid(), nn.Softmax()\n\nLoss functions:\n\nnn.CrossEntropyLoss(): Classification\nnn.BCEWithLogitsLoss(): Binary classification\nnn.MSELoss(): Regression\n\n\n\nListing 5 depicts an example of a class that inherits from torch.nn.Module.\n\n\n\n\nListing 5: Example nn.Module.\n\n\nfrom torch import nn\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self):\n        super(NeuralNetwork, self).__init__()\n        self.flatten = nn.Flatten()\n        self.linear_relu_stack = nn.Sequential(\n            nn.Linear(28*28, 512),\n            nn.ReLU(),\n            nn.Linear(512, 512),\n            nn.ReLU(),\n            nn.Linear(512, 10),\n        )\n\n    def forward(self, x):\n        x = self.flatten(x)\n        logits = self.linear_relu_stack(x)\n        return logits\n\n\n\n\nYou can also visualize the model:\n\nmodel = NeuralNetwork()\nprint(model)\n\nNeuralNetwork(\n  (flatten): Flatten(start_dim=1, end_dim=-1)\n  (linear_relu_stack): Sequential(\n    (0): Linear(in_features=784, out_features=512, bias=True)\n    (1): ReLU()\n    (2): Linear(in_features=512, out_features=512, bias=True)\n    (3): ReLU()\n    (4): Linear(in_features=512, out_features=10, bias=True)\n  )\n)\n\n\nTo use the model, you can pass input data. This will execute the forward() method, along with background operations.\n\nX = torch.rand(1, 28, 28)\nlogits = model(X)\npred_probab = nn.Softmax(dim=1)(logits)\ny_pred = pred_probab.argmax(1)\nprint(f\"Predicted class: {y_pred}\")\n\nPredicted class: tensor([7])\n\n\nThe executed operations will look like this:\n\nfrom torchviz import make_dot\nmake_dot(logits)\n\n\n\n\n\n\n\n\nFor more in-depth information about the model you can use the external library torchinfo as seen in Listing 6.\n\n\n\n\nListing 6: Example output of torchinfo.\n\n\nfrom torchinfo import summary\nmodel = NeuralNetwork()\nsummary(model, input_size=(128, 1, 28, 28))\n\n\n\n\n==========================================================================================\nLayer (type:depth-idx)                   Output Shape              Param #\n==========================================================================================\nNeuralNetwork                            [128, 10]                 --\n├─Flatten: 1-1                           [128, 784]                --\n├─Sequential: 1-2                        [128, 10]                 --\n│    └─Linear: 2-1                       [128, 512]                401,920\n│    └─ReLU: 2-2                         [128, 512]                --\n│    └─Linear: 2-3                       [128, 512]                262,656\n│    └─ReLU: 2-4                         [128, 512]                --\n│    └─Linear: 2-5                       [128, 10]                 5,130\n==========================================================================================\nTotal params: 669,706\nTrainable params: 669,706\nNon-trainable params: 0\nTotal mult-adds (Units.MEGABYTES): 85.72\n==========================================================================================\nInput size (MB): 0.40\nForward/backward pass size (MB): 1.06\nParams size (MB): 2.68\nEstimated Total Size (MB): 4.14\n==========================================================================================",
     "crumbs": [
       "Background & Preparation",
       "3 - Software & Hardware"
@@ -3544,17 +3533,6 @@
     ]
   },
   {
-    "objectID": "pages/slides/genai_intro.html#can-you-spot-the-real-one",
-    "href": "pages/slides/genai_intro.html#can-you-spot-the-real-one",
-    "title": "8 - Generative AI for Computer Vision",
-    "section": "Can You Spot the Real One?",
-    "text": "Can You Spot the Real One?\n\n\nSet 1Set 2Set 3\n\n\n\n\n\n\nA\n\n\n\n\n\nB\n\n\n\n\n\nC\n\n\n\n\n\n\n\n\n\nA\n\n\n\n\n\nB\n\n\n\n\n\nC\n\n\n\n\n\n\n\n\n\nA\n\n\n\n\n\nB\n\n\n\n\n\nC",
-    "crumbs": [
-      "Slides",
-      "8 - Generative AI for Computer Vision"
-    ]
-  },
-  {
     "objectID": "pages/slides/genai_intro.html#can-you-tell-this-is-fake",
     "href": "pages/slides/genai_intro.html#can-you-tell-this-is-fake",
     "title": "8 - Generative AI for Computer Vision",
@@ -3808,17 +3786,6 @@
     ]
   },
   {
-    "objectID": "pages/slides/genai_intro.html#quiz-match-task-and-condition",
-    "href": "pages/slides/genai_intro.html#quiz-match-task-and-condition",
-    "title": "8 - Generative AI for Computer Vision",
-    "section": "Quiz: Match Task and Condition",
-    "text": "Quiz: Match Task and Condition\n\n\nTasks\n\n\n\n#\nTask\n\n\n\n\n1\nSuper-resolution\n\n\n2\nInpainting\n\n\n3\nMRI → CT\n\n\n4\nText-to-image\n\n\n5\nProduct image from reference\n\n\n6\nImage outpainting\n\n\n\n\nConditions\n\n\n\nA\nimage + mask\n\n\nB\nlow-res image\n\n\nC\ntext prompt\n\n\nD\nsource MRI image\n\n\nE\nreference image\n\n\nF\nimage + extended canvas",
-    "crumbs": [
-      "Slides",
-      "8 - Generative AI for Computer Vision"
-    ]
-  },
-  {
     "objectID": "pages/slides/genai_intro.html#creative-vs.-faithful",
     "href": "pages/slides/genai_intro.html#creative-vs.-faithful",
     "title": "8 - Generative AI for Computer Vision",
@@ -3879,17 +3846,6 @@
     "title": "8 - Generative AI for Computer Vision",
     "section": "Density ≠ Generation",
     "text": "Density ≠ Generation\n\nA density model evaluates \\(p_{\\theta}(\\mathbf{x})\\) — useful for outlier detection.\n\n\nTo generate, we additionally need a sampling mechanism.",
-    "crumbs": [
-      "Slides",
-      "8 - Generative AI for Computer Vision"
-    ]
-  },
-  {
-    "objectID": "pages/slides/genai_intro.html#no-free-lunch",
-    "href": "pages/slides/genai_intro.html#no-free-lunch",
-    "title": "8 - Generative AI for Computer Vision",
-    "section": "No Free Lunch",
-    "text": "No Free Lunch\n\nNo single model achieves all desirable properties simultaneously.",
     "crumbs": [
       "Slides",
       "8 - Generative AI for Computer Vision"
@@ -4050,17 +4006,6 @@
     ]
   },
   {
-    "objectID": "pages/slides/genai_intro.html#summary-no-single-metric",
-    "href": "pages/slides/genai_intro.html#summary-no-single-metric",
-    "title": "8 - Generative AI for Computer Vision",
-    "section": "Summary: No Single Metric",
-    "text": "Summary: No Single Metric\n\n\n\nAspect\nExample method\n\n\n\n\nrealism / fidelity\nhuman judgement, FID, KID\n\n\ndiversity / coverage\ndistribution metrics, class coverage\n\n\nlikelihood\ntest-set log-likelihood (if available)\n\n\nprompt adherence\nCLIP-based scores, human judgement\n\n\ninput fidelity\nreconstruction / preservation metrics\n\n\ndownstream utility\nmodel trained on synthetic data\n\n\n\n\nThe right evaluation depends on the task.",
-    "crumbs": [
-      "Slides",
-      "8 - Generative AI for Computer Vision"
-    ]
-  },
-  {
     "objectID": "pages/slides/genai_practical.html#diffusion-in-pixel-space",
     "href": "pages/slides/genai_practical.html#diffusion-in-pixel-space",
     "title": "10 - GenAI: Modern Systems",
@@ -4076,7 +4021,7 @@
     "href": "pages/slides/genai_practical.html#practical-workflows-demand-speed",
     "title": "10 - GenAI: Modern Systems",
     "section": "Practical Workflows Demand Speed",
-    "text": "Practical Workflows Demand Speed\n\nHigh-resolution images\nMany candidate images\nFast previews\nRepeated prompt iteration\nImage edits and variations\nBatch generation",
+    "text": "Practical Workflows Demand Speed\n\nHigh-resolution images\nMany candidate images\nRepeated prompt iteration\nImage edits and variations",
     "crumbs": [
       "Slides",
       "10 - GenAI: Modern Systems"
@@ -4186,7 +4131,7 @@
     "href": "pages/slides/genai_practical.html#beyond-stable-diffusion",
     "title": "10 - GenAI: Modern Systems",
     "section": "Beyond Stable Diffusion",
-    "text": "Beyond Stable Diffusion\n\nThe denoiser itself is evolving (U-Net → Transformer)\nImage gen is integrated into multimodal assistants\nMany commercial systems aren’t fully disclosed — focus on the ideas",
+    "text": "Beyond Stable Diffusion\n\nThe denoiser itself is evolving (U-Net → Transformer)\nImage generation is integrated into multimodal assistants\nMany commercial systems aren’t fully disclosed — focus on the ideas",
     "crumbs": [
       "Slides",
       "10 - GenAI: Modern Systems"
@@ -4534,17 +4479,6 @@
     ]
   },
   {
-    "objectID": "pages/slides/genai_practical.html#provenance",
-    "href": "pages/slides/genai_practical.html#provenance",
-    "title": "10 - GenAI: Modern Systems",
-    "section": "Provenance",
-    "text": "Provenance\n\nCamera capture or model output?\nEdited after capture?\nWhich parts modified?\nMetadata describing origin?\nWatermark / content credential?\nCryptographically verifiable source?",
-    "crumbs": [
-      "Slides",
-      "10 - GenAI: Modern Systems"
-    ]
-  },
-  {
     "objectID": "pages/slides/genai_practical.html#real-or-not",
     "href": "pages/slides/genai_practical.html#real-or-not",
     "title": "10 - GenAI: Modern Systems",
@@ -4583,17 +4517,6 @@
     "title": "10 - GenAI: Modern Systems",
     "section": "Responsibility Checklist",
     "text": "Responsibility Checklist\n\nWhat’s the risk level of the use case?\nCould the image mislead people?\nIdentity / privacy / consent issues?\nCopyright / licensing constraints?\nCould output reinforce stereotypes or biased associations?",
-    "crumbs": [
-      "Slides",
-      "10 - GenAI: Modern Systems"
-    ]
-  },
-  {
-    "objectID": "pages/slides/genai_practical.html#takeaways",
-    "href": "pages/slides/genai_practical.html#takeaways",
-    "title": "10 - GenAI: Modern Systems",
-    "section": "Takeaways",
-    "text": "Takeaways\n\nLatent diffusion made high-res generation practical\nTransformers + multimodality are the architectural direction\nAdapt with the smallest intervention that works\nChoose deployment by control vs. convenience tradeoff\nResponsibility is part of engineering — not optional",
     "crumbs": [
       "Slides",
       "10 - GenAI: Modern Systems"
