@@ -15,11 +15,11 @@ $$
 
 Die folgenden Fragen helfen das gelernte nochmal zu überprüfen und könnten Prüfungsfragen sein.
 
-Typischerweise gibt es an der Prüfung jedoch **Multiple-Choice** Fragen.
+An der Prüfung sind jedoch viele Fragen im **Multiple-Choice** Format.
 
 An der Prüfung wird nur Wissen abgefragt, welches im Unterricht vorgestellt und/oder diskutiert worden ist.
 
-Beachten Sie auch die Quiz-Fragen in den Unerrichtsunterlagen.
+Beachten Sie auch die Quiz-Fragen in den Unterrichtsunterlagen.
 
 Die gelisteten Operationen sind mit folgenden (default) Parametern definiert:
 
@@ -57,7 +57,21 @@ Diese fundamentale Herausforderung macht Computer Vision grundsätzlich schwieri
 
 ---
 
-2. Sie möchten ein Objekt in einem Bild klassifizieren: Ist es besser das ganze Bild zur Verfügung zu haben oder nur einen Ausschnitt vom Objekt? Begründen Sie.
+
+2. Welche der folgenden Eigenschaften unterscheiden Bilder typischerweise von beliebigen unstrukturierten Vektoren? (z.B. tabellarische Daten)
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+- Hohe Dimensionalität
+- Lokale statistische Abhängigkeiten
+- Hierarchische Strukturen
+- Gewünschte Robustheit gegenüber semantikerhaltenden Transformationen
+
+:::
+
+---
+
+3. Sie möchten ein Objekt in einem Bild klassifizieren: Ist es besser das ganze Bild zur Verfügung zu haben oder nur einen Ausschnitt vom Objekt? Begründen Sie.
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
@@ -74,6 +88,76 @@ Das hängt vom Anwendungsfall ab
 - Objekt nimmt mehr Pixel ein → mehr Details sichtbar (je nach Architektur)
 
 **Empfehlung:** In der Regel ist das ganze Bild vorzuziehen, da Kontext wichtig ist.
+
+:::
+
+
+### Bilder als Daten
+
+1. Sie laden einen Datensatz mit Röntgenbildern. Jedes Bild hat die Form `(3, 512, 512)`, aber alle drei Kanäle sind identisch. Wie viele informative Kanäle hat das Bild tatsächlich? Was müssen Sie tun, bevor Sie das Bild an ein vortrainiertes RGB-Modell weitergeben?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+Das Bild trägt nur **1 einzigartigen Kanal**. Es handelt sich um ein Graustufenbild, das als RGB gespeichert wurde.
+
+**Vorgehen:** Da das Bild bereits die Form `(3, H, W)` hat, kann es direkt an das vortrainierte Modell übergeben werden. Es ist keine Umwandlung nötig. Der wichtigste Schritt ist die korrekte **Normalisierung**: dieselben Mittelwerte und Standardabweichungen verwenden, mit denen das Modell vortrainiert wurde (typischerweise ImageNet-Werte).
+
+:::
+
+---
+
+2. Ihr Datensatz enthält Bilder mit Auflösungen zwischen $200 \times 150$ und $6000 \times 4000$ Pixeln. Sie möchten einen Bildklassifizierer trainieren. Welche Resize-Strategie wählen Sie, und was verlieren Sie jeweils?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+| Strategie | Vorgehen | Verlust |
+|---|---|---|
+| **Resize + Center-Crop** (Standard) | Kürzere Seite auf 256 skalieren, dann 224×224 zuschneiden | Bildinhalte an den Rändern |
+| **Direktes Resize** auf 224×224 | Bild verzerren | Seitenverhältnis |
+| **Resize + Padding** | Bild einpassen, Rest mit 0 auffüllen | Rechenzeit für Nullpixel |
+
+**Empfehlung:** Resize + Center-Crop ist der ImageNet-Standard und ein solider Ausgangspunkt. Aber je nach Anwendungsfall könnte auch Padding sinnvoll sein, um Verzerrungen zu vermeiden oder Objekte am Rand zu behalten.
+
+:::
+
+---
+
+3. Sie möchten Bilder für die Hautkrebsdiagnose verwenden. Von vielen Patientinnen und Patienten existieren mehrere Aufnahmen derselben Läsion aus leicht unterschiedlichen Perspektiven. Sie teilen Ihren Datensatz zufällig 80/20 in Trainings- und Testdaten auf und erzielen 94% Testgenauigkeit und damit deutlich über der menschlichen Baseline von 85%. Sechs Monate später schneidet das Modell auf Daten einer neuen Klinik schlecht ab. Was ist die wahrscheinlichste Ursache?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Data Leakage auf Patienten-Ebene.** Mehrere Bilder desselben Patienten sind in Trainings- und Testdaten vorhanden. Das Modell hat patientenspezifische Merkmale (Hautton, Haare, Bildstörungen) auswendig gelernt statt die Läsion zu erkennen.
+
+**Lösung:** Datensplit **nach Patient** (nicht nach Bild). Alle Bilder eines Patienten müssen in derselben Partition liegen.
+
+:::
+
+---
+
+4. Sie trainieren einen Fehlerdetektor für eine Fabrik: 98% der Teile sind einwandfrei, 2% fehlerhaft. Das Modell erzielt 98.0% Accuracy auf dem Testset. Ist das ein gutes Ergebnis? Wie bewerten Sie das Modell korrekt?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Nein**.  Ein triviales Modell, das immer "einwandfrei" vorhersagt, erzielt ebenfalls 98% Accuracy.
+
+**Korrekte Metriken bei Klassenungleichgewicht:**
+
+- **Recall für die Fehlerklasse:** Wie viele fehlerhafte Teile werden erkannt? (In der Praxis wichtiger, da übersehene Fehler oft teuer sind)
+- **Precision für die Fehlerklasse:** Wie viele der als fehlerhaft klassifizierten Teile sind tatsächlich fehlerhaft?
+- **F1-Score** für die Minderheitsklasse
+- **AUC-PR** (Area under Precision-Recall Curve)
+
+:::
+
+---
+
+5. Sie entdecken, dass 4% Ihrer Trainingslabels falsch sind. Ihr Testset wurde sorgfältig manuell verifiziert und ist korrekt. Welche maximale Testgenauigkeit erwarten Sie, und was können Sie unternehmen?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+Da die **Testlabels korrekt** sind, gibt es keine theoretische Obergrenze durch den Label-Fehler im Testset. Ein perfektes Modell könnte 100% erreichen. In der Praxis schaden die 4% falschen Trainingslabels jedoch der Generalisierung, weil das Modell widersprüchliche Signale lernt.
+
+**Massnahmen:**: Verdächtige Samples identifizieren und manuell überprüfen.
 
 :::
 
@@ -143,7 +227,7 @@ Begründung:
 - Jede Gruppe von 3 Neuronen kann lernen, eine bestimmte vertikale Position (pro Zeile) zu detektieren (es gibt davon jeweils 3)
 - Dies muss dann noch pro Zeile gemacht werden (6 Zeilen).
 
-Alternativ: Mit geschickter Gewichtswahl könnten allenfalls auch weniger Neuronen ausreichen, aber 36 ist eine sichere praktische Antwort.
+Alternativ: Mit geschickter Gewichtswahl könnten allenfalls auch weniger Neuronen ausreichen, aber 18 ist eine sichere praktische Antwort.
 
 :::
 
@@ -390,20 +474,8 @@ pool = nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1))
 
 MLP ist vorzuziehen!
 
-Begründung:
+Eine fixe Permutation zerstört keine Informationen. Ein MLP kann im Prinzip damit umgehen, da es keine Annahmen über die räumliche Struktur von Pixeln macht. Ein CNN hingegen nutzt die räumliche Lokalität von Pixeln aus. Nach der Permutation ist diese Struktur zerstört, und die Convolutions würden auf räumlich nicht-zusammenhängende Pixel angewendet, was den Hauptvorteil von CNNs (lokale Feature-Extraktion) zunichte macht.
 
-CNNs basieren auf räumlicher Lokalität:
-
-- Convolutions nutzen aus, dass benachbarte Pixel zusammenhängen
-- Nach zufälliger Permutation ist diese Struktur zerstört
-- Ein 3×3 Filter würde auf räumlich nicht-zusammenhängende Pixel angewendet
-- Der Hauptvorteil von CNNs (lokale Feature-Extraktion) geht verloren
-
-MLPs behandeln alle Positionen gleich:
-
-- MLPs haben keine Annahmen über räumliche Struktur
-- Jedes Pixel wird unabhängig behandelt (volles weight sharing)
-- Permutation ändert nur die Position im Eingangsvektor, nicht die Funktionsweise
 
 :::
 
@@ -520,7 +592,7 @@ Hauptunterschied: Global Average Pooling vs Fixed-size FC Layer
 **CNN2:**
 
 - Verwendet `nn.AdaptiveAvgPool2d((1, 1))` - reduziert jede feature map auf 1×1
-- Funktioniert mit **beliebigen** Input-Grössen!
+- Funktioniert mit **beliebigen** Input-Grössen (mit Einschränkungen bei sehr kleinen Inputs)!
 - Weniger Parameter: $32 \times 10 = 320$ Parameter
 
 **Praktische Implikationen:**
@@ -796,7 +868,9 @@ Vortrainierte Modelle erwarten RGB!
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
-Ja. Siehe Arbeit von @He2016 an ResNet. Overfitting und schlechte Konvergenz könnten jedoch Probleme bereiten, sind aber in der Praxis gut lösbar.
+Grundsätzlich schon, siehe @He2016 an ResNet.
+
+Tiefere Netzwerke können komplexere hierarchische Repräsentationen lernen, aber zusätzliche Tiefe verbessert die Leistung nur, wenn Optimierung, Architektur, Datenvolumen und Regularisierung dies unterstützen. Residual Connections mildern Degradationsprobleme, aber ein tieferes Modell kann immer noch overfitten, mehr kosten oder keinen praktischen Gewinn bieten.
 
 :::
 
@@ -809,6 +883,18 @@ Ja. Siehe Arbeit von @He2016 an ResNet. Overfitting und schlechte Konvergenz kö
 ::: {.callout-note collapse="true" title="Antwort"}
 
 Geschwindigkeit ist zentral. Die Architektur muss also wohl eher klein sein um die Anforderung "Echtzeit" zu erfüllen.
+
+Berücksichtigen Sie folgende Faktoren:
+
+- Latenz (Inference Time) auf der Zielhardware
+- Durchsatz (Bilder pro Sekunde)
+- Speicherbedarf (Memory Footprint)
+- Input Resolution
+- Operator-Unterstützung (z.B. auf Mobilgeräten)
+- Batch-Grösse (meist 1 für Echtzeit)
+- Quantisierung (z.B. INT8 statt FP32)
+- Preprocessing-Overhead
+- Accuracy–Latency Trade-off
 
 :::
 
@@ -824,7 +910,7 @@ Geschwindigkeit ist zentral. Die Architektur muss also wohl eher klein sein um d
 Pixel-Repräsentation:
 
 - Der Raum aller möglichen Bilder ist astronomisch gross
-- Für RGB-Bilder mit $224 \times 224$ Pixeln und 255 Intensitätswerten: $255^{224 \times 224 \times 3} \approx 255^{150{,}528}$ mögliche Bilder
+- Für RGB-Bilder mit $224 \times 224$ Pixeln und 256 Intensitätswerten: $256^{224 \times 224 \times 3} \approx 256^{150{,}528}$ mögliche Bilder
 - Natürliche (reale) Bilder machen nur einen winzigen Bruchteil dieses Raums aus
 - Pixel-Repräsentation ist daher extrem ineffizient
 
@@ -873,6 +959,302 @@ Empfehlung: CLIP oder DINOvx (Foundation Models mit Feature Extraction)
 
 :::
 
+---
+
+3. Sie haben 500'000 unbeschriftete Satellitenbilder und nur 800 beschriftete. Welches Trainingsparadigma wählen Sie für das Backbone, und warum?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Self-Supervised Pre-Training** auf allen 500'000 unbeschrifteten Bildern (z.B. MAE oder SimCLR), gefolgt von einem **Linear Probe oder Fine-Tuning** auf den 800 beschrifteten Samples.
+
+**Begründung:**
+
+- Supervised Training mit nur 800 Bildern führt zu starkem Overfitting
+- Self-Supervised Learning extrahiert allgemeine visuelle Strukturen ohne Labels
+- Das vortrainierte Backbone liefert reichhaltige Features, die mit wenig Labels angepasst werden können
+
+:::
+
+---
+
+4. Im Contrastive Learning (z.B. SimCLR) werden zwei augmentierte Ansichten desselben Bildes zusammengeführt (Positives) und Ansichten verschiedener Bilder auseinandergedrückt (Negatives). Was passiert, wenn Sie nur Positives ohne Negatives trainieren?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Representational Collapse:** Das Modell lernt, alle Bilder auf denselben Punkt (oder Vektor) abzubilden. Das erfüllt trivialerweise die Bedingung "Positives zusammenführen", aber die Repräsentation ist nutzlos.
+
+Negatives verhindern den Kollaps, indem sie das Modell zwingen, verschiedene Bilder im Featureraum zu trennen.
+
+:::
+
+---
+
+5. Sie möchten eine Repräsentation, die gegenüber Bildrotation **invariant**, aber gegenüber der Tierart **selektiv** ist. Welche Augmentierungsstrategie hilft dabei?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Zufällige Rotation als Positive-Pair-Augmentierung** einsetzen: Zwei rotierte Versionen desselben Bildes werden als Positives behandelt. Das Modell lernt, für verschiedene Orientierungen identische Embeddings zu produzieren.
+
+**Entscheidend:** Bilder verschiedener Tierarten werden **nie** als Positives betrachtet, so bleibt die Tierart im Embedding kodiert.
+
+:::
+
+---
+
+6. Sie nutzen DINOv3, um eine Referenzbibliothek mit 10'000 Produktbildern zu indexieren. Für ein neues Query-Bild liefern die 5 nächsten Nachbarn visuell unpassende Ergebnisse. Nennen Sie zwei mögliche Fehlerursachen.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+1. **Domain Shift:** Das Query-Bild wurde unter anderen Bedingungen aufgenommen (anderes Licht, anderer Hintergrund) als die Bibliotheksbilder. Die DINOv3-Embeddings reagieren auf Verteilungsverschiebungen.
+
+2. **Global- vs. Lokal-Mismatch:** DINOv3's `[CLS]`-Token kodiert globale Szeneninformation. Wenn das Query-Bild ein eng zugeschnittenes Produkt zeigt, die Bibliotheksbilder aber das Produkt in Umgebungskontext, stimmen die Embeddings möglicherweise nicht überein. **Lösung:** Patch-Level-Features statt CLS-Token verwenden, oder alle Bilder mit identischem Preprocessing einbetten.
+
+:::
+
+
+### Vision Transformers
+
+1. Ein ViT verarbeitet ein $224 \times 224$ RGB-Bild mit $16 \times 16$ grossen Patches. Wie viele Patch-Tokens sieht die Self-Attention (ohne CLS-Token)?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+$$\left(\frac{224}{16}\right)^2 = 14 \times 14 = 196 \text{ Tokens}$$
+
+Inklusive CLS-Token beträgt die Sequenzlänge **197**.
+
+:::
+
+---
+
+2. Sie trainieren einen ViT-Bildklassifizierer und entfernen beim Inferencing die Positional Embeddings. Welche dieser Aufgaben wäre am stärksten betroffen: (a) globale Szenenklassifikation, (b) Zählen von Objekten, (c) Erkennen der relativen Position von Objekten? Begründen Sie.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**(c) Erkennen der relativen Position** wäre am stärksten betroffen. Ohne Positional Embeddings ist der ViT permutationsinvariant über Patches — er kann nicht unterscheiden, ob ein Patch oben-links oder unten-rechts liegt.
+
+- **Globale Szenenklassifikation (a):** Teils robust, da viele semantische Signale positionsunabhängig sind (z.B. Textur, Farbe).
+- **Objektzählung (b):** Für ungeordnete Zählungen teilweise möglich, aber bei raumabhängigen Zählungen ebenfalls beeinträchtigt.
+
+:::
+
+---
+
+3. Sie haben 2'000 beschriftete Bilder für eine medizinische Klassifikationsaufgabe. Ein Kollege schlägt vor, einen ViT von Grund auf zu trainieren. Stimmen Sie zu? Was empfehlen Sie stattdessen?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Nein.** ViTs haben keine eingebauten Inductive Biases (keine lokale Konnektivität, keine Translationsäquivarianz) und benötigen wesentlich mehr Daten, um kompetitive Repräsentationen von Grund auf zu lernen (das originale ViT-Paper trainierte auf JFT-300M).
+
+**Empfehlung:**
+
+- **Vortrainiertes ViT** (z.B. von ImageNet-21k) laden und feinabstimmen
+- Alternativ: vortrainiertes CNN (ResNet, EfficientNet) — mit 2'000 Bildern oft verlässlicher
+- Bei sehr spezifischem Bereich: Self-Supervised Pre-Training auf domänenspezifischen Daten, dann Fine-Tuning
+
+:::
+
+---
+
+4. Ein CNN und ein ViT werden auf demselben 50'000-Bilder-Datensatz trainiert. Das CNN konvergiert schneller und erzielt nach 10 Epochen höhere Genauigkeit; der ViT holt nach 100 Epochen auf. Erklären Sie dieses Verhalten.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+CNNs haben **eingebaute Inductive Biases** (Lokalität, Translationsäquivarianz), die den Statistiken natürlicher Bilder entsprechen — sie lernen effizient auch mit begrenzten Daten.
+
+ViTs müssen diese Regelmässigkeiten **aus Daten lernen** via Self-Attention, da sie schwächere Inductive Biases haben. Mit ausreichend Daten und Trainingsdauer übertreffen ViTs CNNs oft, weil Self-Attention globale Abhängigkeiten modellieren kann — aber sie brauchen mehr Training dafür.
+
+:::
+
+---
+
+5. Sie entwickeln einen Echtzeit-Verkehrszeichen-Klassifizierer für ein eingebettetes System mit einem Latenz-Budget von 100 ms. Bevorzugen Sie ViT-Large oder ein leichtgewichtiges CNN (z.B. MobileNetV3)? Warum?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**MobileNetV3.** Self-Attention in ViTs skaliert quadratisch mit der Sequenzlänge und hat erheblichen Speicher-Overhead. MobileNetV3 ist explizit für effiziente Inferenz auf Edge-Hardware ausgelegt (depthwise separable Convolutions, hard-swish Aktivierungen) und würde das Latenz-Budget einhalten.
+
+ViT-Large würde das 100-ms-Budget und die Speichergrenzen eines eingebetteten Systems wahrscheinlich überschreiten.
+
+:::
+
+
+### Downstream Adaptation
+
+1. Wählen Sie für jedes Szenario die passende Adaptationsstrategie (k-NN / Linear Probe / LoRA / Full Fine-Tuning) und begründen Sie kurz:
+
+- a) 50 gelabelte Bilder, Domäne ähnlich wie ImageNet
+- b) 50'000 gelabelte Bilder, Domäne ähnlich wie ImageNet
+- c) 200 gelabelte Bilder, stark spezialisierte Domäne (z.B. Elektronenmikroskopie)
+- d) Sie benötigen eine Vorhersage in 10 Minuten, kein GPU verfügbar
+
+
+Achtung, es gibt nicht die "eine richtige Antwort". Es geht darum, die Vor- und Nachteile der Strategien in verschiedenen Kontexten zu verstehen.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+| Szenario | Strategie | Begründung |
+|---|---|---|
+| a) 50 gelabelte Bilder, ähnliche Domäne | **Linear Probe** | Wenig Labels, vortrainierte Features bereits nützlich; kein Overfitting-Risiko |
+| b) 50'000 gelabelte Bilder, ähnliche Domäne | **Partial Fine-Tuning / Full-Fine-Tuning** | Genug Daten um Backbone anzupassen, ohne zu vergessen |
+| c) 200 gelabelte Bilder, fremde Domäne |  **Start mit Linear Probe, über LoRA** | Kleines Dataset → Full Fine-Tuning würde overfitten; LoRA passt nur wenige Parameter an |
+| d) 10 Minuten, kein GPU | **k-NN** | Kein Training nötig — Bilder einbetten, Nearest-Neighbour-Suche |
+
+:::
+
+---
+
+2. Sie frieren einen vortrainierten ResNet-50 ein und trainieren nur einen linearen Klassifizierer darauf. Die Validation Accuracy stagniert bei 72%. Ihr Kollege trainiert denselben ResNet-50 komplett End-to-End und erreicht 78%. Was sagt diese Lücke aus?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+Die vortrainierten Features sind **nicht perfekt auf diese Aufgabe ausgerichtet** — es ist etwas aufgabenspezifisches Representation Learning nötig. Die Features sind trotzdem gut (72% deutlich über Zufall), aber das Fine-Tuning ermöglicht dem Modell, den Featureraum für diese spezifische Verteilung umzuformen.
+
+**Praktische Konsequenz:** Linear Probe als schnelle Baseline starten — wenn die Lücke zum Fine-Tuning gross ist, lohnt sich der Mehraufwand des Fine-Tunings.
+
+:::
+
+---
+
+3. Erklären Sie in zwei Sätzen, was LoRA macht und warum es die Anzahl trainierbarer Parameter reduziert.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+LoRA fügt neben jeder Gewichtsmatrix $W$ zwei kleine Matrizen $A$ und $B$ mit niedrigem Rang ein und trainiert nur diese ($W$ bleibt eingefroren). Da $\text{Rang} \ll \min(d_{\text{in}}, d_{\text{out}})$, haben $A$ und $B$ zusammen wesentlich weniger Parameter als $W$, was Speicher- und Rechenkosten drastisch senkt.
+
+:::
+
+---
+
+4. Sie feinabstimmen einen auf ImageNet-21k vortrainierten ViT vollständig auf 1'000 Dermatoskopie-Bildern. Danach fällt die Genauigkeit auf einem allgemeinen ImageNet-Validierungsset von 80% auf 45%. Was ist passiert, und wie vermeiden Sie das?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Catastrophic Forgetting** — das Fine-Tuning auf dem kleinen spezialisierten Datensatz hat die allgemeinen Repräsentationen überschrieben.
+
+**Gegenmassnahmen:**
+
+1. **Niedrige Lernrate** und wenige Epochen
+2. **Frühe Layer einfrieren** — nur die letzten Transformer-Blöcke freigeben
+3. **LoRA oder Adapter Layer** — originale Gewichte bleiben erhalten
+4. **Layer-wise Learning Rate Decay** — tiefere Layer bekommen kleinere Lernraten
+
+:::
+
+---
+
+5. Sie wenden ein auf Tageslicht-Strassenfotos vortrainiertes Modell auf Nacht-Verkehrsbilder an. Die Performance ist schlecht. Sie haben 200 beschriftete Nachtbilder. Was ist Ihre Strategie?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+1. **Linear Probe** als Ausgangspunkt. Prüfen, ob die eingefrorenen Features überhaupt relevante Nacht-Signale enthalten.
+2. Falls ungenügend: **LoRA oder Partial Fine-Tuning** mit den 200 Nacht-Labels.
+3. Falls zusätzliche unbeschriftete Nachtbilder verfügbar: **Domain Adaptation** (z.B. self-supervised Pre-Training auf Nachtbildern, dann Fine-Tuning).
+
+200 Bilder sind wenig für Full Fine-Tuning ohne starke Regularisierung. Overfitting-Risiko ist hoch.
+
+:::
+
+
+### Generative AI — Grundlagen
+
+1. Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Models und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Generierung? Was ist das Konditionierungssignal?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**conditional Generierung.** Das Konditionierungssignal ist das **Produktbild** (referenzbasierte Konditionierung) — das Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Model variiert werden.
+:::
+
+---
+
+2. Warum scheitert ein rein deterministisches Modell $\hat{x} = g_\theta(y)$ als generatives Modell für Bilder?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+Zu einem einzelnen Prompt $y$ (z.B. "eine Katze auf einem Sofa") sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur **einen** Ausgabewert produzieren — sie würde über die Verteilung mitteln und verschwommene oder kollabierte Ausgaben liefern.
+
+Eine stochastische Latent-Variable $z \sim \mathcal{N}(0, I)$ gibt dem Modell eine Quelle der Vielfalt: verschiedene $z$-Werte erzeugen verschiedene plausible Ausgaben für dasselbe $y$.
+
+:::
+
+---
+
+3. Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele den Prompt gar nicht umsetzen. Was zeigt das über FID?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+FID misst die Ähnlichkeit der Verteilungen von echten und generierten Bildern im Feature-Raum eines vortrainierten Netzwerks. Ein niedriger FID bedeutet, dass die generierten Bilder insgesamt realistisch aussehen, aber es garantiert **nicht**, dass sie den Prompt korrekt umsetzen.
+
+:::
+
+---
+
+4. Ein Kollege fragt, warum Diffusionsmodelle dem Training Noise hinzufügen. Erklären Sie die Intuition in zwei Sätzen.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+Diffusionsmodelle lernen, einen schrittweisen **Noise Prozess umzukehren**. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen; bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noisingiterativ an, bis ein kohärentes Bild entsteht.
+
+:::
+
+---
+
+
+
+### Generative AI — Praktisch
+
+1. Warum arbeiten moderne Bildgenerierungsmodelle wie Stable Diffusion in einem komprimierten **Latent Space** statt direkt im Pixelraum?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+Ein RGB-Bild mit Shape $3 \times 512 \times 512$ enthält 786'432 Werte. Ein typischer Stable-Diffusion-Latent mit Shape $4 \times 64 \times 64$ enthält 16'384 Werte. Das sind etwa 48-mal weniger Werte. Räumlich ist jede Dimension um den Faktor 8 und die Fläche um den Faktor 64 reduziert.
+
+:::
+
+---
+
+2. Sie generieren Produktfotografien und der Hintergrund wird zu dunkel. Ordnen Sie die folgenden Massnahmen von "zuerst versuchen" bis "zuletzt":
+
+- (a) Prompt anpassen: "bright studio lighting, white background" ergänzen
+- (b) Modell wechseln
+- (c) LoRA Fine-Tuning mit Referenzbildern auf hellem Hintergrund
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Reihenfolge: (a) → (b) → (c)**
+
+- **(a) Prompt-Anpassung:** Kostenlos, sofort wirksam — immer zuerst
+- **(b) Modellwechsel:** Zeitaufwand, aber kein Trainingsaufwand
+- **(c) LoRA Fine-Tuning:** Teuerste Option, nur wenn Prompting nicht ausreicht
+
+:::
+
+---
+
+3. Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Models generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+**Referenzbasierte Konditionierung** — das Produktbild als `image_input` an das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.
+
+Falls die Referenz-Konditionierung allein nicht ausreichend treu ist: **LoRA Fine-Tuning** auf Produktbildern als stärkere Alternative.
+
+:::
+
+---
+
+4. Ihr Team stellt eine Text-to-Image API für eine Marketingagentur bereit. Nennen Sie drei konkrete Sicherheitsmassnahmen, die Sie vor dem Go-Live implementieren.
+
+::: {.callout-note collapse="true" title="Antwort"}
+
+
+1. **Prompt-Filterung:** Anfragen mit Namen realer Personen, geschützter Marken oder Hassrede blockieren
+2. **Output-Wasserzeichen:** Unsichtbares Wasserzeichen in generierte Bilder einbetten, um KI-Herkunft nachweisbar zu machen
+3. **Content Moderation:** Safety-Klassifizierer auf Ausgaben anwenden, bevor sie zurückgeliefert werden
+4. **Logging und Audit-Trail:** Jeden Prompt und jede Ausgabe protokollieren, um Missbrauch untersuchen zu können
+5. **Rate Limiting:** Massengenerierung schädlicher Inhalte verhindern
+
+:::
+
 
 ### Praktische Aspekte
 
@@ -880,17 +1262,7 @@ Empfehlung: CLIP oder DINOvx (Foundation Models mit Feature Extraction)
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
-Maximal 95% Accuracy.
-
-- 5% der Labels sind falsch (Label Noise)
-- Selbst ein perfektes Modell, das die wahre Funktion lernt, wird diese 5% "falsch" klassifizieren
-- Das Modell wird für korrekte Predictions bestraft, weil die Ground Truth falsch ist
-
-Wichtige Implikationen:
-
-- **Human Baseline** ist maximal 95%
-- Models können nicht besser _gemessen werden_ als die Label-Qualität
-- Bei Accuracy > 95% liegt vermutlich Overfitting vor (Modell lernt Noise)
+Wenn ungefähr 5% der Testlabels fehlerhaft sind, wird die gemessene Accuracy durch die Labelqualität begrenzt und ist keine unverzerrte Schätzung der tatsächlichen Modellgüte. Eine exakte Obergrenze von 95% folgt daraus jedoch nicht ohne zusätzliche Annahmen über den Fehlerprozess (Fehler könnten z.B. ungleich verteilt sein, oder es könnte systematische Fehler geben). In der Praxis könnte die maximale gemessene Accuracy über 95% liegen, abhängig von der Art der Labelfehler.
 
 :::
 

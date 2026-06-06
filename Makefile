@@ -34,17 +34,16 @@ endif
 ##### EXAM
 
 .PHONY: create-exam
-create-exam: ## Make exam tex
-	export TEXINPUTS=${TEXINPUTS} && \
-	cd ./docs/exam/tex && \
-	xelatex -shell-escape main && \
+create-exam: ## Render exam/main.tex to PDF (runs twice for cross-refs)
+	cd ./exam && \
 	xelatex -shell-escape main && \
 	xelatex -shell-escape main
 
 .PHONY: clear-exam
-clear-exam: ## Clear exam files
-	cd ./docs/exam/tex && \
-	find . -not -name "*.tex" -not -name "main.pdf" -not -name "exam.cls" -delete
+clear-exam: ## Remove LaTeX auxiliary files from exam/
+	cd ./exam && \
+	rm -f main.aux main.log main.out main.toc main.fls main.fdb_latexmk && \
+	rm -rf _minted-main
 
 .PHONY: exam
-exam: create-exam clear-exam ## Make exam
+exam: create-exam clear-exam ## Build exam PDF and clean auxiliary files
