@@ -1155,13 +1155,13 @@ LoRA fügt neben jeder Gewichtsmatrix $W$ zwei kleine Matrizen $A$ und $B$ mit n
 :::
 
 
-### Generative AI — Grundlagen
+### Generative AI: Grundlagen
 
-1. Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Models und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Generierung? Was ist das Konditionierungssignal?
+1. Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Personen und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Genereation? Auf was wird konditioniert?
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
-**conditional Generierung.** Das Konditionierungssignal ist das **Produktbild** (referenzbasierte Konditionierung) — das Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Model variiert werden.
+**conditional Generierung.** Es wird auf das **Produktbild** konditioniert. Das generative Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Person variiert werden.
 :::
 
 ---
@@ -1170,15 +1170,15 @@ LoRA fügt neben jeder Gewichtsmatrix $W$ zwei kleine Matrizen $A$ und $B$ mit n
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
-Zu einem einzelnen Prompt $y$ (z.B. "eine Katze auf einem Sofa") sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur **einen** Ausgabewert produzieren — sie würde über die Verteilung mitteln und verschwommene oder kollabierte Ausgaben liefern.
+Zu einem einzelnen Prompt $y$ (z.B. "eine Katze auf einem Sofa") sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur **einen** Output produzieren.
 
-Eine stochastische Latent-Variable $z \sim \mathcal{N}(0, I)$ gibt dem Modell eine Quelle der Vielfalt: verschiedene $z$-Werte erzeugen verschiedene plausible Ausgaben für dasselbe $y$.
+Eine stochastische Latent-Variable, z.B. $z \sim \mathcal{N}(0, I)$ gibt dem Modell eine Quelle / Input um Vielfalt zu erzeugen: verschiedene $z$-Werte erzeugen verschiedene plausible Ausgaben für dasselbe $y$.
 
 :::
 
 ---
 
-3. Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele den Prompt gar nicht umsetzen. Was zeigt das über FID?
+3. Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele nicht zum Prompt passen. Was zeigt das über FID?
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
@@ -1192,7 +1192,7 @@ FID misst die Ähnlichkeit der Verteilungen von echten und generierten Bildern i
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
-Diffusionsmodelle lernen, einen schrittweisen **Noise Prozess umzukehren**. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen; bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noisingiterativ an, bis ein kohärentes Bild entsteht.
+Diffusionsmodelle lernen, einen schrittweisen **Noise Prozess umzukehren**. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen. Bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noising iterativ an, bis ein kohärentes Bild entsteht.
 
 :::
 
@@ -1200,7 +1200,7 @@ Diffusionsmodelle lernen, einen schrittweisen **Noise Prozess umzukehren**. Wäh
 
 
 
-### Generative AI — Praktisch
+### Generative AI: Praktisch
 
 1. Warum arbeiten moderne Bildgenerierungsmodelle wie Stable Diffusion in einem komprimierten **Latent Space** statt direkt im Pixelraum?
 
@@ -1230,11 +1230,11 @@ Ein RGB-Bild mit Shape $3 \times 512 \times 512$ enthält 786'432 Werte. Ein typ
 
 ---
 
-3. Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Models generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?
+3. Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Personen generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?
 
 ::: {.callout-note collapse="true" title="Antwort"}
 
-**Referenzbasierte Konditionierung** — das Produktbild als `image_input` an das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.
+**Referenzbasierte Konditionierung**: Das Produktbild als Bild-Inputan das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.
 
 Falls die Referenz-Konditionierung allein nicht ausreichend treu ist: **LoRA Fine-Tuning** auf Produktbildern als stärkere Alternative.
 
