@@ -460,8 +460,8 @@ window.Quarto = {
   <li><a href="#representation-learning" id="toc-representation-learning" class="nav-link" data-scroll-target="#representation-learning"><span class="header-section-number">2.6</span> Representation Learning</a></li>
   <li><a href="#vision-transformers" id="toc-vision-transformers" class="nav-link" data-scroll-target="#vision-transformers"><span class="header-section-number">2.7</span> Vision Transformers</a></li>
   <li><a href="#downstream-adaptation" id="toc-downstream-adaptation" class="nav-link" data-scroll-target="#downstream-adaptation"><span class="header-section-number">2.8</span> Downstream Adaptation</a></li>
-  <li><a href="#generative-ai-grundlagen" id="toc-generative-ai-grundlagen" class="nav-link" data-scroll-target="#generative-ai-grundlagen"><span class="header-section-number">2.9</span> Generative AI — Grundlagen</a></li>
-  <li><a href="#generative-ai-praktisch" id="toc-generative-ai-praktisch" class="nav-link" data-scroll-target="#generative-ai-praktisch"><span class="header-section-number">2.10</span> Generative AI — Praktisch</a></li>
+  <li><a href="#generative-ai-grundlagen" id="toc-generative-ai-grundlagen" class="nav-link" data-scroll-target="#generative-ai-grundlagen"><span class="header-section-number">2.9</span> Generative AI: Grundlagen</a></li>
+  <li><a href="#generative-ai-praktisch" id="toc-generative-ai-praktisch" class="nav-link" data-scroll-target="#generative-ai-praktisch"><span class="header-section-number">2.10</span> Generative AI: Praktisch</a></li>
   <li><a href="#praktische-aspekte" id="toc-praktische-aspekte" class="nav-link" data-scroll-target="#praktische-aspekte"><span class="header-section-number">2.11</span> Praktische Aspekte</a></li>
   </ul></li>
   </ul>
@@ -509,7 +509,7 @@ window.Quarto = {
 <p>An der Prüfung wird nur Wissen abgefragt, welches im Unterricht vorgestellt und/oder diskutiert worden ist.</p>
 <p>Beachten Sie auch die Quiz-Fragen in den Unterrichtsunterlagen.</p>
 <p>Die gelisteten Operationen sind mit folgenden (default) Parametern definiert:</p>
-<div id="6d8e55f3" class="cell" data-execution_count="1">
+<div id="a30c072e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>torch.nn.Conv2d(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    in_channels, out_channels, kernel_size,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    stride<span class="op">=</span><span class="dv">1</span>, padding<span class="op">=</span><span class="dv">0</span>, dilation<span class="op">=</span><span class="dv">1</span>,</span>
@@ -856,7 +856,7 @@ Figure&nbsp;1
 <ol start="4" type="1">
 <li>Ihr Kollege ist am verzweifeln. Sein MLP funktioniert nicht sehr gut. Das kann natürlich viele Gründe haben. Nachdem Sie jedoch seinen Code angeschaut haben, haben Sie einen Verdacht. Welcher?</li>
 </ol>
-<div id="c4be1921" class="cell" data-execution_count="2">
+<div id="c504b9e0" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLP(nn.Module):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size1, hidden_size2, hidden_size3, output_size):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(MLP, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -889,7 +889,7 @@ Figure&nbsp;1
 <p>Mathematisch: Die Komposition mehrerer linearer Funktionen ist wieder eine lineare Funktion: <span class="math display">\[f_4(f_3(f_2(f_1(\vec{x})))) = W_4 W_3 W_2 W_1 x = W_{\text{combined}} \vec{x}\]</span></p>
 <p>Das Netzwerk ist also äquivalent zu einem einzigen linearen Layer!</p>
 <p>Lösung:</p>
-<div id="efb61e60" class="cell" data-execution_count="3">
+<div id="b94c3e95" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> F.relu(<span class="va">self</span>.fc1(x))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> F.relu(<span class="va">self</span>.fc2(x))</span>
@@ -920,7 +920,7 @@ Figure&nbsp;1
 <div class="callout-body-container callout-body">
 <p><strong>Ziel:</strong> <span class="math inline">\(64 \times 16 \times 16 \rightarrow 128 \times 8 \times 8\)</span></p>
 <p><strong>Parametrisierung:</strong></p>
-<div id="d139656c" class="cell" data-execution_count="4">
+<div id="333a6a60" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nn.Conv2d(in_channels<span class="op">=</span><span class="dv">64</span>, out_channels<span class="op">=</span><span class="dv">128</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, stride<span class="op">=</span><span class="dv">2</span>, padding<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Begründung:</strong></p>
@@ -1043,7 +1043,7 @@ Figure&nbsp;1
 <li>Medizinische Bilder können mehrere Modalitäten kombinieren (CT + MRI)</li>
 </ul>
 <p><strong>Beispiel:</strong></p>
-<div id="d6b46e4d" class="cell" data-execution_count="5">
+<div id="7c45453e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Satellitendaten mit 12 Bändern</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>nn.Conv2d(in_channels<span class="op">=</span><span class="dv">12</span>, out_channels<span class="op">=</span><span class="dv">64</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, padding<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1118,7 +1118,7 @@ Figure&nbsp;1
 <div id="callout-18" class="callout-18-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Asymmetrische Stride-Parameter verwenden:</p>
-<div id="03dac0de" class="cell" data-execution_count="6">
+<div id="63fa106e" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nn.Conv2d(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    in_channels<span class="op">=</span><span class="dv">3</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    out_channels<span class="op">=</span><span class="dv">64</span>,</span>
@@ -1133,7 +1133,7 @@ Figure&nbsp;1
 <li>Nach Conv mit <code>stride=(2, 1)</code>: <span class="math inline">\(400 \times 400\)</span></li>
 </ul>
 <p>Alternative mit Pooling:</p>
-<div id="d8e5e6a8" class="cell" data-execution_count="7">
+<div id="34187b57" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Asymmetrisches Pooling</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pool <span class="op">=</span> nn.MaxPool2d(kernel_size<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">1</span>), stride<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1165,7 +1165,7 @@ Figure&nbsp;1
 <ol start="8" type="1">
 <li>Schauen Sie sich das folgende CNN an. Können Sie die räumliche Auflösung der Bilder ableiten? Wenn ja, berechnen Sie diese. Wenn nein, begründen Sie.</li>
 </ol>
-<div id="1b0690a4" class="cell" data-execution_count="8">
+<div id="c39b9615" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN1(nn.Module):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(CNN1, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -1216,7 +1216,7 @@ Figure&nbsp;1
 <ol start="9" type="1">
 <li>Schauen Sie sich die folgenden beiden CNNs an. Was sind die wichtigsten praktischen Unterschiede?</li>
 </ol>
-<div id="42d1b935" class="cell" data-execution_count="9">
+<div id="b480c0ca" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN1(nn.Module):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(CNN1, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -1235,7 +1235,7 @@ Figure&nbsp;1
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.fc(x)</span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4022fade" class="cell" data-execution_count="10">
+<div id="fe6c0556" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN2(nn.Module):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(CNN2, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
@@ -1596,7 +1596,7 @@ Figure&nbsp;4
 </ul>
 <p>Modellierung:</p>
 <p>Shared Backbone + Two Heads (empfohlen)</p>
-<div id="08217e9a" class="cell" data-execution_count="11">
+<div id="677a9e3e" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiTaskModel(nn.Module):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_species, num_activities<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -1615,7 +1615,7 @@ Figure&nbsp;4
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> species_logits, activity_logits</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Loss Function:</p>
-<div id="af5d3922" class="cell" data-execution_count="12">
+<div id="023ca5e9" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> lambda_species <span class="op">*</span> CE_loss(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    species_logits, species_labels</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">+</span> lambda_activity <span class="op">*</span> CE_loss(activity_logits, activity_labels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2149,9 +2149,9 @@ Figure&nbsp;4
 </div>
 </section>
 <section id="generative-ai-grundlagen" class="level3" data-number="2.9">
-<h3 data-number="2.9" class="anchored" data-anchor-id="generative-ai-grundlagen"><span class="header-section-number">2.9</span> Generative AI — Grundlagen</h3>
+<h3 data-number="2.9" class="anchored" data-anchor-id="generative-ai-grundlagen"><span class="header-section-number">2.9</span> Generative AI: Grundlagen</h3>
 <ol type="1">
-<li>Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Models und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Generierung? Was ist das Konditionierungssignal?</li>
+<li>Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Personen und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Genereation? Auf was wird konditioniert?</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Antwort">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-49-contents" aria-controls="callout-49" aria-expanded="false" aria-label="Toggle callout">
@@ -2165,7 +2165,7 @@ Figure&nbsp;4
 </div>
 <div id="callout-49" class="callout-49-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>conditional Generierung.</strong> Das Konditionierungssignal ist das <strong>Produktbild</strong> (referenzbasierte Konditionierung) — das Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Model variiert werden.</p>
+<p><strong>conditional Generierung.</strong> Es wird auf das <strong>Produktbild</strong> konditioniert. Das generative Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Person variiert werden.</p>
 </div>
 </div>
 </div>
@@ -2185,14 +2185,14 @@ Figure&nbsp;4
 </div>
 <div id="callout-50" class="callout-50-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Zu einem einzelnen Prompt <span class="math inline">\(y\)</span> (z.B. “eine Katze auf einem Sofa”) sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur <strong>einen</strong> Ausgabewert produzieren — sie würde über die Verteilung mitteln und verschwommene oder kollabierte Ausgaben liefern.</p>
-<p>Eine stochastische Latent-Variable <span class="math inline">\(z \sim \mathcal{N}(0, I)\)</span> gibt dem Modell eine Quelle der Vielfalt: verschiedene <span class="math inline">\(z\)</span>-Werte erzeugen verschiedene plausible Ausgaben für dasselbe <span class="math inline">\(y\)</span>.</p>
+<p>Zu einem einzelnen Prompt <span class="math inline">\(y\)</span> (z.B. “eine Katze auf einem Sofa”) sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur <strong>einen</strong> Output produzieren.</p>
+<p>Eine stochastische Latent-Variable, z.B. <span class="math inline">\(z \sim \mathcal{N}(0, I)\)</span> gibt dem Modell eine Quelle / Input um Vielfalt zu erzeugen: verschiedene <span class="math inline">\(z\)</span>-Werte erzeugen verschiedene plausible Ausgaben für dasselbe <span class="math inline">\(y\)</span>.</p>
 </div>
 </div>
 </div>
 <hr>
 <ol start="3" type="1">
-<li>Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele den Prompt gar nicht umsetzen. Was zeigt das über FID?</li>
+<li>Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele nicht zum Prompt passen. Was zeigt das über FID?</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Antwort">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-51-contents" aria-controls="callout-51" aria-expanded="false" aria-label="Toggle callout">
@@ -2226,14 +2226,14 @@ Figure&nbsp;4
 </div>
 <div id="callout-52" class="callout-52-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Diffusionsmodelle lernen, einen schrittweisen <strong>Noise Prozess umzukehren</strong>. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen; bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noisingiterativ an, bis ein kohärentes Bild entsteht.</p>
+<p>Diffusionsmodelle lernen, einen schrittweisen <strong>Noise Prozess umzukehren</strong>. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen. Bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noising iterativ an, bis ein kohärentes Bild entsteht.</p>
 </div>
 </div>
 </div>
 <hr>
 </section>
 <section id="generative-ai-praktisch" class="level3" data-number="2.10">
-<h3 data-number="2.10" class="anchored" data-anchor-id="generative-ai-praktisch"><span class="header-section-number">2.10</span> Generative AI — Praktisch</h3>
+<h3 data-number="2.10" class="anchored" data-anchor-id="generative-ai-praktisch"><span class="header-section-number">2.10</span> Generative AI: Praktisch</h3>
 <ol type="1">
 <li>Warum arbeiten moderne Bildgenerierungsmodelle wie Stable Diffusion in einem komprimierten <strong>Latent Space</strong> statt direkt im Pixelraum?</li>
 </ol>
@@ -2291,7 +2291,7 @@ Figure&nbsp;4
 </div>
 <hr>
 <ol start="3" type="1">
-<li>Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Models generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?</li>
+<li>Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Personen generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Antwort">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-55-contents" aria-controls="callout-55" aria-expanded="false" aria-label="Toggle callout">
@@ -2305,7 +2305,7 @@ Figure&nbsp;4
 </div>
 <div id="callout-55" class="callout-55-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Referenzbasierte Konditionierung</strong> — das Produktbild als <code>image_input</code> an das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.</p>
+<p><strong>Referenzbasierte Konditionierung</strong>: Das Produktbild als Bild-Inputan das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.</p>
 <p>Falls die Referenz-Konditionierung allein nicht ausreichend treu ist: <strong>LoRA Fine-Tuning</strong> auf Produktbildern als stärkere Alternative.</p>
 </div>
 </div>
@@ -4084,13 +4084,13 @@ He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep <spa
 <span id="cb16-1179"><a href="#cb16-1179" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb16-1180"><a href="#cb16-1180" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1181"><a href="#cb16-1181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1182"><a href="#cb16-1182" aria-hidden="true" tabindex="-1"></a><span class="fu">### Generative AI — Grundlagen</span></span>
+<span id="cb16-1182"><a href="#cb16-1182" aria-hidden="true" tabindex="-1"></a><span class="fu">### Generative AI: Grundlagen</span></span>
 <span id="cb16-1183"><a href="#cb16-1183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1184"><a href="#cb16-1184" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Models und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Generierung? Was ist das Konditionierungssignal?</span>
+<span id="cb16-1184"><a href="#cb16-1184" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Ein Modehändler möchte Bilder seiner bestehenden Produkte auf verschiedenen Personen und Hintergründen generieren, ohne jeden Kombination manuell zu fotografieren. Handelt es sich um conditional oder unconditional Genereation? Auf was wird konditioniert?</span>
 <span id="cb16-1185"><a href="#cb16-1185" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1186"><a href="#cb16-1186" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" title="Antwort"}</span>
 <span id="cb16-1187"><a href="#cb16-1187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1188"><a href="#cb16-1188" aria-hidden="true" tabindex="-1"></a>**conditional Generierung.** Das Konditionierungssignal ist das **Produktbild** (referenzbasierte Konditionierung) — das Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Model variiert werden.</span>
+<span id="cb16-1188"><a href="#cb16-1188" aria-hidden="true" tabindex="-1"></a>**conditional Generierung.** Es wird auf das **Produktbild** konditioniert. Das generative Modell muss die Produktidentität (Farbe, Textur, Form) erhalten, während Hintergrund und Person variiert werden.</span>
 <span id="cb16-1189"><a href="#cb16-1189" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb16-1190"><a href="#cb16-1190" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1191"><a href="#cb16-1191" aria-hidden="true" tabindex="-1"></a>---</span>
@@ -4099,15 +4099,15 @@ He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep <spa
 <span id="cb16-1194"><a href="#cb16-1194" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1195"><a href="#cb16-1195" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" title="Antwort"}</span>
 <span id="cb16-1196"><a href="#cb16-1196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1197"><a href="#cb16-1197" aria-hidden="true" tabindex="-1"></a>Zu einem einzelnen Prompt $y$ (z.B. "eine Katze auf einem Sofa") sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur **einen** Ausgabewert produzieren — sie würde über die Verteilung mitteln und verschwommene oder kollabierte Ausgaben liefern.</span>
+<span id="cb16-1197"><a href="#cb16-1197" aria-hidden="true" tabindex="-1"></a>Zu einem einzelnen Prompt $y$ (z.B. "eine Katze auf einem Sofa") sind viele verschiedene, plausible Bilder möglich. Eine deterministische Funktion kann nur **einen** Output produzieren.</span>
 <span id="cb16-1198"><a href="#cb16-1198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1199"><a href="#cb16-1199" aria-hidden="true" tabindex="-1"></a>Eine stochastische Latent-Variable $z \sim \mathcal{N}(0, I)$ gibt dem Modell eine Quelle der Vielfalt: verschiedene $z$-Werte erzeugen verschiedene plausible Ausgaben für dasselbe $y$.</span>
+<span id="cb16-1199"><a href="#cb16-1199" aria-hidden="true" tabindex="-1"></a>Eine stochastische Latent-Variable, z.B. $z \sim \mathcal{N}(0, I)$ gibt dem Modell eine Quelle / Input um Vielfalt zu erzeugen: verschiedene $z$-Werte erzeugen verschiedene plausible Ausgaben für dasselbe $y$.</span>
 <span id="cb16-1200"><a href="#cb16-1200" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1201"><a href="#cb16-1201" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb16-1202"><a href="#cb16-1202" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1203"><a href="#cb16-1203" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb16-1204"><a href="#cb16-1204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1205"><a href="#cb16-1205" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele den Prompt gar nicht umsetzen. Was zeigt das über FID?</span>
+<span id="cb16-1205"><a href="#cb16-1205" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Sie generieren 200 Bilder aus einem Text-to-Image-Modell und berechnen einen niedrigen FID-Score (gut). Ihr Auftraggeber prüft die Bilder und stellt fest, dass viele nicht zum Prompt passen. Was zeigt das über FID?</span>
 <span id="cb16-1206"><a href="#cb16-1206" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1207"><a href="#cb16-1207" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" title="Antwort"}</span>
 <span id="cb16-1208"><a href="#cb16-1208" aria-hidden="true" tabindex="-1"></a></span>
@@ -4121,7 +4121,7 @@ He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep <spa
 <span id="cb16-1216"><a href="#cb16-1216" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1217"><a href="#cb16-1217" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" title="Antwort"}</span>
 <span id="cb16-1218"><a href="#cb16-1218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1219"><a href="#cb16-1219" aria-hidden="true" tabindex="-1"></a>Diffusionsmodelle lernen, einen schrittweisen **Noise Prozess umzukehren**. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen; bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noisingiterativ an, bis ein kohärentes Bild entsteht.</span>
+<span id="cb16-1219"><a href="#cb16-1219" aria-hidden="true" tabindex="-1"></a>Diffusionsmodelle lernen, einen schrittweisen **Noise Prozess umzukehren**. Während des Trainings sieht das Modell teilweise noisy Bilder und lernt, den Noise Schritt für Schritt zu entfernen. Bei der Generierung startet es aus Random Noise und wendet das gelernten De-Noising iterativ an, bis ein kohärentes Bild entsteht.</span>
 <span id="cb16-1220"><a href="#cb16-1220" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1221"><a href="#cb16-1221" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb16-1222"><a href="#cb16-1222" aria-hidden="true" tabindex="-1"></a></span>
@@ -4129,7 +4129,7 @@ He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep <spa
 <span id="cb16-1224"><a href="#cb16-1224" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1225"><a href="#cb16-1225" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1226"><a href="#cb16-1226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1227"><a href="#cb16-1227" aria-hidden="true" tabindex="-1"></a><span class="fu">### Generative AI — Praktisch</span></span>
+<span id="cb16-1227"><a href="#cb16-1227" aria-hidden="true" tabindex="-1"></a><span class="fu">### Generative AI: Praktisch</span></span>
 <span id="cb16-1228"><a href="#cb16-1228" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1229"><a href="#cb16-1229" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Warum arbeiten moderne Bildgenerierungsmodelle wie Stable Diffusion in einem komprimierten **Latent Space** statt direkt im Pixelraum?</span>
 <span id="cb16-1230"><a href="#cb16-1230" aria-hidden="true" tabindex="-1"></a></span>
@@ -4159,11 +4159,11 @@ He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. <span>“Deep <spa
 <span id="cb16-1254"><a href="#cb16-1254" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1255"><a href="#cb16-1255" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb16-1256"><a href="#cb16-1256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1257"><a href="#cb16-1257" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Models generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?</span>
+<span id="cb16-1257"><a href="#cb16-1257" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Eine Kosmetikmarke möchte Bilder ihres spezifischen Lippenstifts auf verschiedenen Personen generieren. Farbe und Textur des Produkts müssen exakt übereinstimmen. Welcher Ansatz ist am geeignetsten?</span>
 <span id="cb16-1258"><a href="#cb16-1258" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1259"><a href="#cb16-1259" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" title="Antwort"}</span>
 <span id="cb16-1260"><a href="#cb16-1260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-1261"><a href="#cb16-1261" aria-hidden="true" tabindex="-1"></a>**Referenzbasierte Konditionierung** — das Produktbild als <span class="in">`image_input`</span> an das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.</span>
+<span id="cb16-1261"><a href="#cb16-1261" aria-hidden="true" tabindex="-1"></a>**Referenzbasierte Konditionierung**: Das Produktbild als Bild-Inputan das Modell übergeben (z.B. nano-banana-2). Das Modell erhält die Produktidentität als Konditionierungssignal und bewahrt sie bei der Generierung.</span>
 <span id="cb16-1262"><a href="#cb16-1262" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-1263"><a href="#cb16-1263" aria-hidden="true" tabindex="-1"></a>Falls die Referenz-Konditionierung allein nicht ausreichend treu ist: **LoRA Fine-Tuning** auf Produktbildern als stärkere Alternative.</span>
 <span id="cb16-1264"><a href="#cb16-1264" aria-hidden="true" tabindex="-1"></a></span>
