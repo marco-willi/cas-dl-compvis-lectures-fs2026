@@ -708,8 +708,8 @@ bias=False
 2. Wir berechnen für jeden Channel die entsprechenden Werte:
   - R: $0.1$
   - G: $1.9$
-  - B: $0.2$
-3. Wir addiern die Werte und erhalten das Resultat: $2.2$
+  - B: $-0.2$
+3. Wir addiern die Werte und erhalten das Resultat: $1.8$
 :::
 
 ---
