@@ -99,7 +99,7 @@ div.csl-indent {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-7fa0321ffd39fdc934404a1f09d9a8f2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-aaac19e38590fdd6762f71c82a306265.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -577,7 +577,7 @@ window.Quarto = {
 <li>Using a machine learning algorithm to train a model that learns to associate observations with labels.</li>
 <li>Evaluating/applying the model on new data.</li>
 </ul>
-<div id="4f8c39a3" class="cell" data-execution_count="1">
+<div id="73fd11d3" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(observations, labels):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Train a Model"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fit Model here</span></span>
@@ -668,7 +668,7 @@ f_{\theta}(\mathbf{x}^{(i)}) \text{ or } f(\theta, \mathbf{x}^{(i)})
 <li><span class="math inline">\(\theta_0\)</span> (intercept): Where the line crosses the y-axis</li>
 <li><span class="math inline">\(\theta_1\)</span> (slope): How steep the line is</li>
 </ul>
-<div id="b2dfd46c" class="cell" width="500" data-execution_count="2">
+<div id="01716dc6" class="cell" width="500" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -752,7 +752,7 @@ f_{\theta}(\mathbf{x}^{(i)}) \text{ or } f(\theta, \mathbf{x}^{(i)})
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="machine_learning_files/figure-html/cell-3-output-1.png" width="659" height="473" class="figure-img"></p>
+<p><img src="machine_learning_files/figure-html/cell-3-output-1.png" width="659" height="476" class="figure-img"></p>
 <figcaption>Linear regression fitted to synthetic 1D dataset. The red line shows the learned model, and dashed lines show residuals (errors) for each data point.</figcaption>
 </figure>
 </div>
@@ -800,7 +800,7 @@ f_{\theta}(\mathbf{x}^{(i)}) \text{ or } f(\theta, \mathbf{x}^{(i)})
 </ul>
 <p><strong>Optimization goal</strong>: Find parameters <span class="math inline">\(\theta^* = [\theta_0^*, \theta_1^*]\)</span> that minimize MSE:</p>
 <p><span class="math display">\[\theta^* = \mathsf{argmin}_{\theta} J(\theta)\]</span></p>
-<div id="1f4822bf" class="cell" data-execution_count="3">
+<div id="107d7b11" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
@@ -861,7 +861,7 @@ f_{\theta}(\mathbf{x}^{(i)}) \text{ or } f(\theta, \mathbf{x}^{(i)})
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="machine_learning_files/figure-html/cell-4-output-1.png" width="659" height="472" class="figure-img"></p>
+<p><img src="machine_learning_files/figure-html/cell-4-output-1.png" width="659" height="474" class="figure-img"></p>
 <figcaption>Probabilistic view of linear regression. The red line shows the expected value E[y|x], and green curves show the modeled normal distributions p(y|x) at different x locations.</figcaption>
 </figure>
 </div>
